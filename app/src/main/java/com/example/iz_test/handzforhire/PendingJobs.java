@@ -44,6 +44,8 @@ import java.util.Map;
         public static String KEY_USER = "user_id";
         public static String KEY_TYPE = "type";
         String user_id,address,city,state,zipcode,cat_type,cat_id,job_cat_name,name,date,amount,jobId;
+
+        String jobname,jobdate,pay,esti,jobstatus;
         ImageView logo;
         ProgressDialog progress_dialog;
         String type = "applied";
@@ -149,7 +151,7 @@ import java.util.Map;
 
                                     dialog.show();
                                     Window window = dialog.getWindow();
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 }
                                progress_dialog.dismiss();
@@ -193,24 +195,32 @@ import java.util.Map;
                         JSONObject object = (JSONObject) array.get(n);
                         String category = object.getString("job_category");
                         System.out.println("ressss::category:" + category);
-                        name = object.getString("job_name");
-                        date = object.getString("job_date");
-                        type = object.getString("job_payment_type");
-                        amount = object.getString("job_payment_amount");
+                        jobname = object.getString("job_name");
+                        jobdate = object.getString("job_date");
+                        esti = object.getString("job_payment_type");
+                        pay = object.getString("job_estimated_payment");
                         jobId = object.getString("id");
+                        jobstatus=object.getString("job_status");
 
-                        System.out.println("ressss:name::"+name);
-                        System.out.println("ressss:date::"+date);
-                        System.out.println("ressss:type::" + type);
-                        System.out.println("ressss::amount:" + amount);
+
+
+
+
+                        System.out.println("0000"+jobname);
+                        System.out.println("0000"+jobdate);
+                        System.out.println("0000" + esti);
+                        System.out.println("0000" + pay);
                         System.out.println("ressss::jobId:" + jobId);
+                        System.out.println("status::"+jobstatus);
                     }
                     HashMap<String,String> map = new HashMap<String,String>();
-                    map.put("name", name);
-                    map.put("date", date);
-                    map.put("type", type);
-                    map.put("amount", amount);
+                    map.put("name", jobname);
+                    map.put("date", jobdate);
+                    map.put("type", esti);
+                    map.put("amount", pay);
                     map.put("jobId",jobId);
+                    map.put("status",jobstatus);
+
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
                     PendingAdapter arrayAdapter = new PendingAdapter(this, job_list){
