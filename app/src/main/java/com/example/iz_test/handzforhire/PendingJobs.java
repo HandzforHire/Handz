@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -202,9 +206,11 @@ import java.util.Map;
                         jobId = object.getString("id");
                         jobstatus=object.getString("job_status");
 
-
-
-
+                        SimpleDateFormat inFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        Date date = (Date) inFormat.parse(jobdate);
+                        SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
+                        String goal = outFormat.format(date);
+                        System.out.println("gggg"+goal);
 
                         System.out.println("0000"+jobname);
                         System.out.println("0000"+jobdate);
@@ -260,6 +266,12 @@ import java.util.Map;
                 }
             }catch (JSONException e){
                 e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            {
+
+
             }
         }
 }
