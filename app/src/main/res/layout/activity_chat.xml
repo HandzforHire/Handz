@@ -93,14 +93,12 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/sendButton"
                     android:layout_width="wrap_content"
                     android:layout_height="40sp"
                     android:layout_marginLeft="6sp"
-                    android:background="#000000"
                     android:padding="4dp"
                     android:layout_marginBottom="5sp"
-                    android:src="@android:drawable/ic_menu_send" />
+                    android:src="@drawable/attach_file" />
 
                 <EditText
                     android:id="@+id/messageArea"
@@ -110,7 +108,6 @@
                     android:layout_marginLeft="5sp"
                     android:layout_marginRight="12sp"
                     android:layout_weight="1"
-                    android:drawableRight="@drawable/mp_c"
                     android:paddingLeft="10sp"
                     android:paddingRight="5sp"
                     android:layout_marginBottom="2sp"
@@ -119,6 +116,10 @@
                     android:textColor="#000000"
                     android:textColorHint="#000000" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sendButton"/>
             </LinearLayout>
 
 </LinearLayout>
