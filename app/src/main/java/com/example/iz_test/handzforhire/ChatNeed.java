@@ -22,7 +22,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/*Hi for testing*/
 public class ChatNeed extends Activity {
 
     LinearLayout layout,lin_layoutmsg;
