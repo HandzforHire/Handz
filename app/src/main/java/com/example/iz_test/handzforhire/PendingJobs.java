@@ -30,7 +30,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -204,8 +207,6 @@ import java.util.Map;
 
 
 
-
-
                         System.out.println("0000"+jobname);
                         System.out.println("0000"+jobdate);
                         System.out.println("0000" + esti);
@@ -215,6 +216,12 @@ import java.util.Map;
                     }
                     HashMap<String,String> map = new HashMap<String,String>();
                     map.put("name", jobname);
+
+
+
+
+
+
                     map.put("date", jobdate);
                     map.put("type", esti);
                     map.put("amount", pay);
@@ -262,4 +269,6 @@ import java.util.Map;
                 e.printStackTrace();
             }
         }
+
+
 }

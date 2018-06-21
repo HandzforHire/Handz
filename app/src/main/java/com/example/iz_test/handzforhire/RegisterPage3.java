@@ -61,6 +61,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
     public static String ZIPCODE = "zipcode";
     public static String USERTYPE = "usertype";
     public static String DEVICETOKEN = "devicetoken";
+    public static String MERCHANTID = "merchantID";
     public static String XAPP_KEY = "X-APP-KEY";
     ProgressDialog progress_dialog;
     TextView handz_condition,feature;
@@ -509,6 +510,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
                 params.put(ZIPCODE,zip);
                 params.put(USERTYPE,usertype);
                 params.put(DEVICETOKEN,deviceId);
+                params.put(MERCHANTID,"123");
                /* params.put("X-APP-KEY","HandzForHire@~");
                 params.put("username", "Parima");
                 params.put("password", "Parima");

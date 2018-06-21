@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,15 +28,15 @@ public class ChatNeed extends Activity {
 
     LinearLayout layout,lin_layoutmsg;
     RelativeLayout layout2;
-    ImageView sendButton,close_btn;
+    ImageView close_btn;
     EditText messageArea;
     ScrollView scrollView;
     Firebase reference1, reference2;
     String get_user,job_id,channel_id,user_id,user_type,sender_id,child_id,key;
-    TextView Tv;
+    TextView Tv,sendButton;
     SessionManager session;
     String current_user_id = "OGO6K8nyqKVJ8WQoE02WT5qFc1S2";
-
+    private final int PICK_IMAGE_REQUEST = 71;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +45,7 @@ public class ChatNeed extends Activity {
         layout = (LinearLayout) findViewById(R.id.layout1);
         lin_layoutmsg=(LinearLayout)findViewById(R.id.lin_layoutmsg);
         layout2 = (RelativeLayout) findViewById(R.id.layout2);
-        sendButton = (ImageView) findViewById(R.id.sendButton);
+        sendButton = (TextView) findViewById(R.id.sendButton);
         close_btn = (ImageView) findViewById(R.id.img1);
         messageArea = (EditText) findViewById(R.id.messageArea);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -215,5 +216,17 @@ public class ChatNeed extends Activity {
         textView.setLayoutParams(lp2);
         lin_layoutmsg.addView(textView);
         scrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    public static void uploadfile(){
+
     }
 }

@@ -26,7 +26,11 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,6 +121,25 @@ public class ViewListAdapter extends BaseAdapter {
         type.setText(get_type);
         type.setTypeface(font1);
         jobId.setText(get_id);
+
+        DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+//        System.out.println("date "+dateInstance.format(get_date));
+        DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+        try{
+        Date dates = srcDf.parse(get_date);
+         System.out.println("date "+get_date);
+         System.out.println("converted "+destDf.format(dates));
+
+           }catch (Exception e)
+          {
+           System.out.println("error "+e.getMessage());
+          }
+
+
+
+
+        System.out.println("today date "+dateInstance.format(Calendar.getInstance().getTime()));
 
 
         applicants.setOnClickListener(new View.OnClickListener() {

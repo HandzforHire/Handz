@@ -737,43 +737,9 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 }
 
                // list.setAdapter(adapter);
-/*
-                PopupWindow popupWindow = new PopupWindow(this);
 
-                // the drop down list is a list view
-                ListView listcate = new ListView(this);
-                listcate.setAdapter(adapter);*/
 
                 progress_dialog.dismiss();
-              /*  list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        category = parent.getItemAtPosition(position).toString();
-                        if(category.equals("Select Job Category"))
-                        {
-
-                        }
-                     else {
-                            System.out.println("ssssssssssselected:item:" + category);
-                            String value = "1";
-                            cat = Integer.parseInt(category) + Integer.parseInt(value);
-                            categoryId = String.valueOf(cat);
-                            System.out.println("ssssssssssselected:job_cat_name:response:" + categoryId);
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        category = "0";
-                        System.out.println("on nothing selected");
-                        list.setVisibility(View.GONE);
-                        img_arrow.setVisibility(View.VISIBLE);
-                        textview.setVisibility(View.VISIBLE);
-
-                    }
-                });*/
-
-
 
             }
             else
@@ -858,8 +824,8 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 payamount.removeTextChangedListener(this);
                 payamount.setText(cashAmountBuilder.toString());
 
-                payamount.setTextKeepState("$" + cashAmountBuilder.toString());
-                Selection.setSelection(payamount.getText(), cashAmountBuilder.toString().length() + 1);
+                payamount.setTextKeepState("" + cashAmountBuilder.toString());
+                Selection.setSelection(payamount.getText(), cashAmountBuilder.toString().length());
 
                 payamount.addTextChangedListener(this);
             }

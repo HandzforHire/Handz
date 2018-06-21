@@ -12,7 +12,10 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 
@@ -53,16 +56,12 @@ public class PendingAdapter extends BaseAdapter {
         TextView jobId = (TextView) vi.findViewById(R.id.job_id);
         ImageView img=(ImageView) vi.findViewById(R.id.cir);
 
+        System.out.println("pending adapter class");
         img.setOnClickListener(new View.OnClickListener()
         {
         @Override
          public void onClick(View v)
         {
-
-
-
-
-
 
      }
     });
@@ -70,16 +69,6 @@ public class PendingAdapter extends BaseAdapter {
 
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
-        /*final String get_name = items.get("name");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
-        final String get_date = items.get("date");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_date::" + get_date);
-        String get_amount = items.get("amount");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_amount::" + get_amount);
-        String get_type = items.get("type");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_recur::" + get_type);
-        String get_id = items.get("jobId");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_id::" + get_id);*/
         final String get_jobname=items.get("name");
         System.out.println("1111111"+get_jobname);
         final String get_jobdate=items.get("date");
@@ -94,9 +83,8 @@ public class PendingAdapter extends BaseAdapter {
 
         //job_name.setText("PAY"+get_jobname);
 
-
         job_name.setText(""+get_jobname);
-        job_date.setText("WHEN:"+get_jobdate);
+        job_date.setText("WHEN: edited"+get_jobdate);
         pay.setText("PAY:"+get_pay);
         job_type.setText("ESTIMATED DURATION:"+get_esti);
         //jobId.setText(get_id);
