@@ -53,6 +53,8 @@ public class ChatNeed extends Activity {
     //To upload images
     FirebaseStorage storage;
     StorageReference storageReference;
+    String storepath="gs://handz-8ac86.appspot.com";
+
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
     @Override
@@ -158,13 +160,12 @@ public class ChatNeed extends Activity {
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     key = messageSnapshot.getKey();
                     System.out.println("fffffffff:key::" + key.substring(0,3));
+                    System.out.println("message snapshot "+messageSnapshot);
                     if (key.equals(child_id)) {
                         for (DataSnapshot recipient : messageSnapshot.child("messages").getChildren()) {
-                            //String id = String.valueOf(recipient.child("senderId").getValue());
-                       // String name = String.valueOf(recipient.child("senderName").getValue());
-                        String text = String.valueOf(recipient.child("text").getValue());
-                        //System.out.println("fffffffff:id::" + id);
-                        //System.out.println("fffffffff:name::" + name);
+
+                            String text = String.valueOf(recipient.child("text").getValue());
+
                             System.out.println("fffffffff:text::" + text);
                             System.out.println("fffffffff:id::" + recipient.child("senderId").getValue());
                             if(!text.equals("null")) {
@@ -189,6 +190,7 @@ public class ChatNeed extends Activity {
                 && data != null && data.getData() != null )
         {
             filePath = data.getData();
+            uploadImage();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
               //  imageView.setImageBitmap(bitmap);
@@ -276,14 +278,23 @@ public class ChatNeed extends Activity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
+            String randomno=UUID.randomUUID().toString();
+            final String photourl=storepath+"/"+child_id+"/"+randomno+".jpg";
+            StorageReference ref = storageReference.child(child_id+"/"+randomno+".jpg");
 
-            StorageReference ref = storageReference.child("storagepath/"+child_id+"/"+ UUID.randomUUID().toString());
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(ChatNeed.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            Map<String, String> map = new HashMap<String, String>();
+                            map.put("senderId", sender_id);
+                            map.put("senderName", get_user);
+                            map.put("photoURL", photourl);
+                            reference1.child(child_id).child("messages").push().setValue(map);
+                           // addMessageBox(messageText,sender_id);
+                            messageArea.setText("");
+                          //  Toast.makeText(ChatNeed.this, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
