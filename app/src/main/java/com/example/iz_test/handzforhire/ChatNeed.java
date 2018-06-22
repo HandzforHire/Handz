@@ -1,9 +1,14 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +18,23 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /*Hi for testing*/
 public class ChatNeed extends Activity {
@@ -32,10 +46,15 @@ public class ChatNeed extends Activity {
     ScrollView scrollView;
     Firebase reference1, reference2;
     String get_user,job_id,channel_id,user_id,user_type,sender_id,child_id,key;
-    TextView Tv;
+    TextView Tv,txt_sendmsg;
     SessionManager session;
     String current_user_id = "OGO6K8nyqKVJ8WQoE02WT5qFc1S2";
 
+    //To upload images
+    FirebaseStorage storage;
+    StorageReference storageReference;
+    private Uri filePath;
+    private final int PICK_IMAGE_REQUEST = 71;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +68,7 @@ public class ChatNeed extends Activity {
         messageArea = (EditText) findViewById(R.id.messageArea);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         Tv = (TextView) findViewById(R.id.txt1);
+        txt_sendmsg=(TextView)findViewById(R.id.txt_sendmsg);
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
@@ -77,9 +97,13 @@ public class ChatNeed extends Activity {
 
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReferenceFromUrl("gs://handz-8ac86.appspot.com");
+
         //reference2 = new Firebase("https://chatapp-85e06.firebaseio.com/Channels_lend/" + Chat_Need.channel_id + Chat_Need.job_id).child("Messages");
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
+        txt_sendmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
@@ -106,6 +130,16 @@ public class ChatNeed extends Activity {
                     System.out.println("text "+messageText);
                     System.out.println("child_id "+child_id);
                 }
+            }
+        });
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
 
@@ -146,6 +180,24 @@ public class ChatNeed extends Activity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+              //  imageView.setImageBitmap(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -215,5 +267,40 @@ public class ChatNeed extends Activity {
         textView.setLayoutParams(lp2);
         lin_layoutmsg.addView(textView);
         scrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
+    private void uploadImage() {
+
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            StorageReference ref = storageReference.child("storagepath/"+child_id+"/"+ UUID.randomUUID().toString());
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(ChatNeed.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(ChatNeed.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+        }
     }
 }

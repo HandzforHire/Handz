@@ -41,26 +41,33 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     compile files('libs/paypal-2.0.2.jar')
     compile('com.paypal.sdk:paypal-android-sdk:2.14.2') {
         exclude group: 'io.card'
     }
     compile files('libs/commons-net-3.3-ftp.jar')
     compile files('libs/simpleftp.jar')
-   /* compile 'com.google.android.gms:play-services-maps:10.0.1'
+    /* compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.google.android.gms:play-services-places:10.0.1'*/
-    compile 'com.google.android.gms:play-services-maps:8.1.0'
-    compile 'com.google.android.gms:play-services-location:8.1.0'
     compile files('libs/mint-5.2.2.jar')
-    compile 'com.firebase:firebase-client-android:2.5.2+'
+
     //compile 'com.google.firebase:firebase-core:10.0.1'
     //compile 'com.google.firebase:firebase-database:10.0.1'
     compile files('libs/picasso-2.5.2.jar')
+    //    apply plugin: 'com.google.gms.google-services'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
+    //compile 'com.firebase:firebase-client-android:2.5.2.+'
+    compile 'com.google.firebase:firebase-storage:10.0.1'
+    compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.daasuu:BubbleLayout:1.1.1'
-
+    testCompile 'junit:junit:4.12'
 }
+
+
+
+apply plugin: 'com.google.gms.google-services'

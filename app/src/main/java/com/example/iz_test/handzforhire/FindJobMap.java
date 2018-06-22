@@ -107,7 +107,7 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
         logo = (ImageView) findViewById(R.id.logo);
         menu = (ImageView) findViewById(R.id.menu);
 
-        initilizeMap();
+        //initilizeMap();
         /// Changing map type
 
         // create class object
@@ -173,10 +173,10 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        initilizeMap();
+        //initilizeMap();
     }
 
-    private void initilizeMap() {
+   /* private void initilizeMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 
@@ -186,7 +186,7 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
                         .show();
             }
         }
-    }
+    }*/
 
     private double[] createRandLocation(double latitude, double longitude) {
 
