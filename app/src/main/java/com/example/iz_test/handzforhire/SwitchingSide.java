@@ -57,7 +57,7 @@ public class SwitchingSide extends Activity{
         lend_hand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SwitchingSide.this,FindJobMap.class);
+                Intent i = new Intent(SwitchingSide.this,MapActivity.class);
                 startActivity(i);
                 finish();
             }

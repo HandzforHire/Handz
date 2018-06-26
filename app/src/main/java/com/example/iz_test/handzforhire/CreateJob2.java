@@ -71,6 +71,7 @@ public class CreateJob2 extends AppCompatActivity {
     public static String JOB_ZIPCODE = "job_zipcode";
     public static String JOB_ADDRESS = "job_address";
     public static String JOB_CITY = "job_city";
+    public static String JOB_PAYOUT = "job_payout";
     String value = "HandzForHire@~";
     TextView text,pros,cons;
     EditText add,cit,stat,zip;
@@ -466,6 +467,7 @@ public class CreateJob2 extends AppCompatActivity {
                 params.put(JOB_ZIPCODE,zipcode);
                 params.put(ESTIMATED_PAYMENT,estimated_amount);
                 params.put(FLEXIBLE,flexible_status);
+                params.put(JOB_PAYOUT,"0.0");
                 return params;
             }
 
@@ -476,26 +478,27 @@ public class CreateJob2 extends AppCompatActivity {
         System.out.println("vvvvvvv3:"+".."+end_time+".."+amount+".."+type+".."+address+"..");
         System.out.println("vvvvvvv4:"+".."+city+".."+state+".."+zipcode+".."+post_address+"..");
         System.out.println("vvvvvvv5:"+".."+latitude+".."+longitude+".."+estimated_amount+".."+flexible_status+"..");*/
-        System.out.println("USER_ID "+id);
-        System.out.println("JOB_NAME "+name);
-        System.out.println("USER_TYPE "+usertype);
-        System.out.println("JOB_CATEGORY "+category);
-        System.out.println("JOB_DESCRIPTION "+description);
-        System.out.println("JOB_START_DATE "+start_time);
-        System.out.println("END_TIME "+end_time);
-        System.out.println("JOB_PAYMENT_AMOUNT "+amount);
-        System.out.println("POCKET_EXPENSE "+pocket);
-        System.out.println("JOB_PAYMENT_TYPE "+type);
-        System.out.println("ADDRESS "+address);
-        System.out.println("CITY "+j_city);
-        System.out.println("CURRENT_LOCATION "+current_location);
-        System.out.println("STATE "+state);
-        System.out.println("ZIPCODE "+zipcode);
-        System.out.println("POST_ADDRESS "+post_address);
-        System.out.println("LATITUDE "+latitude);
-        System.out.println("LONGITUDE"+longitude);
-        System.out.println("ESTIMATED_PAYMENT "+estimated_amount);
-        System.out.println("FLEXIBLE "+flexible_status);
+        System.out.println(USER_ID+" "+id);
+        System.out.println(JOB_NAME+" "+name);
+        System.out.println(USER_TYPE+" "+usertype);
+        System.out.println(JOB_CATEGORY+" "+category);
+        System.out.println(JOB_DESCRIPTION+" "+description);
+        System.out.println(JOB_START_DATE+" "+start_time);
+        System.out.println(END_TIME+" "+end_time);
+        System.out.println(JOB_PAYMENT_AMOUNT+" "+amount);
+        System.out.println(POCKET_EXPENSE+" "+pocket);
+        System.out.println(JOB_PAYMENT_TYPE+" "+type);
+        System.out.println(ADDRESS+" "+address);
+        System.out.println(CITY+" "+j_city);
+        System.out.println(CURRENT_LOCATION+" "+current_location);
+        System.out.println(STATE+ " "+state);
+        System.out.println(ZIPCODE+" "+zipcode);
+        System.out.println(POST_ADDRESS+" "+post_address);
+        System.out.println(LATITUDE+" "+latitude);
+        System.out.println(LONGITUDE+" "+longitude);
+        System.out.println(ESTIMATED_PAYMENT+" "+estimated_amount);
+        System.out.println(FLEXIBLE+" "+flexible_status);
+        System.out.println(JOB_PAYOUT+"0.0");
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);

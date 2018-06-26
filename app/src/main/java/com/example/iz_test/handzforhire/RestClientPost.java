@@ -3,6 +3,7 @@ package com.example.iz_test.handzforhire;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -40,7 +41,8 @@ public class RestClientPost {
 
     public RestClientPost(Context context, int requestType) {
         //this.url = "http://162.144.41.156/~izaapinn/handzforhire/service/job_search";
-       this.url = "http://50.17.167.215/handz/service/job_search";
+       //this.url = "http://50.17.167.215/handz/service/job_search";
+        this.url = Constant.SERVER_URL+"job_search";
         this.requestType = requestType;
         pDialog = new ProgressDialog(context);
         pDialog.setMessage("Loading...");
@@ -57,11 +59,11 @@ public class RestClientPost {
             pDialog.dismiss();
     }
 
-    public void execute(RequestMethod method, Activity activity)
+    public void execute(RequestMethod method, Activity activity,Fragment fragment)
             throws Exception {
              Log.d("", "Request params " + url);
         this.context=activity;
-        postData(url, activity,(ResponseListener)activity);
+        postData(url, activity,(ResponseListener)fragment);
     }
 
     private void postData(String url, final Context activity, final ResponseListener replist) {
@@ -79,6 +81,7 @@ public class RestClientPost {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                System.out.println("response on restclinet"+response);
                                 JSONObject jsonResponse = new JSONObject(response);
                                 replist.onResponseReceived(jsonResponse,requestType);
                             } catch (JSONException e) {
@@ -110,6 +113,8 @@ public class RestClientPost {
                     params.put("lat", String.valueOf(FindJobMap.lat));
                     params.put("lon", String.valueOf(FindJobMap.lon));
                     params.put("miles","5");
+                    System.out.println("lat "+String.valueOf(FindJobMap.lat));
+                    System.out.println("lon "+String.valueOf(FindJobMap.lon));
                     return params;
                 }
             };

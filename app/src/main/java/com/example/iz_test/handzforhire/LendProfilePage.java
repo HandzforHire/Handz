@@ -212,7 +212,7 @@ public class LendProfilePage extends Activity{
         find_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LendProfilePage.this, FindJobMap.class);
+                Intent i = new Intent(LendProfilePage.this, MapActivity.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
