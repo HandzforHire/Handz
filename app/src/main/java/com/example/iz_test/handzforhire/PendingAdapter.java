@@ -43,22 +43,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class PendingAdapter extends BaseAdapter
-{
+public class PendingAdapter extends BaseAdapter {
     private static final String emp_reject = Constant.SERVER_URL + "employee_reject";
+    private static final String job_list = Constant.SERVER_URL + "job_lists";
+
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     String type = "employee";
-    String get_jobid, get_emplrid, get_employeeid;
+    String user_id;
+    String get_jobid, get_emplrid, get_employeeid, get_status;
     public static String KEY_JOBID = "job_id";
     public static String KEY_EMPLOYERID = "employer_id";
     public static String KEY_EMPLOYEEID = "employee_id";
     public static String KEY_USERTYPE = "user_type";
+    public static String KEY_USER = "user_id";
     ProgressDialog progress_dialog;
     private Activity activity;
     private ArrayList<HashMap<String, String>> data;
     private static LayoutInflater inflater = null;
     private LayoutInflater layoutInflater;
+
 
     public PendingAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
@@ -79,8 +83,7 @@ public class PendingAdapter extends BaseAdapter
         return position;
     }
 
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View vi = convertView;
 
         if (convertView == null)
@@ -94,55 +97,66 @@ public class PendingAdapter extends BaseAdapter
         ImageView gray = (ImageView) vi.findViewById(R.id.gray);
         ImageView red = (ImageView) vi.findViewById(R.id.red);
         ImageView green = (ImageView) vi.findViewById(R.id.green);
-        LinearLayout layout = (LinearLayout) vi.findViewById(R.id.ref);
 
-       /* layout.setOnClickListener(new View.OnClickListener() {
+        gray.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-            }
-        });*/
-
-        gray.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
                 final Dialog dialog = new Dialog(activity);
                 dialog.setContentView(R.layout.hold_popup);
-                dialog.dismiss();
+                LinearLayout gry = (LinearLayout) dialog.findViewById(R.id.hol);
+                gry.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+
+                    }
+                });
+
                 dialog.show();
                 Window window = dialog.getWindow();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
                 return;
             }
         });
-        red.setOnClickListener(new View.OnClickListener()
-        {
+        red.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(activity);
                 dialog.setContentView(R.layout.refuse_popup);
+                LinearLayout re = (LinearLayout) dialog.findViewById(R.id.ref);
+                re.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        refusee();
+
+                    }
+                });
                 dialog.dismiss();
                 dialog.show();
                 Window window = dialog.getWindow();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                refuse();
                 return;
             }
 
         });
-        green.setOnClickListener(new View.OnClickListener()
-        {
+        green.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ;
                 final Dialog dialog = new Dialog(activity);
                 dialog.setContentView(R.layout.hire_popup);
-                dialog.dismiss();
+                LinearLayout gre = (LinearLayout) dialog.findViewById(R.id.hiree);
+                gre.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        dialog.dismiss();
+
+                    }
+                });
                 dialog.show();
                 Window window = dialog.getWindow();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -162,8 +176,27 @@ public class PendingAdapter extends BaseAdapter
         System.out.println("3333333" + get_pay);
         final String get_esti = items.get("type");
         System.out.println("4444444" + get_esti);
-        final String get_status = items.get("status");
+        get_status = items.get("status");
         System.out.println("555555" + get_status);
+        user_id = items.get("employeeid");
+        System.out.println("useridddd" + user_id);
+
+        if (get_status.equals("Hired")) {
+            green.setVisibility(View.VISIBLE);
+            gray.setVisibility(View.INVISIBLE);
+            red.setVisibility(View.INVISIBLE);
+
+        } else if (get_status.equals("Hold")) {
+            gray.setVisibility(View.VISIBLE);
+            green.setVisibility(View.INVISIBLE);
+            red.setVisibility(View.INVISIBLE);
+
+        } else {
+            red.setVisibility(View.VISIBLE);
+            green.setVisibility(View.INVISIBLE);
+            gray.setVisibility(View.INVISIBLE);
+
+        }
 
         get_jobid = items.get("jobId");
         System.out.println("******" + get_jobid);
@@ -172,27 +205,6 @@ public class PendingAdapter extends BaseAdapter
         get_employeeid = items.get("employeeid");
         System.out.println("qqqqq" + get_employeeid);
         System.out.println("======" + type);
-
-
-        if (get_status.equals("Hired"))
-        {
-            
-
-            green.setVisibility(View.VISIBLE);
-
-
-        } else if (get_status.equals("Hold"))
-        {
-
-
-            gray.setVisibility(View.VISIBLE);
-
-        } else if(get_status.equals("Refused"))
-        {
-
-            red.setVisibility(View.VISIBLE);
-
-        }
 
         DateFormat dateInstance = SimpleDateFormat.getDateInstance();
         DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
@@ -215,7 +227,7 @@ public class PendingAdapter extends BaseAdapter
         return vi;
     }
 
-    private void refuse() {
+    private void refusee() {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, emp_reject,
                 new Response.Listener<String>() {
@@ -253,9 +265,7 @@ public class PendingAdapter extends BaseAdapter
                 params.put(KEY_EMPLOYEEID, get_employeeid);
                 params.put(KEY_USERTYPE, type);
                 return params;
-
             }
-
 
         };
 
@@ -266,23 +276,76 @@ public class PendingAdapter extends BaseAdapter
 
     private void onResponserecieved(String response, int i) {
         String status = null;
+
         try {
             JSONObject result = new JSONObject(response);
             status = result.getString("status");
-            if (status.equals("success"))
-            {
-
-
-
+            if (status.equals("success")) {
+                Reload();
 
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        {
-        }
+
+    }
+
+
+    private void Reload()
+    {
+        Toast.makeText(activity, "123456789", Toast.LENGTH_SHORT).show();
+
+        /*StringRequest stringRequest = new StringRequest(Request.Method.POST, job_list,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("reeeeeeeeeeeeeeeee:joblists:::" + response);
+                        onResponserecieved(response, 2);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try {
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            System.out.println("error" + jsonObject);
+                            String status = jsonObject.getString("msg");
+                            if (status.equals("success"))
+                            {
+
+                                Toast.makeText(activity, "Job List Refreshed", Toast.LENGTH_SHORT).show();
+                            }
+                            progress_dialog.dismiss();
+                        } catch (JSONException e) {
+
+                        } catch (UnsupportedEncodingException error1)
+                        {
+
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USER, user_id);
+                params.put(KEY_USERTYPE, type);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }*/
     }
 }
+
+
+
+
+
+
 
 
 
