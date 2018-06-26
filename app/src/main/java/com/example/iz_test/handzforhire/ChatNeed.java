@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -101,7 +102,7 @@ public class ChatNeed extends Activity {
         reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
 
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReferenceFromUrl("gs://handz-8ac86.appspot.com");
+        storageReference = storage.getReferenceFromUrl(storepath);
 
         //reference2 = new Firebase("https://chatapp-85e06.firebaseio.com/Channels_lend/" + Chat_Need.channel_id + Chat_Need.job_id).child("Messages");
 
@@ -155,7 +156,7 @@ public class ChatNeed extends Activity {
         reference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println("data snaopshot"+dataSnapshot);
+
                 lin_layoutmsg.removeAllViews();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     key = messageSnapshot.getKey();
@@ -164,13 +165,19 @@ public class ChatNeed extends Activity {
                     if (key.equals(child_id)) {
                         for (DataSnapshot recipient : messageSnapshot.child("messages").getChildren()) {
 
-                            String text = String.valueOf(recipient.child("text").getValue());
-
-                            System.out.println("fffffffff:text::" + text);
-                            System.out.println("fffffffff:id::" + recipient.child("senderId").getValue());
-                            if(!text.equals("null")) {
-                                addMessageBox(text,String.valueOf(recipient.child("senderId").getValue()));
+                            if(recipient.hasChild("photoURL")) {
+                                String photoURL = String.valueOf(recipient.child("photoURL").getValue());
+                                DownloadImage(photoURL,String.valueOf(recipient.child("senderId").getValue()));
+                                System.out.println("photoURL " + photoURL);
+                            }else if(recipient.hasChild("text")){
+                                String text = String.valueOf(recipient.child("text").getValue());
+                                System.out.println("fffffffff:text::" + text);
+                                System.out.println("fffffffff:id::" + recipient.child("senderId").getValue());
+                                if(!text.equals("null")) {
+                                    addMessageBox(text,String.valueOf(recipient.child("senderId").getValue()));
+                                }
                             }
+
                         }
                     }
                 }
@@ -271,6 +278,31 @@ public class ChatNeed extends Activity {
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
 
+    public void adImage(String url,String senderid)
+    {
+
+        ImageView img=new ImageView(ChatNeed.this);
+        Glide.with(ChatNeed.this).load(url).into(img);
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp2.setMargins(0, 10, 0, 0);
+        lp2.weight = 2.0f;
+        img.setMaxWidth(200);
+        img.setMinimumHeight(200);
+        // System.out.println("usr_type chatneed "+user_type);
+        if(sender_id.equals(senderid))
+        {
+
+            lp2.gravity = Gravity.LEFT;
+            // System.out.println("condtion matched");
+        }
+        else{
+            lp2.gravity = Gravity.RIGHT;
+        }
+        lin_layoutmsg.addView(img);
+        img.setLayoutParams(lp2);
+        scrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
     private void uploadImage() {
 
         if(filePath != null)
@@ -313,5 +345,23 @@ public class ChatNeed extends Activity {
                         }
                     });
         }
+    }
+
+    private void DownloadImage(String url, final String senderid){
+        System.out.println("url"+url);
+        String urls=url.replace(storepath,"");
+        storageReference.child(urls).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                System.out.println("URI "+uri);
+                adImage(uri.toString(),senderid);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                System.out.println("URI "+exception.getMessage());
+            }
+        });
     }
 }
