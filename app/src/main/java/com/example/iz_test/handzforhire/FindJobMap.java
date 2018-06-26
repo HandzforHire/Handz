@@ -15,11 +15,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +41,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -55,9 +60,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListener,GoogleMap.OnMyLocationChangeListener,GoogleMap.OnCameraChangeListener,ResponseListener,OnMapReadyCallback{
+public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListener,GoogleMap.OnMyLocationChangeListener,GoogleMap.OnCameraChangeListener,ResponseListener,OnMapReadyCallback{
 
-    final Context context = this;
+   Context context ;
     private static final String URL = Constant.SERVER_URL+"job_lists";
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
@@ -74,16 +79,22 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
     SessionManager session;
     String id,address,city,state,zipcode,profile_image,profilename,email,user_name;
 
+    public static Fragment fragments;
+    View rootView;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.find_job_map);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        try {
+            rootView = inflater.inflate(R.layout.find_job_map, container, false);
+        } catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+        SupportMapFragment fragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
+        fragment.getMapAsync(this);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
-        session = new SessionManager(getApplicationContext());
+        session = new SessionManager(getActivity());
         HashMap<String, String> user = session.getUserDetails();
         // get name
         user_name = user.get(SessionManager.USERNAME);
@@ -99,19 +110,19 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
         System.out.println("ssssss:city:" + city);
         System.out.println("ssssssstate:" + state);
         System.out.println("ssssssid:zipcode:" + zipcode);
-        Intent intent = getIntent();
-        user_id = intent.getStringExtra("userId");
+       /* Intent intent = getIntent();
+        user_id = intent.getStringExtra("userId");*/
         System.out.println("iiiiiiiiiiii:userid:findjob:"+user_id);
 
-        txt_undisclosedjob=(TextView)findViewById(R.id.txt_undisclosedjob);
-        logo = (ImageView) findViewById(R.id.logo);
-        menu = (ImageView) findViewById(R.id.menu);
+        txt_undisclosedjob=(TextView)rootView.findViewById(R.id.txt_undisclosedjob);
+        logo = (ImageView) rootView.findViewById(R.id.logo);
+        menu = (ImageView) rootView.findViewById(R.id.menu);
 
         //initilizeMap();
         /// Changing map type
 
         // create class object
-        gps = new GPSTracker(FindJobMap.this);
+        gps = new GPSTracker(getActivity());
 
         // check if GPS enabled
         if(gps.canGetLocation()){
@@ -126,8 +137,8 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
             googleMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(cameraPosition));
             try {
-                RestClientPost rest = new RestClientPost(FindJobMap.this, 1);
-                rest.execute(RestClientPost.RequestMethod.POST, FindJobMap.this);
+                RestClientPost rest = new RestClientPost(getActivity(), 1);
+                rest.execute(RestClientPost.RequestMethod.POST, getActivity());
             }catch (Exception e){
                 System.out.println("exception "+e.getMessage());
             }
@@ -142,39 +153,48 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(FindJobMap.this, LendProfilePage.class);
+                Intent i = new Intent(getActivity(), LendProfilePage.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);
-                finish();
+                getActivity().finish();
             }
         });
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(FindJobMap.this, LendProfilePage.class);
+                Intent i = new Intent(getActivity(), LendProfilePage.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);
-                finish();
+                getActivity().finish();
             }
         });
 
+        return rootView;
+    }
 
+    /*@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.find_job_map);
+
+        *//*MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);*//*
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         //initilizeMap();
-    }
+    }*/
 
    /* private void initilizeMap() {
         if (googleMap == null) {
@@ -200,7 +220,7 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
         if (markers.get(marker.getId()) != null) {
             try {
                 JSONObject obj = new JSONObject(markers.get(marker.getId()));
-                showDetails(obj.toString(),FindJobMap.this);
+                showDetails(obj.toString(),getActivity());
             }catch (Exception e){
                 System.out.println("Exception e test "+e.getMessage());
             }
@@ -284,8 +304,8 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
             LatLng latLng=cameraPosition.target;
             lat=latLng.latitude;
             lon=latLng.longitude;
-            RestClientPost rest = new RestClientPost(FindJobMap.this, 1);
-            rest.execute(RestClientPost.RequestMethod.POST, FindJobMap.this);
+            RestClientPost rest = new RestClientPost(getActivity(), 1);
+            rest.execute(RestClientPost.RequestMethod.POST, getActivity());
         }catch (Exception e){
             System.out.println("exception "+e.getMessage());
         }
@@ -308,102 +328,102 @@ public class FindJobMap extends Activity implements GoogleMap.OnMarkerClickListe
                         String lat = object.getString("lat");
                         String lon = object.getString("lon");
                         String job_category=object.getString("job_category");
-                        Bitmap icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_1);
+                        Bitmap icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_1);
                         if(job_category.equals("Painting (Interior / Exterior)")){
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_1);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_1);
                         }else if(job_category.equals("Moving Items"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_2);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_2);
                         }
                         else if(job_category.equals("Heavy Lifting"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_3);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_3);
                         }
                         else if(job_category.equals("Unpacking Boxes"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_4);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_4);
                         }
                         else if(job_category.equals("Landscaping"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_5);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_5);
                         }
                         else if(job_category.equals("Lawnmowing"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_6);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_6);
                         }
                         else if(job_category.equals("Raking Leaves"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_7);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_7);
 
                         }
                         else if(job_category.equals("Babysitting"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_8);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_8);
 
                         }
                         else if(job_category.equals("Digging (trench/hole)"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_9);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_9);
 
                         }
                         else if(job_category.equals("Assembling Furniture/Object"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_10);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_10);
 
                         }
                         else if(job_category.equals("Dog Walking"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_11);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_11);
 
                         }
                         else if(job_category.equals("Pet Care"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_12);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_12);
 
                         }
                         else if(job_category.equals("Workout Partner/Coach"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_13);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_13);
 
                         }
                         else if(job_category.equals("Server(s) for Dinner Party"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_14);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_14);
 
                         }
                         else if(job_category.equals("Bartender for House Party"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_15);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_15);
 
                         }
                         else if(job_category.equals("Shoveling Snow"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_16);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_16);
 
                         }
                         else if(job_category.equals("Apprentice for Skilled Laborer"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_17);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_17);
 
                         }
                         else if(job_category.equals("Cleaning"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_18);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_18);
 
                         }
                         else if(job_category.equals("Organizing"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_19);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_19);
 
                         }
                         else if(job_category.equals("Food Shopping"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_20);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_20);
 
                         }
                         else if(job_category.equals("Other"))
                         {
-                            icon=getBitmapFromVectorDrawable(getApplicationContext(), R.drawable.ic_21);
+                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_21);
 
                         }
 
