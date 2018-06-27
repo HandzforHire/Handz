@@ -296,9 +296,9 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                 } else {
                     progress_dialog.dismiss();
                     session.LendLogin(user_email,user_password,user_name,user_type,user_id,user_address,user_city,user_state,user_zipcode,userType);
-                    Intent i = new Intent(LendLoginPage.this,FindJobMap.class);
-                    /*i.putExtra("userId",user_id);
-                    i.putExtra("username",user_name);
+                    Intent i = new Intent(LendLoginPage.this,MapActivity.class);
+                    i.putExtra("userId",user_id);
+                   /* i.putExtra("username",user_name);
                     i.putExtra("email",user_email);
                     i.putExtra("address",user_address);
                     i.putExtra("state",user_city);

@@ -86,6 +86,10 @@
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
+        <activity android:name=".MapActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+
         <activity android:name=".SwitchingSide" />
 
         <activity android:name=".PayEmployee"

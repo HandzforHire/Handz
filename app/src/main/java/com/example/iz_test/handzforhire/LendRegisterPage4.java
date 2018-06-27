@@ -43,7 +43,7 @@ public class LendRegisterPage4 extends Activity{
             profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(LendRegisterPage4.this, FindJobMap.class);
+                    Intent i = new Intent(LendRegisterPage4.this, MapActivity.class);
                     i.putExtra("userId",id);
                     i.putExtra("username",user_name);
                     i.putExtra("email",email);

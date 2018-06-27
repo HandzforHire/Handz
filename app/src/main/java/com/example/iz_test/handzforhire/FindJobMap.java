@@ -104,14 +104,10 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
         city = user.get(SessionManager.CITY);
         state = user.get(SessionManager.STATE);
         zipcode = user.get(SessionManager.ZIPCODE);
-        System.out.println("ssssssemail:" + email);
-        System.out.println("ssssssid:" + id);
-        System.out.println("ssssssaddress:" + address);
-        System.out.println("ssssss:city:" + city);
-        System.out.println("ssssssstate:" + state);
-        System.out.println("ssssssid:zipcode:" + zipcode);
+
        /* Intent intent = getIntent();
         user_id = intent.getStringExtra("userId");*/
+        user_id=user.get(SessionManager.ID);
         System.out.println("iiiiiiiiiiii:userid:findjob:"+user_id);
 
         txt_undisclosedjob=(TextView)rootView.findViewById(R.id.txt_undisclosedjob);
@@ -124,31 +120,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
         // create class object
         gps = new GPSTracker(getActivity());
 
-        // check if GPS enabled
-        if(gps.canGetLocation()){
 
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(latitude,
-                            longitude)).zoom(15).build();
-            lat=latitude;
-            lon=longitude;
-            googleMap.animateCamera(CameraUpdateFactory
-                    .newCameraPosition(cameraPosition));
-            try {
-                RestClientPost rest = new RestClientPost(getActivity(), 1);
-                rest.execute(RestClientPost.RequestMethod.POST, getActivity());
-            }catch (Exception e){
-                System.out.println("exception "+e.getMessage());
-            }
-            // \n is for new line
-        }else{
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            gps.showSettingsAlert();
-        }
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -305,7 +277,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             lat=latLng.latitude;
             lon=latLng.longitude;
             RestClientPost rest = new RestClientPost(getActivity(), 1);
-            rest.execute(RestClientPost.RequestMethod.POST, getActivity());
+            rest.execute(RestClientPost.RequestMethod.POST, getActivity(),FindJobMap.this);
         }catch (Exception e){
             System.out.println("exception "+e.getMessage());
         }
@@ -315,6 +287,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     public void onResponseReceived(JSONObject responseObj, int requestType) {
         try{
             String status=responseObj.getString("status");
+            System.out.println("response "+responseObj);
             if(status.equals("error"))
             {
                 txt_undisclosedjob.setText("0 disclosed Locations");
@@ -448,7 +421,8 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap map) {
+        googleMap=map;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setZoomControlsEnabled(false);
@@ -458,5 +432,31 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
         googleMap.getUiSettings().setZoomGesturesEnabled(true);
         googleMap.setOnCameraChangeListener(this);
         googleMap.setOnMyLocationChangeListener(this);
+
+        // check if GPS enabled
+        if(gps.canGetLocation()){
+
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(latitude,
+                            longitude)).zoom(15).build();
+            lat=latitude;
+            lon=longitude;
+            googleMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(cameraPosition));
+            try {
+                RestClientPost rest = new RestClientPost(getActivity(), 1);
+                rest.execute(RestClientPost.RequestMethod.POST, getActivity(),FindJobMap.this);
+            }catch (Exception e){
+                System.out.println("exception "+e.getMessage());
+            }
+            // \n is for new line
+        }else{
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gps.showSettingsAlert();
+        }
     }
 }

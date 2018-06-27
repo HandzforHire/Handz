@@ -181,7 +181,7 @@ public class ViewSearchJob extends Activity{
         map_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(ViewSearchJob.this,FindJobMap.class);
+                Intent i = new Intent(ViewSearchJob.this,MapActivity.class);
                 i.putExtra("userId",user_id);
                 i.putExtra("address",address);
                 i.putExtra("city",city);

@@ -111,16 +111,33 @@ public class ActiveJobAdapter extends BaseAdapter {
 
             }
 
+            chat.setTag(position);
+            make_payment.setTag(position);
             make_payment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(activity,MakePayment.class);
-                    i.putExtra("job_id",get_jobid);
-                    i.putExtra("userId",user_id);
-                    i.putExtra("job_name",get_name);
-                    i.putExtra("image",get_image);
-                    i.putExtra("profilename",get_profile);
-                    i.putExtra("username",get_user);
+                    int pos= (int) v.getTag();
+                    HashMap<String, String> items =data.get(pos);
+                    String username="";
+                    String  jobId =  items.get("jobId");;
+
+                    String  userId=items.get("userId");
+                    String name=items.get("name");
+                    String image=items.get("image");
+                    String user=items.get("user");
+                    String profile=items.get("profile");
+                    String employer=items.get("employer");
+                    String employee=items.get("employee");
+
+                    i.putExtra("job_id",jobId);
+                    i.putExtra("userId",userId);
+                    i.putExtra("job_name",name);
+                    i.putExtra("image",image);
+                    i.putExtra("profilename",profile);
+                    i.putExtra("username",user);
+                    i.putExtra("employer",employer);
+                    i.putExtra("employee",employee);
                     v.getContext().startActivity(i);
                 }
             });
