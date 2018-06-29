@@ -1,6 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -52,6 +54,7 @@ public class ViewApplicant extends Activity {
     ListView list;
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
+    Dialog dialog;
 
 
     @Override
@@ -59,9 +62,15 @@ public class ViewApplicant extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_applicant);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(ViewApplicant.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         image = (ImageView) findViewById(R.id.default_image);
         profile = (ImageView) findViewById(R.id.profile_image);
@@ -259,7 +268,7 @@ public class ViewApplicant extends Activity {
 
                 // DataBind ListView with items from ArrayAdapter
                 list.setAdapter(arrayAdapter);
-                progress_dialog.dismiss();
+                dialog.dismiss();
 
             } else {
 

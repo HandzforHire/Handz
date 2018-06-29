@@ -59,7 +59,8 @@ public class UpdateCard extends Activity{
     public static String DEVICETOKEN = "dev";
     String value = "HandzForHire@~";
     String dev = "";
-    ProgressDialog dialog;
+    //ProgressDialog dialog;
+    Dialog dialog;
     RelativeLayout layout;
     String cardtype,getDefaultCard;
     String update_name,update_card_number,update_month,update_year,update_cvv,update_address,update_city,update_state,update_zipcode;
@@ -69,8 +70,14 @@ public class UpdateCard extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_credit);
 
-        dialog = new ProgressDialog(this);
+       /* dialog = new ProgressDialog(this);
         dialog.setMessage("Loading.Please wait.....");
+        dialog.show();*/
+
+        dialog = new Dialog(UpdateCard.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
 
         card_name = (EditText) findViewById(R.id.up_card);

@@ -34,11 +34,13 @@ public class ViewJobAdapter extends BaseAdapter {
         return position;
     }
 
-    public long getItemId(int position) {
+    public long getItemId(int position)
+    {
         return position;
     }
 
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent)
+    {
         View vi = convertView;
         if (convertView == null)
             vi = inflater.inflate(R.layout.job_list, null);

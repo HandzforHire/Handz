@@ -46,6 +46,7 @@ public class ForgotPassword extends Activity{
     String value = "HandzForHire@~";
     String email_address;
     ProgressDialog progress_dialog;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +68,14 @@ public class ForgotPassword extends Activity{
         Typeface tf1 = Typeface.createFromAsset(getAssets(), fontPath1);
         email.setTypeface(tf1);
 
-        progress_dialog = new ProgressDialog(ForgotPassword.this);
-        progress_dialog.setMessage("Loading.Please wait");
+        /*progress_dialog = new ProgressDialog(ForgotPassword.this);
+        progress_dialog.setMessage("Loading.Please wait");*/
+
+        dialog = new Dialog(ForgotPassword.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +143,7 @@ public class ForgotPassword extends Activity{
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
                             System.out.println("eeeeeeeeeeeeeeeror:"+jsonObject);
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
 
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
@@ -194,7 +201,7 @@ public class ForgotPassword extends Activity{
             }
             else
             {
-                progress_dialog.dismiss();
+                dialog.dismiss();
                 final Dialog dialog = new Dialog(ForgotPassword.this);
                 dialog.setContentView(R.layout.custom_dialog);
 

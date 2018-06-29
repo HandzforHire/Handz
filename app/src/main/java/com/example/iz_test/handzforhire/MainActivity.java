@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
                 System.out.println("ppppppppp:florist:" +status);
                 if(status == true)
                 {
-                    Intent intent = new Intent(MainActivity.this,FindJobMap.class);
+                    Intent intent = new Intent(MainActivity.this,LendProfilePage.class);
                     startActivity(intent);
                     finish();
                     String a = "if_condition";

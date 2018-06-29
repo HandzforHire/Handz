@@ -58,15 +58,22 @@ import java.util.Map;
         ProgressDialog progress_dialog;
         String type = "applied";
         Button active_jobs,job_history;
+        Dialog dialog;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.pending_jobs);
 
-            progress_dialog = new ProgressDialog(this);
+           /* progress_dialog = new ProgressDialog(this);
             progress_dialog.setMessage("Loading.Please wait....");
-            progress_dialog.show();
+            progress_dialog.show();*/
+
+            dialog = new Dialog(PendingJobs.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressbar);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
 
             list = (ListView) findViewById(R.id.listview);
             logo = (ImageView) findViewById(R.id.logo);
@@ -162,7 +169,7 @@ import java.util.Map;
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 }
-                               progress_dialog.dismiss();
+                               dialog.dismiss();
                             }
                             catch (JSONException e)
                             {
@@ -253,7 +260,7 @@ import java.util.Map;
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -63,15 +63,22 @@ public class JobHistory extends Activity {
     EditText editsearch;
     ArrayList<WorldPopulation> arraylist = new ArrayList<WorldPopulation>();
     Adapter adapter;
+    Dialog dialog;
 
         @Override
         protected void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.job_history);
 
-            progress_dialog = new ProgressDialog(this);
+            /*progress_dialog = new ProgressDialog(this);
             progress_dialog.setMessage("Loading.Please wait....");
-            progress_dialog.show();
+            progress_dialog.show();*/
+
+            dialog = new Dialog(JobHistory.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressbar);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
 
             posted_job = (Button) findViewById(R.id.btn1);
             active_job = (Button)findViewById(R.id.btn2);
@@ -192,7 +199,7 @@ public class JobHistory extends Activity {
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 }
-                                progress_dialog.dismiss();
+                                dialog.dismiss();
                             } catch ( JSONException e ) {
                                 //Handle a malformed json response
                                 System.out.println("volley error ::"+e.getMessage());
@@ -289,7 +296,7 @@ public class JobHistory extends Activity {
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(adapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

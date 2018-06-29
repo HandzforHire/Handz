@@ -1,6 +1,5 @@
 package com.example.iz_test.handzforhire;
 
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -27,6 +26,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,21 +63,32 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     String address,city,state,zipcode,profile_image,profilename,type;
     ImageView image,profile,logo,menu;
     ProgressDialog progress_dialog;
+    ProgressBar progress;
     RelativeLayout rating_lay;
     SessionManager session;
     LinearLayout posted,history,active;
+    ProgressBar pb;
+    Dialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_page);
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        /*progress_dialog = new ProgressDialog(this);
+        //progress_dialog.setContentView(R.layout.progressbar);
+        progress_dialog.setMessage("Loading.Please wait....");*/
+       /* pb=(ProgressBar)findViewById(R.layout.progressbar);
+        pb.setVisibility(View.VISIBLE);*/
+
+        dialog = new Dialog(ProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         detector = new SimpleGestureFilter(this,this);
 
@@ -495,7 +506,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
                     image.setVisibility(View.INVISIBLE);
                     profile.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
+
                 }
                 else if(!profile_image.equals("")&&profilename.equals("null"))
                 {
@@ -508,20 +520,20 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
                     image.setVisibility(View.INVISIBLE);
                     profile.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
                 else if(!profilename.equals("null")&&profile_image.equals(""))
                 {
                     profile_name.setText(profilename);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
                 else if(profilename.equals("null")&&profile_image.equals(""))
                 {
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
                 else
                 {
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
             }
 

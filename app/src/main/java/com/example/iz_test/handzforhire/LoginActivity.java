@@ -2,6 +2,7 @@ package com.example.iz_test.handzforhire;
 
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,11 +21,13 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +45,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import android.widget.ProgressBar;
+
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 
@@ -69,6 +74,10 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
     private static final int REQUEST_PHONE_STATE = 0;
     SessionManager session;
     String userType = "employer";
+    ProgressBar mprogressBar;
+    RelativeLayout layoutt;
+    Dialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +86,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
         session = new SessionManager(getApplicationContext());
-
         new_employee = (TextView) findViewById(R.id.new_employee);
         forgot = (TextView) findViewById(R.id.forgot_password);
         layout = (LinearLayout) findViewById(R.id.layout3);
@@ -102,8 +109,14 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
         new_employee.setTypeface(tf2);
         forgot.setTypeface(tf2);
 
-        progress_dialog = new ProgressDialog(LoginActivity.this);
-        progress_dialog.setMessage("Loading.Please wait");
+        /*progress_dialog = new ProgressDialog(LoginActivity.this);
+        progress_dialog.setMessage("Loading.Please wait");*/
+
+       /* dialog = new Dialog(LoginActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();*/
 
         permission();
         //getDeviceId();
@@ -129,7 +142,8 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
             }
         });*/
 
-        new_employee.setOnClickListener(new View.OnClickListener() {
+        new_employee.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(LoginActivity.this, RegisterPage2.class);
@@ -157,22 +171,24 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
+
                 email_id = email.getText().toString().trim();
                 pass = password.getText().toString().trim();
                 if (TextUtils.isEmpty(email_id)) {
-                    // custom dialog
+
                     final Dialog dialog = new Dialog(LoginActivity.this);
                     dialog.setContentView(R.layout.custom_dialog);
 
-                    // set the custom dialog components - text, image and button
                     TextView text = (TextView) dialog.findViewById(R.id.text);
                     text.setText("Must Fill In \"Email Id\" Box");
                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                    // if button is clicked, close the custom dialog
+
                     dialogButton.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClick(View v)
+                        {
                             dialog.dismiss();
                         }
                     });
@@ -183,7 +199,8 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     return;
                 }
-                if (TextUtils.isEmpty(pass)) {
+                if (TextUtils.isEmpty(pass))
+                {
                     // custom dialog
                     final Dialog dialog = new Dialog(LoginActivity.this);
                     dialog.setContentView(R.layout.custom_dialog);
@@ -218,6 +235,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
             }
         });
     }
+
 
     public void permission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -303,8 +321,9 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
     }
 
 
-    public void login() {
-        progress_dialog.show();
+    public void login()
+    {
+        //dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -345,7 +364,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
 
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                         } catch (UnsupportedEncodingException error1){
@@ -410,7 +429,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                 }
                 if(user_type.equals("employee"))
                 {
-                    progress_dialog.dismiss();
+                   // dialog.dismiss();
                     final Dialog dialog = new Dialog(LoginActivity.this);
                     dialog.setContentView(R.layout.custom_dialog);
 
@@ -433,7 +452,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                 }
                 else
                 {
-                    progress_dialog.dismiss();
+                    //dialog.dismiss();
                     session.NeedLogin(user_email,user_password,user_name,user_type,user_id,user_address,user_city,user_state,user_zipcode,userType);
                     Intent i = new Intent(LoginActivity.this,ProfilePage.class);
 //                    i.putExtra("username",user_name);

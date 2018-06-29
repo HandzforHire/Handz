@@ -53,15 +53,22 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
     ProgressDialog progress_dialog;
     Button add;
     TextView text,t1,t2;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_payment);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(ManagePaymentOptions.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         detector = new SimpleGestureFilter(this,this);
 
@@ -301,7 +308,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
                     // DataBind ListView with items from ArrayAdapter
                     listView.setAdapter(arrayAdapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
 
                 JSONArray array1 = new JSONArray(check);
@@ -359,7 +366,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
                     // DataBind ListView with items from ArrayAdapter
                     listView1.setAdapter(arrayAdapter1);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
 
                 JSONArray array2 = new JSONArray(paypal);
@@ -424,7 +431,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
                     // DataBind ListView with items from ArrayAdapter
                     listView2.setAdapter(arrayAdapter2);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
 
             }

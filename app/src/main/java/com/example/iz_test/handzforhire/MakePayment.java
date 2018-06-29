@@ -2,6 +2,7 @@ package com.example.iz_test.handzforhire;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,15 +53,22 @@ public class MakePayment extends Activity{
     TextView name,job_cancel;
     Button pay_employee;
     String employee,profile_image,profile_name,user_name;
+    Dialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_payment);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(MakePayment.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         image = (ImageView) findViewById(R.id.imageView);
@@ -129,11 +138,11 @@ public class MakePayment extends Activity{
         if(profile_name==null)
         {
             name.setText(user_name);
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
         else {
             name.setText(profile_name);
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
 
     }
@@ -195,7 +204,7 @@ public class MakePayment extends Activity{
                     System.out.println("ressss:profilename::" + profilename);
 
                     if(profile_image.equals("")) {
-                        progress_dialog.dismiss();
+                        dialog.dismiss();
                     }
                     else {
                         java.net.URL url = new URL(profile_image);
@@ -211,7 +220,7 @@ public class MakePayment extends Activity{
                     else {
                         name.setText(profilename);
                     }
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
 
             } else {
