@@ -55,7 +55,10 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -204,14 +207,16 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     public void showDetails(String obj,Activity activity){
 
         try{
+            System.out.println("obj "+obj);
             AlertDialog.Builder builder=new AlertDialog.Builder(activity);
             JSONObject object=new JSONObject(obj);
             System.out.println("job cat "+object);
-            String job_category=object.getString("job_category");
+            String job_name=object.getString("job_name");
             String recurring=object.getString("recurring");
             String job_payment_amount=object.getString("job_payment_amount");
             String job_date=object.getString("job_date");
             String profile_image=object.getString("profile_image");
+            String duration=object.getString("job_payment_type");
             LayoutInflater inflater = LayoutInflater.from(activity);
             View view = inflater.inflate(R.layout.findjob_popup, null);
             builder.setView(view);
@@ -220,13 +225,26 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             TextView txt_jobcat=(TextView)view.findViewById(R.id.txt_jobcat);
             TextView txt_amount=(TextView)view.findViewById(R.id.txt_amount);
             TextView txt_when=(TextView)view.findViewById(R.id.txt_when);
+            TextView txt_dur=(TextView)view.findViewById(R.id.txt_duration);
             ImageView img_profile=(ImageView)view.findViewById(R.id.img_profile);
             ImageView img_close=(ImageView)view.findViewById(R.id.img_close);
 
-            txt_jobcat.setText(job_category);
-            txt_amount.setText("PAY $"+job_payment_amount+" "+recurring);
-            txt_when.setText(job_date);
+            txt_jobcat.setText(job_name);
+            txt_amount.setText("PAY $"+job_payment_amount);
+            txt_dur.setText("EXPECTED DURATION: "+duration);
 
+
+            DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+            try{
+                Date dates = srcDf.parse(job_date);
+                System.out.println("converted "+destDf.format(dates));
+                txt_when.setText("WHEN: "+destDf.format(dates));
+
+            }catch (Exception e)
+            {
+                System.out.println("error "+e.getMessage());
+            }
             img_close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -238,7 +256,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .placeholder(R.drawable.default_profile)
                     .into(img_profile);
-
+            alert.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             alert.show();
 
 

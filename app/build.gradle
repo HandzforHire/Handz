@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.example.iz_test.handzforhire"
-        minSdkVersion 16
-        targetSdkVersion 23
+        minSdkVersion 21
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -63,6 +63,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.0.1'
 
     compile 'com.firebase:firebase-client-android:2.5.2'
+
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.4.7'
 
     compile 'com.google.firebase:firebase-storage:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'

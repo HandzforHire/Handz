@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
 
         progress_dialog = new ProgressDialog(LoginActivity.this);
         progress_dialog.setMessage("Loading.Please wait");
-
+        progress_dialog.setIndeterminate(true);
         permission();
         //getDeviceId();
 
@@ -158,6 +158,8 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 email_id = email.getText().toString().trim();
                 pass = password.getText().toString().trim();
                 if (TextUtils.isEmpty(email_id)) {
