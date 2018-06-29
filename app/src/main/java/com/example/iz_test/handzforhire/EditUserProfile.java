@@ -43,6 +43,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -121,6 +123,12 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
         layout = (LinearLayout) findViewById(R.id.layout);
 
         getProfileimage();
+/*
+
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .start(this);
+*/
 
         activity = EditUserProfile.this;
         profile_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -413,21 +421,24 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SELECT_FILE)
             {
-                onSelectFromGalleryResult(data);
+              //  onSelectFromGalleryResult(data);
                 Uri selectedImageUri = data.getData();
+                CropImage.activity(selectedImageUri)
+                        .start(this);
+              /*
                 String selectedImagePath = uriToFilename(selectedImageUri);
                 System.out.println("filename:gallery "+selectedImagePath);
                 new FileUpload(selectedImagePath);
                 System.out.println("path:camera:" + selectedImagePath);
                 filename = FileUpload.firstRemoteFile;
-                System.out.println("filename:gallery::"+filename);
+                System.out.println("filename:gallery::"+filename);*/
             }
             else if (requestCode == REQUEST_CAMERA)
             {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 photo = addBorderToBitmap(photo, 10, Color.BLACK);
                 photo = addBorderToBitmap(photo, 3, Color.BLACK);
-                image.setImageBitmap(photo);
+               /// image.setImageBitmap(photo);
                 photo_text.setVisibility(View.INVISIBLE);
 
                 // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
@@ -437,11 +448,26 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 File finalFile = new File(getRealPathFromURI(tempUri));
                 System.out.println("ffffffffffffff:"+ finalFile);
                 String capturedImagePath = String.valueOf(finalFile);
-                new FileUpload(capturedImagePath);
+               /* new FileUpload(capturedImagePath);
                 System.out.println("path:capturedImagePath:" + capturedImagePath);
                 filename = FileUpload.firstRemoteFile;
-                System.out.println("filename:camera::"+filename);
+                System.out.println("filename:camera::"+filename);*/
+                CropImage.activity(tempUri)
+                        .start(this);
 
+            }if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK) {
+                    Uri resultUri = result.getUri();
+                    image.setImageURI(resultUri);
+                    String selectedImagePath = uriToFilename(resultUri);
+                    System.out.println("filename:gallery "+selectedImagePath);
+                    new FileUpload(selectedImagePath);
+                    System.out.println("path:camera:" + selectedImagePath);
+                    filename = FileUpload.firstRemoteFile;
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                }
             }
         } else {
 
