@@ -1,6 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,15 +47,22 @@ public class JobDetails extends Activity{
     String value = "HandzForHire@~";
     String job_id,user_id,employerId;
     ProgressDialog progress_dialog;
+    Dialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_details);
 
-        progress_dialog = new ProgressDialog(this);
+       /* progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(JobDetails.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         profile_image = (ImageView) findViewById(R.id.profile_image);
         default_image = (ImageView) findViewById(R.id.default_image);
@@ -153,6 +162,8 @@ public class JobDetails extends Activity{
                 System.out.println("ressss::employerId:" + employerId);
                 profile_name.setText(get_profile_name);
                 description.setText(get_description);
+
+
                 date.setText(get_date);
                 time.setText(get_start_time);
                 type.setText(get_type);
@@ -180,7 +191,7 @@ public class JobDetails extends Activity{
                     bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                     default_image.setVisibility(View.INVISIBLE);
                     profile_image.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
 
             } else {

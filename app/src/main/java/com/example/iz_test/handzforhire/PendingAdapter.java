@@ -1,6 +1,5 @@
 package com.example.iz_test.handzforhire;
 
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -280,7 +279,9 @@ public class PendingAdapter extends BaseAdapter {
         try {
             JSONObject result = new JSONObject(response);
             status = result.getString("status");
-            if (status.equals("success")) {
+            if (status.equals("success"))
+            {
+
                 Reload();
 
             }
@@ -293,9 +294,8 @@ public class PendingAdapter extends BaseAdapter {
 
     private void Reload()
     {
-        Toast.makeText(activity, "123456789", Toast.LENGTH_SHORT).show();
 
-        /*StringRequest stringRequest = new StringRequest(Request.Method.POST, job_list,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, job_list,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -315,6 +315,7 @@ public class PendingAdapter extends BaseAdapter {
                             {
 
                                 Toast.makeText(activity, "Job List Refreshed", Toast.LENGTH_SHORT).show();
+
                             }
                             progress_dialog.dismiss();
                         } catch (JSONException e) {
@@ -337,9 +338,9 @@ public class PendingAdapter extends BaseAdapter {
 
         RequestQueue requestQueue = Volley.newRequestQueue(activity);
         requestQueue.add(stringRequest);
-    }*/
     }
-}
+    }
+
 
 
 

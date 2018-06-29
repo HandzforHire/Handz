@@ -2,6 +2,7 @@ package com.example.iz_test.handzforhire;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -57,6 +59,7 @@ public class LendProfilePage extends Activity{
     TextView profile_name,rating_value;
     RelativeLayout rating_lay;
     SessionManager session;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +69,16 @@ public class LendProfilePage extends Activity{
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        progress_dialog = new ProgressDialog(this);
+       /* progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+
+        dialog = new Dialog(LendProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         handz = (ImageView) findViewById(R.id.handz);
         need_help = (Button) findViewById(R.id.need_help);
@@ -358,7 +368,7 @@ public class LendProfilePage extends Activity{
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
                     image.setVisibility(View.INVISIBLE);
                     profile.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("")) {
                     URL url = new URL(profile_image);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
@@ -369,13 +379,13 @@ public class LendProfilePage extends Activity{
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
                     image.setVisibility(View.INVISIBLE);
                     profile.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 } else if (!profilename.equals("") && profile_image.equals("")) {
                     profile_name.setText(profilename);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 } else {
                     profile_name.setText(username);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
             }
 

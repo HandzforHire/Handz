@@ -15,7 +15,14 @@
             android:layout_marginTop="15sp"
             android:orientation="vertical">
 
-        <RelativeLayout
+            <include
+                layout="@layout/progressbar"
+                android:visibility="gone"
+                android:gravity="center">
+
+            </include>
+
+            <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right">
@@ -26,6 +33,8 @@
                     android:layout_height="120sp"
                     android:background="#BF178487"
                     android:layout_marginTop="20sp">
+
+
 
                     <RelativeLayout
                         android:id="@+id/relay"

@@ -54,7 +54,7 @@ public class PostedJobs extends Activity {
     public static String XAPP_KEY = "X-APP-KEY";
     public static String TYPE = "type";
     String value = "HandzForHire@~";
-    String address,city,state,zipcode,id,jobId,job_id,name,date,amount,applicants,profile_image,profilename;
+    String address,city,state,zipcode,id,jobId,job_id,name,date,amount,applicants,profile_image,profilename,dlist;
     TextView profile_name;
     ListView list;
     ProgressDialog progress_dialog;
@@ -62,6 +62,7 @@ public class PostedJobs extends Activity {
     int timeout = 60000;
     RelativeLayout rating_lay;
     Button active_btn,history_btn;
+    Dialog dialog;
 
 
     @Override
@@ -69,9 +70,16 @@ public class PostedJobs extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_posted_jobs);
 
-        progress_dialog = new ProgressDialog(this);
+      /*  progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+
+        dialog = new Dialog(PostedJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         //image = (ImageView)findViewById(R.id.default_image);
         //profile = (ImageView)findViewById(R.id.profile_image);
@@ -208,7 +216,7 @@ public class PostedJobs extends Activity {
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                             System.out.println("volley error ::"+e.getMessage());
@@ -258,6 +266,8 @@ public class PostedJobs extends Activity {
                     amount = object.getString("job_payment_amount");
                     applicants = object.getString("no_of_applicants_applied");
                     job_id = object.getString("job_id");
+                    dlist=object.getString("delist");
+
                     System.out.println("ressss:name::"+name);
                     System.out.println("ressss:date::"+date);
                     System.out.println("ressss:recur::" + type);
@@ -277,6 +287,7 @@ public class PostedJobs extends Activity {
                     map.put("state",state);
                     map.put("zipcode",zipcode);
                     map.put("jobId",job_id);
+                    map.put("d_list",dlist);
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
                     ViewListAdapter adapter = new ViewListAdapter(this, job_list);
@@ -302,7 +313,7 @@ public class PostedJobs extends Activity {
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
             }
             else

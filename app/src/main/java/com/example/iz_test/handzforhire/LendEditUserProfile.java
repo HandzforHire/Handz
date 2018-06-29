@@ -2,6 +2,7 @@ package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -99,6 +101,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
     String name;
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,9 +114,15 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        progress_dialog = new ProgressDialog(this);
+       /* progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(LendEditUserProfile.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         home = (Button) findViewById(R.id.change_home_address);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
@@ -310,7 +319,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                     bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                     photo_text.setVisibility(View.INVISIBLE);
                     image.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("null")) {
                     URL url = new URL(profile_image);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
@@ -318,12 +327,12 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                     bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                     photo_text.setVisibility(View.INVISIBLE);
                     image.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 } else if (!profilename.equals("null") && profile_image.equals("")) {
                     profile_name.setText(profilename);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 } else {
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
             }
 

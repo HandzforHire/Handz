@@ -2,7 +2,6 @@ package com.example.iz_test.handzforhire;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -61,16 +60,25 @@ public class MakePayment extends Activity{
     ProgressDialog progress_dialog;
     TextView name,job_cancel;
     Button pay_employee;
+
     String employee,profile_image,profile_name,user_name,employerId,employeeId;
+    Dialog dialog;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_payment);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(MakePayment.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         image = (ImageView) findViewById(R.id.imageView);
@@ -155,11 +163,11 @@ public class MakePayment extends Activity{
         if(profile_name==null)
         {
             name.setText(user_name);
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
         else {
             name.setText(profile_name);
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
 
     }
@@ -241,11 +249,12 @@ public class MakePayment extends Activity{
             status = jResult.getString("status");
             System.out.println("jjjjjjjjjjjjjjjob:::emp_data:::" + emp_data);
             if (status.equals("success")) {
-                if(i==3){
-                    Intent main = new Intent(MakePayment.this,ProfilePage.class);
+
+                if (i == 3) {
+                    Intent main = new Intent(MakePayment.this, ProfilePage.class);
                     startActivity(main);
                     finish();
-                }else {
+                } else {
                     emp_data = jResult.getString("emp_data");
                     JSONArray array = new JSONArray(emp_data);
                     for (int n = 0; n < array.length(); n++) {
@@ -271,17 +280,48 @@ public class MakePayment extends Activity{
                         }
                         progress_dialog.dismiss();
                     }
+
+                    JSONArray array = new JSONArray(emp_data);
+                    for (int n = 0; n < array.length(); n++) {
+                        JSONObject object = (JSONObject) array.get(n);
+                        final String username = object.getString("username");
+                        profile_image = object.getString("profile_image");
+                        employee = object.getString("employee_id");
+                        final String profilename = object.getString("profile_name");
+
+                        System.out.println("ressss:username::" + username);
+                        System.out.println("ressss:profile_image::" + profile_image);
+                        System.out.println("ressss:employee_id::" + employee);
+                        System.out.println("ressss:profilename::" + profilename);
+
+                        if (profile_image.equals("")) {
+                            dialog.dismiss();
+                        } else {
+                            java.net.URL url = new URL(profile_image);
+                            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
+                            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
+                            image.setImageBitmap(bmp);
+                        }
+                        if (profilename.equals("null")) {
+                            name.setText(username);
+                        } else {
+                            name.setText(profilename);
+                        }
+                        dialog.dismiss();
+
+                    }
+                } else{
+
                 }
-            } else {
 
+            } catch(JSONException e){
+                e.printStackTrace();
+            } catch(MalformedURLException e){
+                e.printStackTrace();
+            } catch(IOException e){
+                e.printStackTrace();
             }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

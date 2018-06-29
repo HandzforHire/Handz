@@ -56,15 +56,23 @@ public class LendActiveJobs extends Activity{
     ProgressDialog progress_dialog;
     String usertype = "employee";
     String jobDate,startTime,endTime,amount,type,job_name,image;
+    Dialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lend_active_jobs);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();
+*/
+
+        dialog = new Dialog(LendActiveJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         pending_job = (Button) findViewById(R.id.btn1);
         job_history = (Button)findViewById(R.id.btn2);
@@ -185,7 +193,7 @@ public class LendActiveJobs extends Activity{
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
 */
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                         } catch (UnsupportedEncodingException error1){
@@ -279,7 +287,7 @@ public class LendActiveJobs extends Activity{
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

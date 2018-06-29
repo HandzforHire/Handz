@@ -92,15 +92,21 @@ public class SearchJob extends Activity {
             R.drawable.box_21,
 
     };
-
+Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_job);
 
-        progress_dialog = new ProgressDialog(this);
+      /*  progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(SearchJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         //permission();
 
@@ -339,7 +345,8 @@ public class SearchJob extends Activity {
 
                 CustomJobListAdapter adapter = new CustomJobListAdapter(SearchJob.this, job_title,imageId);
                 list.setAdapter(adapter);
-                progress_dialog.dismiss();
+                dialog.dismiss();
+                dialog.dismiss();
                 list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

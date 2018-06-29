@@ -2,12 +2,14 @@ package com.example.iz_test.handzforhire;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -44,15 +46,24 @@ public class JobDescription extends Activity {
     String job_id,user_id,employerId,get_name,get_start_time,get_date,get_amount,get_end_time,get_type,get_profile_name,image,profileimage,profilename;
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_description);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();
+
+*/
+
+        dialog = new Dialog(JobDescription.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         profile_image = (ImageView) findViewById(R.id.profile_image);
         default_image = (ImageView) findViewById(R.id.default_image);
@@ -191,7 +202,7 @@ public class JobDescription extends Activity {
                 if(image.equals(""))
                 {
                     default_image.setVisibility(View.VISIBLE);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
                 else
                 {
@@ -199,7 +210,7 @@ public class JobDescription extends Activity {
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     default_image.setVisibility(View.INVISIBLE);
                     profile_image.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
 
             } else {

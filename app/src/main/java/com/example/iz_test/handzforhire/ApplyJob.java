@@ -58,15 +58,22 @@ public class ApplyJob extends Activity{
     RelativeLayout rating_lay;
     String usertype = "employee";
     int timeout = 60000;
+    Dialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apply_job);
 
-        progress_dialog = new ProgressDialog(this);
+       /* progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(ApplyJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         TextView apply = (TextView) findViewById(R.id.apply);
         name = (TextView) findViewById(R.id.text1);
@@ -76,7 +83,7 @@ public class ApplyJob extends Activity{
         text = (TextView) findViewById(R.id.tv7);
         job = (TextView) findViewById(R.id.tv1);
         com = (EditText) findViewById(R.id.edit);
-   default_image = (ImageView) findViewById(R.id.default_image);
+        default_image = (ImageView) findViewById(R.id.default_image);
         profile_image = (ImageView) findViewById(R.id.profile_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
 
@@ -105,7 +112,7 @@ public class ApplyJob extends Activity{
         if(image.equals(""))
         {
             default_image.setVisibility(View.VISIBLE);
-            progress_dialog.dismiss();
+            dialog.dismiss();
             System.out.println("iiiiiiiiiiiiiiiiiiid:get_image22::" + image);
         }
         else {
@@ -123,7 +130,7 @@ public class ApplyJob extends Activity{
             }
             default_image.setVisibility(View.INVISIBLE);
             profile_image.setImageBitmap(bmp);
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
 
 
