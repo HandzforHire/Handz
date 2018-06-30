@@ -165,6 +165,7 @@ public class MakePayment extends Activity{
     }
 
     public void getJobDetails() {
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -196,12 +197,14 @@ public class MakePayment extends Activity{
     }
 
     public void cancelJob() {
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, CANCEL_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("ggggggggget:profile:" + response);
                         onResponserecieved1(response, 3);
+
                     }
                 },
                 new Response.ErrorListener() {
