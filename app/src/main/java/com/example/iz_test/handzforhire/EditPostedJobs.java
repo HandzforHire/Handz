@@ -73,12 +73,6 @@ public class EditPostedJobs extends Activity {
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(EditPostedJobs.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         image = (ImageView)findViewById(R.id.default_image);
         profile = (ImageView)findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
@@ -193,7 +187,15 @@ public class EditPostedJobs extends Activity {
         }
     }
 
-    public void listPostedJobs() {
+    public void listPostedJobs()
+    {
+
+        dialog = new Dialog(EditPostedJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -255,7 +257,7 @@ public class EditPostedJobs extends Activity {
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                             System.out.println("volley error ::"+e.getMessage());

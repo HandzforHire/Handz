@@ -2,9 +2,11 @@ package com.example.iz_test.handzforhire;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +35,7 @@ public class SwitchingSide extends Activity{
     String user_id = "70";
     SessionManager session;
     LinearLayout promo;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,14 @@ public class SwitchingSide extends Activity{
         });
     }
 
-    private void signoutmethod() {
+    private void signoutmethod()
+    {
+        dialog = new Dialog(SwitchingSide.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -121,6 +131,7 @@ public class SwitchingSide extends Activity{
                 Intent intent = new Intent(SwitchingSide.this,MainActivity.class);
                 startActivity(intent);
                 finish();
+                dialog.dismiss();
             }
 
         } catch (JSONException e) {

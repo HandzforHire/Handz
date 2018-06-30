@@ -77,12 +77,6 @@ public class ViewSearchJob extends Activity{
         progress_dialog.show();
 */
 
-        dialog = new Dialog(ViewSearchJob.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         list = (ListView) findViewById(R.id.listview);
         logo = (ImageView) findViewById(R.id.logo);
         new_search = (ImageView) findViewById(R.id.new_search);
@@ -200,7 +194,14 @@ public class ViewSearchJob extends Activity{
         });
     }
 
-    private void joblist() {
+    private void joblist()
+    {
+        dialog = new Dialog(ViewSearchJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override

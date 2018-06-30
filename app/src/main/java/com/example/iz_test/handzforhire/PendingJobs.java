@@ -69,12 +69,6 @@ import java.util.Map;
             progress_dialog.setMessage("Loading.Please wait....");
             progress_dialog.show();*/
 
-            dialog = new Dialog(PendingJobs.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.progressbar);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            dialog.show();
-
             list = (ListView) findViewById(R.id.listview);
             logo = (ImageView) findViewById(R.id.logo);
             active_jobs = (Button) findViewById(R.id.btn1);
@@ -129,7 +123,14 @@ import java.util.Map;
             });
         }
 
-        public void searchJobList() {
+        public void searchJobList()
+        {
+            dialog = new Dialog(PendingJobs.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressbar);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
+
             StringRequest stringRequest = new StringRequest(Request.Method.POST, SEARCH_URL,
                     new Response.Listener<String>() {
                         @Override

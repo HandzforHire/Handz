@@ -78,18 +78,6 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        /*progress_dialog = new ProgressDialog(this);
-        //progress_dialog.setContentView(R.layout.progressbar);
-        progress_dialog.setMessage("Loading.Please wait....");*/
-       /* pb=(ProgressBar)findViewById(R.layout.progressbar);
-        pb.setVisibility(View.VISIBLE);*/
-
-        dialog = new Dialog(ProfilePage.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         detector = new SimpleGestureFilter(this,this);
 
         Button edit_profile = (Button) findViewById(R.id.edit_user_profile);
@@ -288,6 +276,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
     public void paymentCheck()
     {
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, PAYMENT_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -367,6 +357,12 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
     public void getProfileimage()
     {
+        dialog = new Dialog(ProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override

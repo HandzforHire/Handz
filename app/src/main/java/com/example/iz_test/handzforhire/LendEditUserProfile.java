@@ -118,12 +118,6 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(LendEditUserProfile.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         home = (Button) findViewById(R.id.change_home_address);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
         update = (Button) findViewById(R.id.update_email);
@@ -254,7 +248,14 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
 */
     }
 
-    public void getProfileimage() {
+    public void getProfileimage()
+    {
+        dialog = new Dialog(LendEditUserProfile.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override

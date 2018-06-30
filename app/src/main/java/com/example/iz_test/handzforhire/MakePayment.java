@@ -74,12 +74,6 @@ public class MakePayment extends Activity{
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(MakePayment.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         ImageView logo = (ImageView) findViewById(R.id.logo);
         image = (ImageView) findViewById(R.id.imageView);
         name = (TextView) findViewById(R.id.text);
@@ -172,7 +166,14 @@ public class MakePayment extends Activity{
 
     }
 
-    public void getJobDetails() {
+    public void getJobDetails()
+    {
+        dialog = new Dialog(MakePayment.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -265,7 +266,7 @@ public class MakePayment extends Activity{
                         final String profilename = object.getString("profile_name");
 
                         if (profile_image.equals("")) {
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } else {
                             java.net.URL url = new URL(profile_image);
                             Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
@@ -278,10 +279,10 @@ public class MakePayment extends Activity{
                         } else {
                             name.setText(profilename);
                         }
-                        progress_dialog.dismiss();
+                        dialog.dismiss();
                     }
 
-                    JSONArray array = new JSONArray(emp_data);
+                    array = new JSONArray(emp_data);
                     for (int n = 0; n < array.length(); n++) {
                         JSONObject object = (JSONObject) array.get(n);
                         final String username = object.getString("username");
@@ -311,17 +312,15 @@ public class MakePayment extends Activity{
                         dialog.dismiss();
 
                     }
-                } else{
-
                 }
 
-            } catch(JSONException e){
-                e.printStackTrace();
-            } catch(MalformedURLException e){
-                e.printStackTrace();
-            } catch(IOException e){
-                e.printStackTrace();
+
             }
+        } catch (IOException e) {
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

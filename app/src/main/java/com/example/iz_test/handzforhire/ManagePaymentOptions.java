@@ -64,12 +64,6 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(ManagePaymentOptions.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         detector = new SimpleGestureFilter(this,this);
 
         add = (Button) findViewById(R.id.payment);
@@ -156,7 +150,14 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
     }
 
-    private void webservice() {
+    private void webservice()
+    {
+        dialog = new Dialog(ManagePaymentOptions.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override

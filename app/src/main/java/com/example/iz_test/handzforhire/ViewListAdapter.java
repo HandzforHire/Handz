@@ -243,6 +243,7 @@ public class ViewListAdapter extends BaseAdapter {
                     {
 
 
+
                     }
                 }
         );
@@ -264,8 +265,8 @@ public class ViewListAdapter extends BaseAdapter {
 
             if(status.equals("success"))
             {
-                Intent intent=new Intent(activity,ProfilePage.class);
-                activity.startActivity(intent);
+                /*Intent intent=new Intent(activity,ProfilePage.class);
+                activity.startActivity(intent);*/
             }
 
         } catch (JSONException e) {
@@ -278,6 +279,7 @@ public class ViewListAdapter extends BaseAdapter {
 
     private void check()
     {
+
         final String url = "http://162.144.41.156/~izaapinn/handzforhire/service/remove_job?X-APP-KEY="+value+"&delist="+dlist+"&job_id="+job_id;
 
                 JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -307,7 +309,8 @@ public class ViewListAdapter extends BaseAdapter {
         requestQueue.add(getRequest);
     }
 
-    public void onResponserecieved1(JSONObject jsonobject, int i) {
+    public void onResponserecieved1(JSONObject jsonobject, int i)
+    {
         String status = null;
 
         try {
@@ -318,7 +321,7 @@ public class ViewListAdapter extends BaseAdapter {
 
             if(status.equals("success"))
             {
-                Intent intent=new Intent(activity,ProfilePage.class);
+                Intent intent=new Intent(activity,PostedJobs.class);
                 activity.startActivity(intent);
             }
 

@@ -59,11 +59,7 @@ public class JobDescription extends Activity {
 
 */
 
-        dialog = new Dialog(JobDescription.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
+
 
         profile_image = (ImageView) findViewById(R.id.profile_image);
         default_image = (ImageView) findViewById(R.id.default_image);
@@ -123,7 +119,15 @@ public class JobDescription extends Activity {
         });
     }
 
-    public void getJobDetails() {
+    public void getJobDetails()
+    {
+
+        dialog = new Dialog(JobDescription.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override

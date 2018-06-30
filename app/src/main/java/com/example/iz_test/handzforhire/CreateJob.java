@@ -124,7 +124,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
             R.drawable.box_21,
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,11 +136,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(CreateJob.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
+
 
         layout = (LinearLayout)findViewById(R.id.relay);
         next = (Button) findViewById(R.id.next);
@@ -677,7 +672,15 @@ public class CreateJob extends Activity implements View.OnClickListener {
         }
     }
 
-    public void listCategory() {
+    public void listCategory()
+    {
+
+        dialog = new Dialog(CreateJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -801,7 +804,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH);
             int year = calendar.get(Calendar.YEAR);
-
             DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,this,year,month,day);
             datepickerdialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
             return datepickerdialog;
@@ -817,13 +819,9 @@ public class CreateJob extends Activity implements View.OnClickListener {
             //TextView textview = (TextView) getActivity().findViewById(R.id.textView1);
 
             Calendar calander2 = Calendar.getInstance();
-
             calander2.setTimeInMillis(0);
-
             calander2.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
-
             Date SelectedDate = calander2.getTime();
-
             DateFormat dateformat_US = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
             String StringDateformat_US = dateformat_US.format(SelectedDate);
             date_text.setText(StringDateformat_US);

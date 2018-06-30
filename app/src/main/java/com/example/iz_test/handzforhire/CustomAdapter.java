@@ -124,7 +124,9 @@ public class CustomAdapter extends BaseAdapter {
             return vi;
         }
 
-    private void webService() {
+    private void webService()
+    {
+
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                     new Response.Listener<String>() {
                         @Override

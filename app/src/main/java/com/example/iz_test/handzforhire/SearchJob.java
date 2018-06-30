@@ -102,12 +102,6 @@ Dialog dialog;
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(SearchJob.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         //permission();
 
        /* // Get the location manager
@@ -278,7 +272,14 @@ Dialog dialog;
         });
     }
 
-    public void listPostedJobs() {
+    public void listPostedJobs()
+    {
+        dialog = new Dialog(SearchJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -346,7 +347,7 @@ Dialog dialog;
                 CustomJobListAdapter adapter = new CustomJobListAdapter(SearchJob.this, job_title,imageId);
                 list.setAdapter(adapter);
                 dialog.dismiss();
-                dialog.dismiss();
+                //dialog.dismiss();
                 list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

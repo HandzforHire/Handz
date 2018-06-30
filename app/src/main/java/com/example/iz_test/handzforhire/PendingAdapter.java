@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -147,6 +148,11 @@ public class PendingAdapter extends BaseAdapter {
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(activity);
                 dialog.setContentView(R.layout.hire_popup);
+                Window dialogWindow = dialog.getWindow();
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                dialogWindow.setFormat(1);
+                lp.alpha = 0.7f;
+                dialogWindow.setAttributes(lp);
                 LinearLayout gre = (LinearLayout) dialog.findViewById(R.id.hiree);
                 gre.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -73,13 +73,6 @@ public class LendProfilePage extends Activity{
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-
-        dialog = new Dialog(LendProfilePage.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         handz = (ImageView) findViewById(R.id.handz);
         need_help = (Button) findViewById(R.id.need_help);
         job_list = (Button) findViewById(R.id.list_view);
@@ -246,7 +239,14 @@ public class LendProfilePage extends Activity{
         });
     }
 
-    public void getUsername() {
+    public void getUsername()
+    {
+        dialog = new Dialog(LendProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, USERNAME_URL,
                 new Response.Listener<String>() {
                     @Override
