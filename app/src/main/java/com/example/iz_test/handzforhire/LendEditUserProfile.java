@@ -44,6 +44,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -407,12 +408,15 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
             if (requestCode == SELECT_FILE) {
                 onSelectFromGalleryResult(data);
                 Uri selectedImageUri = data.getData();
-                String selectedImagePath = uriToFilename(selectedImageUri);
+             /*   String selectedImagePath = uriToFilename(selectedImageUri);
                 System.out.println("filename:gallery " + selectedImagePath);
                 new LendFileUpload(selectedImagePath);
                 System.out.println("path:camera:" + selectedImagePath);
                 filename = LendFileUpload.firstRemoteFile;
-                System.out.println("filename:gallery::" + filename);
+                System.out.println("filename:gallery::" + filename);*/
+                CropImage.activity(selectedImageUri)
+                        .start(this);
+
             } else if (requestCode == REQUEST_CAMERA) {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 photo = addBorderToBitmap(photo, 10, Color.BLACK);
@@ -427,11 +431,26 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 File finalFile = new File(getRealPathFromURI(tempUri));
                 System.out.println("ffffffffffffff:" + finalFile);
                 String capturedImagePath = String.valueOf(finalFile);
-                new LendFileUpload(capturedImagePath);
+               /* new LendFileUpload(capturedImagePath);
                 System.out.println("path:capturedImagePath:" + capturedImagePath);
                 filename = LendFileUpload.firstRemoteFile;
-                System.out.println("filename:camera::" + filename);
+                System.out.println("filename:camera::" + filename);*/
+                CropImage.activity(tempUri)
+                        .start(this);
 
+            }if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK) {
+                    Uri resultUri = result.getUri();
+                    image.setImageURI(resultUri);
+                    String selectedImagePath = uriToFilename(resultUri);
+                    System.out.println("filename:gallery "+selectedImagePath);
+                    new FileUpload(selectedImagePath,id,LendEditUserProfile.this);
+                    System.out.println("path:camera:" + selectedImagePath);
+                    filename = FileUpload.firstRemoteFile;
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                }
             }
         } else {
 

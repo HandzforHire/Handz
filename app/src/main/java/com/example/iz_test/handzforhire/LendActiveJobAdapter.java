@@ -115,6 +115,8 @@ public class LendActiveJobAdapter extends BaseAdapter{
         employee_id.setText(get_employee);
         image_text.setText(get_image);
 
+        chat.setTag(position);
+
         payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,12 +142,31 @@ public class LendActiveJobAdapter extends BaseAdapter{
         {
             @Override
             public void onClick(View view) {
-                String jobId = job_id.getText().toString();
+             /*   String jobId = job_id.getText().toString();
                 System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
                 Intent i = new Intent(activity,ChatNeed.class);
                 i.putExtra("jobId",jobId);
                 i.putExtra("channel",channel_id);
                 i.putExtra("username",get_user);
+                view.getContext().startActivity(i);*/
+
+                int pos= (int) view.getTag();
+                HashMap<String, String> items =data.get(pos);
+                String username="";
+                String  jobId =  items.get("jobId");;
+                String channel_id=items.get("channel");
+                if(items.get("profile").isEmpty())
+                    username=items.get("user");
+                else
+                    username= items.get("profile");;
+                String  userId=items.get("userId");
+
+
+                Intent i = new Intent(activity,ChatNeed.class);
+                i.putExtra("jobId",jobId);
+                i.putExtra("channel",channel_id);
+                i.putExtra("username",username);
+                i.putExtra("userId",userId);
                 view.getContext().startActivity(i);
 
             }
