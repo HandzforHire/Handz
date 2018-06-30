@@ -70,9 +70,6 @@ public class MakePayment extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_payment);
 
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
 
         dialog = new Dialog(MakePayment.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
