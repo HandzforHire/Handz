@@ -70,9 +70,6 @@ public class MakePayment extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_payment);
 
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         image = (ImageView) findViewById(R.id.imageView);
@@ -244,13 +241,11 @@ public class MakePayment extends Activity{
 
         String status = null;
         String emp_data = null;
-
         try {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             System.out.println("jjjjjjjjjjjjjjjob:::emp_data:::" + emp_data);
             if (status.equals("success")) {
-
                 if (i == 3) {
                     Intent main = new Intent(MakePayment.this, ProfilePage.class);
                     startActivity(main);
@@ -296,6 +291,7 @@ public class MakePayment extends Activity{
                         System.out.println("ressss:profilename::" + profilename);
 
                         if (profile_image.equals("")) {
+
                             dialog.dismiss();
                         } else {
                             java.net.URL url = new URL(profile_image);
@@ -310,9 +306,9 @@ public class MakePayment extends Activity{
                             name.setText(profilename);
                         }
                         dialog.dismiss();
-
                     }
                 }
+            } else {
 
 
             }
@@ -323,6 +319,8 @@ public class MakePayment extends Activity{
             e.printStackTrace();
         }
     }
+
+        
 
 
     protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor) {
