@@ -88,8 +88,7 @@
 
         <activity android:name=".MapActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            android:screenOrientation="portrait"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
 
         <activity android:name=".SwitchingSide" />
 

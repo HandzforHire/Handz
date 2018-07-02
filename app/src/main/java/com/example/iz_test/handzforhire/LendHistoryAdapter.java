@@ -101,8 +101,6 @@ public class LendHistoryAdapter extends BaseAdapter{
             employer_id.setText(get_employer);
             employee_id.setText(get_employee);
 
-            chat.setTag(position);
-
             leave_rating.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

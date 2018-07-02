@@ -1,10 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.view.Window;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -44,7 +41,7 @@ public class FileUpload{
     public static String APP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     String id;
-   // Activity activity;
+    Activity activity;
 
     /*********  work only for Dedicated IP ***********/
     static final String FTP_HOST= "162.144.41.156";
@@ -54,17 +51,12 @@ public class FileUpload{
 
     /*********  FTP PASSWORD ***********/
     static final String FTP_PASS  ="Y9+CW:K_o[";
-    Dialog dialog;
-    Activity cntxt;
-    Activity activity;
-    public FileUpload(String file,String ids, Activity cntxt){
+
+    public FileUpload(String file){
 
         System.out.println("save profile");
-        this.cntxt=cntxt;
-        activity=cntxt;
-        id=ids;
-        new UploadFile().execute(file);
 
+        new UploadFile().execute(file);
     }
 
     public class UploadFile extends AsyncTask<String, Void, Boolean> {
@@ -77,8 +69,9 @@ public class FileUpload{
 
         @Override
         protected Boolean doInBackground(String... params) {
-            //id = EditUserProfile.id;
+            id = EditUserProfile.id;
             System.out.println("iiiiiiiiiiiid:fileupload::"+id);
+
            // ss=params[0];
 
             FTPClient ftpClient = new FTPClient();
@@ -143,7 +136,6 @@ public class FileUpload{
         @Override
         protected void onPostExecute(Boolean s) {
             super.onPostExecute(s);
-            dialog.dismiss();
             if(s = true)
             {
                 imageUpload();
@@ -157,11 +149,6 @@ public class FileUpload{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            dialog = new Dialog(cntxt);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.progressbar);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            dialog.show();
             //	txt_loading.setVisibility(View.VISIBLE);
             //  showProgressDialog();
         }
@@ -190,9 +177,8 @@ public class FileUpload{
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                        /*try {
+                    public void onErrorResponse(VolleyError error) {
+                        try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
                             System.out.println("error"+jsonObject);
@@ -200,11 +186,6 @@ public class FileUpload{
                             //Handle a malformed json response
                         } catch (UnsupportedEncodingException error1){
 
-                        }*/
-                        if(volleyError.networkResponse != null && volleyError.networkResponse.data != null){
-                            VolleyError error = new VolleyError(new String(volleyError.networkResponse.data));
-                            volleyError = error;
-                            System.out.println("error" + volleyError);
                         }
                     }
                 }) {
@@ -214,13 +195,11 @@ public class FileUpload{
                 map.put(APP_KEY, value);
                 map.put(KEY_PROFILE_IMAGE, firstRemoteFile);
                 map.put(KEY_USERID, id);
-                System.out.println("id "+id);
-                System.out.println("firstRemoteFile "+firstRemoteFile);
                 return map;
             }
         };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        RequestQueue requestQueue = Volley.newRequestQueue(EditUserProfile.activity);
         requestQueue.add(stringRequest);
     }
 

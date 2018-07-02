@@ -471,7 +471,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                     image.setImageURI(resultUri);
                     String selectedImagePath = uriToFilename(resultUri);
                     System.out.println("filename:gallery "+selectedImagePath);
-                    new FileUpload(selectedImagePath,id,EditUserProfile.this);
+                    new FileUpload(selectedImagePath);
                     System.out.println("path:camera:" + selectedImagePath);
                     filename = FileUpload.firstRemoteFile;
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
