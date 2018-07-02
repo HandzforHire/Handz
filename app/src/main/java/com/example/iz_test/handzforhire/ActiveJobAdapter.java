@@ -217,22 +217,6 @@ public class ActiveJobAdapter extends BaseAdapter {
                 image1.setVisibility(View.INVISIBLE);
                 image.setImageBitmap(bmp);
 
-               /* URL url = null;
-                try {
-                    url = new URL(get_image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bmp = null;
-                try {
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                image1.setVisibility(View.INVISIBLE);
-                image.setImageBitmap(bmp);*/
             }
      return  vi;
         }

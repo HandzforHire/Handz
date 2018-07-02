@@ -87,16 +87,6 @@ public class ChatNeed extends Activity {
         sender_id = current_user_id + user_id;
         child_id = channel_id + job_id;
 
-        /*get_job_id=i.getStringExtra("jobId");
-        get_user_id=i.getStringExtra("channel");
-        get_channel_id=i.getStringExtra("username");*/
-
-        System.out.println("jobbbbbbbbbbbb" + job_id);
-        System.out.println("jobbbbbbbbbbbb" + channel_id);
-        System.out.println("jobbbbbbbbbbbb:" + get_user);
-        System.out.println("jobbbbbbbbbbbb:" + user_id);
-
-        System.out.println("User type  "+user_type);
 
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
