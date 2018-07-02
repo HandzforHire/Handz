@@ -148,11 +148,12 @@ public class PendingAdapter extends BaseAdapter {
             public void onClick(View v) {
                 final Dialog dialog = new Dialog(activity);
                 dialog.setContentView(R.layout.hire_popup);
-                Window dialogWindow = dialog.getWindow();
-                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                dialogWindow.setFormat(1);
-                lp.alpha = 0.7f;
-                dialogWindow.setAttributes(lp);
+
+                Window window = dialog.getWindow();
+                WindowManager.LayoutParams wlp = window.getAttributes();
+                wlp.gravity = Gravity.BOTTOM;
+                wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                window.setAttributes(wlp);
                 LinearLayout gre = (LinearLayout) dialog.findViewById(R.id.hiree);
                 gre.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -163,7 +164,7 @@ public class PendingAdapter extends BaseAdapter {
                     }
                 });
                 dialog.show();
-                Window window = dialog.getWindow();
+                window = dialog.getWindow();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 return;

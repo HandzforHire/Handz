@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -15,10 +16,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -26,10 +29,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.request.animation.GlideAnimation;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,10 +43,23 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ViewListAdapter extends BaseAdapter {
+public class ViewListAdapter extends BaseAdapter
+{
+
+    private static final String URL_REFRESH = Constant.SERVER_URL+"job_lists";
+    public static String KEY_USERID = "user_id";
+    public static String XAPP_KEY = "X-APP-KEY";
+    public static String TYPE = "type";
+    String address,city,state,zipcode,id,jobId,job_id,name,date,amount,applicants,profile_image,profilename,user_id;
+    TextView profile_name;
+    ListView list;
+    String type = "posted";
+    int timeout = 60000;
 
     private Activity activity;
-    String dlist,job_id;
+    String dlist;
+    Dialog dialog;
+    ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
     String value = "HandzForHire@~";
     private ArrayList<HashMap<String, String>> data;
     private static LayoutInflater inflater = null;
@@ -98,15 +117,15 @@ public class ViewListAdapter extends BaseAdapter {
         System.out.println("iiiiiiiiiiiiiiiiiiid:get_id::" + job_id);
         final String get_applicants = items.get("no_of_applicants");
         System.out.println("iiiiiiiiiiiiiiiiiiid:get_applicants::" + get_applicants);
-        final String user_id = items.get("userId");
+        user_id = items.get("userId");
         System.out.println("iiiiiiiiiiiiiiiiiiid:user_id::" + user_id);
-        final String address = items.get("address");
+        address = items.get("address");
         System.out.println("iiiiiiiiiiiiiiiiiiid:address::" + address);
         final String city = items.get("city");
         System.out.println("iiiiiiiiiiiiiiiiiiid:city::" + city);
-        final String state = items.get("state");
+        state = items.get("state");
         System.out.println("iiiiiiiiiiiiiiiiiiid:state::" + state);
-        final String zipcode = items.get("zipcode");
+        zipcode = items.get("zipcode");
         System.out.println("iiiiiiiiiiiiiiiiiiid:zipcode::" + zipcode);
         dlist= items.get("d_list");
         System.out.println("iiiiiidlist::"+dlist);
@@ -115,32 +134,36 @@ public class ViewListAdapter extends BaseAdapter {
         {
             unchecked.setVisibility(View.VISIBLE);
             checked.setVisibility(View.INVISIBLE);
-            unchecked.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    uncheck();
-
-                }
-            });
 
         }else
         {
             checked.setVisibility(View.VISIBLE);
             unchecked.setVisibility(View.INVISIBLE);
-            checked.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-
-                    check();
-
-                }
-            });
 
         }
+
+        unchecked.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                uncheck();
+
+            }
+        });
+
+        checked.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+                check();
+
+            }
+        });
+
+
         DateFormat dateInstance = SimpleDateFormat.getDateInstance();
         DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
@@ -192,7 +215,8 @@ public class ViewListAdapter extends BaseAdapter {
                     // if button is clicked, close the custom dialog
                     dialogButton.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClick(View v)
+                        {
                             dialog.dismiss();
                         }
                     });
@@ -222,7 +246,8 @@ public class ViewListAdapter extends BaseAdapter {
     private void uncheck()
     {
 
-        final String url = "http://162.144.41.156/~izaapinn/handzforhire/service/remove_job?X-APP-KEY="+value+"&delist="+dlist+"&job_id="+job_id;
+        final String url = "http://162.144.41.156/~izaapinn/handzforhire/service/remove_job?" +
+                "X-APP-KEY="+value+"&delist="+dlist+"&job_id="+job_id;
 
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>()
@@ -263,24 +288,24 @@ public class ViewListAdapter extends BaseAdapter {
 
             status = jResult.getString("status");
 
-            if(status.equals("success"))
+            if (status.equals("success"))
             {
-                /*Intent intent=new Intent(activity,ProfilePage.class);
-                activity.startActivity(intent);*/
+
+                Intent intent =new Intent(activity,PostedJobs.class);
+                activity.startActivity(intent);
+
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
     }
 
     private void check()
     {
 
-        final String url = "http://162.144.41.156/~izaapinn/handzforhire/service/remove_job?X-APP-KEY="+value+"&delist="+dlist+"&job_id="+job_id;
+        final String url = "http://162.144.41.156/~izaapinn/handzforhire/service/remove_job?X-APP-KEY="
+                +value+"&delist="+dlist+"&job_id="+job_id;
 
                 JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>()
@@ -299,6 +324,8 @@ public class ViewListAdapter extends BaseAdapter {
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
+
+
 
                     }
                 }
@@ -321,14 +348,204 @@ public class ViewListAdapter extends BaseAdapter {
 
             if(status.equals("success"))
             {
-                Intent intent=new Intent(activity,PostedJobs.class);
-                activity.startActivity(intent);
+
+                refresh();
+
+            }
+
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void refresh()
+    {
+        dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_REFRESH,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response3)
+                    {
+                        System.out.println("posted:::jobs" + response3);
+                        onResponserecieved1(response3, 2);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try {
+                            String responseBody = new String( error.networkResponse.data, "utf-8" );
+                            JSONObject jsonObject = new JSONObject( responseBody );
+                            System.out.println("volley error::: "+jsonObject);
+                            String status = jsonObject.getString("msg");
+                            if(status.equals("No Jobs Found"))
+                            {
+                                final Dialog dialog = new Dialog(activity);
+                                dialog.setContentView(R.layout.custom_dialog);
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText("No Jobs Found");
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            }
+                            else {
+
+                                final Dialog dialog = new Dialog(activity);
+                                dialog.setContentView(R.layout.custom_dialog);
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText("Login Failed.Please try again");
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            }
+                            dialog.dismiss();
+                        } catch ( JSONException e )
+                        {
+                            System.out.println("volley error ::"+e.getMessage());
+                        } catch (UnsupportedEncodingException errors){
+                            System.out.println("volley error ::"+errors.getMessage());
+                        }
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USERID, user_id);
+                params.put(TYPE,type);
+                return params;
+            }
+        };
+
+        System.out.println("usereeee"+user_id);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
+    }
+
+
+    public void onResponserecieved1(String jsonobject, int i)
+    {
+        System.out.println("response from interface"+jsonobject);
+
+        String status = null;
+        String jobList = null;
+
+        try {
+            JSONObject jResult = new JSONObject(jsonobject);
+            status = jResult.getString("status");
+            jobList = jResult.getString("job_lists");
+            System.out.println("J::list:::"+jobList);
+            if(status.equals("success"))
+            {
+                JSONArray array = new JSONArray(jobList);
+                for(int n = 0; n < array.length(); n++)
+                {
+                    JSONObject object = (JSONObject) array.get(n);
+                    name = object.getString("job_name");
+                    date = object.getString("job_date");
+                    type = object.getString("job_payment_type");
+                    amount = object.getString("job_payment_amount");
+                    applicants = object.getString("no_of_applicants_applied");
+                    job_id = object.getString("jobId");
+                    dlist=object.getString("delist");
+
+                    System.out.println("ressss::11111"+name);
+                    System.out.println("ressss:::22222"+date);
+                    System.out.println("ressss:::33333" + type);
+                    System.out.println("ressss:::44444" + amount);
+                    System.out.println("ressss:::55555" + applicants);
+                    System.out.println("ressss:::66666" + job_id);
+                    System.out.println("ressss:::77777"+user_id);
+                    System.out.println("ressss:::99999" + type);
+                    System.out.println("ressss:::88888" + address);
+                    System.out.println("ressss:::88888" + state);
+                    System.out.println("ressss:::88888" + zipcode);
+                    System.out.println("ressss:::88888" + dlist);
+
+
+                    HashMap<String,String> map = new HashMap<String,String>();
+                    map.put("name", name);
+                    map.put("date", date);
+                    map.put("type", type);
+                    map.put("amount", amount);
+                    map.put("no_of_applicants",applicants);
+                    map.put("userId",user_id);
+                    map.put("address",address);
+                    map.put("city",city);
+                    map.put("state",state);
+                    map.put("zipcode",zipcode);
+                    map.put("jobId",job_id);
+                    map.put("d_list",dlist);
+
+                    job_list.add(map);
+                    System.out.println("job_list:::" + job_list);
+                    ViewListAdapter adapter = new ViewListAdapter(activity, job_list);
+                    list.setAdapter(adapter);
+                    ViewListAdapter arrayAdapter = new ViewListAdapter(activity, job_list)
+                    {
+                        @Override
+                        public View getView(int position, View convertView, ViewGroup parent){
+
+                            View view = super.getView(position,convertView,parent);
+                            if(position %2 == 1)
+                            {
+
+                                view.setBackgroundColor(Color.parseColor("#BF178487"));
+                            }
+                            else
+                            {
+
+                                view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
+                            }
+                            return view;
+                        }
+                    };
+
+                    list.setAdapter(arrayAdapter);
+                    dialog.dismiss();
+                }
+
+            }
+            else
+            {
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
 }
+
+
 

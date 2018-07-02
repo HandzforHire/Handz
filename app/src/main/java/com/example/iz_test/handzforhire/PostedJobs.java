@@ -244,7 +244,8 @@ public class PostedJobs extends Activity {
         requestQueue.add(stringRequest);
     }
 
-    public void onResponserecieved1(String jsonobject, int i) {
+    public void onResponserecieved1(String jsonobject, int i)
+    {
         System.out.println("response from interface"+jsonobject);
 
         String status = null;
