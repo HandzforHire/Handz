@@ -30,6 +30,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -131,7 +134,10 @@ public class ApplyJob extends Activity{
             }
             default_image.setVisibility(View.INVISIBLE);
             profile_image.setImageBitmap(bmp);*/
-            Glide.with(ApplyJob.this).load(image).error(R.drawable.default_profile).into(default_image);
+            //Glide.with(ApplyJob.this).load(image).into(default_image);
+            profile_image.setVisibility(View.INVISIBLE);
+            Glide.with(ApplyJob.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(default_image);
+
             dialog.dismiss();
         }
 

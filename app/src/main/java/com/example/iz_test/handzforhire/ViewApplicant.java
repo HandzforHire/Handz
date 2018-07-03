@@ -27,6 +27,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -171,7 +174,10 @@ public class ViewApplicant extends Activity {
                 image.setVisibility(View.INVISIBLE);
                 profile.setImageBitmap(bmp);*/
                 //profile_name.setText(user_name);
-                Glide.with(ViewApplicant.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                //Glide.with(ViewApplicant.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                profile.setVisibility(View.INVISIBLE);
+                Glide.with(ViewApplicant.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
             }
 
         } catch (JSONException e) {

@@ -38,6 +38,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -475,10 +478,14 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                     /* Matrix matrix = new Matrix();
                     matrix.postRotate(90);
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
-                    image.setVisibility(View.INVISIBLE);
+                   // image.setVisibility(View.INVISIBLE);
                    // profile.setImageBitmap(bmp);
-                   Glide.with(ProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
-                    dialog.dismiss();
+                   // profile.setVisibility(View.VISIBLE);
+                  /* Glide.with(ProfilePage.this).load(profile_image).apply(RequestOptions.bitmapTransform(
+                           new RoundedCornersTransformation(ProfilePage.this, Glideconstants.sCorner, Glideconstants.sColor, Glideconstants.sBorder))).into(image);
+                   */
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+                  dialog.dismiss();
 
                 }
                 else if(!profile_image.equals("")&&profilename.equals("null"))
@@ -492,7 +499,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
                     //image.setVisibility(View.INVISIBLE);
                     //profile.setImageBitmap(bmp);
-                    Glide.with(ProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+                    // Glide.with(ProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     dialog.dismiss();
                 }
                 else if(!profilename.equals("null")&&profile_image.equals(""))

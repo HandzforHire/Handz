@@ -30,6 +30,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -157,7 +160,9 @@ public class MakePayment extends Activity{
                 bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                 image.setImageBitmap(bmp);
             }*/
-            Glide.with(MakePayment.this).load(profile_image).error(R.drawable.default_profile).into(image);
+           // Glide.with(MakePayment.this).load(profile_image).error(R.drawable.default_profile).into(image);
+            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
         }
         if(profile_name==null)
         {
@@ -269,8 +274,9 @@ public class MakePayment extends Activity{
                             bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
                             bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                             image.setImageBitmap(bmp);*/
+                            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
-                            Glide.with(MakePayment.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                            //Glide.with(MakePayment.this).load(profile_image).error(R.drawable.default_profile).into(image);
                         }
                         if (profilename.equals("null")) {
                             name.setText(username);

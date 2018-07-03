@@ -21,6 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -76,10 +79,8 @@ public class ActiveJobAdapter extends BaseAdapter {
             HashMap<String, String> items = new HashMap<String, String>();
             items = data.get(position);
             final String get_name = items.get("name");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
             final String get_image = items.get("image");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_image::" + get_image);
-            final String get_profile = items.get("profile");
+           final String get_profile = items.get("profile");
             System.out.println("iiiiiiiiiiiiiiiiiiid:get_profile::" + get_profile);
             final String get_user = items.get("user");
             System.out.println("iiiiiiiiiiiiiiiiiiid:get_user::" + get_user);
@@ -218,7 +219,10 @@ public class ActiveJobAdapter extends BaseAdapter {
                 bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                 image1.setVisibility(View.INVISIBLE);
                 image.setImageBitmap(bmp);*/
-                Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
+               // Glide.with(activity).load(get_image).into(image1);
+
+                Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
+
             }
      return  vi;
         }

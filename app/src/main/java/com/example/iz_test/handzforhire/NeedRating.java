@@ -18,6 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -83,7 +86,10 @@ public class NeedRating extends Activity{
             bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
             default_image.setVisibility(View.INVISIBLE);
             profile.setImageBitmap(bmp);*/
-            Glide.with(NeedRating.this).load(image).error(R.drawable.default_profile).into(default_image);
+           // Glide.with(NeedRating.this).load(image).error(R.drawable.default_profile).into(default_image);
+            profile.setVisibility(View.GONE);
+            Glide.with(NeedRating.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(NeedRating.this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(default_image);
+
         }
 
         nxt.setOnClickListener(new View.OnClickListener()

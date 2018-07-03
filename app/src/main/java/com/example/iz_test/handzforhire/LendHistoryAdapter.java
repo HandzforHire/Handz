@@ -20,6 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -172,7 +175,9 @@ public class LendHistoryAdapter extends BaseAdapter{
                     image1.setVisibility(View.INVISIBLE);
                     image.setImageBitmap(bmp);
                 }*/
-                Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
+                //Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
+                Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
+
             }
 
 

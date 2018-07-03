@@ -104,25 +104,32 @@ public class Adapter extends BaseAdapter {
         username = worldpopulationlist.get(position).getUsername();
 
         chat.setTag(position);
+        leave_rating_btn.setTag(position);
 
         leave_rating_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jobId = job_id.getText().toString();
-                System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+
+                int pos= (int) v.getTag();
+                WorldPopulation item=worldpopulationlist.get(pos);
+
+                if(item.getProfilename().isEmpty())
+                    username=item.getUsername();
+                else
+                    username=item.getProfilename();
+
+               /* jobId = job_id.getText().toString();
                 String employerId = employer_id.getText().toString();
-                System.out.println("jjjjjjjjjjjj:jobhistory:employerId::"+employerId);
                 String employeeId = employee_id.getText().toString();
-                System.out.println("jjjjjjjjjjjj:jobhistory:employeeId::"+employeeId);
-                String profile_image = image_text.getText().toString();
-                System.out.println("jjjjjjjjjjjj:jobhistory:profile_image::"+profile_image);
+                String profile_image = image_text.getText().toString();*/
+
                 Intent intent = new Intent(mContext, NeedRating.class);
-                intent.putExtra("jobId",jobId);
-                intent.putExtra("employer_id",employerId);
-                intent.putExtra("employee_id",employeeId);
-                intent.putExtra("user_id",userId);
-                intent.putExtra("image",profile_image);
-                intent.putExtra("profilename",profile_name);
+                intent.putExtra("jobId", item.getJobId());
+                intent.putExtra("employer_id",item.getEmployerId());
+                intent.putExtra("employee_id",item.getEmployeeId());
+                intent.putExtra("user_id",item.getUserid());
+                intent.putExtra("image",item.getImage());
+                intent.putExtra("profilename",username);
                 v.getContext().startActivity(intent);
             }
         });

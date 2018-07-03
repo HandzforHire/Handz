@@ -34,6 +34,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -369,7 +372,9 @@ public class LendProfilePage extends Activity{
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
                     image.setVisibility(View.INVISIBLE);
                     profile.setImageBitmap(bmp);*/
-                    Glide.with(LendProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                    //Glide.with(LendProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                    profile.setVisibility(View.INVISIBLE);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                     dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("")) {
                     /*URL url = new URL(profile_image);
@@ -381,7 +386,10 @@ public class LendProfilePage extends Activity{
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
                     image.setVisibility(View.INVISIBLE);
                     profile.setImageBitmap(bmp);*/
-                    Glide.with(LendProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                    //Glide.with(LendProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                    profile.setVisibility(View.INVISIBLE);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
                     dialog.dismiss();
                 } else if (!profilename.equals("") && profile_image.equals("")) {
                     profile_name.setText(profilename);
