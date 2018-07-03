@@ -17,6 +17,8 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -65,7 +67,7 @@ public class NeedRating extends Activity{
             default_image.setVisibility(View.VISIBLE);
         }
         else {
-            URL url = null;
+            /*URL url = null;
             try {
                 url = new URL(image);
             } catch (MalformedURLException e) {
@@ -80,7 +82,8 @@ public class NeedRating extends Activity{
             bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
             bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
             default_image.setVisibility(View.INVISIBLE);
-            profile.setImageBitmap(bmp);
+            profile.setImageBitmap(bmp);*/
+            Glide.with(NeedRating.this).load(image).error(R.drawable.default_profile).into(default_image);
         }
 
         nxt.setOnClickListener(new View.OnClickListener()

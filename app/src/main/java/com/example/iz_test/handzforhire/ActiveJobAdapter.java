@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -192,7 +194,7 @@ public class ActiveJobAdapter extends BaseAdapter {
                 System.out.println("iiiiiiiiiiiiiiiiiiid:get_image22::" + get_image);
             }
             else {
-                System.out.println("iiiiiiiiiiiiiiiiiiid:get_image33::" + get_image);
+          /*      System.out.println("iiiiiiiiiiiiiiiiiiid:get_image33::" + get_image);
 
                 URL url = null;
                 try {
@@ -215,8 +217,8 @@ public class ActiveJobAdapter extends BaseAdapter {
                 bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
                 bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                 image1.setVisibility(View.INVISIBLE);
-                image.setImageBitmap(bmp);
-
+                image.setImageBitmap(bmp);*/
+                Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
             }
      return  vi;
         }

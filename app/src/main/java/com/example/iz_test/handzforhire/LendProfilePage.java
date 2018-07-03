@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -359,26 +360,28 @@ public class LendProfilePage extends Activity{
                 rating_value.setText(employee_rating);
                 if (!profile_image.equals("") && !profilename.equals("")) {
                     profile_name.setText(profilename);
-                    URL url = new URL(profile_image);
+                  /*  URL url = new URL(profile_image);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
                     bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    /* Matrix matrix = new Matrix();
+                    *//* Matrix matrix = new Matrix();
                     matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
                     image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);
+                    profile.setImageBitmap(bmp);*/
+                    Glide.with(LendProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("")) {
-                    URL url = new URL(profile_image);
+                    /*URL url = new URL(profile_image);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
                     bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    /* Matrix matrix = new Matrix();
+                    *//* Matrix matrix = new Matrix();
                     matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
                     image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);
+                    profile.setImageBitmap(bmp);*/
+                    Glide.with(LendProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     dialog.dismiss();
                 } else if (!profilename.equals("") && profile_image.equals("")) {
                     profile_name.setText(profilename);
@@ -391,11 +394,11 @@ public class LendProfilePage extends Activity{
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        }/* catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public static Bitmap rotateImageIfRequired(Bitmap img, Context context, Uri selectedImage) throws IOException {

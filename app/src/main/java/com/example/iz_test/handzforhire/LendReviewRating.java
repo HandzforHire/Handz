@@ -31,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +102,7 @@ public class LendReviewRating extends Activity {
             image1.setVisibility(View.VISIBLE);
         }
         else {
-            java.net.URL url = null;
+          /*  java.net.URL url = null;
             try {
                 url = new URL(profile_image);
             } catch (MalformedURLException e) {
@@ -116,7 +117,8 @@ public class LendReviewRating extends Activity {
             bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
             bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
             image1.setVisibility(View.INVISIBLE);
-            image.setImageBitmap(bmp);
+            image.setImageBitmap(bmp);*/
+            Glide.with(LendReviewRating.this).load(profile_image).error(R.drawable.default_profile).into(image1);
         }
 
 

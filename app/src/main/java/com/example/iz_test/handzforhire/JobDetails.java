@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -172,10 +173,10 @@ public class JobDetails extends Activity{
 
                 if(image.equals(""))
                 {
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
                 else {
-                    URL url = null;
+                   /* URL url = null;
                     try {
                         url = new URL(image);
                     } catch (MalformedURLException e) {
@@ -190,7 +191,8 @@ public class JobDetails extends Activity{
                     bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
                     bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                     default_image.setVisibility(View.INVISIBLE);
-                    profile_image.setImageBitmap(bmp);
+                    profile_image.setImageBitmap(bmp);*/
+                    Glide.with(JobDetails.this).load(profile_image).error(R.drawable.default_profile).into(default_image);
                     dialog.dismiss();
                 }
 

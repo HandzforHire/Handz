@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,7 +119,7 @@ public class NeedComments extends Activity{
             default_image.setVisibility(View.VISIBLE);
         }
         else {
-            java.net.URL url = null;
+           /* java.net.URL url = null;
             try {
                 url = new URL(image);
             } catch (MalformedURLException e) {
@@ -133,7 +134,8 @@ public class NeedComments extends Activity{
             bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
             bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
             default_image.setVisibility(View.INVISIBLE);
-            profile.setImageBitmap(bmp);
+            profile.setImageBitmap(bmp);*/
+            Glide.with(NeedComments.this).load(image).error(R.drawable.default_profile).into(default_image);
         }
 
         b1.setOnClickListener(new View.OnClickListener() {

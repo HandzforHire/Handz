@@ -272,6 +272,7 @@ public class ChatNeed extends Activity {
     {
 
         ImageView img=new ImageView(ChatNeed.this);
+        System.out.println("url "+url);
         Glide.with(ChatNeed.this).load(url).into(img);
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp2.setMargins(0, 10, 0, 0);

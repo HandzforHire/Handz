@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -182,11 +183,12 @@ public class PayEmployee1 extends Activity{
                         progress_dialog.dismiss();
                     }
                     else {
-                        java.net.URL url = new URL(profile_image);
+                       /* java.net.URL url = new URL(profile_image);
                         Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                         bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
                         bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                        image.setImageBitmap(bmp);
+                        image.setImageBitmap(bmp);*/
+                        Glide.with(PayEmployee1.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     }
                     if (profilename.equals("null")) {
                         name.setText(username);
@@ -202,11 +204,11 @@ public class PayEmployee1 extends Activity{
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } /*catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void payment() {

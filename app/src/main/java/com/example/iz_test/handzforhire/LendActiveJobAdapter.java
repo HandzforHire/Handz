@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -156,7 +158,7 @@ public class LendActiveJobAdapter extends BaseAdapter{
             image1.setVisibility(View.VISIBLE);
         }
         else {
-            URL url = null;
+            /*URL url = null;
             try {
                 url = new URL(get_image);
             } catch (MalformedURLException e) {
@@ -171,7 +173,8 @@ public class LendActiveJobAdapter extends BaseAdapter{
             bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
             bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
             image1.setVisibility(View.INVISIBLE);
-            image.setImageBitmap(bmp);
+            image.setImageBitmap(bmp);*/
+            Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
         }
 
         return vi;

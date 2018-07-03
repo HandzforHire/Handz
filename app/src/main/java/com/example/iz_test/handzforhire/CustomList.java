@@ -14,6 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -83,7 +85,7 @@ public class CustomList extends BaseAdapter {
             def.setVisibility(View.VISIBLE);
         }
         else {
-            URL url = null;
+         /*   URL url = null;
             try {
                 url = new URL(get_image);
             } catch (MalformedURLException e) {
@@ -98,7 +100,8 @@ public class CustomList extends BaseAdapter {
             bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
             bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
             def.setVisibility(View.INVISIBLE);
-            profile.setImageBitmap(bmp);
+            profile.setImageBitmap(bmp);*/
+            Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(def);
         }
 
         return vi;
