@@ -7,7 +7,7 @@
     android:weightSum="1">
 
     <LinearLayout
-        android:id="@+id/ref"
+        android:id="@+id/refu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FF1919"

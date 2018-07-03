@@ -62,6 +62,8 @@ public class PendingAdapter extends BaseAdapter {
     private ArrayList<HashMap<String, String>> data;
     private static LayoutInflater inflater = null;
     private LayoutInflater layoutInflater;
+    LinearLayout lig,lir,lih;
+    
 
 
     public PendingAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
@@ -83,7 +85,7 @@ public class PendingAdapter extends BaseAdapter {
         return position;
     }
 
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
         View vi = convertView;
 
         if (convertView == null)
@@ -97,80 +99,74 @@ public class PendingAdapter extends BaseAdapter {
         ImageView gray = (ImageView) vi.findViewById(R.id.gray);
         ImageView red = (ImageView) vi.findViewById(R.id.red);
         ImageView green = (ImageView) vi.findViewById(R.id.green);
+        final LinearLayout lig=(LinearLayout)vi.findViewById(R.id.hiree);
+        final LinearLayout lir=(LinearLayout)vi.findViewById(R.id.refu);
+        final LinearLayout lih=(LinearLayout)vi.findViewById(R.id.hol);
 
-        gray.setOnClickListener(new View.OnClickListener() {
+
+        gray.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.hold_popup);
-                LinearLayout gry = (LinearLayout) dialog.findViewById(R.id.hol);
-                gry.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+
+                lih.setVisibility(View.VISIBLE);
+                lih.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
+
+                        lih.setVisibility(View.GONE);
 
                     }
                 });
 
-                dialog.show();
-                Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                return;
+
             }
         });
-        red.setOnClickListener(new View.OnClickListener() {
+        red.setOnClickListener(new View.OnClickListener()
+        {
+
             @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.refuse_popup);
-                LinearLayout re = (LinearLayout) dialog.findViewById(R.id.ref);
-                re.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+
+                lir.setVisibility(View.VISIBLE);
+                lir.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View v)
+                    {
 
                         refusee();
 
-                    }
-                });
-                dialog.dismiss();
-                dialog.show();
-                Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
-            }
-
-        });
-        green.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.hire_popup);
-
-                Window window = dialog.getWindow();
-                WindowManager.LayoutParams wlp = window.getAttributes();
-                wlp.gravity = Gravity.BOTTOM;
-                wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                window.setAttributes(wlp);
-                LinearLayout gre = (LinearLayout) dialog.findViewById(R.id.hiree);
-                gre.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        dialog.dismiss();
 
                     }
                 });
-                dialog.show();
-                window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
 
-            }
+        }
         });
+
+
+
+
+       green.setOnClickListener(new View.OnClickListener()
+       {
+           @Override
+           public void onClick(View v)
+           {
+
+               lig.setVisibility(View.VISIBLE);
+               lig.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v)
+                   {
+                       lig.setVisibility(View.GONE);
+                   }
+               });
+
+           }
+       });
+
 
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
@@ -194,7 +190,7 @@ public class PendingAdapter extends BaseAdapter {
 
         } else if (get_status.equals("Hold")) {
             gray.setVisibility(View.VISIBLE);
-            green.setVisibility(View.INVISIBLE);
+           green.setVisibility(View.INVISIBLE);
             red.setVisibility(View.INVISIBLE);
 
         } else {
@@ -245,7 +241,8 @@ public class PendingAdapter extends BaseAdapter {
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(VolleyError error)
+                    {
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -272,7 +269,6 @@ public class PendingAdapter extends BaseAdapter {
                 params.put(KEY_USERTYPE, type);
                 return params;
             }
-
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(activity);
@@ -280,7 +276,8 @@ public class PendingAdapter extends BaseAdapter {
 
     }
 
-    private void onResponserecieved(String response, int i) {
+    private void onResponserecieved(String response, int i)
+    {
         String status = null;
 
         try {
@@ -297,7 +294,6 @@ public class PendingAdapter extends BaseAdapter {
         }
 
     }
-
 
     private void Reload()
     {
@@ -346,7 +342,7 @@ public class PendingAdapter extends BaseAdapter {
         RequestQueue requestQueue = Volley.newRequestQueue(activity);
         requestQueue.add(stringRequest);
     }
-    }
+}
 
 
 

@@ -53,8 +53,8 @@ import java.util.Map;
         String user_id,address,city,state,zipcode,cat_type,cat_id,job_cat_name,name,date,amount,jobId;
         String emplrid,empleid;
 
-        String jobname,jobdate,pay,esti,jobstatus;
-        ImageView logo;
+        String jobname,jobdate,pay,esti,jobstatus,get_status;
+        ImageView logo,green,gray,red;
         ProgressDialog progress_dialog;
         String type = "applied";
         Button active_jobs,job_history;
@@ -73,6 +73,9 @@ import java.util.Map;
             logo = (ImageView) findViewById(R.id.logo);
             active_jobs = (Button) findViewById(R.id.btn1);
             job_history = (Button) findViewById(R.id.btn2);
+            green = (ImageView)findViewById(R.id.green);
+            gray = (ImageView) findViewById(R.id.gray);
+            red = (ImageView) findViewById(R.id.red);
 
             Intent i = getIntent();
             user_id = i.getStringExtra("userId");
@@ -88,6 +91,7 @@ import java.util.Map;
             System.out.println("11iiiiiiiiiiiiiiiiiiiii:cat_type::" + cat_type);
 
             searchJobList();
+
 
             logo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -202,13 +206,11 @@ import java.util.Map;
             {
                 JSONObject result = new JSONObject(response);
                 status = result.getString("status");
-                if(status.equals("success"))
-                {
+                if(status.equals("success")) {
                     String job = result.getString("job_lists");
-                    System.out.println("jjjjjjjjjjjjjjjob:"+job);
+                    System.out.println("jjjjjjjjjjjjjjjob:" + job);
                     JSONArray array = new JSONArray(job);
-                    for(int n = 0; n < array.length(); n++)
-                    {
+                    for (int n = 0; n < array.length(); n++) {
                         JSONObject object = (JSONObject) array.get(n);
                         String category = object.getString("job_category");
                         System.out.println("ressss::category:" + category);
@@ -217,8 +219,10 @@ import java.util.Map;
                         esti = object.getString("job_payment_type");
                         pay = object.getString("job_estimated_payment");
                         jobId = object.getString("id");
-                        jobstatus=object.getString("job_status");
-                        emplrid=object.getString("employer_id");
+                        jobstatus = object.getString("job_status");
+                        emplrid = object.getString("employer_id");
+                        get_status = object.getString("status");
+
 
                         /*System.out.println("0000"+jobname);
                         System.out.println("0000"+jobdate);
@@ -262,16 +266,28 @@ import java.util.Map;
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
                     dialog.dismiss();
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    list.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                    {
+
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                               /* view.setSelected(true);
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                        {
+
+                               /*view.setSelected(true);
                                 String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
                                 System.out.println("ssssssssssselected:job_id:" + job_id);
                                 Intent i = new Intent(PendingJobs.this,JobDescription.class);
                                 i.putExtra("userId",user_id);
                                 i.putExtra("jobId",job_id);
-                                startActivity(i);*/
+                                startActivity(i);
+
+
+*/
+                                Intent intent = new Intent(PendingJobs.this,JobDescription.class);
+                                startActivity(intent);
+
+
+
                         }
                     });
                 }

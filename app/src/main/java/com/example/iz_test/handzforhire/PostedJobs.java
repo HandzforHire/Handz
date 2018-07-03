@@ -297,23 +297,22 @@ public class PostedJobs extends Activity {
                     ViewListAdapter arrayAdapter = new ViewListAdapter(this, job_list){
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent){
-                            // Get the current item from ListView
+
                             View view = super.getView(position,convertView,parent);
                             if(position %2 == 1)
                             {
-                                // Set a background color for ListView regular row/item
+
                                 view.setBackgroundColor(Color.parseColor("#BF178487"));
                             }
                             else
                             {
-                                // Set the background color for alternate row/item
+
                                 view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
                             }
                             return view;
                         }
                     };
 
-                    // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
                     dialog.dismiss();
                 }

@@ -378,10 +378,13 @@ public class ViewListAdapter extends BaseAdapter
                         onResponserecieved1(response3, 2);
                     }
                 },
-                new Response.ErrorListener() {
+                new Response.ErrorListener()
+                {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        try {
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        try
+                        {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
                             System.out.println("volley error::: "+jsonObject);
@@ -393,9 +396,11 @@ public class ViewListAdapter extends BaseAdapter
                                 TextView text = (TextView) dialog.findViewById(R.id.text);
                                 text.setText("No Jobs Found");
                                 Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                dialogButton.setOnClickListener(new View.OnClickListener()
+                                {
                                     @Override
-                                    public void onClick(View v) {
+                                    public void onClick(View v)
+                                    {
                                         dialog.dismiss();
                                     }
                                 });
@@ -405,16 +410,19 @@ public class ViewListAdapter extends BaseAdapter
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            else {
+                            else
+                                {
 
                                 final Dialog dialog = new Dialog(activity);
                                 dialog.setContentView(R.layout.custom_dialog);
                                 TextView text = (TextView) dialog.findViewById(R.id.text);
                                 text.setText("Login Failed.Please try again");
                                 Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                dialogButton.setOnClickListener(new View.OnClickListener()
+                                {
                                     @Override
-                                    public void onClick(View v) {
+                                    public void onClick(View v)
+                                    {
                                         dialog.dismiss();
                                     }
                                 });
@@ -451,7 +459,6 @@ public class ViewListAdapter extends BaseAdapter
         requestQueue.add(stringRequest);
     }
 
-
     public void onResponserecieved1(String jsonobject, int i)
     {
         System.out.println("response from interface"+jsonobject);
@@ -463,89 +470,24 @@ public class ViewListAdapter extends BaseAdapter
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             jobList = jResult.getString("job_lists");
-            System.out.println("J::list:::"+jobList);
+            System.out.println("jjjjjjjjjjjjjjjob:::list:::"+jobList);
             if(status.equals("success"))
             {
-                JSONArray array = new JSONArray(jobList);
-                for(int n = 0; n < array.length(); n++)
-                {
-                    JSONObject object = (JSONObject) array.get(n);
-                    name = object.getString("job_name");
-                    date = object.getString("job_date");
-                    type = object.getString("job_payment_type");
-                    amount = object.getString("job_payment_amount");
-                    applicants = object.getString("no_of_applicants_applied");
-                    job_id = object.getString("jobId");
-                    dlist=object.getString("delist");
-
-                    System.out.println("ressss::11111"+name);
-                    System.out.println("ressss:::22222"+date);
-                    System.out.println("ressss:::33333" + type);
-                    System.out.println("ressss:::44444" + amount);
-                    System.out.println("ressss:::55555" + applicants);
-                    System.out.println("ressss:::66666" + job_id);
-                    System.out.println("ressss:::77777"+user_id);
-                    System.out.println("ressss:::99999" + type);
-                    System.out.println("ressss:::88888" + address);
-                    System.out.println("ressss:::88888" + state);
-                    System.out.println("ressss:::88888" + zipcode);
-                    System.out.println("ressss:::88888" + dlist);
-
-
-                    HashMap<String,String> map = new HashMap<String,String>();
-                    map.put("name", name);
-                    map.put("date", date);
-                    map.put("type", type);
-                    map.put("amount", amount);
-                    map.put("no_of_applicants",applicants);
-                    map.put("userId",user_id);
-                    map.put("address",address);
-                    map.put("city",city);
-                    map.put("state",state);
-                    map.put("zipcode",zipcode);
-                    map.put("jobId",job_id);
-                    map.put("d_list",dlist);
-
-                    job_list.add(map);
-                    System.out.println("job_list:::" + job_list);
-                    ViewListAdapter adapter = new ViewListAdapter(activity, job_list);
-                    list.setAdapter(adapter);
-                    ViewListAdapter arrayAdapter = new ViewListAdapter(activity, job_list)
-                    {
-                        @Override
-                        public View getView(int position, View convertView, ViewGroup parent){
-
-                            View view = super.getView(position,convertView,parent);
-                            if(position %2 == 1)
-                            {
-
-                                view.setBackgroundColor(Color.parseColor("#BF178487"));
-                            }
-                            else
-                            {
-
-                                view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
-                            }
-                            return view;
-                        }
-                    };
-
-                    list.setAdapter(arrayAdapter);
-                    dialog.dismiss();
-                }
+                dialog.dismiss();
 
             }
-            else
-            {
-            }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (JSONException e1)
+        {
+            e1.printStackTrace();
         }
-
     }
 
+
+
 }
+
+
 
 
 
