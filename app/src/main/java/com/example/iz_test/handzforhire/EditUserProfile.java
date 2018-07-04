@@ -45,6 +45,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -107,11 +111,6 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
-
         dialog = new Dialog(EditUserProfile.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
@@ -325,28 +324,17 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 if(!profile_image.equals("")&&!profilename.equals("null"))
                 {
                     profile_name.setText(profilename);
-                    URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    /* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
                     photo_text.setVisibility(View.INVISIBLE);
-                    image.setImageBitmap(bmp);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
                     dialog.dismiss();
                 }
                 else if(!profile_image.equals("")&&profilename.equals("null"))
                 {
-                    URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    /* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
+
                     photo_text.setVisibility(View.INVISIBLE);
-                    image.setImageBitmap(bmp);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
                     dialog.dismiss();
                 }
                 else if(!profilename.equals("null")&&profile_image.equals(""))
@@ -362,11 +350,11 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } /*catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void selectImage() {

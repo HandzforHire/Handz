@@ -25,6 +25,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,7 +69,7 @@ public class LendComments extends Activity
 
     EditText comment;
     String type = "employer";
-    ImageView profile,default_image;
+    ImageView profile;
     RelativeLayout rating_lay;
     TextView pn_lend;
 
@@ -79,7 +83,6 @@ public class LendComments extends Activity
         t3 = (TextView) findViewById(R.id.text3);
         comment = (EditText) findViewById(R.id.edit_text);
         profile = (ImageView) findViewById(R.id.profile_image);
-        default_image = (ImageView) findViewById(R.id.default_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
         pn_lend=(TextView)findViewById(R.id.text1);
 
@@ -105,25 +108,11 @@ public class LendComments extends Activity
 
         if(image==null)
         {
-            default_image.setVisibility(View.VISIBLE);
+
         }
         else {
-            java.net.URL url = null;
-            try {
-                url = new URL(image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            default_image.setVisibility(View.INVISIBLE);
-            profile.setImageBitmap(bmp);
+            Glide.with(this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
+
         }
 
         b1.setOnClickListener(new View.OnClickListener()

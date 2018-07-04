@@ -22,6 +22,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +39,7 @@ import java.util.Map;
 
 public class JobDescription extends Activity {
 
-    ImageView profile_image, default_image,close;
+    ImageView profile_image,close;
     TextView profile_name, description, date, time, amount, type,name,apply;
     private static final String URL = Constant.SERVER_URL+"job_detail_view";
     public static String APP_KEY = "X-APP-KEY";
@@ -66,7 +70,6 @@ public class JobDescription extends Activity {
         dialog.show();
 
         profile_image = (ImageView) findViewById(R.id.profile_image);
-        default_image = (ImageView) findViewById(R.id.default_image);
         profile_name = (TextView) findViewById(R.id.text1);
         description = (TextView) findViewById(R.id.description_text);
         name = (TextView) findViewById(R.id.job_name_text);
@@ -201,15 +204,12 @@ public class JobDescription extends Activity {
                 name.setText(get_name);
                 if(image.equals(""))
                 {
-                    default_image.setVisibility(View.VISIBLE);
                     dialog.dismiss();
                 }
                 else
                 {
-                    URL url = new URL(image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    default_image.setVisibility(View.INVISIBLE);
-                    profile_image.setImageBitmap(bmp);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
+
                     dialog.dismiss();
                 }
 
@@ -217,10 +217,10 @@ public class JobDescription extends Activity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        }/* catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

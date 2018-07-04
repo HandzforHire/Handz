@@ -29,6 +29,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,29 +137,10 @@ public class MakePayment extends Activity{
         });
 
         if(profile_image==null) {
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
         else {
-            java.net.URL url = null;
-            try {
-                url = new URL(profile_image);
-
-                System.out.println("url "+profile_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                if(url!=null)
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(bmp!=null) {
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                image.setImageBitmap(bmp);
-            }
+            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
         }
         if(profile_name==null)
         {
@@ -262,11 +247,7 @@ public class MakePayment extends Activity{
                         if (profile_image.equals("")) {
                             dialog.dismiss();
                         } else {
-                            java.net.URL url = new URL(profile_image);
-                            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                            image.setImageBitmap(bmp);
+                            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                         }
                         if (profilename.equals("null")) {
                             name.setText(username);
@@ -282,13 +263,13 @@ public class MakePayment extends Activity{
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } /*catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
+*/
     }
 
 

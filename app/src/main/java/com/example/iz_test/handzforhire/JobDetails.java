@@ -24,6 +24,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +41,7 @@ import java.util.Map;
 
 public class JobDetails extends Activity{
 
-    ImageView profile_image, default_image,close;
+    ImageView profile_image,close;
     TextView profile_name, description, date, time, amount, type,name;
     private static final String URL = Constant.SERVER_URL+"job_detail_view";
     public static String APP_KEY = "X-APP-KEY";
@@ -65,7 +69,6 @@ public class JobDetails extends Activity{
         dialog.show();
 
         profile_image = (ImageView) findViewById(R.id.profile_image);
-        default_image = (ImageView) findViewById(R.id.default_image);
         profile_name = (TextView) findViewById(R.id.text1);
         description = (TextView) findViewById(R.id.description_text);
         name = (TextView) findViewById(R.id.job_name_text);
@@ -172,25 +175,11 @@ public class JobDetails extends Activity{
 
                 if(image.equals(""))
                 {
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
                 else {
-                    URL url = null;
-                    try {
-                        url = new URL(image);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                    Bitmap bmp = null;
-                    try {
-                        bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    default_image.setVisibility(View.INVISIBLE);
-                    profile_image.setImageBitmap(bmp);
+                    Glide.with(this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
+
                     dialog.dismiss();
                 }
 

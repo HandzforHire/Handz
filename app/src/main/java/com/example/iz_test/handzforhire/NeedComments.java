@@ -23,6 +23,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +64,7 @@ public class NeedComments extends Activity{
     String category1,category2,category3,category4,category5;
     EditText comment;
     String type = "employee";
-    ImageView profile,default_image;
+    ImageView profile;
     RelativeLayout rating_lay;
     TextView pn_needcmd;
 
@@ -73,7 +77,6 @@ public class NeedComments extends Activity{
         t3 = (TextView) findViewById(R.id.text3);
         comment = (EditText) findViewById(R.id.edit_text);
         profile = (ImageView) findViewById(R.id.profile_image);
-        default_image = (ImageView) findViewById(R.id.default_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
         pn_needcmd=(TextView)findViewById(R.id.text1);
 
@@ -115,25 +118,11 @@ public class NeedComments extends Activity{
 
         if(image.equals(""))
         {
-            default_image.setVisibility(View.VISIBLE);
         }
         else {
-            java.net.URL url = null;
-            try {
-                url = new URL(image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            default_image.setVisibility(View.INVISIBLE);
-            profile.setImageBitmap(bmp);
+            profile.setVisibility(View.INVISIBLE);
+            Glide.with(this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
+
         }
 
         b1.setOnClickListener(new View.OnClickListener() {

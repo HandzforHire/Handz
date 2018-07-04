@@ -32,6 +32,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,7 +84,6 @@ Dialog dialog;
         list = (ListView) findViewById(R.id.listview);
         close = (Button) findViewById(R.id.cancel_btn);
         ImageView image = (ImageView)findViewById(R.id.profile_image);
-        ImageView image1 = (ImageView) findViewById(R.id.default_image);
          TextView name = (TextView) findViewById(R.id.t2);
          rate = (TextView) findViewById(R.id.text3);
 
@@ -102,25 +105,11 @@ Dialog dialog;
         name.setText(profilename);
         if(profile_image.equals(""))
         {
-            image1.setVisibility(View.VISIBLE);
         }
         else {
-            java.net.URL url = null;
-            try {
-                url = new URL(profile_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            image1.setVisibility(View.INVISIBLE);
-            image.setImageBitmap(bmp);
+            image.setVisibility(View.INVISIBLE);
+            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
         }
 
 

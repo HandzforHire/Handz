@@ -112,18 +112,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_alignParentTop="true"
-                        android:src="@drawable/image_border"
+                        android:padding="4dp"
+                        android:src="@drawable/default_profile"
+                        android:background="@drawable/image_border"
                         android:scaleType="fitCenter"
                         android:layerType="software"  />
-
-                    <ImageView
-                        android:id="@+id/default_image"
-                        android:layout_width="120sp"
-                        android:layout_height="120sp"
-                        android:scaleType="fitCenter"
-                        android:layout_alignParentTop="true"
-                        android:src="@drawable/image_border"
-                        android:background="@drawable/default_profile"  />
 
                 </RelativeLayout>
 
