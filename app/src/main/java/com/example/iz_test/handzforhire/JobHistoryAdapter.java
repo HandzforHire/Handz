@@ -84,23 +84,15 @@ public class JobHistoryAdapter extends BaseAdapter {
             HashMap<String, String> items = new HashMap<String, String>();
             items = data.get(position);
             final String get_name = items.get("name");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
             final String get_image = items.get("image");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_image::" + get_image);
             final String get_profile = items.get("profile");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_profile::" + get_profile);
             final String get_user = items.get("user");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_user::" + get_user);
             final String get_id = items.get("user_id");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_id::" + get_id);
             final String get_jobid = items.get("jobId");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_jobid::" + get_jobid);
             final String get_employer = items.get("employer");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_employer::" + get_employer);
             final String get_employee = items.get("employee");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_employee::" + get_employee);
             final String channel_id=items.get("channel");
-            System.out.println("iiiiiiiiiiiiiii:get_channel_id"+channel_id);
+
 
             job_name.setText(get_name);
             job_name.setTypeface(font);
@@ -128,24 +120,24 @@ public class JobHistoryAdapter extends BaseAdapter {
 
             }
 
+            leave_rating_btn.setTag(position);
+            chat.setTag(position);
+            job_details.setTag(position);
+
             leave_rating_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    jobId = job_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
-                    String employerId = employer_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:employerId::"+employerId);
-                    String employeeId = employee_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:employeeId::"+employeeId);
-                    String profile_image = image_text.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:profile_image::"+profile_image);
+
+                    HashMap<String, String> items = new HashMap<String, String>();
+                    items = data.get((Integer) v.getTag());
+
                     Intent intent = new Intent(activity, NeedRating.class);
-                    intent.putExtra("jobId",jobId);
-                    intent.putExtra("employer_id",employerId);
-                    intent.putExtra("employee_id",employeeId);
-                    intent.putExtra("user_id",get_id);
-                    intent.putExtra("image",profile_image);
-                    intent.putExtra("profilename",get_profile);
+                    intent.putExtra("jobId",items.get("jobId"));
+                    intent.putExtra("employer_id", items.get("employer"));
+                    intent.putExtra("employee_id",items.get("employee"));
+                    intent.putExtra("user_id", items.get("user_id"));
+                    intent.putExtra("image",items.get("image"));
+                    intent.putExtra("profilename", items.get("profile"));
                     v.getContext().startActivity(intent);
                 }
             });
@@ -154,13 +146,20 @@ public class JobHistoryAdapter extends BaseAdapter {
             {
                 @Override
                 public void onClick(View view) {
-                    jobId = job_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+
+                    int pos= (int) view.getTag();
+                    HashMap<String, String> items =data.get(pos);
+                    String username="";
+                    if(items.get("profile").isEmpty())
+                        username=items.get("user");
+                    else
+                        username= items.get("profile");
+
                     Intent i = new Intent(activity,ChatNeed.class);
-                    i.putExtra("jobId",jobId);
-                    i.putExtra("channel",channel_id);
-                    i.putExtra("username",get_user);
-                    i.putExtra("userId",get_id);
+                    i.putExtra("jobId",items.get("jobId"));
+                    i.putExtra("channel",items.get("channel"));
+                    i.putExtra("username",username);
+                    i.putExtra("userId", items.get("user_id"));
                     view.getContext().startActivity(i);
 
                 }
@@ -169,11 +168,13 @@ public class JobHistoryAdapter extends BaseAdapter {
             job_details.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    jobId = job_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+
+                    int pos= (int) v.getTag();
+                    HashMap<String, String> items =data.get(pos);
+
                     Intent i = new Intent(activity,JobDetails.class);
-                    i.putExtra("jobId",jobId);
-                    i.putExtra("userId",get_id);
+                    i.putExtra("jobId",items.get("jobId"));
+                    i.putExtra("userId",items.get("user_id"));
                     v.getContext().startActivity(i);
                 }
             });
