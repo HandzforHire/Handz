@@ -2,6 +2,7 @@ package com.example.iz_test.handzforhire;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -31,6 +33,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,10 +59,11 @@ public class LendProfilePage extends Activity{
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     ProgressDialog progress_dialog;
-    ImageView image,profile,handz,menu;
+    ImageView profile,handz,menu;
     TextView profile_name,rating_value;
     RelativeLayout rating_lay;
     SessionManager session;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +73,16 @@ public class LendProfilePage extends Activity{
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        progress_dialog = new ProgressDialog(this);
+       /* progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+
+        dialog = new Dialog(LendProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         handz = (ImageView) findViewById(R.id.handz);
         need_help = (Button) findViewById(R.id.need_help);
@@ -76,7 +90,6 @@ public class LendProfilePage extends Activity{
         edit = (Button) findViewById(R.id.edit_user_profile);
         user = (TextView) findViewById(R.id.text1);
         rating_value = (TextView) findViewById(R.id.text3);
-        image = (ImageView)findViewById(R.id.default_image);
         profile = (ImageView)findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
         find_map = (Button) findViewById(R.id.find_job);
@@ -349,43 +362,27 @@ public class LendProfilePage extends Activity{
                 rating_value.setText(employee_rating);
                 if (!profile_image.equals("") && !profilename.equals("")) {
                     profile_name.setText(profilename);
-                    URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    /* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
-                    image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
+                    dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("")) {
-                    URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    /* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
-                    image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
+                    dialog.dismiss();
                 } else if (!profilename.equals("") && profile_image.equals("")) {
                     profile_name.setText(profilename);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 } else {
                     profile_name.setText(username);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        }/* catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public static Bitmap rotateImageIfRequired(Bitmap img, Context context, Uri selectedImage) throws IOException {

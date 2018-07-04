@@ -17,6 +17,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,7 +59,6 @@ public class ReviewAdapter extends BaseAdapter {
         final TextView rating = (TextView) vi.findViewById(R.id.rating);
         final TextView comments = (TextView) vi.findViewById(R.id.comments);
         final TextView date = (TextView) vi.findViewById(R.id.date);
-        ImageView image = (ImageView)vi.findViewById(R.id.img2);
         ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
         RatingBar rating_bar = (RatingBar) vi.findViewById(R.id.ratingBar1);
 
@@ -86,22 +90,8 @@ public class ReviewAdapter extends BaseAdapter {
             image1.setVisibility(View.VISIBLE);
         }
         else {
-            URL url = null;
-            try {
-                url = new URL(get_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            image1.setVisibility(View.INVISIBLE);
-            image.setImageBitmap(bmp);
+            Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
+
         }
 
         return vi;

@@ -2,12 +2,14 @@ package com.example.iz_test.handzforhire;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,6 +22,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +39,7 @@ import java.util.Map;
 
 public class JobDescription extends Activity {
 
-    ImageView profile_image, default_image,close;
+    ImageView profile_image,close;
     TextView profile_name, description, date, time, amount, type,name,apply;
     private static final String URL = Constant.SERVER_URL+"job_detail_view";
     public static String APP_KEY = "X-APP-KEY";
@@ -44,18 +50,26 @@ public class JobDescription extends Activity {
     String job_id,user_id,employerId,get_name,get_start_time,get_date,get_amount,get_end_time,get_type,get_profile_name,image,profileimage,profilename;
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_description);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();
 
+*/
+
+        dialog = new Dialog(JobDescription.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
         profile_image = (ImageView) findViewById(R.id.profile_image);
-        default_image = (ImageView) findViewById(R.id.default_image);
         profile_name = (TextView) findViewById(R.id.text1);
         description = (TextView) findViewById(R.id.description_text);
         name = (TextView) findViewById(R.id.job_name_text);
@@ -190,26 +204,23 @@ public class JobDescription extends Activity {
                 name.setText(get_name);
                 if(image.equals(""))
                 {
-                    default_image.setVisibility(View.VISIBLE);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                 }
                 else
                 {
-                    URL url = new URL(image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    default_image.setVisibility(View.INVISIBLE);
-                    profile_image.setImageBitmap(bmp);
-                    progress_dialog.dismiss();
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
+
+                    dialog.dismiss();
                 }
 
             } else {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        }/* catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

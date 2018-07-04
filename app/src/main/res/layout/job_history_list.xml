@@ -25,17 +25,10 @@
                 android:layout_height="100sp"
                 android:scaleType="fitXY"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/default_profile" />
-
-            <ImageView
-                android:id="@+id/img2"
-                android:layout_width="100sp"
-                android:layout_height="100sp"
-                android:layout_alignParentLeft="true"
-                android:scaleType="fitXY"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
+                android:padding="3dp"
+                android:src="@drawable/default_profile"
                 android:background="@drawable/image_border" />
+
 
         </RelativeLayout>
 

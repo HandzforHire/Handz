@@ -20,6 +20,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,7 +60,6 @@ public class ActiveJobAdapter extends BaseAdapter {
                 vi = inflater.inflate(R.layout.activejobs_list, null);
 
             TextView job_name = (TextView) vi.findViewById(R.id.text1);
-            ImageView image = (ImageView)vi.findViewById(R.id.img2);
             ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
             TextView make_payment = (TextView) vi.findViewById(R.id.payment);
             final TextView profile_name = (TextView) vi.findViewById(R.id.text3);
@@ -74,10 +78,8 @@ public class ActiveJobAdapter extends BaseAdapter {
             HashMap<String, String> items = new HashMap<String, String>();
             items = data.get(position);
             final String get_name = items.get("name");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
             final String get_image = items.get("image");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_image::" + get_image);
-            final String get_profile = items.get("profile");
+           final String get_profile = items.get("profile");
             System.out.println("iiiiiiiiiiiiiiiiiiid:get_profile::" + get_profile);
             final String get_user = items.get("user");
             System.out.println("iiiiiiiiiiiiiiiiiiid:get_user::" + get_user);
@@ -192,47 +194,8 @@ public class ActiveJobAdapter extends BaseAdapter {
                 System.out.println("iiiiiiiiiiiiiiiiiiid:get_image22::" + get_image);
             }
             else {
-                System.out.println("iiiiiiiiiiiiiiiiiiid:get_image33::" + get_image);
+                Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
-                URL url = null;
-                try {
-                    url = new URL(get_image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bmp = null;
-                try {
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    if(bmp == null)
-                    {
-                        Log.e("ERR","Failed to decode resource");
-                        System.out.println("iiiiiiiiiiiiiiiiiiid:Failed to decode resource::" + get_image);
-                        return null;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                image1.setVisibility(View.INVISIBLE);
-                image.setImageBitmap(bmp);
-
-               /* URL url = null;
-                try {
-                    url = new URL(get_image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bmp = null;
-                try {
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                image1.setVisibility(View.INVISIBLE);
-                image.setImageBitmap(bmp);*/
             }
      return  vi;
         }

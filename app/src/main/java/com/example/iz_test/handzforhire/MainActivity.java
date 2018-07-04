@@ -97,7 +97,9 @@ public class MainActivity extends Activity {
                 System.out.println("ppppppppp:florist:" +status);
                 if(status == true)
                 {
+
                     Intent intent = new Intent(MainActivity.this,MapActivity.class);
+                    //Intent intent = new Intent(MainActivity.this,LendProfilePage.
                     startActivity(intent);
                     finish();
                     String a = "if_condition";

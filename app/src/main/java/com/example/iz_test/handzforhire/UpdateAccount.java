@@ -38,7 +38,7 @@ public class UpdateAccount extends Activity{
     EditText name,bank,account,re_account,driver,st;
     CheckBox check;
     Button update;
-    ProgressDialog dialog;
+   // ProgressDialog dialog;
     RelativeLayout layout;
     String employer_id,account_id,default_account;
     String acc_name,routing_no,acc_no,re_acc_no,license_no,state;
@@ -60,14 +60,20 @@ public class UpdateAccount extends Activity{
     String status = "1";
     String getAcc_name,getRouting_no,getAcc_no,getLicense_no,getState,getDefault;
     ImageView logo;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_account);
 
-        dialog = new ProgressDialog(this);
+       /* dialog = new ProgressDialog(this);
         dialog.setMessage("Loading.Please wait.....");
+        dialog.show();*/
+        dialog = new Dialog(UpdateAccount.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
 
         name = (EditText)findViewById(R.id.up_ac_name);

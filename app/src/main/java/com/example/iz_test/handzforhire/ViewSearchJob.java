@@ -62,6 +62,7 @@ public class ViewSearchJob extends Activity{
     String type = "";
      int timeout = 60000;
     ImageView new_search,map_view;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +72,16 @@ public class ViewSearchJob extends Activity{
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        progress_dialog = new ProgressDialog(this);
+       /* progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();
+*/
+
+        dialog = new Dialog(ViewSearchJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         list = (ListView) findViewById(R.id.listview);
         logo = (ImageView) findViewById(R.id.logo);
@@ -274,7 +282,7 @@ public class ViewSearchJob extends Activity{
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } catch (JSONException e) {
                             //Handle a malformed json response
                             System.out.println("volley error ::" + e.getMessage());
@@ -362,7 +370,7 @@ public class ViewSearchJob extends Activity{
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -444,7 +452,7 @@ public class ViewSearchJob extends Activity{
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

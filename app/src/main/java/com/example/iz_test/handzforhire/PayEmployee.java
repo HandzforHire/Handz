@@ -1,6 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -47,15 +49,21 @@ public class PayEmployee extends Activity{
     TextView name,date,total;
     String get_tip,get_amount,get_method,get_date,get_total;
     Integer total_value;
+    Dialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_employee);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+        dialog = new Dialog(PayEmployee.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         logo = (ImageView)findViewById(R.id.logo);
         image = (ImageView)findViewById(R.id.imageView);

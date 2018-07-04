@@ -31,6 +31,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,20 +62,26 @@ public class LendReviewRating extends Activity {
     ProgressDialog progress_dialog;
     ListView list;
     Button close;
+    Dialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_rating);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(LendReviewRating.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         list = (ListView) findViewById(R.id.listview);
         close = (Button) findViewById(R.id.cancel_btn);
         ImageView image = (ImageView)findViewById(R.id.profile_image);
-        ImageView image1 = (ImageView) findViewById(R.id.default_image);
         TextView name = (TextView) findViewById(R.id.t2);
 
         Intent i = getIntent();
@@ -91,25 +101,12 @@ public class LendReviewRating extends Activity {
         name.setText(profilename);
         if(profile_image.equals(""))
         {
-            image1.setVisibility(View.VISIBLE);
+
         }
         else {
-            java.net.URL url = null;
-            try {
-                url = new URL(profile_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            image1.setVisibility(View.INVISIBLE);
-            image.setImageBitmap(bmp);
+
+            Glide.with(LendReviewRating.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(LendReviewRating.this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
         }
 
 
@@ -155,7 +152,7 @@ public class LendReviewRating extends Activity {
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                             System.out.println("volley error ::"+e.getMessage());
@@ -230,7 +227,7 @@ public class LendReviewRating extends Activity {
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

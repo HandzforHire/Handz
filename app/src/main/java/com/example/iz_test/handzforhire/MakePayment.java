@@ -2,7 +2,6 @@ package com.example.iz_test.handzforhire;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -30,6 +29,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,16 +64,22 @@ public class MakePayment extends Activity{
     ProgressDialog progress_dialog;
     TextView name,job_cancel;
     Button pay_employee;
+
     String employee,profile_image,profile_name,user_name,employerId,employeeId;
+    Dialog dialog;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_payment);
 
-        progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+
+        dialog = new Dialog(MakePayment.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         image = (ImageView) findViewById(R.id.imageView);
@@ -128,38 +137,19 @@ public class MakePayment extends Activity{
         });
 
         if(profile_image==null) {
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
         else {
-            java.net.URL url = null;
-            try {
-                url = new URL(profile_image);
-
-                System.out.println("url "+profile_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                if(url!=null)
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(bmp!=null) {
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                image.setImageBitmap(bmp);
-            }
+            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
         }
         if(profile_name==null)
         {
             name.setText(user_name);
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
         else {
             name.setText(profile_name);
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
 
     }
@@ -238,7 +228,6 @@ public class MakePayment extends Activity{
 
         String status = null;
         String emp_data = null;
-
         try {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
@@ -259,20 +248,16 @@ public class MakePayment extends Activity{
                         final String profilename = object.getString("profile_name");
 
                         if (profile_image.equals("")) {
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } else {
-                            java.net.URL url = new URL(profile_image);
-                            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                            image.setImageBitmap(bmp);
+                            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                         }
                         if (profilename.equals("null")) {
                             name.setText(username);
                         } else {
                             name.setText(profilename);
                         }
-                        progress_dialog.dismiss();
+                        dialog.dismiss();
                     }
                 }
             } else {
@@ -281,11 +266,13 @@ public class MakePayment extends Activity{
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } /*catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+*/
     }
 
 

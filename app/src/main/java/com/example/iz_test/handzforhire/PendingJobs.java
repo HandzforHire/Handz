@@ -17,6 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,7 +34,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,22 +49,31 @@ import java.util.Map;
         String value = "HandzForHire@~";
         public static String KEY_USER = "user_id";
         public static String KEY_TYPE = "type";
+        Calendar calendar;
         String user_id,address,city,state,zipcode,cat_type,cat_id,job_cat_name,name,date,amount,jobId;
+        String emplrid,empleid;
 
         String jobname,jobdate,pay,esti,jobstatus;
         ImageView logo;
         ProgressDialog progress_dialog;
         String type = "applied";
         Button active_jobs,job_history;
+        Dialog dialog;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.pending_jobs);
 
-            progress_dialog = new ProgressDialog(this);
+           /* progress_dialog = new ProgressDialog(this);
             progress_dialog.setMessage("Loading.Please wait....");
-            progress_dialog.show();
+            progress_dialog.show();*/
+
+            dialog = new Dialog(PendingJobs.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressbar);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
 
             list = (ListView) findViewById(R.id.listview);
             logo = (ImageView) findViewById(R.id.logo);
@@ -142,19 +157,19 @@ import java.util.Map;
                                     text.setText("No Jobs Found");
                                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                                     // if button is clicked, close the custom dialog
-                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    dialogButton.setOnClickListener(new View.OnClickListener()
+                                    {
                                         @Override
                                         public void onClick(View v) {
                                             dialog.dismiss();
                                         }
                                     });
-
                                     dialog.show();
                                     Window window = dialog.getWindow();
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 }
-                               progress_dialog.dismiss();
+                               dialog.dismiss();
                             }
                             catch (JSONException e)
                             {
@@ -178,7 +193,8 @@ import java.util.Map;
             requestQueue.add(stringRequest);
         }
 
-        private void onResponserecieved(String response, int i) {
+        private void onResponserecieved(String response, int i)
+        {
             String status = null;
 
             try
@@ -201,31 +217,31 @@ import java.util.Map;
                         pay = object.getString("job_estimated_payment");
                         jobId = object.getString("id");
                         jobstatus=object.getString("job_status");
+                        emplrid=object.getString("employer_id");
 
-
-
-
-
-                        System.out.println("0000"+jobname);
+                        /*System.out.println("0000"+jobname);
                         System.out.println("0000"+jobdate);
                         System.out.println("0000" + esti);
                         System.out.println("0000" + pay);
                         System.out.println("ressss::jobId:" + jobId);
-                        System.out.println("status::"+jobstatus);
+                        System.out.println("status::"+jobstatus);*/
+                        HashMap<String,String> map = new HashMap<String,String>();
+                        map.put("name", jobname);
+                        map.put("date", jobdate);
+                        map.put("type", esti);
+                        map.put("amount", pay);
+                        map.put("jobId",jobId);
+                        map.put("status",jobstatus);
+                        map.put("emrid",emplrid);
+                        map.put("employeeid",user_id);
+                        job_list.add(map);
                     }
-                    HashMap<String,String> map = new HashMap<String,String>();
-                    map.put("name", jobname);
-                    map.put("date", jobdate);
-                    map.put("type", esti);
-                    map.put("amount", pay);
-                    map.put("jobId",jobId);
-                    map.put("status",jobstatus);
-
-                    job_list.add(map);
                     System.out.println("job_list:::" + job_list);
-                    PendingAdapter arrayAdapter = new PendingAdapter(this, job_list){
+                    PendingAdapter arrayAdapter = new PendingAdapter(this, job_list)
+                    {
                         @Override
-                        public View getView(int position, View convertView, ViewGroup parent){
+                        public View getView(int position, View convertView, ViewGroup parent)
+                        {
                             // Get the current item from ListView
                             View view = super.getView(position,convertView,parent);
                             if(position %2 == 1)
@@ -244,7 +260,7 @@ import java.util.Map;
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    progress_dialog.dismiss();
+                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -260,6 +276,10 @@ import java.util.Map;
                 }
             }catch (JSONException e){
                 e.printStackTrace();
+            }  {
+            }
+            {
+
             }
         }
 }

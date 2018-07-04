@@ -98,6 +98,7 @@
                         android:scaleType="fitCenter"
                         android:src="@drawable/dashed_line"/>
 
+
                     <TextView
                         android:id="@+id/text_photo"
                         android:layout_width="120sp"

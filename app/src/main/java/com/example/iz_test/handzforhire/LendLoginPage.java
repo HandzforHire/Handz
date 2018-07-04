@@ -66,6 +66,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
     private static final int REQUEST_PHONE_STATE = 0;
     SessionManager session;
     String userType = "employee";
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +82,15 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
         login = (Button) findViewById(R.id.login);
         logo = (ImageView) findViewById(R.id.logo);
 
-        progress_dialog = new ProgressDialog(LendLoginPage.this);
-        progress_dialog.setMessage("Loading.Please wait");
+        /*progress_dialog = new ProgressDialog(LendLoginPage.this);
+        progress_dialog.setMessage("Loading.Please wait");*/
+
+        /*dialog = new Dialog(LendLoginPage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+        dialog.dismiss();*/
 
         permission();
 
@@ -175,7 +183,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
     }
 
     public void login() {
-        progress_dialog.show();
+        //dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -214,7 +222,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            progress_dialog.dismiss();
+                            //dialog.dismiss();
                         } catch (JSONException e) {
                             //Handle a malformed json response
                         } catch (UnsupportedEncodingException error1) {
@@ -273,7 +281,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                         System.out.println("ressss:zipcode::"+get_zipcode);*/
                 }
                 if (user_type.equals("employer")) {
-                    progress_dialog.dismiss();
+                    //dialog.dismiss();
                     final Dialog dialog = new Dialog(LendLoginPage.this);
                     dialog.setContentView(R.layout.custom_dialog);
 
@@ -294,11 +302,15 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 } else {
-                    progress_dialog.dismiss();
+                    //dialog.dismiss();
                     session.LendLogin(user_email,user_password,user_name,user_type,user_id,user_address,user_city,user_state,user_zipcode,userType);
+
                     Intent i = new Intent(LendLoginPage.this,MapActivity.class);
                     i.putExtra("userId",user_id);
                    /* i.putExtra("username",user_name);
+                    Intent i = new Intent(LendLoginPage.this,LendProfilePage.class);
+                    /*i.putExtra("userId",user_id);
+                    i.putExtra("username",user_name);
                     i.putExtra("email",user_email);
                     i.putExtra("address",user_address);
                     i.putExtra("state",user_city);

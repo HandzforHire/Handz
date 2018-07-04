@@ -98,6 +98,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
     CustomJobListAdapter adapter;
     public static PopupWindow popupWindowDogs;
     public static Button buttonShowDropDown;
+    Dialog dialog;
 
     Integer[] imageId = {
             R.drawable.box_1,
@@ -132,9 +133,15 @@ public class CreateJob extends Activity implements View.OnClickListener {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(CreateJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         layout = (LinearLayout)findViewById(R.id.relay);
         next = (Button) findViewById(R.id.next);
@@ -397,7 +404,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                    new TimePickerDialog.OnTimeSetListener() {
+                            new TimePickerDialog.OnTimeSetListener() {
 
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
@@ -744,7 +751,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 ListView listcate = new ListView(this);
                 listcate.setAdapter(adapter);*/
 
-                progress_dialog.dismiss();
+                dialog.dismiss();
               /*  list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

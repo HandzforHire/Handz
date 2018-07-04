@@ -108,15 +108,22 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
             R.drawable.box_21,
 
     };
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_create_job);
 
-        progress_dialog = new ProgressDialog(this);
+        /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
+        progress_dialog.show();*/
+
+        dialog = new Dialog(EditCreateJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         layout = (LinearLayout)findViewById(R.id.relay);
         next = (Button) findViewById(R.id.next);
@@ -731,7 +738,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
 
                 CustomJobListAdapter adapter = new CustomJobListAdapter(EditCreateJob.this, job_title, imageId);
                 list.setAdapter(adapter);
-                progress_dialog.dismiss();
+                dialog.dismiss();
                 list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
