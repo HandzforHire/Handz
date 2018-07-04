@@ -71,7 +71,6 @@ public class JobHistoryAdapter extends BaseAdapter {
             final TextView employee_id = (TextView) vi.findViewById(R.id.employee_id);
             final TextView image_text = (TextView) vi.findViewById(R.id.image1);
             TextView user_name = (TextView) vi.findViewById(R.id.text3);
-            ImageView image = (ImageView)vi.findViewById(R.id.img2);
             ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
             TextView leave_rating_btn = (TextView) vi.findViewById(R.id.leave_rating);
             Button job_details = (Button) vi.findViewById(R.id.btn);
@@ -125,26 +124,6 @@ public class JobHistoryAdapter extends BaseAdapter {
                 image1.setVisibility(View.VISIBLE);
             }
             else {
-             /*   URL url = null;
-                try {
-                    url = new URL(get_image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bmp = null;
-                try {
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(bmp!=null) {
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    image1.setVisibility(View.INVISIBLE);
-                    image.setImageBitmap(bmp);
-                }*/
-                //Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
-                 image.setVisibility(View.GONE);
                 Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
             }

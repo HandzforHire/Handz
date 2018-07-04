@@ -20,6 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
+
 public class Adapter extends BaseAdapter {
 
     // Declare Variables
@@ -81,8 +86,7 @@ public class Adapter extends BaseAdapter {
             employee_id = (TextView) view.findViewById(R.id.employee_id);
             image_text = (TextView) view.findViewById(R.id.image1);
             user_name = (TextView) view.findViewById(R.id.text3);
-            image = (ImageView)view.findViewById(R.id.img2);
-            image1 = (ImageView) view.findViewById(R.id.img1);
+            image = (ImageView)view.findViewById(R.id.img1);
             leave_rating_btn = (TextView) view.findViewById(R.id.leave_rating);
             job_details = (Button) view.findViewById(R.id.btn);
             chat = (LinearLayout) view.findViewById(R.id.lay1);
@@ -105,6 +109,7 @@ public class Adapter extends BaseAdapter {
 
         chat.setTag(position);
         leave_rating_btn.setTag(position);
+        Glide.with(mContext).load(worldpopulationlist.get(position).getImage()).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(mContext,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
         leave_rating_btn.setOnClickListener(new View.OnClickListener() {
             @Override

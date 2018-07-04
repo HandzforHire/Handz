@@ -60,7 +60,6 @@ public class ActiveJobAdapter extends BaseAdapter {
                 vi = inflater.inflate(R.layout.activejobs_list, null);
 
             TextView job_name = (TextView) vi.findViewById(R.id.text1);
-            ImageView image = (ImageView)vi.findViewById(R.id.img2);
             ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
             TextView make_payment = (TextView) vi.findViewById(R.id.payment);
             final TextView profile_name = (TextView) vi.findViewById(R.id.text3);
@@ -195,32 +194,6 @@ public class ActiveJobAdapter extends BaseAdapter {
                 System.out.println("iiiiiiiiiiiiiiiiiiid:get_image22::" + get_image);
             }
             else {
-          /*      System.out.println("iiiiiiiiiiiiiiiiiiid:get_image33::" + get_image);
-
-                URL url = null;
-                try {
-                    url = new URL(get_image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bmp = null;
-                try {
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    if(bmp == null)
-                    {
-                        Log.e("ERR","Failed to decode resource");
-                        System.out.println("iiiiiiiiiiiiiiiiiiid:Failed to decode resource::" + get_image);
-                        return null;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                image1.setVisibility(View.INVISIBLE);
-                image.setImageBitmap(bmp);*/
-               // Glide.with(activity).load(get_image).into(image1);
-
                 Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
             }

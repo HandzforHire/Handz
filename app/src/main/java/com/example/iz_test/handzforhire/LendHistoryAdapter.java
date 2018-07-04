@@ -61,7 +61,6 @@ public class LendHistoryAdapter extends BaseAdapter{
 
             TextView job_name = (TextView) vi.findViewById(R.id.name);
             TextView amount = (TextView) vi.findViewById(R.id.amount);
-            ImageView image = (ImageView)vi.findViewById(R.id.img2);
             ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
             Button job_details = (Button) vi.findViewById(R.id.btn);
             LinearLayout leave_rating = (LinearLayout) vi.findViewById(R.id.lay2);
@@ -154,28 +153,9 @@ public class LendHistoryAdapter extends BaseAdapter{
 
             if(get_image.equals(""))
             {
-                image1.setVisibility(View.VISIBLE);
+
             }
             else {
-               /* URL url = null;
-                try {
-                    url = new URL(get_image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bmp = null;
-                try {
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(bmp!=null) {
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    image1.setVisibility(View.INVISIBLE);
-                    image.setImageBitmap(bmp);
-                }*/
-                //Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
                 Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
             }

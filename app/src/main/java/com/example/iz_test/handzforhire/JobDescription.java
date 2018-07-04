@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class JobDescription extends Activity {
 
-    ImageView profile_image, default_image,close;
+    ImageView profile_image,close;
     TextView profile_name, description, date, time, amount, type,name,apply;
     private static final String URL = Constant.SERVER_URL+"job_detail_view";
     public static String APP_KEY = "X-APP-KEY";
@@ -70,7 +70,6 @@ public class JobDescription extends Activity {
         dialog.show();
 
         profile_image = (ImageView) findViewById(R.id.profile_image);
-        default_image = (ImageView) findViewById(R.id.default_image);
         profile_name = (TextView) findViewById(R.id.text1);
         description = (TextView) findViewById(R.id.description_text);
         name = (TextView) findViewById(R.id.job_name_text);
@@ -205,18 +204,11 @@ public class JobDescription extends Activity {
                 name.setText(get_name);
                 if(image.equals(""))
                 {
-                    default_image.setVisibility(View.VISIBLE);
                     dialog.dismiss();
                 }
                 else
                 {
-                   /* URL url = new URL(image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    default_image.setVisibility(View.INVISIBLE);
-                    profile_image.setImageBitmap(bmp);*/
-                    //Glide.with(JobDescription.this).load(profile_image).error(R.drawable.default_profile).into(default_image);
-                    profile_image.setVisibility(View.INVISIBLE);
-                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(default_image);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
 
                     dialog.dismiss();
                 }

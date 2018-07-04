@@ -65,7 +65,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     Button create,edit,need_help;
     private SimpleGestureFilter detector;
     String address,city,state,zipcode,profile_image,profilename,type;
-    ImageView image,profile,logo,menu;
+    ImageView profile,logo,menu;
     ProgressDialog progress_dialog;
     ProgressBar progress;
     RelativeLayout rating_lay;
@@ -99,7 +99,6 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         posted = (LinearLayout) findViewById(R.id.posted_job);
         active = (LinearLayout) findViewById(R.id.active_job);
         history = (LinearLayout) findViewById(R.id.job_history);
-        image = (ImageView)findViewById(R.id.default_image);
         logo = (ImageView)findViewById(R.id.logo);
         profile = (ImageView)findViewById(R.id.profile_image);
         menu = (ImageView)findViewById(R.id.menu);
@@ -471,36 +470,15 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 if(!profile_image.equals("")&&!profilename.equals("null"))
                 {
                     profile_name.setText(profilename);
-                    /* URL url = new URL(profile_image);
-                      Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);*/
-                    /* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
-                   // image.setVisibility(View.INVISIBLE);
-                   // profile.setImageBitmap(bmp);
-                   // profile.setVisibility(View.VISIBLE);
-                  /* Glide.with(ProfilePage.this).load(profile_image).apply(RequestOptions.bitmapTransform(
-                           new RoundedCornersTransformation(ProfilePage.this, Glideconstants.sCorner, Glideconstants.sColor, Glideconstants.sBorder))).into(image);
-                   */
-                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
                   dialog.dismiss();
 
                 }
                 else if(!profile_image.equals("")&&profilename.equals("null"))
                 {
-                    /*URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);*/
-                    /* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
-                    //image.setVisibility(View.INVISIBLE);
-                    //profile.setImageBitmap(bmp);
-                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-                    // Glide.with(ProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
+
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
+
                     dialog.dismiss();
                 }
                 else if(!profilename.equals("null")&&profile_image.equals(""))

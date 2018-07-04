@@ -137,32 +137,10 @@ public class MakePayment extends Activity{
         });
 
         if(profile_image==null) {
-            progress_dialog.dismiss();
+            dialog.dismiss();
         }
         else {
-          /*  java.net.URL url = null;
-            try {
-                url = new URL(profile_image);
-
-                System.out.println("url "+profile_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                if(url!=null)
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(bmp!=null) {
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                image.setImageBitmap(bmp);
-            }*/
-           // Glide.with(MakePayment.this).load(profile_image).error(R.drawable.default_profile).into(image);
             Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-
         }
         if(profile_name==null)
         {
@@ -269,14 +247,7 @@ public class MakePayment extends Activity{
                         if (profile_image.equals("")) {
                             dialog.dismiss();
                         } else {
-                       /*     java.net.URL url = new URL(profile_image);
-                            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                            image.setImageBitmap(bmp);*/
                             Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-
-                            //Glide.with(MakePayment.this).load(profile_image).error(R.drawable.default_profile).into(image);
                         }
                         if (profilename.equals("null")) {
                             name.setText(username);

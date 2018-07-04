@@ -82,7 +82,6 @@ public class LendReviewRating extends Activity {
         list = (ListView) findViewById(R.id.listview);
         close = (Button) findViewById(R.id.cancel_btn);
         ImageView image = (ImageView)findViewById(R.id.profile_image);
-        ImageView image1 = (ImageView) findViewById(R.id.default_image);
         TextView name = (TextView) findViewById(R.id.t2);
 
         Intent i = getIntent();
@@ -102,27 +101,10 @@ public class LendReviewRating extends Activity {
         name.setText(profilename);
         if(profile_image.equals(""))
         {
-            image1.setVisibility(View.VISIBLE);
+
         }
         else {
-          /*  java.net.URL url = null;
-            try {
-                url = new URL(profile_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            image1.setVisibility(View.INVISIBLE);
-            image.setImageBitmap(bmp);*/
-           // Glide.with(LendReviewRating.this).load(profile_image).error(R.drawable.default_profile).into(image1);
-            image1.setVisibility(View.INVISIBLE);
+
             Glide.with(LendReviewRating.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(LendReviewRating.this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
         }

@@ -317,23 +317,12 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 rating_value.setText(employee_rating);
                 if (!profile_image.equals("") && !profilename.equals("null")) {
                     profile_name.setText(profilename);
-                   /* java.net.URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    image.setImageBitmap(bmp);*/
                     photo_text.setVisibility(View.INVISIBLE);
-                   // Glide.with(LendEditUserProfile.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     Glide.with(LendEditUserProfile.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                     dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("null")) {
-                   /* URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
+
                     photo_text.setVisibility(View.INVISIBLE);
-                    image.setImageBitmap(bmp);*/
-                    //Glide.with(LendEditUserProfile.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     Glide.with(LendEditUserProfile.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                     dialog.dismiss();
                 } else if (!profilename.equals("null") && profile_image.equals("")) {
