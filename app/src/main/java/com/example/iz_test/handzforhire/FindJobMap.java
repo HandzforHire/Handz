@@ -160,7 +160,8 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             public void onClick(View view) {
 
                 if(undisclosedjob>0){
-
+                   Intent in_job_list=new Intent(getActivity(),SearchJob.class);
+                    startActivity(in_job_list);
                 }
             }
         });

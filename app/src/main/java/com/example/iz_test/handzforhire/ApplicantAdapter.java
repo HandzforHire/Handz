@@ -97,17 +97,11 @@ public class ApplicantAdapter extends BaseAdapter {
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String get_name = items.get("username");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
         final String get_comments = items.get("comments");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_comments::" + get_comments);
         employee_id = items.get("employee_id");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:employee_id::" + employee_id);
         job_id = items.get("job_id");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:job_id::" + job_id);
         employer_id = items.get("employer_id");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:employer_id::" + employer_id);
         job_name = items.get("jobname");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:job_name::" + job_name);
 
         name.setText(get_name);
         name.setTypeface(font);
@@ -120,45 +114,9 @@ public class ApplicantAdapter extends BaseAdapter {
 
     public void hiremethod()
     {
-        /*StringRequest stringRequest = new StringRequest(Request.Method.POST, HIRE_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println("resssssssssssssssss:hire::service:::" + response);
-                        onResponserecieved1(response, 1);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            System.out.println("error" + jsonObject);
-                        } catch (JSONException e) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1) {
 
-                        }
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(XAPP_KEY, value);
-                params.put(EMPLOYER_ID, employer_id);
-                params.put(JOB_ID, job_id);
-                params.put(EMPLOYEE_ID, employee_id);
-                params.put(JOB_NAME,job_name);
-                params.put(USER_TYPE,usertype);
-                return params;
-            }
-        };
 
-        RequestQueue requestQueue = Volley.newRequestQueue(activity);
-        requestQueue.add(stringRequest);*/
-
-        final String url = "http://162.144.41.156/~izaapinn/handzforhire/service/hire_job?X-APP-KEY="+value+"&employer_id="+employer_id+"&job_id="+job_id+"&employee_id="+employee_id+"&job_name="+job_name;
+        final String url = HIRE_URL+"?X-APP-KEY="+value+"&employer_id="+employer_id+"&job_id="+job_id+"&employee_id="+employee_id+"&job_name="+job_name;
 
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,

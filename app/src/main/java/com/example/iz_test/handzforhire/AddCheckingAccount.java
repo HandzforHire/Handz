@@ -85,7 +85,6 @@ public class AddCheckingAccount extends Activity implements SimpleGestureFilter.
         city = i.getStringExtra("city");
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
-        System.out.println("uuuuuuuuuuuuser:id::"+user_id);
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
@@ -101,43 +100,6 @@ public class AddCheckingAccount extends Activity implements SimpleGestureFilter.
         reenter_check_account_number.setTypeface(tf1);
         driver_license_number.setTypeface(tf1);
         stat.setTypeface(tf1);
-
-       /* account_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                account_name.setHint("");
-            }
-        });
-        bank_number.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                bank_number.setHint("");
-            }
-        });
-        checking_account_number.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                checking_account_number.setHint("");
-            }
-        });
-        reenter_check_account_number.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                reenter_check_account_number.setHint("");
-            }
-        });
-        driver_license_number.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                driver_license_number.setHint("");
-            }
-        });
-        stat.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                stat.setHint("");
-            }
-        });*/
 
         h_logo.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -50,9 +50,8 @@ public class CustomJobListAdapter extends BaseAdapter {
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String job_category = items.get("job_category");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:job_category::" + job_category);
         final String job_id = items.get("job_id");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:cardid::" + job_id);
+
 
         job.setText(job_category);
         id.setText(job_id);

@@ -44,14 +44,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-<<<<<<< HEAD
 import com.theartofdev.edmodo.cropper.CropImage;
-=======
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
->>>>>>> master
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -444,7 +442,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                     image.setImageURI(resultUri);
                     String selectedImagePath = uriToFilename(resultUri);
                     System.out.println("filename:gallery "+selectedImagePath);
-                    new FileUpload(selectedImagePath);
+                    new FileUpload(selectedImagePath,id);
                     System.out.println("path:camera:" + selectedImagePath);
                     filename = FileUpload.firstRemoteFile;
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {

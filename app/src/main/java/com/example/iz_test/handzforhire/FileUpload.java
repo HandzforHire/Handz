@@ -52,10 +52,10 @@ public class FileUpload{
     /*********  FTP PASSWORD ***********/
     static final String FTP_PASS  ="Y9+CW:K_o[";
 
-    public FileUpload(String file){
+    public FileUpload(String file,String userid){
 
         System.out.println("save profile");
-
+        id=userid;
         new UploadFile().execute(file);
     }
 
@@ -69,9 +69,6 @@ public class FileUpload{
 
         @Override
         protected Boolean doInBackground(String... params) {
-            id = EditUserProfile.id;
-            System.out.println("iiiiiiiiiiiid:fileupload::"+id);
-
            // ss=params[0];
 
             FTPClient ftpClient = new FTPClient();

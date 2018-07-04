@@ -69,10 +69,6 @@ public class ApplyJob extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apply_job);
 
-       /* progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
-
         dialog = new Dialog(ApplyJob.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
@@ -102,8 +98,7 @@ public class ApplyJob extends Activity{
         amount = i.getStringExtra("amount");
         type = i.getStringExtra("type");
         image = i.getStringExtra("image");
-        System.out.println("hhhhhhhhhhhhh:apply:::"+job_name+date+start_time+end_time+profile_name+amount+type+image);
-        System.out.println("hhhhhhhhhhhhh:image:::"+image);
+
 
         name.setText(profile_name);
         dat.setText(date);
@@ -115,7 +110,6 @@ public class ApplyJob extends Activity{
         if(image.equals(""))
         {
             dialog.dismiss();
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_image22::" + image);
         }
         else {
             Glide.with(ApplyJob.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
@@ -150,7 +144,6 @@ public class ApplyJob extends Activity{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("reeeeeeeeeeeeeeeee:apply_job:::" + response);
                         onResponserecieved1(response, 2);
                     }
                 },
@@ -203,8 +196,6 @@ public class ApplyJob extends Activity{
                 return params;
             }
         };
-
-        System.out.println("values::"+job_id+".."+usertype+".."+employer_id+"..."+comments+".."+user_id);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

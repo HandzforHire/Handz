@@ -57,15 +57,10 @@ public class EditPostedAdapter extends BaseAdapter {
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String get_name = items.get("name");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
         final String get_date = items.get("date");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_date::" + get_date);
         String get_amount = items.get("amount");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_amount::" + get_amount);
         String get_type = items.get("type");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_recur::" + get_type);
         String get_id = items.get("jobId");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_id::" + get_id);
 
         job_name.setText(get_name);
         job_name.setTypeface(font);
