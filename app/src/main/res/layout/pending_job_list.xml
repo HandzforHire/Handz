@@ -97,6 +97,7 @@
         </RelativeLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/hol"
         android:layout_width="match_parent"
@@ -142,10 +143,7 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
-
     </LinearLayout>
-
-
 
 
     <LinearLayout

@@ -53,7 +53,8 @@ public class JobDescription extends Activity {
     Dialog dialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_description);
 
@@ -62,8 +63,6 @@ public class JobDescription extends Activity {
         progress_dialog.show();
 
 */
-
-
 
         profile_image = (ImageView) findViewById(R.id.profile_image);
         default_image = (ImageView) findViewById(R.id.default_image);

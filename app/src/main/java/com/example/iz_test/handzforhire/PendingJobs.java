@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -68,6 +69,7 @@ import java.util.Map;
            /* progress_dialog = new ProgressDialog(this);
             progress_dialog.setMessage("Loading.Please wait....");
             progress_dialog.show();*/
+
 
             list = (ListView) findViewById(R.id.listview);
             logo = (ImageView) findViewById(R.id.logo);
@@ -223,7 +225,6 @@ import java.util.Map;
                         emplrid = object.getString("employer_id");
                         get_status = object.getString("status");
 
-
                         /*System.out.println("0000"+jobname);
                         System.out.println("0000"+jobdate);
                         System.out.println("0000" + esti);
@@ -279,6 +280,8 @@ import java.util.Map;
                                 i.putExtra("userId",user_id);
                                 i.putExtra("jobId",job_id);
                                 startActivity(i);*/
+
+                            Toast.makeText(PendingJobs.this, "hiiiiiiiiiiii", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

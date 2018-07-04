@@ -120,7 +120,6 @@ public class PendingAdapter extends BaseAdapter {
                 });
 
 
-
             }
         });
         red.setOnClickListener(new View.OnClickListener()
@@ -296,7 +295,6 @@ public class PendingAdapter extends BaseAdapter {
     private void Reload()
     {
 
-
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
@@ -326,13 +324,15 @@ public class PendingAdapter extends BaseAdapter {
                                 Toast.makeText(activity, "Job List Refreshed", Toast.LENGTH_SHORT).show();
 
                             }
-                            dialog.dismiss();
+
                         } catch (JSONException e) {
 
                         } catch (UnsupportedEncodingException error1)
                         {
 
                         }
+                        dialog.dismiss();
+
                     }
                 }) {
             @Override
