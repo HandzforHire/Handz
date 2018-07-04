@@ -22,6 +22,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -210,10 +214,14 @@ public class JobDescription extends Activity {
                 }
                 else
                 {
-                    URL url = new URL(image);
+                   /* URL url = new URL(image);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     default_image.setVisibility(View.INVISIBLE);
-                    profile_image.setImageBitmap(bmp);
+                    profile_image.setImageBitmap(bmp);*/
+                    //Glide.with(JobDescription.this).load(profile_image).error(R.drawable.default_profile).into(default_image);
+                    profile_image.setVisibility(View.INVISIBLE);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(default_image);
+
                     dialog.dismiss();
                 }
 
@@ -221,10 +229,10 @@ public class JobDescription extends Activity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        }/* catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

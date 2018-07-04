@@ -31,6 +31,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -375,25 +379,29 @@ public class PostedJobs extends Activity {
                 System.out.println("ggggggggget:profilename:" + profilename);
                 profile_name.setText(profilename);
                 System.out.println("ggggggggget:profile_image:" + profile_image);
-                URL url = new URL(profile_image);
+               /* URL url = new URL(profile_image);
                 Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                 bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
                 bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-               /* Matrix matrix = new Matrix();
+               *//* Matrix matrix = new Matrix();
                 matrix.postRotate(90);
-                Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
+                Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
                 image.setVisibility(View.INVISIBLE);
-                profile.setImageBitmap(bmp);
+                profile.setImageBitmap(bmp);*/
                 //profile_name.setText(user_name);
+                //Glide.with(PostedJobs.this).load(profile_image).error(R.drawable.default_profile).into(image);
+                profile.setVisibility(View.GONE);
+                Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } /*catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 

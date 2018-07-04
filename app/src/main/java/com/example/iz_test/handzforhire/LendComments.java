@@ -25,6 +25,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,7 +112,7 @@ public class LendComments extends Activity
             default_image.setVisibility(View.VISIBLE);
         }
         else {
-            java.net.URL url = null;
+           /* java.net.URL url = null;
             try {
                 url = new URL(image);
             } catch (MalformedURLException e) {
@@ -123,7 +127,11 @@ public class LendComments extends Activity
             bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
             bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
             default_image.setVisibility(View.INVISIBLE);
-            profile.setImageBitmap(bmp);
+            profile.setImageBitmap(bmp);*/
+            //Glide.with(LendComments.this).load(image).error(R.drawable.default_profile).into(default_image);
+            profile.setVisibility(View.INVISIBLE);
+            Glide.with(this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(default_image);
+
         }
 
         b1.setOnClickListener(new View.OnClickListener()

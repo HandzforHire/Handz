@@ -24,6 +24,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -178,7 +182,7 @@ public class JobDetails extends Activity{
                     dialog.dismiss();
                 }
                 else {
-                    URL url = null;
+                   /* URL url = null;
                     try {
                         url = new URL(image);
                     } catch (MalformedURLException e) {
@@ -193,7 +197,11 @@ public class JobDetails extends Activity{
                     bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
                     bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
                     default_image.setVisibility(View.INVISIBLE);
-                    profile_image.setImageBitmap(bmp);
+                    profile_image.setImageBitmap(bmp);*/
+                    //Glide.with(JobDetails.this).load(profile_image).error(R.drawable.default_profile).into(default_image);
+                    profile_image.setVisibility(View.INVISIBLE);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(default_image);
+
                     dialog.dismiss();
                 }
 

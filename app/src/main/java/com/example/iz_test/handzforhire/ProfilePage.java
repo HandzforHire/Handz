@@ -37,6 +37,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,6 +82,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+
+
         detector = new SimpleGestureFilter(this,this);
 
         Button edit_profile = (Button) findViewById(R.id.edit_user_profile);
@@ -111,25 +117,6 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         state = user.get(SessionManager.KEY_STATE);
         zipcode = user.get(SessionManager.KEY_ZIPCODE);
         type = user.get(SessionManager.TYPE);
-        System.out.println("ssssssemail:" + email);
-        System.out.println("ssssssid:" + id);
-        System.out.println("ssssssaddress:" + address);
-        System.out.println("ssssss:city:" + city);
-        System.out.println("ssssssstate:" + state);
-        System.out.println("ssssssid:zipcode:" + zipcode);
-        System.out.println("type:type:" + type);
-
-
-     /* Intent i = getIntent();
-        userType = i.getStringExtra("userType");
-       address = i.getStringExtra("address");
-        city = i.getStringExtra("city");
-        state = i.getStringExtra("state");
-        zipcode = i.getStringExtra("zipcode");
-        email = i.getStringExtra("email");
-
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:userType::::"+userType);
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:"+email);*/
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
@@ -277,6 +264,11 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     public void paymentCheck()
     {
 
+
+        dialog = new Dialog(ProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, PAYMENT_URL,
                 new Response.Listener<String>() {
@@ -465,14 +457,9 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
             {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
-                System.out.println("ggggggggget:profile_image:" + profile_image);
-                System.out.println("ggggggggget:profilename:" + profilename);
                 employer_rating = jResult.getString("employer_rating");
-                System.out.println("resssssss:employer_rating:" + employer_rating);
                 posted_notification = jResult.getString("notificationCountPosted");
-                System.out.println("resssssss:employer_rating:" + posted_notification);
                 pending_notification = jResult.getString("notificationCountPending");
-                System.out.println("resssssss:employer_rating:" + pending_notification);
                 active_notification = jResult.getString("notificationCountActive");
                 System.out.println("resssssss:employer_rating:" + active_notification);
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
@@ -493,29 +480,36 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 if(!profile_image.equals("")&&!profilename.equals("null"))
                 {
                     profile_name.setText(profilename);
-                    URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    /* URL url = new URL(profile_image);
+                      Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
+                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);*/
                     /* Matrix matrix = new Matrix();
                     matrix.postRotate(90);
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
-                    image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);
-                    dialog.dismiss();
+                   // image.setVisibility(View.INVISIBLE);
+                   // profile.setImageBitmap(bmp);
+                   // profile.setVisibility(View.VISIBLE);
+                  /* Glide.with(ProfilePage.this).load(profile_image).apply(RequestOptions.bitmapTransform(
+                           new RoundedCornersTransformation(ProfilePage.this, Glideconstants.sCorner, Glideconstants.sColor, Glideconstants.sBorder))).into(image);
+                   */
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+                  dialog.dismiss();
 
                 }
                 else if(!profile_image.equals("")&&profilename.equals("null"))
                 {
-                    URL url = new URL(profile_image);
+                    /*URL url = new URL(profile_image);
                     Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
+                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);*/
                     /* Matrix matrix = new Matrix();
                     matrix.postRotate(90);
                     Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*/
-                    image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);
+                    //image.setVisibility(View.INVISIBLE);
+                    //profile.setImageBitmap(bmp);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+                    // Glide.with(ProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     dialog.dismiss();
                 }
                 else if(!profilename.equals("null")&&profile_image.equals(""))
@@ -535,12 +529,11 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (MalformedURLException e) {
+        } /*catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
+        }*/
 
     }
 
