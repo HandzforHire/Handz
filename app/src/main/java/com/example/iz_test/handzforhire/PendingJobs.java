@@ -272,22 +272,13 @@ import java.util.Map;
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
                         {
-
                                /*view.setSelected(true);
                                 String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
                                 System.out.println("ssssssssssselected:job_id:" + job_id);
                                 Intent i = new Intent(PendingJobs.this,JobDescription.class);
                                 i.putExtra("userId",user_id);
                                 i.putExtra("jobId",job_id);
-                                startActivity(i);
-
-
-*/
-                                Intent intent = new Intent(PendingJobs.this,JobDescription.class);
-                                startActivity(intent);
-
-
-
+                                startActivity(i);*/
                         }
                     });
                 }

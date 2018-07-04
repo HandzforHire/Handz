@@ -574,7 +574,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     }
 
 
-    public void getUsername() {
+    public void getUsername()
+    {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, USERNAME_URL,
                 new Response.Listener<String>() {
                     @Override

@@ -63,8 +63,7 @@ public class PendingAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     private LayoutInflater layoutInflater;
     LinearLayout lig,lir,lih;
-    
-
+    Dialog dialog;
 
     public PendingAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
@@ -147,8 +146,6 @@ public class PendingAdapter extends BaseAdapter {
         });
 
 
-
-
        green.setOnClickListener(new View.OnClickListener()
        {
            @Override
@@ -229,7 +226,8 @@ public class PendingAdapter extends BaseAdapter {
         return vi;
     }
 
-    private void refusee() {
+    private void refusee()
+    {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, emp_reject,
                 new Response.Listener<String>() {
@@ -298,11 +296,19 @@ public class PendingAdapter extends BaseAdapter {
     private void Reload()
     {
 
+
+        dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, job_list,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("reeeeeeeeeeeeeeeee:joblists:::" + response);
+                        System.out.println("reeeeeeeeeeeeeeeee:reload:::" + response);
                         onResponserecieved(response, 2);
                     }
                 },
@@ -320,7 +326,7 @@ public class PendingAdapter extends BaseAdapter {
                                 Toast.makeText(activity, "Job List Refreshed", Toast.LENGTH_SHORT).show();
 
                             }
-                            progress_dialog.dismiss();
+                            dialog.dismiss();
                         } catch (JSONException e) {
 
                         } catch (UnsupportedEncodingException error1)
