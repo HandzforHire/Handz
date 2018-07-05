@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -59,7 +60,7 @@ public class LendProfilePage extends Activity{
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     ProgressDialog progress_dialog;
-    ImageView profile,handz,menu;
+    ImageView profile,handz,menu,share_lend;
     TextView profile_name,rating_value;
     RelativeLayout rating_lay;
     SessionManager session;
@@ -91,6 +92,16 @@ public class LendProfilePage extends Activity{
         job_history = (Button) findViewById(R.id.job_history);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
         menu = (ImageView)findViewById(R.id.menu);
+        share_lend=(ImageView)findViewById(R.id.sha_lend);
+        share_lend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Toast.makeText(LendProfilePage.this, "lend a hand", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();

@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -65,7 +66,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     Button create,edit,need_help;
     private SimpleGestureFilter detector;
     String address,city,state,zipcode,profile_image,profilename,type;
-    ImageView profile,logo,menu;
+    ImageView profile,logo,menu,share_need;
     ProgressDialog progress_dialog;
     ProgressBar progress;
     RelativeLayout rating_lay;
@@ -103,6 +104,16 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         posted_circle = (TextView) findViewById(R.id.circle1);
         active_circle = (TextView) findViewById(R.id.circle2);
         history_circle = (TextView) findViewById(R.id.circle3);
+
+        share_need=(ImageView)findViewById(R.id.sha_need);
+        share_need.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Toast.makeText(ProfilePage.this, "need a hand", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         session = new SessionManager(getApplicationContext());

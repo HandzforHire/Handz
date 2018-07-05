@@ -421,7 +421,7 @@
 
             </LinearLayout>
 
-                <Button
+            <Button
                     android:id="@+id/need_help"
                     android:layout_width="50sp"
                     android:layout_height="50sp"
@@ -429,11 +429,32 @@
                     android:layout_gravity="center"
                     android:background="@drawable/bulb"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-5sp"
+                >
+
+
             <TextView
+                android:id="@+id/tex"
                 android:layout_width="120sp"
                 android:layout_height="40sp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/handz"/>
+
+                <ImageView
+                    android:id="@+id/sha_need"
+                    android:layout_width="50sp"
+                    android:layout_height="50sp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="50sp"
+                    android:src="@drawable/share"
+                    android:layout_marginBottom="20sp"
+                    android:layout_toRightOf="@+id/tex"
+                    />
+            </RelativeLayout>
+
         </LinearLayout>
 
     </ScrollView>

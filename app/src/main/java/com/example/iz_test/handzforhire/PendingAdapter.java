@@ -262,11 +262,9 @@ public class PendingAdapter extends BaseAdapter {
             }
         });
 
-
         get_jobid = items.get("jobId");
         get_emplrid = items.get("emrid");
         get_employeeid = items.get("employeeid");
-
 
         DateFormat dateInstance = SimpleDateFormat.getDateInstance();
         DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
