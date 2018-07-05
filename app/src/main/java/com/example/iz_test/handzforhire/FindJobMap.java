@@ -84,6 +84,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
 
     public static Fragment fragments;
     View rootView;
+    int undisclosedjob=0;
 
     @Nullable
     @Override
@@ -150,6 +151,18 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);
                 getActivity().finish();
+            }
+        });
+
+
+        txt_undisclosedjob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(undisclosedjob>0){
+                   Intent in_job_list=new Intent(getActivity(),SearchJob.class);
+                    startActivity(in_job_list);
+                }
             }
         });
 
@@ -308,6 +321,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             System.out.println("response "+responseObj);
             if(status.equals("error"))
             {
+                undisclosedjob=0;
                 txt_undisclosedjob.setText("0 disclosed Locations");
             }else {
                 googleMap.clear();
@@ -426,6 +440,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                         undisclosedjobs.add(object.toString());
                     }
                 }
+                undisclosedjob=undisclosedjobs.size();
                 if(undisclosedjobs.size()>0)
                     txt_undisclosedjob.setText(undisclosedjobs.size()+" Additional Undisclosed Locations\n Within the Parameters of this map\n(Click Here for ListView the Job Details)");
                 else

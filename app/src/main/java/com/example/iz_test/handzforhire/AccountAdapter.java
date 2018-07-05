@@ -73,27 +73,22 @@ public class AccountAdapter extends BaseAdapter {
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String employer_id = items.get("userId");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:employer_id::"+employer_id);
         final String acc_id = items.get("id");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:acc_id::"+acc_id);
         String routing_no = items.get("routing");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:routing_no::"+routing_no);
         String account_no = items.get("account");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:account_no::" + account_no);
 
         // Setting all values in listview
         id.setText(acc_id);
         routing.setText(routing_no);
         account.setText(account_no);
-
+        edit_btn.setTag(position);
+        delete_btn.setTag(position);
         edit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finalItems = data.get(position);
+                finalItems = data.get((Integer) v.getTag());
                 user_id = finalItems.get("userId");
-                System.out.println("OOOOOOOOOOOOOOO:" + user_id);
                 String acc_id = finalItems.get("id");
-                System.out.println("OOOOOOOOOOOOOOO:" + acc_id);
                 Intent intent = new Intent(activity, UpdateAccount.class);
                 intent.putExtra("id", acc_id);
                 intent.putExtra("userId", user_id);
@@ -105,7 +100,8 @@ public class AccountAdapter extends BaseAdapter {
         delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finalItems = data.get(position);
+
+                finalItems = data.get((Integer) v.getTag());
                 delete_account_id = finalItems.get("id");
                 System.out.println("OOOOOOOOOOOOOOO:delete_account_id:" + delete_account_id);
                 webService();

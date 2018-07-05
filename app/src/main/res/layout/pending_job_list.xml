@@ -6,6 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <LinearLayout
         android:id="@+id/refu"
         android:layout_width="match_parent"
@@ -333,7 +338,39 @@
                 android:textStyle="bold" />
 
 
+
     </LinearLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lin_hold"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+        <include layout="@layout/hold_popup" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lin_refuse"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:visibility="gone">
+            <include layout="@layout/refuse_popup" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lin_hire"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:visibility="gone">
+            <include layout="@layout/hire_popup" />
+        </LinearLayout>
+    </FrameLayout>
 
         <View
             android:layout_width="match_parent"
@@ -343,4 +380,3 @@
 
     </LinearLayout>
 
-</LinearLayout>

@@ -59,7 +59,6 @@ public class ReviewAdapter extends BaseAdapter {
         final TextView rating = (TextView) vi.findViewById(R.id.rating);
         final TextView comments = (TextView) vi.findViewById(R.id.comments);
         final TextView date = (TextView) vi.findViewById(R.id.date);
-        ImageView image = (ImageView)vi.findViewById(R.id.img2);
         ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
         RatingBar rating_bar = (RatingBar) vi.findViewById(R.id.ratingBar1);
 
@@ -71,13 +70,9 @@ public class ReviewAdapter extends BaseAdapter {
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String get_image= items.get("image");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_image::" + get_image);
         final String get_average = items.get("average");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_average::" + get_average);
         final String get_date = items.get("date");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_date::" + get_date);
         final String comment = items.get("comments");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:comment::" + comment);
 
         rating.setText(get_average);
         rating.setTypeface(font);
@@ -91,56 +86,11 @@ public class ReviewAdapter extends BaseAdapter {
             image1.setVisibility(View.VISIBLE);
         }
         else {
-           /* URL url = null;
-            try {
-                url = new URL(get_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            image1.setVisibility(View.INVISIBLE);
-            image.setImageBitmap(bmp);*/
-           // Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
-            image1.setVisibility(View.INVISIBLE);
-            Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+            Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
         }
 
         return vi;
     }
 
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
-
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
-    }
 }

@@ -112,9 +112,16 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+
         /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
+        dialog = new Dialog(EditUserProfile.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
 
         home = (Button) findViewById(R.id.change_home_address);
         update = (Button) findViewById(R.id.update_email);
@@ -314,48 +321,24 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
             {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
-                System.out.println("ggggggggget:profile_image:" + profile_image);
-                System.out.println("ggggggggget:profilename:" + profilename);
                 employer_rating = jResult.getString("employer_rating");
-                System.out.println("resssssss:employer_rating:" + employer_rating);
                 posted_notification = jResult.getString("notificationCountPosted");
-                System.out.println("resssssss:employer_rating:" + posted_notification);
                 pending_notification = jResult.getString("notificationCountPending");
-                System.out.println("resssssss:employer_rating:" + pending_notification);
                 active_notification = jResult.getString("notificationCountActive");
-                System.out.println("resssssss:employer_rating:" + active_notification);
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
-                System.out.println("resssssss:employer_rating:" + jobhistory_notification);
                 rating_value.setText(employer_rating);
                 if(!profile_image.equals("")&&!profilename.equals("null"))
                 {
                     profile_name.setText(profilename);
-                  /*  URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    *//* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
                     photo_text.setVisibility(View.INVISIBLE);
-                    image.setImageBitmap(bmp);*/
-                    //Glide.with(EditUserProfile.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
                     dialog.dismiss();
                 }
                 else if(!profile_image.equals("")&&profilename.equals("null"))
                 {
-                 /*   URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    *//* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
+
                     photo_text.setVisibility(View.INVISIBLE);
-                    image.setImageBitmap(bmp);*/
-                    //Glide.with(EditUserProfile.this).load(profile_image).error(R.drawable.default_profile).into(image);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
                     dialog.dismiss();
@@ -445,13 +428,6 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 Uri selectedImageUri = data.getData();
                 CropImage.activity(selectedImageUri)
                         .start(this);
-              /*
-                String selectedImagePath = uriToFilename(selectedImageUri);
-                System.out.println("filename:gallery "+selectedImagePath);
-                new FileUpload(selectedImagePath);
-                System.out.println("path:camera:" + selectedImagePath);
-                filename = FileUpload.firstRemoteFile;
-                System.out.println("filename:gallery::"+filename);*/
             }
             else if (requestCode == REQUEST_CAMERA)
             {
@@ -468,10 +444,6 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 File finalFile = new File(getRealPathFromURI(tempUri));
                 System.out.println("ffffffffffffff:"+ finalFile);
                 String capturedImagePath = String.valueOf(finalFile);
-               /* new FileUpload(capturedImagePath);
-                System.out.println("path:capturedImagePath:" + capturedImagePath);
-                filename = FileUpload.firstRemoteFile;
-                System.out.println("filename:camera::"+filename);*/
                 CropImage.activity(tempUri)
                         .start(this);
 
@@ -482,7 +454,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                     image.setImageURI(resultUri);
                     String selectedImagePath = uriToFilename(resultUri);
                     System.out.println("filename:gallery "+selectedImagePath);
-                    new FileUpload(selectedImagePath);
+                    new FileUpload(selectedImagePath,id);
                     System.out.println("path:camera:" + selectedImagePath);
                     filename = FileUpload.firstRemoteFile;
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -518,13 +490,13 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 // Split at colon, use second item in the array
                 String[] splits = wholeID.split(":");
                 if (splits.length == 2) {
-                    String id = splits[1];
+                    String ids = splits[1];
 
                     String[] column = {MediaStore.Images.Media.DATA};
 // where id is equal to
                     String sel = MediaStore.Images.Media._ID + "=?";
                     Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            column, sel, new String[]{id}, null);
+                            column, sel, new String[]{ids}, null);
                     int columnIndex = cursor.getColumnIndex(column[0]);
                     if (cursor.moveToFirst()) {
                         filePath = cursor.getString(columnIndex);

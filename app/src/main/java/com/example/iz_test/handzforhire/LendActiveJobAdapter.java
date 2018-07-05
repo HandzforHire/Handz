@@ -64,7 +64,6 @@ public class LendActiveJobAdapter extends BaseAdapter{
         TextView tv3 = (TextView) vi.findViewById(R.id.text5);
         TextView tv4 = (TextView) vi.findViewById(R.id.text7);
         TextView tv5 = (TextView) vi.findViewById(R.id.text8);
-        ImageView image = (ImageView)vi.findViewById(R.id.img2);
         ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
         TextView payment = (TextView) vi.findViewById(R.id.payment);
         LinearLayout message = (LinearLayout) vi.findViewById(R.id.lay1);
@@ -84,28 +83,20 @@ public class LendActiveJobAdapter extends BaseAdapter{
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String get_name = items.get("name");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
+
         final String get_image = items.get("image");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_image::" + get_image);
         final String get_user = items.get("user");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_user::" + get_user);
         final String get_job_id = items.get("jobId");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_job_id::" + get_job_id);
         final String user_id = items.get("userId");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:userId::" + user_id);
         final String jobDate = items.get("jobDate");
         final String start_time = items.get("start_time");
         final String end_time = items.get("end_time");
         final String payment_amount = items.get("payment_amount");
         final String payment_type = items.get("payment_type");
         final String get_jobid = items.get("jobId");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_jobid::" + get_jobid);
         final String get_employer = items.get("employer");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_employer::" + get_employer);
         final String get_employee = items.get("employee");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_employee::" + get_employee);
         final String channel_id=items.get("channel");
-        System.out.println("iiiiiiiiiiiiiii:get_channel_id"+channel_id);
 
         job_name.setText(get_name);
         job_name.setTypeface(font);
@@ -120,13 +111,24 @@ public class LendActiveJobAdapter extends BaseAdapter{
         employee_id.setText(get_employee);
         image_text.setText(get_image);
 
+
+        payment.setTag(position);
+        job_details.setTag(position);
+        chat.setTag(position);
+
         payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                int pos= (int) v.getTag();
+                HashMap<String, String> items =data.get(pos);
+                String username="";
+
                 Intent i = new Intent(activity,MakePayment.class);
-                i.putExtra("job_id",get_job_id);
-                i.putExtra("userId",user_id);
-                i.putExtra("job_name",get_name);
+                i.putExtra("job_id", items.get("jobId"));
+                i.putExtra("userId",items.get("userId"));
+                i.putExtra("job_name",items.get("name"));
                 v.getContext().startActivity(i);
             }
         });
@@ -134,9 +136,11 @@ public class LendActiveJobAdapter extends BaseAdapter{
         job_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int pos= (int) v.getTag();
+                HashMap<String, String> items =data.get(pos);
                 Intent i = new Intent(activity,JobDetails.class);
-                i.putExtra("jobId",get_job_id);
-                i.putExtra("userId",user_id);
+                i.putExtra("jobId", items.get("jobId"));
+                i.putExtra("userId",items.get("userId"));
                 v.getContext().startActivity(i);
             }
         });
@@ -145,12 +149,22 @@ public class LendActiveJobAdapter extends BaseAdapter{
         {
             @Override
             public void onClick(View view) {
-                String jobId = job_id.getText().toString();
-                System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+
+                int pos= (int) view.getTag();
+                HashMap<String, String> items =data.get(pos);
+                String username="";
+                String  jobId =  items.get("jobId");;
+                String channel_id=items.get("channel");
+                if(items.get("profile").isEmpty())
+                    username=items.get("user");
+                else
+                    username= items.get("profile");;
+                String  userId=items.get("userId");
+
                 Intent i = new Intent(activity,ChatNeed.class);
                 i.putExtra("jobId",jobId);
                 i.putExtra("channel",channel_id);
-                i.putExtra("username",get_user);
+                i.putExtra("username",username);
                 view.getContext().startActivity(i);
 
             }
@@ -161,57 +175,11 @@ public class LendActiveJobAdapter extends BaseAdapter{
             image1.setVisibility(View.VISIBLE);
         }
         else {
-            /*URL url = null;
-            try {
-                url = new URL(get_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            image1.setVisibility(View.INVISIBLE);
-            image.setImageBitmap(bmp);*/
-            //Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
-            image1.setVisibility(View.INVISIBLE);
-            Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+            Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
         }
 
         return vi;
-    }
-
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
-
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
     }
 
 }

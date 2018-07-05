@@ -54,7 +54,7 @@ public class EditPostedJobs extends Activity {
     private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
     private static final String URL = Constant.SERVER_URL+"job_lists";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
-    ImageView image,profile,logo;
+    ImageView profile,logo;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
@@ -67,6 +67,7 @@ public class EditPostedJobs extends Activity {
     int timeout = 60000;
     RelativeLayout rating_lay;
     Dialog dialog;
+    ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,16 @@ public class EditPostedJobs extends Activity {
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
+
         image = (ImageView)findViewById(R.id.default_image);
+
+        dialog = new Dialog(EditPostedJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
+
         profile = (ImageView)findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
         logo = (ImageView)findViewById(R.id.logo);
@@ -170,19 +180,7 @@ public class EditPostedJobs extends Activity {
                 System.out.println("ggggggggget:profilename:" + profilename);
                 profile_name.setText(profilename);
                 System.out.println("ggggggggget:profile_image:" + profile_image);
-               /* URL url = new URL(profile_image);
-                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-               *//* Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
-                image.setVisibility(View.INVISIBLE);
-                profile.setImageBitmap(bmp);*/
-                //profile_name.setText(user_name);
-                //Glide.with(EditPostedJobs.this).load(profile_image).error(R.drawable.default_profile).into(image);
-                profile.setVisibility(View.INVISIBLE);
-                Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+                Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 
             }
 

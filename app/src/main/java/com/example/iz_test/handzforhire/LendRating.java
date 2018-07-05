@@ -47,7 +47,7 @@ public class LendRating extends Activity{
     float average;
     String job_id,employer_id,employee_id,user_id,image,profilename,profile_image;
     String category1,category2,category3,category4,category5;
-    ImageView profile,default_image;
+    ImageView profile;
     RelativeLayout rating_lay;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
@@ -69,7 +69,6 @@ public class LendRating extends Activity{
         ra = (TextView) findViewById(R.id.text3);
         prof=(TextView)findViewById(R.id.text1);
         profile = (ImageView) findViewById(R.id.profile_image);
-        default_image = (ImageView) findViewById(R.id.default_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
 
         Intent i = getIntent();
@@ -234,29 +233,10 @@ public class LendRating extends Activity{
 
                 if(profile_image.equals(""))
                 {
-                    default_image.setVisibility(View.VISIBLE);
                 }
                 else {
-                    /*URL url = null;
-                    try {
-                        url = new URL(profile_image);
-                    } catch (MalformedURLException e)
-                    {
-                        e.printStackTrace();
-                    }
-                    Bitmap bmp = null;
-                    try {
-                        bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    default_image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);*/
-                    //Glide.with(LendRating.this).load(profile_image).error(R.drawable.default_profile).into(default_image);
-                    profile.setVisibility(View.INVISIBLE);
-                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(default_image);
+
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 
                 }
             }

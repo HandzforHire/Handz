@@ -20,6 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.View.OnClickListener;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
+
 public class Adapter extends BaseAdapter {
 
     // Declare Variables
@@ -81,8 +86,7 @@ public class Adapter extends BaseAdapter {
             employee_id = (TextView) view.findViewById(R.id.employee_id);
             image_text = (TextView) view.findViewById(R.id.image1);
             user_name = (TextView) view.findViewById(R.id.text3);
-            image = (ImageView)view.findViewById(R.id.img2);
-            image1 = (ImageView) view.findViewById(R.id.img1);
+            image = (ImageView)view.findViewById(R.id.img1);
             leave_rating_btn = (TextView) view.findViewById(R.id.leave_rating);
             job_details = (Button) view.findViewById(R.id.btn);
             chat = (LinearLayout) view.findViewById(R.id.lay1);
@@ -105,6 +109,8 @@ public class Adapter extends BaseAdapter {
 
         chat.setTag(position);
         leave_rating_btn.setTag(position);
+        job_details.setTag(position);
+        Glide.with(mContext).load(worldpopulationlist.get(position).getImage()).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(mContext,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
         leave_rating_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,11 +123,6 @@ public class Adapter extends BaseAdapter {
                     username=item.getUsername();
                 else
                     username=item.getProfilename();
-
-               /* jobId = job_id.getText().toString();
-                String employerId = employer_id.getText().toString();
-                String employeeId = employee_id.getText().toString();
-                String profile_image = image_text.getText().toString();*/
 
                 Intent intent = new Intent(mContext, NeedRating.class);
                 intent.putExtra("jobId", item.getJobId());
@@ -140,15 +141,6 @@ public class Adapter extends BaseAdapter {
             public void onClick(View view) {
                 int pos= (int) view.getTag();
                WorldPopulation item=worldpopulationlist.get(pos);
-
-              /* jobId = job_id.getText().toString();
-                System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
-                Intent i = new Intent(mContext,ChatNeed.class);
-                i.putExtra("jobId",jobId);
-                i.putExtra("channel",channel_id);
-                i.putExtra("username",username);
-                i.putExtra("userId",userId);
-                view.getContext().startActivity(i);*/
 
                 jobId = item.getJobId();
                 channel_id=item.getChannel();
@@ -174,33 +166,14 @@ public class Adapter extends BaseAdapter {
         job_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jobId = job_id.getText().toString();
-                System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+                int pos= (int) v.getTag();
+                WorldPopulation item=worldpopulationlist.get(pos);
                 Intent i = new Intent(mContext,JobDetails.class);
-                i.putExtra("jobId",jobId);
-                i.putExtra("userId",userId);
+                i.putExtra("jobId",item.getJobId());
+                i.putExtra("userId",item.getUserid());
                 v.getContext().startActivity(i);
             }
         });
-
-       /* // Listen for ListView Item Click
-        view.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                // Send single item click data to SingleItemView Class
-                Intent intent = new Intent(mContext, SingleItemView.class);
-                // Pass all data rank
-                intent.putExtra("rank",(worldpopulationlist.get(position).getRank()));
-                // Pass all data country
-                intent.putExtra("country",(worldpopulationlist.get(position).getCountry()));
-                // Pass all data population
-                intent.putExtra("population",(worldpopulationlist.get(position).getPopulation()));
-                // Pass all data flag
-                // Start SingleItemView Class
-                mContext.startActivity(intent);
-            }
-        });*/
 
         return view;
     }

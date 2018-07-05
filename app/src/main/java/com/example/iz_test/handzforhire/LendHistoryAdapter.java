@@ -61,7 +61,6 @@ public class LendHistoryAdapter extends BaseAdapter{
 
             TextView job_name = (TextView) vi.findViewById(R.id.name);
             TextView amount = (TextView) vi.findViewById(R.id.amount);
-            ImageView image = (ImageView)vi.findViewById(R.id.img2);
             ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
             Button job_details = (Button) vi.findViewById(R.id.btn);
             LinearLayout leave_rating = (LinearLayout) vi.findViewById(R.id.lay2);
@@ -81,24 +80,14 @@ public class LendHistoryAdapter extends BaseAdapter{
             HashMap<String, String> items = new HashMap<String, String>();
             items = data.get(position);
             final String get_name = items.get("name");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
             final String get_image = items.get("image");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_image::" + get_image);
             final String get_profile = items.get("profile");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_profile::" + get_profile);
             final String get_amount = items.get("payment");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_amount::" + get_amount);
             final String get_id = items.get("user_id");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_id::" + get_id);
             final String get_jobid = items.get("jobId");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_jobid::" + get_jobid);
             final String get_employer = items.get("employer");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_employer::" + get_employer);
             final String get_employee = items.get("employee");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_employee::" + get_employee);
             final String channel_id=items.get("channel");
-            System.out.println("iiiiiiiiiiiiiii:channel_Id"+channel_id);
-
             job_name.setText(get_name);
             job_name.setTypeface(font);
             amount.setText(get_amount);
@@ -106,21 +95,23 @@ public class LendHistoryAdapter extends BaseAdapter{
             employer_id.setText(get_employer);
             employee_id.setText(get_employee);
 
+            leave_rating.setTag(position);
+            chat.setTag(position);
+            job_details.setTag(position);
+
             leave_rating.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    jobId = job_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
-                    String employerId = employer_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:employerId::"+employerId);
-                    String employeeId = employee_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:employeeId::"+employeeId);
+
+                    HashMap<String, String> items = new HashMap<String, String>();
+                    items = data.get((Integer) v.getTag());
+
                     Intent intent = new Intent(activity, LendRating.class);
-                    intent.putExtra("jobId",jobId);
-                    intent.putExtra("employer_id",employerId);
-                    intent.putExtra("employee_id",employeeId);
-                    intent.putExtra("user_id",get_id);
-                    intent.putExtra("profilename",get_profile);
+                    intent.putExtra("jobId",items.get("jobId"));
+                    intent.putExtra("employer_id", items.get("employer"));
+                    intent.putExtra("employee_id",items.get("employee"));
+                    intent.putExtra("user_id", items.get("user_id"));
+                    intent.putExtra("profilename", items.get("profile"));
                     v.getContext().startActivity(intent);
                 }
             });
@@ -129,13 +120,20 @@ public class LendHistoryAdapter extends BaseAdapter{
             {
                 @Override
                 public void onClick(View view) {
-                    jobId = job_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+
+                    int pos= (int) view.getTag();
+                    HashMap<String, String> items =data.get(pos);
+                    String username="";
+                    if(items.get("profile").isEmpty())
+                        username=items.get("user");
+                    else
+                        username= items.get("profile");
+
                     Intent i = new Intent(activity,ChatNeed.class);
-                    i.putExtra("jobId",jobId);
-                    i.putExtra("channel",channel_id);
-                    i.putExtra("username",get_name);
-                    i.putExtra("userId",get_id);
+                    i.putExtra("jobId",items.get("jobId"));
+                    i.putExtra("channel",items.get("channel"));
+                    i.putExtra("username",username);
+                    i.putExtra("userId", items.get("user_id"));
                     view.getContext().startActivity(i);
                 }
             });
@@ -143,39 +141,22 @@ public class LendHistoryAdapter extends BaseAdapter{
             job_details.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String jobId = job_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+
+                    int pos= (int) v.getTag();
+                    HashMap<String, String> items =data.get(pos);
+
                     Intent i = new Intent(activity,JobDetails.class);
-                    i.putExtra("jobId",jobId);
-                    i.putExtra("userId",get_id);
+                    i.putExtra("jobId",items.get("jobId"));
+                    i.putExtra("userId",items.get("user_id"));
                     v.getContext().startActivity(i);
                 }
             });
 
             if(get_image.equals(""))
             {
-                image1.setVisibility(View.VISIBLE);
+
             }
             else {
-               /* URL url = null;
-                try {
-                    url = new URL(get_image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bmp = null;
-                try {
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(bmp!=null) {
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    image1.setVisibility(View.INVISIBLE);
-                    image.setImageBitmap(bmp);
-                }*/
-                //Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(image1);
                 Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
             }
@@ -184,31 +165,5 @@ public class LendHistoryAdapter extends BaseAdapter{
             return vi;
         }
 
-        protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-            // Initialize a new Bitmap to make it bordered bitmap
-            Bitmap dstBitmap = Bitmap.createBitmap(
-                    srcBitmap.getWidth() + borderWidth*2, // Width
-                    srcBitmap.getHeight() + borderWidth*2, // Height
-                    Bitmap.Config.ARGB_8888 // Config
-            );
-            Canvas canvas = new Canvas(dstBitmap);
 
-            Paint paint = new Paint();
-            paint.setColor(borderColor);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(borderWidth);
-            paint.setAntiAlias(true);
-            Rect rect = new Rect(
-                    borderWidth / 2,
-                    borderWidth / 2,
-                    canvas.getWidth() - borderWidth / 2,
-                    canvas.getHeight() - borderWidth / 2
-            );
-            canvas.drawRect(rect,paint);
-            canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-            srcBitmap.recycle();
-
-            // Return the bordered circular bitmap
-            return dstBitmap;
-        }
     }

@@ -196,12 +196,7 @@ public class PayEmployee1 extends Activity{
                         dialog.dismiss();
                     }
                     else {
-                       /* java.net.URL url = new URL(profile_image);
-                        Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                        bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                        image.setImageBitmap(bmp);*/
-                        //Glide.with(PayEmployee1.this).load(profile_image).error(R.drawable.default_profile).into(image);
+
                         Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
                     }

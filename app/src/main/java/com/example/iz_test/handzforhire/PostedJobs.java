@@ -4,6 +4,7 @@ package com.example.iz_test.handzforhire;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,11 +12,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +34,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -44,6 +50,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +82,7 @@ public class PostedJobs extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_posted_jobs);
 
+
       /*  progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
@@ -81,6 +90,12 @@ public class PostedJobs extends Activity {
         //image = (ImageView)findViewById(R.id.default_image);
         //profile = (ImageView)findViewById(R.id.profile_image);
         //profile_name = (TextView) findViewById(R.id.text1);
+
+        dialog = new Dialog(PostedJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
         logo = (ImageView)findViewById(R.id.logo);
         list = (ListView)findViewById(R.id.listview);
         //rating_lay = (RelativeLayout) findViewById(R.id.rating);
@@ -160,12 +175,13 @@ public class PostedJobs extends Activity {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
 
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("resssssssssssssssss:view:posted:jobs" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
@@ -221,14 +237,14 @@ public class PostedJobs extends Activity {
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            dialog.dismiss();
+
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                             System.out.println("volley error ::"+e.getMessage());
                         } catch (UnsupportedEncodingException errors){
                             System.out.println("volley error ::"+errors.getMessage());
                         }
-
+                        dialog.dismiss();
                     }
                 }) {
             @Override
@@ -262,6 +278,7 @@ public class PostedJobs extends Activity {
             System.out.println("jjjjjjjjjjjjjjjob:::list:::"+jobList);
             if(status.equals("success"))
             {
+                job_list.clear();
                 JSONArray array = new JSONArray(jobList);
                 for(int n = 0; n < array.length(); n++)
                 {
@@ -273,13 +290,6 @@ public class PostedJobs extends Activity {
                     applicants = object.getString("no_of_applicants_applied");
                     job_id = object.getString("job_id");
                     dlist=object.getString("delist");
-
-                    System.out.println("ressss:name::"+name);
-                    System.out.println("ressss:date::"+date);
-                    System.out.println("ressss:recur::" + type);
-                    System.out.println("ressss::amount:" + amount);
-                    System.out.println("ressss::applicants:" + applicants);
-                    System.out.println("ressss::job_id:" + job_id);
 
                     HashMap<String,String> map = new HashMap<String,String>();
                     map.put("name", name);
@@ -296,8 +306,8 @@ public class PostedJobs extends Activity {
                     map.put("d_list",dlist);
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
-                    ViewListAdapter adapter = new ViewListAdapter(this, job_list);
-                    list.setAdapter(adapter);
+                   /* ViewListAdapter adapter = new ViewListAdapter(this, job_list);
+                    list.setAdapter(adapter);*/
                     ViewListAdapter arrayAdapter = new ViewListAdapter(this, job_list){
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent){
@@ -379,20 +389,9 @@ public class PostedJobs extends Activity {
                 System.out.println("ggggggggget:profilename:" + profilename);
                 profile_name.setText(profilename);
                 System.out.println("ggggggggget:profile_image:" + profile_image);
-               /* URL url = new URL(profile_image);
-                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-               *//* Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
-                image.setVisibility(View.INVISIBLE);
-                profile.setImageBitmap(bmp);*/
-                //profile_name.setText(user_name);
-                //Glide.with(PostedJobs.this).load(profile_image).error(R.drawable.default_profile).into(image);
-                profile.setVisibility(View.GONE);
+            /*    profile.setVisibility(View.GONE);
                 Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-
+*/
             }
 
         } catch (JSONException e) {
@@ -405,31 +404,243 @@ public class PostedJobs extends Activity {
     }
 
 
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
 
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
+    public class ViewListAdapter extends BaseAdapter {
 
-        // Return the bordered circular bitmap
-        return dstBitmap;
+        private Activity activity;
+        String dlist,job_id;
+        String value = "HandzForHire@~";
+        private ArrayList<HashMap<String, String>> data;
+        private  LayoutInflater inflater = null;
+        public ViewListAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
+            activity = a;
+            data = d;
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        public int getCount() {
+            return data.size();
+        }
+
+        public Object getItem(int position) {
+            return position;
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View vi = convertView;
+            if (convertView == null)
+                vi = inflater.inflate(R.layout.view_listview, null);
+
+            TextView job_name = (TextView) vi.findViewById(R.id.text1);
+            TextView when = (TextView) vi.findViewById(R.id.text2);
+            TextView pay = (TextView) vi.findViewById(R.id.text6);
+            TextView date = (TextView) vi.findViewById(R.id.text3);
+            TextView amount = (TextView) vi.findViewById(R.id.text7);
+            TextView type = (TextView) vi.findViewById(R.id.text8);
+            final TextView jobId = (TextView) vi.findViewById(R.id.job_id);
+            final TextView applicants = (TextView) vi.findViewById(R.id.no_applicants);
+            ImageView checked=(ImageView)vi.findViewById(R.id.img);
+            ImageView unchecked=(ImageView)vi.findViewById(R.id.img1);
+
+
+            String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
+            Typeface font = Typeface.createFromAsset(activity.getAssets(), fontPath);
+            String fontPath1 = "fonts/calibri.ttf";
+            Typeface font1 = Typeface.createFromAsset(activity.getAssets(), fontPath1);
+
+            HashMap<String, String> items = new HashMap<String, String>();
+            items = data.get(position);
+            final String get_name = items.get("name");
+            final String get_date = items.get("date");
+            String get_amount = items.get("amount");
+            String get_type = items.get("type");
+            job_id = items.get("jobId");
+            final String get_applicants = items.get("no_of_applicants");
+            final String user_id = items.get("userId");
+            final String address = items.get("address");
+            final String city = items.get("city");
+            final String state = items.get("state");
+            final String zipcode = items.get("zipcode");
+            dlist= items.get("d_list");
+            System.out.println("iiiiiidlist::"+dlist);
+
+            checked.setTag(position);
+            unchecked.setTag(position);
+
+            if (dlist.equals("no"))
+            {
+                unchecked.setVisibility(View.VISIBLE);
+                checked.setVisibility(View.INVISIBLE);
+
+
+            }else
+            {
+                checked.setVisibility(View.VISIBLE);
+                unchecked.setVisibility(View.INVISIBLE);
+            }
+
+            unchecked.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    int pos= (int) v.getTag();
+                    dlist="yes";
+                    HashMap<String, String> items = new HashMap<String, String>();
+                    items = data.get(pos);
+                    job_id=items.get("jobId");
+                    check();
+
+                }
+            });
+
+            checked.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    int pos= (int) v.getTag();
+                    dlist="no";
+                    HashMap<String, String> items = new HashMap<String, String>();
+                    items = data.get(pos);
+                    job_id=items.get("jobId");
+                    check();
+
+                }
+            });
+            DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+            DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+            try {
+                java.util.Date dates = srcDf.parse(get_date);
+                date.setText("" + destDf.format(dates));
+
+            } catch (Exception e)
+            {
+                System.out.println("error " + e.getMessage());
+            }
+
+
+            if(get_applicants.equals("0"))
+            {
+                applicants.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                applicants.setText(get_applicants);
+            }
+
+            job_name.setText(get_name);
+            job_name.setTypeface(font);
+            when.setTypeface(font);
+            pay.setTypeface(font);
+            //date.setText(get_date);
+            //date.setTypeface(font1);
+            amount.setText(get_amount);
+            amount.setTypeface(font1);
+            type.setText(get_type);
+            type.setTypeface(font1);
+            jobId.setText(job_id);
+
+            applicants.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v) {
+                    if (get_applicants.equals("0")) {
+                        final Dialog dialog = new Dialog(activity);
+                        dialog.setContentView(R.layout.custom_dialog);
+
+                        // set the custom dialog components - text, image and button
+                        TextView text = (TextView) dialog.findViewById(R.id.text);
+                        text.setText("No Job Applied");
+                        Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                        // if button is clicked, close the custom dialog
+                        dialogButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialog.show();
+                        Window window = dialog.getWindow();
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        return;
+                    } else {
+                        Intent i = new Intent(activity, ViewApplicant.class);
+                        i.putExtra("jobId", job_id);
+                        i.putExtra("userId",user_id);
+                        i.putExtra("address", address);
+                        i.putExtra("city",city);
+                        i.putExtra("zipcode", zipcode);
+                        i.putExtra("state",state);
+                        i.putExtra("jobname",get_name);
+                        v.getContext().startActivity(i);
+                    }
+                }
+            });
+
+            return vi;
+        }
+
+        private void check()
+        {
+            final String url = Constant.SERVER_URL+"remove_job?X-APP-KEY="+value+"&delist="+dlist+"&job_id="+job_id;
+
+            JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>()
+                    {
+                        @Override
+                        public void onResponse(JSONObject response)
+                        {
+
+                            Log.d("Response", response.toString());
+                            System.out.println("resssssssssssssssss:dlist::service:::" + response);
+                            onResponserecieved1(response, 1);
+                        }
+                    },
+                    new Response.ErrorListener()
+                    {
+                        @Override
+                        public void onErrorResponse(VolleyError error)
+                        {
+
+                        }
+                    }
+            );
+
+
+            RequestQueue requestQueue = Volley.newRequestQueue(activity);
+            requestQueue.add(getRequest);
+        }
+
+        public void onResponserecieved1(JSONObject jsonobject, int i) {
+            String status = null;
+
+            try {
+
+                JSONObject jResult = new JSONObject(String.valueOf(jsonobject));
+
+                status = jResult.getString("status");
+
+                if(status.equals("success"))
+                {
+                  type="posted";
+                  listPostedJobs();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
+
+
+
 }

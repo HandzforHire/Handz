@@ -59,7 +59,7 @@ public class LendProfilePage extends Activity{
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     ProgressDialog progress_dialog;
-    ImageView image,profile,handz,menu;
+    ImageView profile,handz,menu;
     TextView profile_name,rating_value;
     RelativeLayout rating_lay;
     SessionManager session;
@@ -83,7 +83,6 @@ public class LendProfilePage extends Activity{
         edit = (Button) findViewById(R.id.edit_user_profile);
         user = (TextView) findViewById(R.id.text1);
         rating_value = (TextView) findViewById(R.id.text3);
-        image = (ImageView)findViewById(R.id.default_image);
         profile = (ImageView)findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
         find_map = (Button) findViewById(R.id.find_job);
@@ -363,33 +362,10 @@ public class LendProfilePage extends Activity{
                 rating_value.setText(employee_rating);
                 if (!profile_image.equals("") && !profilename.equals("")) {
                     profile_name.setText(profilename);
-                  /*  URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    *//* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
-                    image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);*/
-                    //Glide.with(LendProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
-                    profile.setVisibility(View.INVISIBLE);
-                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
                     dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("")) {
-                    /*URL url = new URL(profile_image);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                    bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                    *//* Matrix matrix = new Matrix();
-                    matrix.postRotate(90);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);*//*
-                    image.setVisibility(View.INVISIBLE);
-                    profile.setImageBitmap(bmp);*/
-                    //Glide.with(LendProfilePage.this).load(profile_image).error(R.drawable.default_profile).into(image);
-                    profile.setVisibility(View.INVISIBLE);
-                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-
+                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
                     dialog.dismiss();
                 } else if (!profilename.equals("") && profile_image.equals("")) {
                     profile_name.setText(profilename);

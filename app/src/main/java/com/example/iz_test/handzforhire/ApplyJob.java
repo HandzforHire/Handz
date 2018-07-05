@@ -57,7 +57,7 @@ public class ApplyJob extends Activity{
     String job_id,user_id,employer_id,job_name,profile_name,image,date,start_time,end_time,amount,type,comments;
     TextView name,dat,amt,pay,text,job;
     ProgressDialog progress_dialog;
-    ImageView default_image,profile_image;
+    ImageView profile_image;
     EditText com;
     RelativeLayout rating_lay;
     String usertype = "employee";
@@ -73,6 +73,13 @@ public class ApplyJob extends Activity{
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
+        dialog = new Dialog(ApplyJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
+
         TextView apply = (TextView) findViewById(R.id.apply);
         name = (TextView) findViewById(R.id.text1);
         dat = (TextView) findViewById(R.id.tv2);
@@ -81,7 +88,6 @@ public class ApplyJob extends Activity{
         text = (TextView) findViewById(R.id.tv7);
         job = (TextView) findViewById(R.id.tv1);
         com = (EditText) findViewById(R.id.edit);
-        default_image = (ImageView) findViewById(R.id.default_image);
         profile_image = (ImageView) findViewById(R.id.profile_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
 
@@ -97,8 +103,7 @@ public class ApplyJob extends Activity{
         amount = i.getStringExtra("amount");
         type = i.getStringExtra("type");
         image = i.getStringExtra("image");
-        System.out.println("hhhhhhhhhhhhh:apply:::"+job_name+date+start_time+end_time+profile_name+amount+type+image);
-        System.out.println("hhhhhhhhhhhhh:image:::"+image);
+
 
         name.setText(profile_name);
         dat.setText(date);
@@ -109,28 +114,10 @@ public class ApplyJob extends Activity{
 
         if(image.equals(""))
         {
-            default_image.setVisibility(View.VISIBLE);
             dialog.dismiss();
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_image22::" + image);
         }
         else {
-    /*        URL url = null;
-            try {
-                url = new URL(image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            default_image.setVisibility(View.INVISIBLE);
-            profile_image.setImageBitmap(bmp);*/
-            //Glide.with(ApplyJob.this).load(image).into(default_image);
-            profile_image.setVisibility(View.INVISIBLE);
-            Glide.with(ApplyJob.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(default_image);
+            Glide.with(ApplyJob.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
 
             dialog.dismiss();
         }
@@ -169,7 +156,6 @@ public class ApplyJob extends Activity{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("reeeeeeeeeeeeeeeee:apply_job:::" + response);
                         onResponserecieved1(response, 2);
                     }
                 },
@@ -220,8 +206,6 @@ public class ApplyJob extends Activity{
                 return params;
             }
         };
-
-        System.out.println("values::"+job_id+".."+usertype+".."+employer_id+"..."+comments+".."+user_id);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

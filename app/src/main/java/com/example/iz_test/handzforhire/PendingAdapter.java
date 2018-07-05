@@ -103,6 +103,7 @@ public class PendingAdapter extends BaseAdapter {
         final LinearLayout lih=(LinearLayout)vi.findViewById(R.id.hol);
 
 
+
         gray.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -164,20 +165,23 @@ public class PendingAdapter extends BaseAdapter {
        });
 
 
+        final LinearLayout lin_hold=(LinearLayout)vi.findViewById(R.id.lin_hold);
+        final LinearLayout lin_hire=(LinearLayout)vi.findViewById(R.id.lin_hire);
+        final LinearLayout lin_refuse=(LinearLayout)vi.findViewById(R.id.lin_refuse);
+
+        final LinearLayout layout_refuse=(LinearLayout)vi.findViewById(R.id.layout_refuse);
+        final LinearLayout layout_hold=(LinearLayout)vi.findViewById(R.id.layout_hold);
+        final LinearLayout layout_hire=(LinearLayout)vi.findViewById(R.id.layout_hire);
+
+
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String get_jobname = items.get("name");
-        System.out.println("1111111" + get_jobname);
         final String get_jobdate = items.get("date");
-        System.out.println("2222222" + get_jobdate);
         final String get_pay = items.get("amount");
-        System.out.println("3333333" + get_pay);
         final String get_esti = items.get("type");
-        System.out.println("4444444" + get_esti);
         get_status = items.get("status");
-        System.out.println("555555" + get_status);
         user_id = items.get("employeeid");
-        System.out.println("useridddd" + user_id);
 
         if (get_status.equals("Hired")) {
             green.setVisibility(View.VISIBLE);
@@ -196,13 +200,73 @@ public class PendingAdapter extends BaseAdapter {
 
         }
 
+
+        layout_hold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lin_hold.setVisibility(View.GONE);
+            }
+        });
+
+        layout_hire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lin_hire.setVisibility(View.GONE);
+            }
+        });
+
+        layout_refuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lin_refuse.setVisibility(View.GONE);
+            }
+        });
+
+
+
+
+        gray.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lin_hold.setVisibility(View.VISIBLE);
+                lin_hire.setVisibility(View.GONE);
+                lin_refuse.setVisibility(View.GONE);
+                return;
+            }
+        });
+        red.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lin_hold.setVisibility(View.GONE);
+                lin_hire.setVisibility(View.GONE);
+                lin_refuse.setVisibility(View.VISIBLE);
+                HashMap<String, String> items = new HashMap<String, String>();
+                items = data.get((Integer) v.getTag());
+                get_jobid = items.get("jobId");
+                get_emplrid = items.get("emrid");
+                get_employeeid = items.get("employeeid");
+                type=items.get("type");
+                refusee();
+                return;
+            }
+
+        });
+        green.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lin_hold.setVisibility(View.GONE);
+                lin_hire.setVisibility(View.VISIBLE);
+                lin_refuse.setVisibility(View.GONE);
+                return;
+
+            }
+        });
+
+
         get_jobid = items.get("jobId");
-        System.out.println("******" + get_jobid);
         get_emplrid = items.get("emrid");
-        System.out.println("*******" + get_emplrid);
         get_employeeid = items.get("employeeid");
-        System.out.println("qqqqq" + get_employeeid);
-        System.out.println("======" + type);
+
 
         DateFormat dateInstance = SimpleDateFormat.getDateInstance();
         DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");

@@ -92,11 +92,6 @@ public class ViewSearchJob extends Activity{
         category = i.getStringExtra("categoryId");
         zip = i.getStringExtra("zip");
         alljobs = i.getStringExtra("alljobs");
-        System.out.println("11iiiiiiiiiiiiiiiiiiiii:viewsearchjob:user_id;;;" + user_id);
-        System.out.println("11iiiiiiiiiiiiiiiiiiiii:viewsearchjob:radius::" + radius);
-        System.out.println("11iiiiiiiiiiiiiiiiiiiii:viewsearchjob:category::" + category);
-        System.out.println("11iiiiiiiiiiiiiiiiiiiii:viewsearchjob:zip::" + zip);
-        System.out.println("11iiiiiiiiiiiiiiiiiiiii:viewsearchjob:alljobs::" + alljobs);
 
         if(!category.equals(""))
         {

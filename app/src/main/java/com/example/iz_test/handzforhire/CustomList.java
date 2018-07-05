@@ -59,7 +59,6 @@ public class CustomList extends BaseAdapter {
         TextView amount = (TextView) vi.findViewById(R.id.text7);
         TextView type = (TextView) vi.findViewById(R.id.text8);
         TextView jobId = (TextView) vi.findViewById(R.id.job_id);
-        ImageView def = (ImageView) vi.findViewById(R.id.img1);
         ImageView profile = (ImageView) vi.findViewById(R.id.img2);
 
         HashMap<String, String> items = new HashMap<String, String>();
@@ -83,31 +82,8 @@ public class CustomList extends BaseAdapter {
         type.setText(get_type);
         jobId.setText(get_id);
 
-        if(get_image.equals(""))
-        {
-            def.setVisibility(View.VISIBLE);
-        }
-        else {
-         /*   URL url = null;
-            try {
-                url = new URL(get_image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            def.setVisibility(View.INVISIBLE);
-            profile.setImageBitmap(bmp);*/
-          //  Glide.with(activity).load(get_image).error(R.drawable.default_profile).into(def);
-            profile.setVisibility(View.GONE);
-            Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(def);
-        }
+        Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
+
 
         return vi;
     }

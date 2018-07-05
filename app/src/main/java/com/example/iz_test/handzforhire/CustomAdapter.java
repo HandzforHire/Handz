@@ -74,17 +74,11 @@ public class CustomAdapter extends BaseAdapter {
             HashMap<String, String> items = new HashMap<String, String>();
             items = data.get(position);
             final String employer_id = items.get("userId");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:employer_id::"+employer_id);
             final String card_id = items.get("id");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:cardid::"+card_id);
             String card_type = items.get("type");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:card_type::"+card_type);
             String mm = items.get("month");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:mm::"+mm);
             String yy = items.get("year");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:yy::"+yy);
             String card_no = items.get("card_number");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:card_no::" + card_no);
             String number = "**** **** **** " + card_no.substring(card_no.length() - 4);
 
             // Setting all values in listview
@@ -93,15 +87,15 @@ public class CustomAdapter extends BaseAdapter {
             year.setText(yy);
             id.setText(card_id);
             card_number.setText(number);
-
+            edit_btn.setTag(position);
+            delete_btn.setTag(position);
             edit_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    finalItems = data.get(position);
+
+                    finalItems = data.get((Integer) v.getTag());
                     user_id = finalItems.get("userId");
-                    System.out.println("OOOOOOOOOOOOOOO:user_id:" + user_id);
                     String c_id = finalItems.get("id");
-                    System.out.println("OOOOOOOOOOOOOOO:c_id:" + c_id);
                     Intent intent = new Intent(activity, UpdateCard.class);
                     intent.putExtra("id", c_id);
                     intent.putExtra("userId", user_id);
@@ -113,7 +107,7 @@ public class CustomAdapter extends BaseAdapter {
             delete_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    finalItems = data.get(position);
+                    finalItems = data.get((Integer) v.getTag());
                     delete_card_id = finalItems.get("id");
                     System.out.println("OOOOOOOOOOOOOOO:delete_card_id:" + delete_card_id);
                     webService();
@@ -178,7 +172,6 @@ public class CustomAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         dialog.dismiss();
                         user_id = finalItems.get("userId");
-                        System.out.println("OOOOOOOOOOOOOOO:" + user_id);
                         Intent i = new Intent(activity,ManagePaymentOptions.class);
                         i.putExtra("userId",user_id);
                         v.getContext().startActivity(i);

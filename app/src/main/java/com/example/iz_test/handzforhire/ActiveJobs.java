@@ -146,12 +146,11 @@ public class ActiveJobs extends Activity{
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         try {
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("error"+jsonObject);
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            System.out.println("error" + jsonObject);
                             String status = jsonObject.getString("msg");
-                            if(status.equals("No Jobs Found"))
-                            {
+                            if (status.equals("No Jobs Found")) {
                                 // custom dialog
                                 final Dialog dialog = new Dialog(ActiveJobs.this);
                                 dialog.setContentView(R.layout.custom_dialog);
@@ -173,7 +172,10 @@ public class ActiveJobs extends Activity{
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                           /* else {
+
+
+
+                           else {
 
                                 final Dialog dialog = new Dialog(ActiveJobs.this);
                                 dialog.setContentView(R.layout.custom_dialog);
@@ -195,8 +197,9 @@ public class ActiveJobs extends Activity{
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-*/
+
                            dialog.dismiss();
+
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                             System.out.println("volley error ::"+e.getMessage());
@@ -239,21 +242,14 @@ public class ActiveJobs extends Activity{
                 for(int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
                     job_name = object.getString("job_name");
-                    System.out.println("ressss:job_name::" + job_name);
                     image = object.getString("profile_image");
-                    System.out.println("ressss:profile_image:::"+image);
                     profilename = object.getString("profile_name");
-                    System.out.println("ressss:profile_name:::"+profilename);
                     user_name = object.getString("username");
-                    System.out.println("ressss:user_name:::"+user_name);
                     job_id = object.getString("job_id");
-                    System.out.println("ressss:job_id:::"+job_id);
                     final String employerId = object.getString("employer_id");
-                    System.out.println("ressss:employerId:::"+employerId);
                     final String employeeId = object.getString("employee_id");
-                    System.out.println("ressss:employeeId:::"+employeeId);
                     final String channelid=object.getString("channel");
-                    System.out.println("resss:channel_id::"+channelid);
+
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("name",job_name);
@@ -305,33 +301,4 @@ public class ActiveJobs extends Activity{
         }
     }
 
-
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
-
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
-
-    }
 }

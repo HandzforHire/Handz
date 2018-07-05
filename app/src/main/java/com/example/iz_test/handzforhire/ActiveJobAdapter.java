@@ -60,7 +60,6 @@ public class ActiveJobAdapter extends BaseAdapter {
                 vi = inflater.inflate(R.layout.activejobs_list, null);
 
             TextView job_name = (TextView) vi.findViewById(R.id.text1);
-            ImageView image = (ImageView)vi.findViewById(R.id.img2);
             ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
             TextView make_payment = (TextView) vi.findViewById(R.id.payment);
             final TextView profile_name = (TextView) vi.findViewById(R.id.text3);
@@ -80,20 +79,13 @@ public class ActiveJobAdapter extends BaseAdapter {
             items = data.get(position);
             final String get_name = items.get("name");
             final String get_image = items.get("image");
-           final String get_profile = items.get("profile");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_profile::" + get_profile);
+            final String get_profile = items.get("profile");
             final String get_user = items.get("user");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_user::" + get_user);
             final String user_id = items.get("userId");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:userId::" + user_id);
             final String get_jobid = items.get("jobId");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_jobid::" + get_jobid);
             final String get_employer = items.get("employer");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_employer::" + get_employer);
             final String get_employee = items.get("employee");
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_employee::" + get_employee);
             final String channel_id=items.get("channel");
-            System.out.println("iiiiiiiiiiiiiii:get_channel_id"+channel_id);
 
             job_name.setText(get_name);
             job_name.setTypeface(font);
@@ -116,6 +108,7 @@ public class ActiveJobAdapter extends BaseAdapter {
 
             chat.setTag(position);
             make_payment.setTag(position);
+            job_details.setTag(position);
             make_payment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -149,13 +142,6 @@ public class ActiveJobAdapter extends BaseAdapter {
             {
                 @Override
                 public void onClick(View view) {
-                   /* String jobId = job_id.getText().toString();
-                    System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
-                    Intent i = new Intent(activity,ChatNeed.class);
-                    i.putExtra("jobId",jobId);
-                    i.putExtra("channel",channel_id);
-                    i.putExtra("username",get_user);
-                    view.getContext().startActivity(i);*/
                     int pos= (int) view.getTag();
                     HashMap<String, String> items =data.get(pos);
                     String username="";
@@ -180,14 +166,14 @@ public class ActiveJobAdapter extends BaseAdapter {
             job_details.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int pos= (int) v.getTag();
+                    HashMap<String, String> items =data.get(pos);
                     Intent i = new Intent(activity,JobDetails.class);
-                    i.putExtra("jobId",get_jobid);
-                    i.putExtra("userId",user_id);
+                    i.putExtra("jobId",items.get("jobId"));
+                    i.putExtra("userId",items.get("userId"));
                     v.getContext().startActivity(i);
                 }
             });
-
-            System.out.println("iiiiiiiiiiiiiiiiiiid:get_image11::" + get_image);
 
             if(get_image.equals(""))
             {
@@ -195,64 +181,10 @@ public class ActiveJobAdapter extends BaseAdapter {
                 System.out.println("iiiiiiiiiiiiiiiiiiid:get_image22::" + get_image);
             }
             else {
-          /*      System.out.println("iiiiiiiiiiiiiiiiiiid:get_image33::" + get_image);
-
-                URL url = null;
-                try {
-                    url = new URL(get_image);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bmp = null;
-                try {
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    if(bmp == null)
-                    {
-                        Log.e("ERR","Failed to decode resource");
-                        System.out.println("iiiiiiiiiiiiiiiiiiid:Failed to decode resource::" + get_image);
-                        return null;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                image1.setVisibility(View.INVISIBLE);
-                image.setImageBitmap(bmp);*/
-               // Glide.with(activity).load(get_image).into(image1);
-
                 Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
             }
      return  vi;
         }
-
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
-
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
-    }
 
 }
