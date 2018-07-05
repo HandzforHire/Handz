@@ -261,7 +261,7 @@ import java.util.Map;
                                 view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
                             }
                             return view;
-                        }
+                        } 
                     };
 
                     // DataBind ListView with items from ArrayAdapter
