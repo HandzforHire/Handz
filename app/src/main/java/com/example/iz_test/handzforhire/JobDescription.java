@@ -58,12 +58,6 @@ public class JobDescription extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_description);
 
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
-
-*/
-
         profile_image = (ImageView) findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
         description = (TextView) findViewById(R.id.description_text);
@@ -121,6 +115,7 @@ public class JobDescription extends Activity {
         });
     }
 
+
     public void getJobDetails()
     {
 
@@ -136,11 +131,13 @@ public class JobDescription extends Activity {
                     public void onResponse(String response) {
                         System.out.println("reeeeeeeeeeeeeeeee:job_description:::" + response);
                         onResponserecieved(response, 1);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -207,13 +204,11 @@ public class JobDescription extends Activity {
                 name.setText(get_name);
                 if(image.equals(""))
                 {
-                    dialog.dismiss();
                 }
                 else
                 {
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
 
-                    dialog.dismiss();
                 }
 
             } else {

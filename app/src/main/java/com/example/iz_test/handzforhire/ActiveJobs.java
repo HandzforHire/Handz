@@ -63,11 +63,6 @@ public class ActiveJobs extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.active_jobs);
 
-       /* progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
-
-
         posted_job = (Button) findViewById(R.id.btn1);
         job_history = (Button)findViewById(R.id.btn2);
         logo = (ImageView)findViewById(R.id.logo);
@@ -125,6 +120,7 @@ public class ActiveJobs extends Activity{
 
     }
 
+
     public void activeJobs()
     {
 
@@ -140,11 +136,13 @@ public class ActiveJobs extends Activity{
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:activejobs::" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -172,8 +170,6 @@ public class ActiveJobs extends Activity{
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-
-
 
                            else {
 
@@ -281,7 +277,7 @@ public class ActiveJobs extends Activity{
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    dialog.dismiss();
+
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

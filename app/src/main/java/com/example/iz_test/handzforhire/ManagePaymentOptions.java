@@ -63,7 +63,6 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
         /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
-
         detector = new SimpleGestureFilter(this,this);
 
         add = (Button) findViewById(R.id.payment);
@@ -150,6 +149,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
     }
 
+
     private void webservice()
     {
         dialog = new Dialog(ManagePaymentOptions.this);
@@ -158,17 +158,20 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
 
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
@@ -309,7 +312,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
                     // DataBind ListView with items from ArrayAdapter
                     listView.setAdapter(arrayAdapter);
-                    dialog.dismiss();
+
                 }
 
                 JSONArray array1 = new JSONArray(check);
@@ -367,7 +370,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
                     // DataBind ListView with items from ArrayAdapter
                     listView1.setAdapter(arrayAdapter1);
-                    dialog.dismiss();
+
                 }
 
                 JSONArray array2 = new JSONArray(paypal);
@@ -432,7 +435,6 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
                     // DataBind ListView with items from ArrayAdapter
                     listView2.setAdapter(arrayAdapter2);
-                    dialog.dismiss();
                 }
 
             }

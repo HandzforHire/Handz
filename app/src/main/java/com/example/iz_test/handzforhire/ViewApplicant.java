@@ -74,12 +74,6 @@ public class ViewApplicant extends Activity {
 
         image = (ImageView) findViewById(R.id.default_image);
 
-        dialog = new Dialog(ViewApplicant.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
         profile = (ImageView) findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
         job_name = (TextView) findViewById(R.id.name);
@@ -95,9 +89,7 @@ public class ViewApplicant extends Activity {
         zipcode = i.getStringExtra("zipcode");
         job_id = i.getStringExtra("jobId");
         name = i.getStringExtra("jobname");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:user_id" + user_id);
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:jobname::" + name);
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:jobid::" + job_id);
+
 
         job_name.setText(name);
 
@@ -125,17 +117,20 @@ public class ViewApplicant extends Activity {
     }
 
     public void getProfileimage() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("ggggggggget:profile:" + response);
                         onResponserecieved2(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
                     }
                 }) {
@@ -180,6 +175,7 @@ public class ViewApplicant extends Activity {
         }*/
     }
 
+
     public void listPostedJobs()
     {
         dialog = new Dialog(ViewApplicant.this);
@@ -188,17 +184,20 @@ public class ViewApplicant extends Activity {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
 
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:view applicant:::" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                        /* try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -274,7 +273,7 @@ public class ViewApplicant extends Activity {
 
                 // DataBind ListView with items from ArrayAdapter
                 list.setAdapter(arrayAdapter);
-                dialog.dismiss();
+
 
             } else {
 
@@ -286,31 +285,5 @@ public class ViewApplicant extends Activity {
     }
 
 
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor) {
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth * 2, // Width
-                srcBitmap.getHeight() + borderWidth * 2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
 
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect, paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
-    }
 }

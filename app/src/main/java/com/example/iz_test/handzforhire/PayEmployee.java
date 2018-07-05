@@ -63,7 +63,7 @@ public class PayEmployee extends Activity{
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
+
 
         logo = (ImageView)findViewById(R.id.logo);
         image = (ImageView)findViewById(R.id.imageView);

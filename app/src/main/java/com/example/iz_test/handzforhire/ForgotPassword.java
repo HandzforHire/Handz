@@ -45,7 +45,6 @@ public class ForgotPassword extends Activity{
     String dev = "Handz";
     String value = "HandzForHire@~";
     String email_address;
-    ProgressDialog progress_dialog;
     Dialog dialog;
 
     @Override
@@ -122,6 +121,7 @@ public class ForgotPassword extends Activity{
         });
     }
 
+
     public void forgotPassword()
         {
 
@@ -132,22 +132,24 @@ public class ForgotPassword extends Activity{
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             dialog.show();
 
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("need:login:response::" + response);
                         onResponserecieved(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
                             System.out.println("eeeeeeeeeeeeeeeror:"+jsonObject);
-                            dialog.dismiss();
 
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
@@ -180,7 +182,10 @@ public class ForgotPassword extends Activity{
 
             if (status.equals("success"))
             {
+
                 dialog.dismiss();
+
+
                 final Dialog dialog = new Dialog(ForgotPassword.this);
                 dialog.setContentView(R.layout.gray_custom);
 
@@ -205,7 +210,7 @@ public class ForgotPassword extends Activity{
             }
             else
             {
-                dialog.dismiss();
+
                 final Dialog dialog = new Dialog(ForgotPassword.this);
                 dialog.setContentView(R.layout.custom_dialog);
 

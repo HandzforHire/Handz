@@ -149,6 +149,7 @@ public class UpdateAccount extends Activity{
         });
     }
 
+
     public void updateCard()
     {
         dialog = new Dialog(UpdateAccount.this);
@@ -157,17 +158,20 @@ public class UpdateAccount extends Activity{
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
 
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL1,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
@@ -248,17 +252,20 @@ public class UpdateAccount extends Activity{
     }
 
     public void webService() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:" + response);
                         onResponserecieved(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
@@ -323,7 +330,7 @@ public class UpdateAccount extends Activity{
                 {
                     check.setChecked(false);
                 }
-                dialog.dismiss();
+
             }
 
         } catch (JSONException e) {
