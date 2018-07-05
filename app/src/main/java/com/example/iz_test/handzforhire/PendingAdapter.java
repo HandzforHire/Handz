@@ -168,17 +168,11 @@ public class PendingAdapter extends BaseAdapter {
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String get_jobname = items.get("name");
-        System.out.println("1111111" + get_jobname);
         final String get_jobdate = items.get("date");
-        System.out.println("2222222" + get_jobdate);
         final String get_pay = items.get("amount");
-        System.out.println("3333333" + get_pay);
         final String get_esti = items.get("type");
-        System.out.println("4444444" + get_esti);
         get_status = items.get("status");
-        System.out.println("555555" + get_status);
         user_id = items.get("employeeid");
-        System.out.println("useridddd" + user_id);
 
         if (get_status.equals("Hired")) {
             green.setVisibility(View.VISIBLE);
@@ -198,12 +192,9 @@ public class PendingAdapter extends BaseAdapter {
         }
 
         get_jobid = items.get("jobId");
-        System.out.println("******" + get_jobid);
         get_emplrid = items.get("emrid");
-        System.out.println("*******" + get_emplrid);
         get_employeeid = items.get("employeeid");
-        System.out.println("qqqqq" + get_employeeid);
-        System.out.println("======" + type);
+
 
         DateFormat dateInstance = SimpleDateFormat.getDateInstance();
         DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
