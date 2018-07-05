@@ -4,15 +4,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    >
 
     <LinearLayout
-        android:id="@+id/ref"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FF1919"
         android:orientation="vertical"
         android:clickable="true"
+        android:id="@+id/layout_refuse"
         android:layout_weight="0.01">
         <RelativeLayout
             android:layout_width="match_parent"

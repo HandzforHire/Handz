@@ -75,9 +75,19 @@ public class ApplicantAdapter extends BaseAdapter {
         TextView hire = (TextView) vi.findViewById(R.id.hire);
         TextView refuse = (TextView) vi.findViewById(R.id.refuse);
 
+
+        hire.setTag(position);
+        refuse.setTag(position);
+
         hire.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HashMap<String, String> items = new HashMap<String, String>();
+                items = data.get((Integer) v.getTag());
+                employee_id = items.get("employee_id");
+                job_id = items.get("job_id");
+                employer_id = items.get("employer_id");
+                job_name = items.get("jobname");
                 hiremethod();
             }
         });
@@ -85,6 +95,14 @@ public class ApplicantAdapter extends BaseAdapter {
         refuse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                HashMap<String, String> items = new HashMap<String, String>();
+                items = data.get((Integer) v.getTag());
+                employee_id = items.get("employee_id");
+                job_id = items.get("job_id");
+                employer_id = items.get("employer_id");
+                job_name = items.get("jobname");
+
                 refusemethod();
             }
         });

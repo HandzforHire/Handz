@@ -75,15 +75,10 @@ public class PaypalAdapter extends BaseAdapter {
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         employer_id = items.get("userId");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:employer_id::"+employer_id);
         final String get_id = items.get("id");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_id::"+get_id);
         String get_email = items.get("email");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_email::"+get_email);
         String get_first = items.get("firstname");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_first::" + get_first);
         String get_last = items.get("lastname");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_last::" + get_last);
         address = items.get("address");
         city = items.get("city");
         state = items.get("state");
@@ -95,10 +90,12 @@ public class PaypalAdapter extends BaseAdapter {
         first_name.setText(get_first);
         last_name.setText(get_last);
 
+        delete_btn.setTag(position);
         delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                account_id = id.getText().toString().trim();
+                HashMap<String, String> items = data.get((Integer) v.getTag());
+                account_id = items.get("id");
                 System.out.println("aaaaaaaaaaa:accountid:::"+account_id);
                 webService();
             }

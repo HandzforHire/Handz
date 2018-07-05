@@ -97,73 +97,13 @@ public class PendingAdapter extends BaseAdapter {
         ImageView red = (ImageView) vi.findViewById(R.id.red);
         ImageView green = (ImageView) vi.findViewById(R.id.green);
 
-        gray.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.hold_popup);
-                LinearLayout gry = (LinearLayout) dialog.findViewById(R.id.hol);
-                gry.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
+        final LinearLayout lin_hold=(LinearLayout)vi.findViewById(R.id.lin_hold);
+        final LinearLayout lin_hire=(LinearLayout)vi.findViewById(R.id.lin_hire);
+        final LinearLayout lin_refuse=(LinearLayout)vi.findViewById(R.id.lin_refuse);
 
-                    }
-                });
-
-                dialog.show();
-                Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                return;
-            }
-        });
-        red.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.refuse_popup);
-                LinearLayout re = (LinearLayout) dialog.findViewById(R.id.ref);
-                re.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        refusee();
-
-                    }
-                });
-                dialog.dismiss();
-                dialog.show();
-                Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
-            }
-
-        });
-        green.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(activity);
-                dialog.setContentView(R.layout.hire_popup);
-                LinearLayout gre = (LinearLayout) dialog.findViewById(R.id.hiree);
-                gre.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        dialog.dismiss();
-
-                    }
-                });
-                dialog.show();
-                Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
-
-            }
-        });
+        final LinearLayout layout_refuse=(LinearLayout)vi.findViewById(R.id.layout_refuse);
+        final LinearLayout layout_hold=(LinearLayout)vi.findViewById(R.id.layout_hold);
+        final LinearLayout layout_hire=(LinearLayout)vi.findViewById(R.id.layout_hire);
 
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
@@ -190,6 +130,69 @@ public class PendingAdapter extends BaseAdapter {
             gray.setVisibility(View.INVISIBLE);
 
         }
+
+
+        layout_hold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lin_hold.setVisibility(View.GONE);
+            }
+        });
+
+        layout_hire.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lin_hire.setVisibility(View.GONE);
+            }
+        });
+
+        layout_refuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lin_refuse.setVisibility(View.GONE);
+            }
+        });
+
+
+
+
+        gray.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lin_hold.setVisibility(View.VISIBLE);
+                lin_hire.setVisibility(View.GONE);
+                lin_refuse.setVisibility(View.GONE);
+                return;
+            }
+        });
+        red.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lin_hold.setVisibility(View.GONE);
+                lin_hire.setVisibility(View.GONE);
+                lin_refuse.setVisibility(View.VISIBLE);
+                HashMap<String, String> items = new HashMap<String, String>();
+                items = data.get((Integer) v.getTag());
+                get_jobid = items.get("jobId");
+                get_emplrid = items.get("emrid");
+                get_employeeid = items.get("employeeid");
+                type=items.get("type");
+                refusee();
+                return;
+            }
+
+        });
+        green.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lin_hold.setVisibility(View.GONE);
+                lin_hire.setVisibility(View.VISIBLE);
+                lin_refuse.setVisibility(View.GONE);
+                return;
+
+            }
+        });
+
 
         get_jobid = items.get("jobId");
         get_emplrid = items.get("emrid");

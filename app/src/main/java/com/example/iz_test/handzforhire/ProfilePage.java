@@ -272,11 +272,13 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                     public void onResponse(String response) {
                         System.out.println("cccccccccccccheck:payment:" + response);
                         onResponserecieved3(response, 3);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
@@ -345,18 +347,21 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
     public void getProfileimage()
     {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("ggggggggget:profile:" + response);
                         onResponserecieved2(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         try {
+                            dialog.dismiss();
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
                             System.out.println("eeeeeeeeeeeeeeeror:"+jsonObject);
@@ -471,28 +476,23 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 {
                     profile_name.setText(profilename);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
-                  dialog.dismiss();
 
                 }
                 else if(!profile_image.equals("")&&profilename.equals("null"))
                 {
 
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
-
-                    dialog.dismiss();
                 }
                 else if(!profilename.equals("null")&&profile_image.equals(""))
                 {
                     profile_name.setText(profilename);
-                    dialog.dismiss();
                 }
                 else if(profilename.equals("null")&&profile_image.equals(""))
                 {
-                    dialog.dismiss();
+
                 }
                 else
                 {
-                    dialog.dismiss();
                 }
             }
 
@@ -544,70 +544,25 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
 
     public void getUsername() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, USERNAME_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
                             System.out.println("eeeeeeeeeeeeeeeror:"+jsonObject);
-                            /*String status = jsonObject.getString("msg");
-                            if(!status.equals(""))
-                            {
-                                // custom dialog
-                                final Dialog dialog = new Dialog(ProfilePage.this);
-                                dialog.setContentView(R.layout.custom_dialog);
 
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText(status);
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                return;
-                            }
-                            else
-                            {
-                                // custom dialog
-                                final Dialog dialog = new Dialog(ProfilePage.this);
-                                dialog.setContentView(R.layout.custom_dialog);
-
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText("Registration Failed");
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                return;
-                            }*/
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                         } catch (UnsupportedEncodingException error1){
