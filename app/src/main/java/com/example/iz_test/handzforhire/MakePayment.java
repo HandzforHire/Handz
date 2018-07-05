@@ -79,7 +79,7 @@ public class MakePayment extends Activity{
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
+
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         image = (ImageView) findViewById(R.id.imageView);
@@ -137,7 +137,7 @@ public class MakePayment extends Activity{
         });
 
         if(profile_image==null) {
-            dialog.dismiss();
+
         }
         else {
             Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
@@ -145,28 +145,30 @@ public class MakePayment extends Activity{
         if(profile_name==null)
         {
             name.setText(user_name);
-            dialog.dismiss();
+
         }
         else {
             name.setText(profile_name);
-            dialog.dismiss();
+
         }
 
     }
 
     public void getJobDetails() {
-
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("ggggggggget:profile:" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
                     }
                 }) {
@@ -248,7 +250,7 @@ public class MakePayment extends Activity{
                         final String profilename = object.getString("profile_name");
 
                         if (profile_image.equals("")) {
-                            dialog.dismiss();
+
                         } else {
                             Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                         }
@@ -257,7 +259,7 @@ public class MakePayment extends Activity{
                         } else {
                             name.setText(profilename);
                         }
-                        dialog.dismiss();
+
                     }
                 }
             } else {

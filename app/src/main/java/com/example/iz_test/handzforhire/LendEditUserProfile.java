@@ -128,7 +128,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
+
 
         home = (Button) findViewById(R.id.change_home_address);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
@@ -261,17 +261,20 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
     }
 
     public void getProfileimage() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("ggggggggget:profile:" + response);
                         onResponserecieved2(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
                     }
                 }) {
@@ -321,17 +324,13 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                     profile_name.setText(profilename);
                     photo_text.setVisibility(View.INVISIBLE);
                     Glide.with(LendEditUserProfile.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-                    dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("null")) {
 
                     photo_text.setVisibility(View.INVISIBLE);
                     Glide.with(LendEditUserProfile.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-                    dialog.dismiss();
                 } else if (!profilename.equals("null") && profile_image.equals("")) {
                     profile_name.setText(profilename);
-                    dialog.dismiss();
                 } else {
-                    dialog.dismiss();
                 }
             }
 
@@ -366,7 +365,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                         galleryIntent();
 
                 } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
+
                 }
             }
         });

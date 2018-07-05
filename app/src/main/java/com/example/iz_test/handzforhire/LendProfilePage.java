@@ -82,7 +82,7 @@ public class LendProfilePage extends Activity{
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
+
 
         handz = (ImageView) findViewById(R.id.handz);
         need_help = (Button) findViewById(R.id.need_help);
@@ -116,15 +116,6 @@ public class LendProfilePage extends Activity{
         System.out.println("ssssssstate:" + state);
         System.out.println("ssssssid:zipcode:" + zipcode);
 
-       /* Intent i = getIntent();
-        id = i.getStringExtra("userId");
-        address = i.getStringExtra("address");
-        city = i.getStringExtra("city");
-        state = i.getStringExtra("state");
-        zipcode = i.getStringExtra("zipcode");
-        email = i.getStringExtra("email");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:userId::::::::" + id);
-*/
         getProfileimage();
         getUsername();
 
@@ -250,17 +241,21 @@ public class LendProfilePage extends Activity{
     }
 
     public void getUsername() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, USERNAME_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        dialog.dismiss();
                         //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
                     }
                 }) {
@@ -302,17 +297,20 @@ public class LendProfilePage extends Activity{
 
     public void getProfileimage()
     {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("ggggggggget:profile:" + response);
                         onResponserecieved2(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
                     }
                 }) {
@@ -363,16 +361,12 @@ public class LendProfilePage extends Activity{
                 if (!profile_image.equals("") && !profilename.equals("")) {
                     profile_name.setText(profilename);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
-                    dialog.dismiss();
                 } else if (!profile_image.equals("") && profilename.equals("")) {
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
-                    dialog.dismiss();
                 } else if (!profilename.equals("") && profile_image.equals("")) {
                     profile_name.setText(profilename);
-                    dialog.dismiss();
                 } else {
                     profile_name.setText(username);
-                    dialog.dismiss();
                 }
             }
 

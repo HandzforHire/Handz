@@ -228,7 +228,7 @@ public class PostedJobs extends Activity {
                         } catch (UnsupportedEncodingException errors){
                             System.out.println("volley error ::"+errors.getMessage());
                         }
-                        dialog.dismiss();
+
                     }
                 }) {
             @Override
@@ -312,7 +312,7 @@ public class PostedJobs extends Activity {
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    dialog.dismiss();
+
                 }
             }
             else

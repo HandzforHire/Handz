@@ -106,29 +106,8 @@ Dialog dialog;
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
 
-        //permission();
 
-       /* // Get the location manager
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(provider);
-        System.out.println("kkkkkkkkkk:location::"+location);
-        double latit = location.getLatitude();
-        double longi = location.getLongitude();
-        System.out.println("kkkkkkkkkkk:latitude:::"+latit);
-        System.out.println("kkkkkkkkkkk:longitude:::"+longi);
-
-        // Initialize the location fields
-        if (location != null) {
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
-        }
-*/
         layout = (LinearLayout)findViewById(R.id.relay);
         list = (Spinner)findViewById(R.id.listview);
         logo = (ImageView) findViewById(R.id.logo);
@@ -279,18 +258,22 @@ Dialog dialog;
     }
 
     public void listPostedJobs() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
+
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
                             System.out.println("error"+jsonObject);
@@ -345,8 +328,6 @@ Dialog dialog;
 
                 CustomJobListAdapter adapter = new CustomJobListAdapter(SearchJob.this, job_title,imageId);
                 list.setAdapter(adapter);
-                dialog.dismiss();
-                dialog.dismiss();
                 list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

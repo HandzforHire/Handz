@@ -455,11 +455,6 @@ public class EditCreateJob2 extends Activity {
             }
         };
 
-        System.out.println("vvvvvvv1:"+".."+value+".."+id+".."+name+".."+usertype+"..");
-        System.out.println("vvvvvvv2:"+".."+category+".."+description+".."+date+".."+start_time+"..");
-        System.out.println("vvvvvvv3:"+".."+end_time+".."+amount+".."+type+".."+address+"..");
-        System.out.println("vvvvvvv4:"+".."+city+".."+state+".."+zipcode+".."+post_address+"..");
-        System.out.println("vvvvvvv5:"+".."+latitude+".."+longitude+".."+estimated_amount+".."+flexible_status+"..");
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);

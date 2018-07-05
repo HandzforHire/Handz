@@ -81,7 +81,7 @@ public class ViewSearchJob extends Activity{
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
+
 
         list = (ListView) findViewById(R.id.listview);
         logo = (ImageView) findViewById(R.id.logo);
@@ -196,17 +196,20 @@ public class ViewSearchJob extends Activity{
     }
 
     private void joblist() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("reeeeeeeeeeeeeeeee:search_job:joblist::" +response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -238,17 +241,20 @@ public class ViewSearchJob extends Activity{
     }
 
     public void searchJobList() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SEARCH_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("reeeeeeeeeeeeeeeee:search_job:::" +response);
                         onResponserecieved(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -277,7 +283,6 @@ public class ViewSearchJob extends Activity{
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            dialog.dismiss();
                         } catch (JSONException e) {
                             //Handle a malformed json response
                             System.out.println("volley error ::" + e.getMessage());
@@ -365,7 +370,7 @@ public class ViewSearchJob extends Activity{
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    dialog.dismiss();
+
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -447,7 +452,7 @@ public class ViewSearchJob extends Activity{
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-                    dialog.dismiss();
+
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
