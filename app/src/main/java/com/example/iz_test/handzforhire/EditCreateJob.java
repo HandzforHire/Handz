@@ -96,32 +96,29 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
     CustomJobListAdapter adapter;
 
     Dialog dialog;
-
     Integer[] imageId = {
-            R.drawable.box_1,
-            R.drawable.box_2,
-            R.drawable.box_3,
-            R.drawable.box_4,
-            R.drawable.box_5,
-            R.drawable.box_6,
-            R.drawable.box_7,
-            R.drawable.box_8,
-            R.drawable.box_9,
-            R.drawable.box_10,
-            R.drawable.box_11,
-            R.drawable.box_12,
-            R.drawable.box_13,
-            R.drawable.box_14,
-            R.drawable.box_15,
-            R.drawable.box_16,
             R.drawable.box_17,
+            R.drawable.box_10,
+            R.drawable.box_8,
+            R.drawable.box_15,
             R.drawable.box_18,
-            R.drawable.box_19,
+            R.drawable.box_9,
+            R.drawable.box_11,
             R.drawable.box_20,
+            R.drawable.box_3,
+            R.drawable.box_5,
+            R.drawable.box_13,
+            R.drawable.box_2,
+            R.drawable.box_19,
             R.drawable.box_21,
-
+            R.drawable.box_1,
+            R.drawable.box_12,
+            R.drawable.box_7,
+            R.drawable.box_14,
+            R.drawable.box_16,
+            R.drawable.box_4,
+            R.drawable.box_6,
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

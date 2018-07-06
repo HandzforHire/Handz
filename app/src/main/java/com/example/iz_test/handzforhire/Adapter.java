@@ -46,7 +46,7 @@ public class Adapter extends BaseAdapter {
     ImageView image1;
     String userId;
     String profile_name,channel_id,username,rating_value;
-    LinearLayout leave_layout,edit_layout;
+    LinearLayout leave_layout,edit_layout,rehire_layout;
 
     public Adapter(Context context, List<WorldPopulation> worldpopulationlist) {
         mContext = context;
@@ -93,7 +93,7 @@ public class Adapter extends BaseAdapter {
             chat = (LinearLayout) view.findViewById(R.id.lay1);
             leave_layout = (LinearLayout) view.findViewById(R.id.leave_lay);
             edit_layout = (LinearLayout) view.findViewById(R.id.edit_lay);
-
+            rehire_layout = (LinearLayout) view.findViewById(R.id.rehire_lay);
 
             view.setTag(holder);
         } else {
@@ -180,6 +180,17 @@ public class Adapter extends BaseAdapter {
             }
         });
 
+        rehire_layout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jobId = job_id.getText().toString();
+                System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+                Intent i = new Intent(mContext,RehireJob.class);
+                i.putExtra("userId",userId);
+                i.putExtra("jobId",jobId);
+                v.getContext().startActivity(i);
+            }
+        });
         chat.setOnClickListener(new View.OnClickListener()
         {
             @Override

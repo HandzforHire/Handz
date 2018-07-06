@@ -237,6 +237,9 @@
         <activity android:name=".SummarySubtract"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
 
+        <activity android:name=".RehireJob"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
