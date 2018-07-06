@@ -82,10 +82,14 @@ public class PostedJobs extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_posted_jobs);
 
-        dialog = new Dialog(PostedJobs.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+      /*  progress_dialog = new ProgressDialog(this);
+        progress_dialog.setMessage("Loading.Please wait....");
+        progress_dialog.show();*/
+
+        //image = (ImageView)findViewById(R.id.default_image);
+        //profile = (ImageView)findViewById(R.id.profile_image);
+        //profile_name = (TextView) findViewById(R.id.text1);
 
 
         logo = (ImageView)findViewById(R.id.logo);
@@ -158,8 +162,16 @@ public class PostedJobs extends Activity {
 
     }
 
-    public void listPostedJobs() {
+    public void listPostedJobs()
+    {
+
+        dialog = new Dialog(PostedJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -248,7 +260,8 @@ public class PostedJobs extends Activity {
         requestQueue.add(stringRequest);
     }
 
-    public void onResponserecieved1(String jsonobject, int i) {
+    public void onResponserecieved1(String jsonobject, int i)
+    {
         System.out.println("response from interface"+jsonobject);
 
         String status = null;
@@ -294,23 +307,22 @@ public class PostedJobs extends Activity {
                     ViewListAdapter arrayAdapter = new ViewListAdapter(this, job_list){
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent){
-                            // Get the current item from ListView
+
                             View view = super.getView(position,convertView,parent);
                             if(position %2 == 1)
                             {
-                                // Set a background color for ListView regular row/item
+
                                 view.setBackgroundColor(Color.parseColor("#BF178487"));
                             }
                             else
                             {
-                                // Set the background color for alternate row/item
+
                                 view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
                             }
                             return view;
                         }
                     };
 
-                    // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
 
                 }
@@ -451,8 +463,6 @@ public class PostedJobs extends Activity {
             final String zipcode = items.get("zipcode");
             dlist= items.get("d_list");
             System.out.println("iiiiiidlist::"+dlist);
-
-
 
             checked.setTag(position);
             unchecked.setTag(position);

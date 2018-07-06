@@ -127,11 +127,17 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_create_job);
 
+<<<<<<< HEAD
 
         dialog = new Dialog(EditCreateJob.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+=======
+        /*progress_dialog = new ProgressDialog(this);
+        progress_dialog.setMessage("Loading.Please wait....");
+        progress_dialog.show();*/
+>>>>>>> baskaran-dev
 
         layout = (LinearLayout)findViewById(R.id.relay);
         next = (Button) findViewById(R.id.next);
@@ -542,6 +548,16 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
 
     public void getJobDetails()
     {
+<<<<<<< HEAD
+=======
+
+        dialog = new Dialog(EditCreateJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
+>>>>>>> baskaran-dev
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_JOB,
                 new Response.Listener<String>() {
                     @Override
