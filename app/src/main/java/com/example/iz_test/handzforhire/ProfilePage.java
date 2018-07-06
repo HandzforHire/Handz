@@ -74,6 +74,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     LinearLayout posted,history,active;
     ProgressBar pb;
     Dialog dialog;
+    //String URL_TO_SHARE="https://www.handzforhire.com";
+    //String CONTENTS="HandzForHire";
 
 
     @Override
@@ -108,10 +110,12 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         share_need=(ImageView)findViewById(R.id.sha_need);
         share_need.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+
+                share();
 
 
-                Toast.makeText(ProfilePage.this, "need a hand", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -269,6 +273,18 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 startActivity(i);
             }
         });
+    }
+
+    private void share()
+    {
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        myIntent.setType("text/plain");
+        String Tittle="HandzNeed";
+        String Text="https://www.handzforhire.com";
+        myIntent.putExtra(Intent.EXTRA_SUBJECT,Tittle);
+        myIntent.putExtra(Intent.EXTRA_TEXT, Text);
+        startActivity(Intent.createChooser(myIntent, "Share using"));
+
     }
 
     public void paymentCheck()

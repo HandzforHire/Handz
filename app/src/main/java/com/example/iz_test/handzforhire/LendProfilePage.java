@@ -100,7 +100,7 @@ public class LendProfilePage extends Activity{
             public void onClick(View v) {
 
 
-                Toast.makeText(LendProfilePage.this, "lend a hand", Toast.LENGTH_SHORT).show();
+                sharelend();
             }
         });
 
@@ -244,6 +244,21 @@ public class LendProfilePage extends Activity{
                 startActivity(i);
             }
         });
+    }
+
+    private void sharelend() {
+
+
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        myIntent.setType("text/plain");
+        String Tittle="HandzLend";
+        String Text="https://www.handzforhire.com";
+        myIntent.putExtra(Intent.EXTRA_SUBJECT,Tittle);
+        myIntent.putExtra(Intent.EXTRA_TEXT, Text);
+        startActivity(Intent.createChooser(myIntent, "Share using"));
+
+
+
     }
 
 

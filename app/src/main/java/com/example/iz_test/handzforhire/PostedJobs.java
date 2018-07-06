@@ -91,10 +91,6 @@ public class PostedJobs extends Activity {
         //profile = (ImageView)findViewById(R.id.profile_image);
         //profile_name = (TextView) findViewById(R.id.text1);
 
-        dialog = new Dialog(PostedJobs.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         logo = (ImageView)findViewById(R.id.logo);
         list = (ListView)findViewById(R.id.listview);
