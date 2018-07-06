@@ -70,11 +70,6 @@ public class UpdateAccount extends Activity{
        /* dialog = new ProgressDialog(this);
         dialog.setMessage("Loading.Please wait.....");
         dialog.show();*/
-        dialog = new Dialog(UpdateAccount.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
 
         name = (EditText)findViewById(R.id.up_ac_name);
         bank = (EditText)findViewById(R.id.up_brn);
@@ -154,8 +149,16 @@ public class UpdateAccount extends Activity{
         });
     }
 
-    public void updateCard() {
+
+    public void updateCard()
+    {
+        dialog = new Dialog(UpdateAccount.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL1,
                 new Response.Listener<String>() {
                     @Override

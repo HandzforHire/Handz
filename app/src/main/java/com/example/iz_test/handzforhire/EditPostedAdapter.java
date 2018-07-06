@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +20,7 @@ public class EditPostedAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<HashMap<String, String>> data;
     private static LayoutInflater inflater = null;
+
     public EditPostedAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
         data = d;
@@ -62,18 +66,33 @@ public class EditPostedAdapter extends BaseAdapter {
         String get_type = items.get("type");
         String get_id = items.get("jobId");
 
-        job_name.setText(get_name);
-        job_name.setTypeface(font);
-        when.setTypeface(font);
-        pay.setTypeface(font);
-        date.setText(get_date);
-        date.setTypeface(font1);
-        amount.setText(get_amount);
-        amount.setTypeface(font1);
-        type.setText(get_type);
-        type.setTypeface(font1);
-        jobId.setText(get_id);
+
+        DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+        DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+        try {
+            java.util.Date dates = srcDf.parse(get_date);
+            System.out.println("date " + get_date);
+            System.out.println("converted " + destDf.format(dates));
+            date.setText(" " + destDf.format(dates));
+            job_name.setText(get_name);
+            job_name.setTypeface(font);
+            when.setTypeface(font);
+            pay.setTypeface(font);
+            //date.setText(get_date);
+            date.setTypeface(font1);
+            amount.setText(get_amount);
+            amount.setTypeface(font1);
+            type.setText(get_type);
+            type.setTypeface(font1);
+            jobId.setText(get_id);
+
+
+        } catch (ParseException e) {
+
+        }
 
         return vi;
+
     }
 }

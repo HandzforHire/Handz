@@ -73,11 +73,6 @@ public class LendReviewRating extends Activity {
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(LendReviewRating.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
 
         list = (ListView) findViewById(R.id.listview);
         close = (Button) findViewById(R.id.cancel_btn);
@@ -112,8 +107,15 @@ public class LendReviewRating extends Activity {
 
     }
 
-    public void completerating() {
+    public void completerating()
+    {
+        dialog = new Dialog(LendReviewRating.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override

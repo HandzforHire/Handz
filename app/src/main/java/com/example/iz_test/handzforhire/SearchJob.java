@@ -102,11 +102,27 @@ Dialog dialog;
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(SearchJob.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        //permission();
 
+       /* // Get the location manager
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Define the criteria how to select the locatioin provider -> use
+        // default
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(provider);
+        System.out.println("kkkkkkkkkk:location::"+location);
+        double latit = location.getLatitude();
+        double longi = location.getLongitude();
+        System.out.println("kkkkkkkkkkk:latitude:::"+latit);
+        System.out.println("kkkkkkkkkkk:longitude:::"+longi);
+
+        // Initialize the location fields
+        if (location != null) {
+            System.out.println("Provider " + provider + " has been selected.");
+            onLocationChanged(location);
+        }
+*/
 
         layout = (LinearLayout)findViewById(R.id.relay);
         list = (Spinner)findViewById(R.id.listview);
@@ -257,45 +273,52 @@ Dialog dialog;
         });
     }
 
-    public void listPostedJobs() {
+
+    public void listPostedJobs()
+    {
+        dialog = new Dialog(SearchJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println("resssssssssssssssss:" + response);
-                        onResponserecieved1(response, 2);
-                        dialog.dismiss();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        dialog.dismiss();
-                        try {
 
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("error"+jsonObject);
-                        } catch ( JSONException e ) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1){
-
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            System.out.println("resssssssssssssssss:" + response);
+                            onResponserecieved1(response, 2);
+                            dialog.dismiss();
                         }
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(XAPP_KEY, value);
-                params.put(KEY_USERID, id);
-                return params;
-            }
-        };
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            dialog.dismiss();
+                            try {
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                            } catch (UnsupportedEncodingException error1) {
+
+                            }
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put(XAPP_KEY, value);
+                    params.put(KEY_USERID, id);
+                    return params;
+                }
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
+        }
 
     public void onResponserecieved1(String jsonobject, int i) {
         System.out.println("response from interface" + jsonobject);
@@ -328,6 +351,9 @@ Dialog dialog;
 
                 CustomJobListAdapter adapter = new CustomJobListAdapter(SearchJob.this, job_title,imageId);
                 list.setAdapter(adapter);
+
+                dialog.dismiss();
+                //dialog.dismiss();
                 list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -48,7 +48,7 @@
             android:text="click this box to minimize this message"
             android:textAllCaps="true"
             android:textColor="#FFFFFF"
-            android:textSize="14sp" />
+           android:textSize="14sp" />
 
 
     </LinearLayout>

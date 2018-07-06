@@ -19,7 +19,8 @@ public class ViewWeb extends Activity{
         wv.loadUrl("file:///android_asset/terms_conditions.html");
 
         ImageView close = (ImageView) findViewById(R.id.close_btn);
-        close.setOnClickListener(new View.OnClickListener() {
+        close.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 finish();

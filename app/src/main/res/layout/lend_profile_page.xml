@@ -350,15 +350,25 @@
                 android:layout_gravity="center"
                 android:background="@drawable/bulb"/>
 
-            <TextView
-                android:layout_width="120sp"
-                android:layout_height="40sp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/handz"/>
+            <ImageView
+                android:id="@+id/sha_lend"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:layout_gravity="end"
+                android:layout_marginRight="30sp"
+                android:src="@drawable/share"
 
-        </LinearLayout>
+                />
 
+                <TextView
+                    android:id="@+id/tex1"
+                    android:layout_width="120sp"
+                    android:layout_height="40sp"
+                    android:layout_alignParentBottom="true"
+                   android:background="@drawable/handz"/>
+
+
+             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-
 </LinearLayout>

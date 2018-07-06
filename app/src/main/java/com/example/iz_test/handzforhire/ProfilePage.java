@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -65,7 +66,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     Button create,edit,need_help;
     private SimpleGestureFilter detector;
     String address,city,state,zipcode,profile_image,profilename,type;
-    ImageView profile,logo,menu;
+    ImageView profile,logo,menu,share_need;
     ProgressDialog progress_dialog;
     ProgressBar progress;
     RelativeLayout rating_lay;
@@ -73,6 +74,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     LinearLayout posted,history,active;
     ProgressBar pb;
     Dialog dialog;
+    //String URL_TO_SHARE="https://www.handzforhire.com";
+    //String CONTENTS="HandzForHire";
 
 
     @Override
@@ -82,10 +85,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        dialog = new Dialog(ProfilePage.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         detector = new SimpleGestureFilter(this,this);
 
@@ -106,6 +106,18 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         posted_circle = (TextView) findViewById(R.id.circle1);
         active_circle = (TextView) findViewById(R.id.circle2);
         history_circle = (TextView) findViewById(R.id.circle3);
+
+        share_need=(ImageView)findViewById(R.id.sha_need);
+        share_need.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+
+                share();
+
+
+            }
+        });
 
 
         session = new SessionManager(getApplicationContext());
@@ -263,9 +275,27 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         });
     }
 
+    private void share()
+    {
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        myIntent.setType("text/plain");
+        String Tittle="HandzNeed";
+        String Text="https://www.handzforhire.com";
+        myIntent.putExtra(Intent.EXTRA_SUBJECT,Tittle);
+        myIntent.putExtra(Intent.EXTRA_TEXT, Text);
+        startActivity(Intent.createChooser(myIntent, "Share using"));
+
+    }
+
     public void paymentCheck()
     {
-        dialog.show();
+
+
+        dialog = new Dialog(ProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, PAYMENT_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -347,7 +377,13 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
     public void getProfileimage()
     {
+
+        dialog = new Dialog(ProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -543,8 +579,10 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     }
 
 
+
     public void getUsername() {
         dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, USERNAME_URL,
                 new Response.Listener<String>() {
                     @Override

@@ -111,10 +111,11 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        dialog = new Dialog(EditUserProfile.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
+        /*progress_dialog = new ProgressDialog(this);
+        progress_dialog.setMessage("Loading.Please wait....");
+        progress_dialog.show();*/
 
         home = (Button) findViewById(R.id.change_home_address);
         update = (Button) findViewById(R.id.update_email);
@@ -263,7 +264,14 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
     public void getProfileimage()
     {
+
+
+        dialog = new Dialog(EditUserProfile.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -589,7 +597,8 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
         return rotatedImg;
     }
 
-    public void profilenameUpload() {
+    public void profilenameUpload()
+    {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -641,6 +650,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
             else {
 
             }
+            dialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();

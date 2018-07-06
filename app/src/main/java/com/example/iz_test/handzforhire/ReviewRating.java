@@ -75,12 +75,6 @@ Dialog dialog;
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        dialog = new Dialog(ReviewRating.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-
         list = (ListView) findViewById(R.id.listview);
         close = (Button) findViewById(R.id.cancel_btn);
         ImageView image = (ImageView)findViewById(R.id.profile_image);
@@ -115,8 +109,16 @@ Dialog dialog;
 
     }
 
-    public void completerating() {
+
+    public void completerating()
+    {
+        dialog = new Dialog(ReviewRating.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
