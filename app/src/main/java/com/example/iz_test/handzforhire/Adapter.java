@@ -45,7 +45,8 @@ public class Adapter extends BaseAdapter {
     ImageView image;
     ImageView image1;
     String userId;
-    String profile_name,channel_id,username;
+    String profile_name,channel_id,username,rating_value;
+    LinearLayout leave_layout,edit_layout;
 
     public Adapter(Context context, List<WorldPopulation> worldpopulationlist) {
         mContext = context;
@@ -90,6 +91,9 @@ public class Adapter extends BaseAdapter {
             leave_rating_btn = (TextView) view.findViewById(R.id.leave_rating);
             job_details = (Button) view.findViewById(R.id.btn);
             chat = (LinearLayout) view.findViewById(R.id.lay1);
+            leave_layout = (LinearLayout) view.findViewById(R.id.leave_lay);
+            edit_layout = (LinearLayout) view.findViewById(R.id.edit_lay);
+
 
             view.setTag(holder);
         } else {
@@ -106,11 +110,25 @@ public class Adapter extends BaseAdapter {
         profile_name = worldpopulationlist.get(position).getProfilename();
         channel_id = worldpopulationlist.get(position).getChannel();
         username = worldpopulationlist.get(position).getUsername();
+        rating_value=worldpopulationlist.get(position).getRatingValue();
 
         chat.setTag(position);
         leave_rating_btn.setTag(position);
         job_details.setTag(position);
+        edit_layout.setTag(position);
         Glide.with(mContext).load(worldpopulationlist.get(position).getImage()).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(mContext,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+
+
+        if(rating_value.equals(""))
+        {
+            edit_layout.setVisibility(View.GONE);
+            leave_layout.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            leave_layout.setVisibility(View.GONE);
+            edit_layout.setVisibility(View.VISIBLE);
+        }
 
         leave_rating_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +149,33 @@ public class Adapter extends BaseAdapter {
                 intent.putExtra("user_id",item.getUserid());
                 intent.putExtra("image",item.getImage());
                 intent.putExtra("profilename",username);
+                v.getContext().startActivity(intent);
+            }
+        });
+
+
+        edit_layout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos= (int) v.getTag();
+                WorldPopulation item=worldpopulationlist.get(pos);
+                jobId = item.getJobId();
+                String employerId = item.getEmployerId();
+                String employeeId = item.getEmployeeId();
+                String profile_image =item.getImage();
+                Intent intent = new Intent(mContext, EditRating.class);
+                intent.putExtra("jobId",jobId);
+                intent.putExtra("employer_id",employerId);
+                intent.putExtra("employee_id",employeeId);
+                intent.putExtra("user_id",item.getUserid());
+                intent.putExtra("image",profile_image);
+                intent.putExtra("ratingId",item.getRatingId());
+                intent.putExtra("cat1",item.getCategory1());
+                intent.putExtra("cat2",item.getCategory2());
+                intent.putExtra("cat3",item.getCategory3());
+                intent.putExtra("cat4",item.getCategory4());
+                intent.putExtra("cat5",item.getCategory5());
+                intent.putExtra("profilename",profile_name);
                 v.getContext().startActivity(intent);
             }
         });

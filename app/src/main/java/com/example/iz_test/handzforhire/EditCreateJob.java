@@ -15,9 +15,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -26,6 +28,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -40,6 +44,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bigkoo.pickerview.MyOptionsPickerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,30 +64,38 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
 
     Spinner list;
     LinearLayout layout;
-    String id, address, zipcode, state, city, name, category,description,date,start_time,end_time,amount,st_time,en_time, type;
+    String id, address, zipcode, state, city, name,cat,description,date,start_time,end_time,amount,st_time,en_time, type;
     private static final String URL = Constant.SERVER_URL+"job_category_lists";
     private static final String GET_JOB = Constant.SERVER_URL+"job_detail_view";
     Button next;
     EditText job_name, job_description,payamount;
     static TextView date_text;
-    TextView start_time_text;
+    TextView start_time_text,hour;
     TextView end_time_text;
     TextView job_amount,symbol;
     TextView pay_text;
-    TextView amount_text,textview;
+    TextView amount_text;
     ImageView img_arrow;
+    public static TextView textview;
+    public static ImageView img_paint;
+    static String category="0",categoryId="0";
+    static ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
     private int mYear, mMonth, mDay, mHour, mMinute;
     ImageView logo,arrow;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
-    ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
     String job_category_name, job_id,jobId,paytext,pay_amount,flexible_status,job_estimated,hourr,mintt,secc;
-    ProgressDialog progress_dialog;
+
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     CheckBox checkBox;
     Activity activity;
+    MyOptionsPickerView threePicker;
+    public static PopupWindow popupWindowDogs;
+    CustomJobListAdapter adapter;
+
+    Dialog dialog;
 
     Integer[] imageId = {
             R.drawable.box_1,
@@ -108,18 +121,17 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
             R.drawable.box_21,
 
     };
-    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_create_job);
 
+
         dialog = new Dialog(EditCreateJob.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
 
         layout = (LinearLayout)findViewById(R.id.relay);
         next = (Button) findViewById(R.id.next);
@@ -131,7 +143,6 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
         job_amount = (TextView) findViewById(R.id.amount);
         amount_text = (TextView) findViewById(R.id.pay_type);
         pay_text = (TextView) findViewById(R.id.payment_details);
-        symbol = (TextView) findViewById(R.id.symbol);
         logo = (ImageView) findViewById(R.id.logo);
         arrow = (ImageView) findViewById(R.id.arrow);
         list = (Spinner)findViewById(R.id.listview);
@@ -142,7 +153,10 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
         estimate_layout = (RelativeLayout) findViewById(R.id.linear3);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         textview = (TextView) findViewById(R.id.textview);
+        symbol = (TextView) findViewById(R.id.symbol);
         img_arrow=(ImageView)findViewById(R.id.img_arrow);
+        hour = (TextView) findViewById(R.id.hour);
+        img_paint=(ImageView)findViewById(R.id.img_paint);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -151,7 +165,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
         jobId = i.getStringExtra("jobId");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:jobId::::" + jobId);
+
 
         String pattern2 = "hh:mm:ss";
         st_time = new SimpleDateFormat(pattern2).format(new Date());
@@ -188,21 +202,13 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
         start_time_text.setOnClickListener(this);
         end_time_text.setOnClickListener(this);
 
+        popupWindowDogs = popupWindowDogs();
+
         list.setVisibility(View.VISIBLE);
         //list.performClick();
         img_arrow.setVisibility(View.GONE);
         textview.setVisibility(View.GONE);
-        pay_lay.setVisibility(View.GONE);
-
-        /*list.setOnTouchListener(new View.OnTouchListener() {
-            // Setting on Touch Listener for handling the touch inside ScrollView
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // Disallow the touch request for parent scroll on touch of child view
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });*/
+        //pay_lay.setVisibility(View.GONE);
 
         textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +217,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
                 list.performClick();
                 img_arrow.setVisibility(View.GONE);
                 textview.setVisibility(View.GONE);
-
+                popupWindowDogs.showAsDropDown(v, -5, 0);
             }
         });
 
@@ -222,9 +228,58 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
                 list.performClick();
                 img_arrow.setVisibility(View.GONE);
                 textview.setVisibility(View.GONE);
-
+                popupWindowDogs.showAsDropDown(v, -5, 0);
             }
         });
+
+        end_time_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                threePicker.show();
+            }
+        });
+
+        //Three Options PickerView
+        threePicker = new MyOptionsPickerView(EditCreateJob.this);
+        final ArrayList<Integer> numbers = new ArrayList<Integer>(100);
+
+        for (int j = 0; j <= 100; j++)
+        {
+            numbers.add(j);
+            System.out.println(numbers.get(j));
+        }
+
+        final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
+        threeItemsOptions2.add("0.00");
+        threeItemsOptions2.add("0.25");
+        threeItemsOptions2.add("0.50");
+        threeItemsOptions2.add("0.75");
+
+        final ArrayList<String> threeItemsOptions3 = new ArrayList<String>();
+        threeItemsOptions3.add("Hours");
+        threeItemsOptions3.add("Minutes");
+
+        threePicker.setPicker(numbers, threeItemsOptions2, threeItemsOptions3, false);
+        //threePicker.setTitle("Picker");
+        threePicker.setCyclic(false, false, false);
+        threePicker.setSelectOptions(0, 0, 0);
+        threePicker.setOnoptionsSelectListener(new MyOptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+                String a = String.valueOf(numbers.get(options1));
+                String b = String.valueOf(threeItemsOptions2.get(option2));
+                float numa = Float.parseFloat(a);
+                float numb = Float.parseFloat(b);
+                System.out.println("aaaaaaaaaaa:::"+numa+"..."+numb+"..."+a+"...."+b);
+                float c = numa + numb;
+                System.out.println("aaaaaaaaaaa::cccc:"+c);
+                end_time_text.setText(String.valueOf(c));
+                String option = threeItemsOptions3.get(options3);
+                hour.setText(option);
+                // Toast.makeText(CreateJob.this, "" + numbers.get(options1) + " " + threeItemsOptions2.get(option2) + " " + threeItemsOptions3.get(options3), Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         job_amount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -380,7 +435,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         }
-        if (v == end_time_text) {
+        /*if (v == end_time_text) {
 
             // Get Current Time
             final Calendar c = Calendar.getInstance();
@@ -438,7 +493,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
-        }
+        }*/
     }
 
     public void validate() {
@@ -472,7 +527,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
         i.putExtra("state", state);
         i.putExtra("zipcode", zipcode);
         i.putExtra("name",name);
-        i.putExtra("category",category);
+        i.putExtra("category",cat);
         i.putExtra("description",description);
         i.putExtra("job_id",jobId);
         i.putExtra("date", date);
@@ -487,20 +542,17 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
 
     public void getJobDetails()
     {
-        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_JOB,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:new:get:job:" + response);
                         onResponserecieved(response, 2);
-                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        dialog.dismiss();
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -540,8 +592,8 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
                 JSONObject object = new JSONObject(job_data);
                 String get_name = object.getString("job_name");
                 System.out.println("nnnnnnnnnnn:name::"+get_name);
-                category = object.getString("job_category");
-                System.out.println("nnnnnnnnnnn:category::" + category);
+                cat = object.getString("job_category");
+                System.out.println("nnnnnnnnnnn:category::" + cat);
                 String get_description = object.getString("description");
                 System.out.println("nnnnnnnnnnn:description::" + get_description);
                 String get_date = object.getString("job_date");
@@ -559,9 +611,9 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
 
                 String[] arrayString = get_end_time.split(":");
 
-                 hourr = arrayString[0];
-                 mintt = arrayString[1];
-                 secc = arrayString[2];
+                hourr = arrayString[0];
+                mintt = arrayString[1];
+                secc = arrayString[2];
                 System.out.println("eeeeeeeee:eeeeee:::"+hourr+"...."+mintt+"...."+secc);
 
                 job_name.setText(get_name);
@@ -579,87 +631,87 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
                     checkBox.setChecked(true);
                 }
 
-                if(category.equals("1")) {
+                if(cat.equals("1")) {
                     int position = 0;
                     list.setSelection(position);
                 }
-                if(category.equals("2")) {
+                if(cat.equals("2")) {
                     int position = 1;
                     list.setSelection(position);
                 }
-                if(category.equals("3")) {
+                if(cat.equals("3")) {
                     int position = 2;
                     list.setSelection(position);
                 }
-                if(category.equals("4")) {
+                if(cat.equals("4")) {
                     int position = 3;
                     list.setSelection(position);
                 }
-                if(category.equals("5")) {
+                if(cat.equals("5")) {
                     int position = 4;
                     list.setSelection(position);
                 }
-                if(category.equals("6")) {
+                if(cat.equals("6")) {
                     int position = 5;
                     list.setSelection(position);
                 }
-                if(category.equals("7")) {
+                if(cat.equals("7")) {
                     int position = 6;
                     list.setSelection(position);
                 }
-                if(category.equals("8")) {
+                if(cat.equals("8")) {
                     int position = 7;
                     list.setSelection(position);
                 }
-                if(category.equals("9")) {
+                if(cat.equals("9")) {
                     int position = 8;
                     list.setSelection(position);
                 }
-                if(category.equals("10")) {
+                if(cat.equals("10")) {
                     int position = 9;
                     list.setSelection(position);
                 }
-                if(category.equals("11")) {
+                if(cat.equals("11")) {
                     int position = 10;
                     list.setSelection(position);
                 }
-                if(category.equals("12")) {
+                if(cat.equals("12")) {
                     int position = 11;
                     list.setSelection(position);
                 }
-                if(category.equals("13")) {
+                if(cat.equals("13")) {
                     int position = 12;
                     list.setSelection(position);
                 }
-                if(category.equals("14")) {
+                if(cat.equals("14")) {
                     int position = 13;
                     list.setSelection(position);
                 }
-                if(category.equals("15")) {
+                if(cat.equals("15")) {
                     int position = 14;
                     list.setSelection(position);
                 }
-                if(category.equals("16")) {
+                if(cat.equals("16")) {
                     int position = 15;
                     list.setSelection(position);
                 }
-                if(category.equals("17")) {
+                if(cat.equals("17")) {
                     int position = 16;
                     list.setSelection(position);
                 }
-                if(category.equals("18")) {
+                if(cat.equals("18")) {
                     int position = 17;
                     list.setSelection(position);
                 }
-                if(category.equals("19")) {
+                if(cat.equals("19")) {
                     int position = 18;
                     list.setSelection(position);
                 }
-                if(category.equals("20")) {
+                if(cat.equals("20")) {
                     int position = 19;
                     list.setSelection(position);
                 }
-                if(category.equals("21")) {
+                if(cat.equals("21")) {
                     int position = 20;
                     list.setSelection(position);
                 }
@@ -743,8 +795,8 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
                 list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        category = ((TextView) view.findViewById(R.id.id)).getText().toString();
-                        System.out.println("ssssssssssselected:item:" + category);
+                        cat = ((TextView) view.findViewById(R.id.id)).getText().toString();
+                        System.out.println("ssssssssssselected:item:" + cat);
                     }
 
                     @Override
@@ -838,4 +890,114 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
             }
         }
     };
+
+    public PopupWindow popupWindowDogs() {
+
+        // initialize a pop up window type
+        PopupWindow popupWindow = new PopupWindow(this);
+
+        // the drop down list is a list view
+
+
+        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.popupbackground,null);
+
+        ListView listViewDogs =(ListView) layout.findViewById(R.id.list_category);;
+        // set our adapter and pass our pop up window contents
+        adapter = new CustomJobListAdapter(EditCreateJob.this, job_title,imageId);
+        listViewDogs.setAdapter(adapter);
+
+        // set the item click listener
+        listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
+
+        // some other visual settings
+        popupWindow.setFocusable(true);
+        popupWindow.setWidth(600);
+        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
+
+        // set the list view as pop up window content
+        popupWindow.setContentView(layout);
+
+        return popupWindow;
+    }
+
+
+    public static void SetCategory(int pos){
+
+        HashMap<String,String> map = job_title.get(pos);
+        String title =map.get("job_category");
+        category =title;
+        textview.setText(title);
+        categoryId=String.valueOf(pos);
+        switch (pos){
+            case 0:
+                img_paint.setImageResource(R.drawable.box_17);
+                break;
+            case 1:
+                img_paint.setImageResource(R.drawable.box_10);
+                break;
+            case 2:
+                img_paint.setImageResource(R.drawable.box_8);
+                break;
+            case 3:
+                img_paint.setImageResource(R.drawable.box_15);
+                break;
+            case 4:
+                img_paint.setImageResource(R.drawable.box_18);
+                break;
+            case 5:
+                img_paint.setImageResource(R.drawable.box_9);
+                break;
+            case 6:
+                img_paint.setImageResource(R.drawable.box_11);
+                break;
+            case 7:
+                img_paint.setImageResource(R.drawable.box_20);
+                break;
+            case 8:
+                img_paint.setImageResource(R.drawable.box_3);
+                break;
+            case 9:
+                img_paint.setImageResource(R.drawable.box_5);
+                break;
+            case 10:
+                img_paint.setImageResource(R.drawable.box_6);
+                break;
+            case 11:
+                img_paint.setImageResource(R.drawable.box_2);
+                break;
+            case 12:
+                img_paint.setImageResource(R.drawable.box_19);
+                break;
+            case 13:
+                img_paint.setImageResource(R.drawable.box_21);
+                break;
+            case 14:
+                img_paint.setImageResource(R.drawable.box_1);
+                break;
+            case 15:
+                img_paint.setImageResource(R.drawable.box_12);
+                break;
+            case 16:
+                img_paint.setImageResource(R.drawable.box_7);
+                break;
+            case 17:
+                img_paint.setImageResource(R.drawable.box_14);
+                break;
+            case 18:
+                img_paint.setImageResource(R.drawable.box_16);
+                break;
+            case 19:
+                img_paint.setImageResource(R.drawable.box_4);
+                break;
+            case 20:
+                img_paint.setImageResource(R.drawable.box_6);
+                break;
+            default:
+                break;
+        }
+
+        img_paint.setVisibility(View.VISIBLE);
+    }
 }

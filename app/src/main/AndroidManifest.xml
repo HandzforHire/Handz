@@ -225,6 +225,18 @@
         <activity android:name=".CreditDebit"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
 
+        <activity android:name=".EditRating"/>
+
+
+        <activity android:name=".SummaryAdd"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+        <activity android:name=".SummaryMultiply"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+        <activity android:name=".SummarySubtract"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

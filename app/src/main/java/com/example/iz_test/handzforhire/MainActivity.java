@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -61,8 +62,8 @@ public class MainActivity extends Activity {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this,PromoVideo.class);
-                startActivity(i);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.handzforhire.com/want-handz-in-your-area"));
+                startActivity(browserIntent);
             }
         });
 

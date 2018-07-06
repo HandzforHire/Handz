@@ -48,8 +48,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="40sp"
                             android:layout_below="@+id/descrip"
-                            android:background="#BAB7AB"
+                            android:background="#3B3B3B"
                             android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="20sp"
+                                android:layout_height="20sp"
+                                android:id="@+id/img_paint"
+                                android:layout_marginLeft="10sp"
+                                android:visibility="gone"
+                                android:layout_gravity="center"
+                                android:src="@drawable/box_1" />
 
                             <TextView
                                 android:id="@+id/textview"
@@ -57,18 +66,20 @@
                                 android:layout_height="wrap_content"
                                 android:text="Select Job Category"
                                 android:textSize="18sp"
+                                android:visibility="visible"
                                 android:layout_marginLeft="15sp"
                                 android:textStyle="italic"
                                 android:layout_gravity="center"
-                                android:textColor="#000000" />
+                                android:textColor="#DCDCDC" />
 
                             <ImageView
                                 android:layout_width="20sp"
                                 android:layout_height="20sp"
                                 android:id="@+id/img_arrow"
                                 android:layout_marginLeft="10sp"
+                                android:visibility="visible"
                                 android:layout_gravity="center"
-                                android:src="@drawable/right_arrow" />
+                                android:src="@drawable/arrow_right" />
 
                             <Spinner
                                 android:id="@+id/listview"
@@ -79,6 +90,9 @@
                                 android:layout_centerVertical="true"
                                 android:background="@android:color/transparent" />
 
+                            <ListView android:id="@+id/list_cat"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
 
                         </LinearLayout>
 
@@ -157,7 +171,7 @@
                             android:id="@+id/linear1"
                             android:layout_width="match_parent"
                             android:layout_height="40sp"
-                            android:background="#BAB7AB"
+                            android:background="#3B3B3B"
                             android:layout_below="@+id/detail">
 
                             <TextView
@@ -167,7 +181,7 @@
                                 android:id="@+id/date_text"
                                 android:textStyle="italic"
                                 android:layout_marginLeft="15sp"
-                                android:textColor="#000000"
+                                android:textColor="#DCDCDC"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentLeft="true"
                                 android:textSize="18sp" />
@@ -178,7 +192,7 @@
                                 android:layout_marginLeft="10sp"
                                 android:layout_toRightOf="@+id/date_text"
                                 android:layout_centerVertical="true"
-                                android:src="@drawable/right_arrow" />
+                                android:src="@drawable/arrow_right" />
 
                         </RelativeLayout>
 
@@ -197,14 +211,14 @@
                             android:id="@+id/linear2"
                             android:layout_width="match_parent"
                             android:layout_height="40sp"
-                            android:background="#BAB7AB"
+                            android:background="#3B3B3B"
                             android:layout_below="@+id/linear1">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Start Time"
-                                android:textColor="#000000"
+                                android:textColor="#DCDCDC"
                                 android:textStyle="italic"
                                 android:id="@+id/start_time_text"
                                 android:layout_marginLeft="15sp"
@@ -218,7 +232,7 @@
                                 android:layout_toRightOf="@+id/start_time_text"
                                 android:layout_marginLeft="10sp"
                                 android:layout_centerVertical="true"
-                                android:src="@drawable/right_arrow" />
+                                android:src="@drawable/arrow_right" />
 
                             <RelativeLayout
                                 android:layout_width="fill_parent"
@@ -234,8 +248,8 @@
                                     android:layout_alignParentLeft="true"
                                     android:layout_weight="1"
                                     android:layout_marginLeft="5sp"
-                                    android:textColor="#000000"
-                                    android:textColorHint="#000000"/>
+                                    android:textColor="#DCDCDC"
+                                    android:textColorHint="#DCDCDC"/>
 
                             </RelativeLayout>
 
@@ -257,8 +271,15 @@
                             android:id="@+id/linear3"
                             android:layout_width="match_parent"
                             android:layout_height="40sp"
-                            android:background="#BAB7AB"
+                            android:background="#3B3B3B"
                             android:layout_below="@+id/linear2">
+
+                            <!-- <NumberPicker
+                                 android:id="@+id/numberPicker1"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:background="@null"
+                                 android:layout_alignParentLeft="true" />-->
 
                             <TextView
                                 android:id="@+id/end_time_text"
@@ -268,17 +289,27 @@
                                 android:textStyle="italic"
                                 android:layout_marginLeft="15sp"
                                 android:layout_centerVertical="true"
-                                android:layout_alignParentLeft="true"
-                                android:textColor="#000000"
+                                android:textColor="#DCDCDC"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/hour"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="italic"
+                                android:layout_marginLeft="10sp"
+                                android:layout_toRightOf="@+id/end_time_text"
+                                android:layout_centerVertical="true"
+                                android:textColor="#DCDCDC"
                                 android:textSize="18sp" />
 
                             <ImageView
                                 android:layout_width="20sp"
                                 android:layout_height="20sp"
-                                android:layout_toRightOf="@+id/end_time_text"
-                                android:layout_marginLeft="10sp"
+                                android:layout_toRightOf="@+id/hour"
+                                android:layout_marginLeft="5sp"
                                 android:layout_centerVertical="true"
-                                android:src="@drawable/right_arrow" />
+                                android:src="@drawable/arrow_right" />
 
                         </RelativeLayout>
 
@@ -287,14 +318,19 @@
                             android:layout_height="2dp"
                             android:background="#000000"/>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="15sp"
+                            android:background="#000000"/>
+
                         <LinearLayout
                             android:id="@+id/lay"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40sp"
                             android:orientation="vertical"
                             android:layout_below="@+id/layout2"
                             android:gravity="center"
-                            android:layout_marginTop="15sp"
                             android:paddingBottom="5sp"
                             android:background="#BF178487">
 
@@ -303,9 +339,10 @@
                                 android:layout_marginTop="5sp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Work Date/Time Is Flexible \n For This Job"
-                                android:textSize="16sp"
+                                android:text="Work Date/Time Is Flexible For This Job"
+                                android:textSize="15sp"
                                 android:paddingLeft="10sp"
+                                android:textStyle="italic"
                                 android:button="@drawable/custom_checkbox"
                                 android:gravity="center_vertical"
                                 android:textAllCaps="true"
@@ -316,19 +353,22 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="2dp"
+                            android:background="#000000"/>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
                             android:layout_marginTop="10sp"
                             android:background="#000000"/>
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/linear3">
 
                         <RelativeLayout
                             android:id="@+id/linear4"
                             android:layout_width="match_parent"
                             android:layout_height="40sp"
-                            android:background="#BAB7AB">
+                            android:background="#3B3B3B"
+                            android:layout_below="@+id/linear3">
 
                             <TextView
                                 android:id="@+id/payment_details"
@@ -339,7 +379,7 @@
                                 android:textStyle="italic"
                                 android:layout_marginLeft="15sp"
                                 android:layout_alignParentLeft="true"
-                                android:textColor="#000000"
+                                android:textColor="#DCDCDC"
                                 android:textSize="18sp" />
 
                             <ImageView
@@ -349,47 +389,44 @@
                                 android:layout_toRightOf="@+id/payment_details"
                                 android:layout_marginLeft="10sp"
                                 android:layout_centerVertical="true"
-                                android:src="@drawable/right_arrow" />
-
-                            </RelativeLayout>
+                                android:src="@drawable/arrow_right" />
 
                             <RelativeLayout
                                 android:id="@+id/relay1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
+                                android:visibility="invisible"
                                 android:layout_centerInParent="true">
 
                                 <TextView
                                     android:id="@+id/symbol"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="40sp"
+                                    android:layout_height="wrap_content"
                                     android:textSize="16sp"
                                     android:text="$"
                                     android:gravity="center"
-                                    android:layout_gravity="center"
-                                    android:textColor="#000000" />
+                                    android:textColor="#DCDCDC"
+                                    android:layout_gravity="center"/>
 
                                 <TextView
                                     android:id="@+id/amount"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="40sp"
+                                    android:layout_height="wrap_content"
                                     android:textSize="16sp"
+                                    android:layout_marginLeft="5sp"
                                     android:layout_toRightOf="@+id/symbol"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"
-                                    android:textColor="#000000" />
+                                    android:textColor="#DCDCDC" />
 
                                 <TextView
                                     android:id="@+id/pay_type"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="40sp"
+                                    android:layout_height="wrap_content"
                                     android:textSize="16sp"
-                                    android:gravity="center"
                                     android:layout_marginLeft="20sp"
                                     android:layout_toRightOf="@+id/amount"
-                                    android:textColor="#000000"
-                                    android:textColorHint="#000000"/>
+                                    android:textColor="#BEBEBE"
+                                    android:textColorHint="#DCDCDC"/>
 
                             </RelativeLayout>
 

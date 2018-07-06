@@ -14,19 +14,19 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
-import android.text.InputFilter;
+
 import android.text.Selection;
-import android.text.Spanned;
+
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
+
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
+
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -39,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -47,14 +48,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bigkoo.pickerview.MyOptionsPickerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,7 +79,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
     TextView end_time_text;
     TextView job_amount;
     TextView pay_text;
-    TextView amount_text;
+    TextView amount_text,hour;
     public static TextView textview;
     public static ImageView img_paint;
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -87,7 +89,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
     String value = "HandzForHire@~";
     static ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
     String job_category_name,job_id,payment_type,pay_amount,flexible_status,job_estimated,paytext;
-    ProgressDialog progress_dialog;
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     Integer cat;
     CheckBox checkBox;
@@ -98,8 +99,8 @@ public class CreateJob extends Activity implements View.OnClickListener {
     CustomJobListAdapter adapter;
     public static PopupWindow popupWindowDogs;
     public static Button buttonShowDropDown;
+    MyOptionsPickerView threePicker;
     Dialog dialog;
-
     Integer[] imageId = {
             R.drawable.box_1,
             R.drawable.box_2,
@@ -138,7 +139,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-
         layout = (LinearLayout)findViewById(R.id.relay);
         next = (Button) findViewById(R.id.next);
         job_name = (EditText) findViewById(R.id.descrip);
@@ -161,6 +161,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
         time_layout = (RelativeLayout) findViewById(R.id.linear2);
         estimate_layout = (RelativeLayout) findViewById(R.id.linear3);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
+        hour = (TextView) findViewById(R.id.hour);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -244,6 +245,60 @@ public class CreateJob extends Activity implements View.OnClickListener {
             }
         });
 
+        end_time_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                threePicker.show();
+            }
+        });
+
+        //Three Options PickerView
+        threePicker = new MyOptionsPickerView(CreateJob.this);
+        final ArrayList<Integer> numbers = new ArrayList<Integer>(100);
+
+        for (int j = 0; j <= 100; j++)
+        {
+            numbers.add(j);
+            System.out.println(numbers.get(j));
+        }
+        /* ArrayList<String> threeItemsOptions1 = new ArrayList<String>();
+        threeItemsOptions1.add("AA");
+        threeItemsOptions1.add("BB");
+        threeItemsOptions1.add("CC");
+        threeItemsOptions1.add("DD");
+        threeItemsOptions1.add("EE");*/
+
+        final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
+        threeItemsOptions2.add("0.00");
+        threeItemsOptions2.add("0.25");
+        threeItemsOptions2.add("0.50");
+        threeItemsOptions2.add("0.75");
+
+        final ArrayList<String> threeItemsOptions3 = new ArrayList<String>();
+        threeItemsOptions3.add("Hours");
+        threeItemsOptions3.add("Minutes");
+
+        threePicker.setPicker(numbers, threeItemsOptions2, threeItemsOptions3, false);
+        //threePicker.setTitle("Picker");
+        threePicker.setCyclic(false, false, false);
+        threePicker.setSelectOptions(0, 0, 0);
+        threePicker.setOnoptionsSelectListener(new MyOptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+                String a = String.valueOf(numbers.get(options1));
+                String b = String.valueOf(threeItemsOptions2.get(option2));
+                float numa = Float.parseFloat(a);
+                float numb = Float.parseFloat(b);
+                System.out.println("aaaaaaaaaaa:::"+numa+"..."+numb+"..."+a+"...."+b);
+                float c = numa + numb;
+                System.out.println("aaaaaaaaaaa::cccc:"+c);
+                end_time_text.setText(String.valueOf(c));
+                String option = threeItemsOptions3.get(options3);
+                hour.setText(option);
+                // Toast.makeText(CreateJob.this, "" + numbers.get(options1) + " " + threeItemsOptions2.get(option2) + " " + threeItemsOptions3.get(options3), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         pay_lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -277,6 +332,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                     @Override
                     public void onClick(View v) {
                         pay_amount = payamount.getText().toString().trim();
+                        System.out.println("sssssssssssss::pay_amount:"+pay_amount);
                         paytext = text.getText().toString().trim();
 
                         payment_layout.setVisibility(View.VISIBLE);
@@ -391,7 +447,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         }
-        if (v == estimate_layout) {
+       /* if (v == estimate_layout) {
 
             // Get Current Time
             final Calendar c = Calendar.getInstance();
@@ -400,7 +456,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                            new TimePickerDialog.OnTimeSetListener() {
+                    new TimePickerDialog.OnTimeSetListener() {
 
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
@@ -457,7 +513,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
-        }
+        }*/
     }
 
     public void validate()
@@ -480,7 +536,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
             // set the custom dialog components - text, image and button
             TextView text = (TextView) dialog.findViewById(R.id.text);
-            text.setText("Must Fill In \"Brief Description of Job\" Box");
+            text.setText("Must Fill In \"Job Title\" Box");
             Button dialogButton = (Button) dialog.findViewById(R.id.ok);
             // if button is clicked, close the custom dialog
             dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -644,8 +700,9 @@ public class CreateJob extends Activity implements View.OnClickListener {
         }
         if(!name.equals("")&&!description.equals("")&&!date.equals("")&&!start_time.equals("")&&!end_time.equals("")&&!amount.equals(""))
         {
-            System.out.println("eeeeeeeee:time:::"+en_time+"...."+amount);
-            job_estimated = String.valueOf(Float.valueOf(en_time)*Float.valueOf(amount));
+            String estim = end_time_text.getText().toString();
+            System.out.println("eeeeeeeee:time:::"+estim+"...."+amount);
+            job_estimated = String.valueOf(Float.valueOf(estim)*Float.valueOf(amount));
             System.out.println("eeeeeeeee:estimated:::"+job_estimated);
             Intent i = new Intent(CreateJob.this, CreateJob2.class);
             i.putExtra("userId", id);
@@ -658,7 +715,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
             i.putExtra("description",description);
             i.putExtra("date", date);
             i.putExtra("start_time",st_time);
-            i.putExtra("end_time",en_time);
+            i.putExtra("end_time",estim);
             i.putExtra("payment_amount",amount);
             i.putExtra("payment_type", payment_type);
             i.putExtra("flexible_status", flexible_status);
@@ -742,7 +799,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                     System.out.println("menuitems:::" + job_title);
                 }
 
-               // list.setAdapter(adapter);
+                // list.setAdapter(adapter);
 /*
                 PopupWindow popupWindow = new PopupWindow(this);
 
@@ -750,7 +807,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 ListView listcate = new ListView(this);
                 listcate.setAdapter(adapter);*/
 
-                dialog.dismiss();
               /*  list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -895,7 +951,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
         popupWindow.setFocusable(true);
         popupWindow.setWidth(600);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-       // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
+        // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
 
         // set the list view as pop up window content
         popupWindow.setContentView(layout);
@@ -913,73 +969,97 @@ public class CreateJob extends Activity implements View.OnClickListener {
         categoryId=String.valueOf(pos);
         switch (pos){
             case 0:
-               img_paint.setImageResource(R.drawable.box_1);
-                break;
-            case 1:
-                img_paint.setImageResource(R.drawable.box_2);
-                break;
-            case 2:
-                img_paint.setImageResource(R.drawable.box_3);
-                break;
-            case 3:
-                img_paint.setImageResource(R.drawable.box_4);
-                break;
-            case 4:
-                img_paint.setImageResource(R.drawable.box_5);
-                break;
-            case 5:
-                img_paint.setImageResource(R.drawable.box_6);
-                break;
-            case 6:
-                img_paint.setImageResource(R.drawable.box_7);
-                break;
-            case 7:
-                img_paint.setImageResource(R.drawable.box_8);
-                break;
-            case 8:
-                img_paint.setImageResource(R.drawable.box_9);
-                break;
-            case 9:
-                img_paint.setImageResource(R.drawable.box_10);
-                break;
-            case 10:
-                img_paint.setImageResource(R.drawable.box_11);
-                break;
-            case 11:
-                img_paint.setImageResource(R.drawable.box_12);
-                break;
-            case 12:
-                img_paint.setImageResource(R.drawable.box_13);
-                break;
-            case 13:
-                img_paint.setImageResource(R.drawable.box_14);
-                break;
-            case 14:
-                img_paint.setImageResource(R.drawable.box_15);
-                break;
-            case 15:
-                img_paint.setImageResource(R.drawable.box_16);
-                break;
-            case 16:
                 img_paint.setImageResource(R.drawable.box_17);
                 break;
-            case 17:
+            case 1:
+                img_paint.setImageResource(R.drawable.box_10);
+                break;
+            case 2:
+                img_paint.setImageResource(R.drawable.box_8);
+                break;
+            case 3:
+                img_paint.setImageResource(R.drawable.box_15);
+                break;
+            case 4:
                 img_paint.setImageResource(R.drawable.box_18);
                 break;
-            case 18:
-                img_paint.setImageResource(R.drawable.box_19);
+            case 5:
+                img_paint.setImageResource(R.drawable.box_9);
                 break;
-            case 19:
+            case 6:
+                img_paint.setImageResource(R.drawable.box_11);
+                break;
+            case 7:
                 img_paint.setImageResource(R.drawable.box_20);
                 break;
-            case 20:
+            case 8:
+                img_paint.setImageResource(R.drawable.box_3);
+                break;
+            case 9:
+                img_paint.setImageResource(R.drawable.box_5);
+                break;
+            case 10:
+                img_paint.setImageResource(R.drawable.box_6);
+                break;
+            case 11:
+                img_paint.setImageResource(R.drawable.box_2);
+                break;
+            case 12:
+                img_paint.setImageResource(R.drawable.box_19);
+                break;
+            case 13:
                 img_paint.setImageResource(R.drawable.box_21);
                 break;
-         default:
-             break;
+            case 14:
+                img_paint.setImageResource(R.drawable.box_1);
+                break;
+            case 15:
+                img_paint.setImageResource(R.drawable.box_12);
+                break;
+            case 16:
+                img_paint.setImageResource(R.drawable.box_7);
+                break;
+            case 17:
+                img_paint.setImageResource(R.drawable.box_14);
+                break;
+            case 18:
+                img_paint.setImageResource(R.drawable.box_16);
+                break;
+            case 19:
+                img_paint.setImageResource(R.drawable.box_4);
+                break;
+            case 20:
+                img_paint.setImageResource(R.drawable.box_6);
+                break;
+            default:
+                break;
         }
 
         img_paint.setVisibility(View.VISIBLE);
+    }
+
+    public static class DatePickerDialogTheme4 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState){
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(),
+                    AlertDialog.THEME_HOLO_LIGHT,this,year,month,day);
+
+            return datepickerdialog;
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day){
+
+           /* TextView textview = (TextView)getActivity().findViewById(R.id.textView1);
+
+            textview.setText(day + ":" + (month+1) + ":" + year);*/
+
+        }
     }
 
 }

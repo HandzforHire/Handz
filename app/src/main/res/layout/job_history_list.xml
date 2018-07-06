@@ -205,6 +205,7 @@
 
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="80sp"
@@ -233,15 +234,54 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/leave_rating"
+            <LinearLayout
+                android:id="@+id/leave_lay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="leave a\n rating"
-                android:textAllCaps="true"
                 android:layout_gravity="center"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:background="@drawable/star_filled"/>
+
+                <TextView
+                    android:id="@+id/leave_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="leave \n rating"
+                    android:textAllCaps="true"
+                    android:paddingLeft="10sp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/edit_lay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:background="@drawable/star_filled"/>
+
+                <TextView
+                    android:id="@+id/edit_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="edit \n rating"
+                    android:textAllCaps="true"
+                    android:paddingLeft="10sp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -90,11 +90,17 @@ public class EditCreateJob2 extends Activity {
     static String latitude;
     static String longitude;
     String estimated_amount,flexible_status;
-
+    Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_create_job2);
+
+
+        dialog = new Dialog(EditCreateJob2.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -392,7 +398,7 @@ public class EditCreateJob2 extends Activity {
     }
 
     private void registerUser() {
-
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -400,11 +406,13 @@ public class EditCreateJob2 extends Activity {
                         //Toast.makeText(Registrationpage3.this,response,Toast.LENGTH_LONG).show();
                         System.out.println("eeeee:" + response);
                         onResponserecieved(response, 1);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                       /*  try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -455,6 +463,11 @@ public class EditCreateJob2 extends Activity {
             }
         };
 
+        System.out.println("vvvvvvv1:"+".."+value+".."+id+".."+name+".."+usertype+"..");
+        System.out.println("vvvvvvv2:"+".."+category+".."+description+".."+date+".."+start_time+"..");
+        System.out.println("vvvvvvv3:"+".."+end_time+".."+amount+".."+type+".."+address+"..");
+        System.out.println("vvvvvvv4:"+".."+city+".."+state+".."+zipcode+".."+post_address+"..");
+        System.out.println("vvvvvvv5:"+".."+latitude+".."+longitude+".."+estimated_amount+".."+flexible_status+"..");
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
@@ -516,17 +529,20 @@ public class EditCreateJob2 extends Activity {
 
     public void getJobDetails()
     {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_JOB,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:new:get:job:" + response);
                         onResponserecieved1(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);

@@ -29,6 +29,8 @@
                 android:src="@drawable/default_profile"
                 android:background="@drawable/image_border"/>
 
+
+
         </RelativeLayout>
 
         <LinearLayout
@@ -65,6 +67,16 @@
                     android:textSize="20sp" />
                 <TextView
                     android:id="@+id/employee_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:textColor="#000000"
+                    android:visibility="gone"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/image1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -234,14 +246,56 @@
 
             </RelativeLayout>
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/leave_lay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="leave a\n rating"
-                android:textAllCaps="true"
+
+
                 android:layout_gravity="center"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:background="@drawable/star_filled"/>
+
+                <TextView
+                    android:id="@+id/leave_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="leave\nrating"
+                    android:textAllCaps="true"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/edit_lay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:background="@drawable/star_filled"/>
+
+                <TextView
+                    android:id="@+id/edit_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="edit \n rating"
+                    android:textAllCaps="true"
+                    android:paddingLeft="10sp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
