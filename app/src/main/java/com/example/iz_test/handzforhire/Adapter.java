@@ -88,7 +88,6 @@ public class Adapter extends BaseAdapter {
             image_text = (TextView) view.findViewById(R.id.image1);
             user_name = (TextView) view.findViewById(R.id.text3);
             image = (ImageView)view.findViewById(R.id.img1);
-            leave_rating_btn = (TextView) view.findViewById(R.id.leave_rating);
             job_details = (Button) view.findViewById(R.id.btn);
             chat = (LinearLayout) view.findViewById(R.id.lay1);
             leave_layout = (LinearLayout) view.findViewById(R.id.leave_lay);
@@ -113,7 +112,7 @@ public class Adapter extends BaseAdapter {
         rating_value=worldpopulationlist.get(position).getRatingValue();
 
         chat.setTag(position);
-        leave_rating_btn.setTag(position);
+        leave_layout.setTag(position);
         job_details.setTag(position);
         edit_layout.setTag(position);
         Glide.with(mContext).load(worldpopulationlist.get(position).getImage()).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(mContext,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
@@ -130,7 +129,7 @@ public class Adapter extends BaseAdapter {
             edit_layout.setVisibility(View.VISIBLE);
         }
 
-        leave_rating_btn.setOnClickListener(new View.OnClickListener() {
+        leave_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
