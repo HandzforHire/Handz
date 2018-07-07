@@ -46,7 +46,7 @@ public class Adapter extends BaseAdapter {
     ImageView image1;
     String userId;
     String profile_name,channel_id,username,rating_value;
-    LinearLayout leave_layout,edit_layout;
+    LinearLayout leave_layout,edit_layout,rehire_layout;
 
     public Adapter(Context context, List<WorldPopulation> worldpopulationlist) {
         mContext = context;
@@ -88,11 +88,12 @@ public class Adapter extends BaseAdapter {
             image_text = (TextView) view.findViewById(R.id.image1);
             user_name = (TextView) view.findViewById(R.id.text3);
             image = (ImageView)view.findViewById(R.id.img1);
+            leave_rating_btn = (TextView) view.findViewById(R.id.leave_rating);
             job_details = (Button) view.findViewById(R.id.btn);
             chat = (LinearLayout) view.findViewById(R.id.lay1);
             leave_layout = (LinearLayout) view.findViewById(R.id.leave_lay);
             edit_layout = (LinearLayout) view.findViewById(R.id.edit_lay);
-
+            rehire_layout = (LinearLayout) view.findViewById(R.id.rehire_lay);
 
             view.setTag(holder);
         } else {
@@ -112,7 +113,7 @@ public class Adapter extends BaseAdapter {
         rating_value=worldpopulationlist.get(position).getRatingValue();
 
         chat.setTag(position);
-        leave_layout.setTag(position);
+        leave_rating_btn.setTag(position);
         job_details.setTag(position);
         edit_layout.setTag(position);
         Glide.with(mContext).load(worldpopulationlist.get(position).getImage()).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(mContext,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
@@ -129,7 +130,7 @@ public class Adapter extends BaseAdapter {
             edit_layout.setVisibility(View.VISIBLE);
         }
 
-        leave_layout.setOnClickListener(new View.OnClickListener() {
+        leave_rating_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -179,6 +180,17 @@ public class Adapter extends BaseAdapter {
             }
         });
 
+        rehire_layout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jobId = job_id.getText().toString();
+                System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
+                Intent i = new Intent(mContext,RehireJob.class);
+                i.putExtra("userId",userId);
+                i.putExtra("jobId",jobId);
+                v.getContext().startActivity(i);
+            }
+        });
         chat.setOnClickListener(new View.OnClickListener()
         {
             @Override

@@ -62,7 +62,7 @@ import java.util.Map;
         String type = "applied";
         Button active_jobs,job_history;
         Dialog dialog;
-
+        int visible_pos,visible_lay;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -283,8 +283,6 @@ import java.util.Map;
         }
 
 
-
-
         public class PendingAdapter extends BaseAdapter {
             private  final String emp_reject = Constant.SERVER_URL + "employee_reject";
             private  final String job_list = Constant.SERVER_URL + "job_lists";
@@ -374,11 +372,37 @@ import java.util.Map;
 
                 }
 
+                System.out.println("pos "+visible_pos);
+                if(position==visible_pos){
+                    if(visible_lay==1){
+                        lin_hold.setVisibility(View.VISIBLE);
+                        lin_hire.setVisibility(View.GONE);
+                        lin_refuse.setVisibility(View.GONE);
+                    }else if(visible_lay==2){
+                        lin_hold.setVisibility(View.GONE);
+                        lin_hire.setVisibility(View.GONE);
+                        lin_refuse.setVisibility(View.VISIBLE);
+                    }else if(visible_lay==3){
+                        lin_hold.setVisibility(View.GONE);
+                        lin_hire.setVisibility(View.VISIBLE);
+                        lin_refuse.setVisibility(View.GONE);
+                    }
+                }else{
+                    lin_hold.setVisibility(View.GONE);
+                    lin_hire.setVisibility(View.GONE);
+                    lin_refuse.setVisibility(View.GONE);
+                }
+
                 layout_refuse.setTag(position);
+                layout_hold.setTag(position);
+                layout_hire.setTag(position);
+
                 layout_hold.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         lin_hold.setVisibility(View.GONE);
+                        visible_pos=-1;
+                        visible_lay=0;
                     }
                 });
 
@@ -386,12 +410,16 @@ import java.util.Map;
                     @Override
                     public void onClick(View view) {
                         lin_hire.setVisibility(View.GONE);
+                        visible_pos=-1;
+                        visible_lay=0;
                     }
                 });
 
                 layout_refuse.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        visible_pos=-1;
+                        visible_lay=0;
                         lin_refuse.setVisibility(View.GONE);
                         HashMap<String, String> items = new HashMap<String, String>();
                         items = data.get((Integer) view.getTag());
@@ -404,23 +432,27 @@ import java.util.Map;
                 });
 
 
-
-
+                gray.setTag(position);
+                red.setTag(position);
+                green.setTag(position);
                 gray.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lin_hold.setVisibility(View.VISIBLE);
-                        lin_hire.setVisibility(View.GONE);
-                        lin_refuse.setVisibility(View.GONE);
+                        int pos= (int) v.getTag();
+                        visible_pos=pos;
+                        visible_lay=1;
+
+                        notifyDataSetChanged();
                         return;
                     }
                 });
                 red.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lin_hold.setVisibility(View.GONE);
-                        lin_hire.setVisibility(View.GONE);
-                        lin_refuse.setVisibility(View.VISIBLE);
+                        int pos= (int) v.getTag();
+                        visible_pos=pos;
+                        visible_lay=2;;
+                        notifyDataSetChanged();
 
                         return;
                     }
@@ -429,9 +461,10 @@ import java.util.Map;
                 green.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lin_hold.setVisibility(View.GONE);
-                        lin_hire.setVisibility(View.VISIBLE);
-                        lin_refuse.setVisibility(View.GONE);
+                        int pos= (int) v.getTag();
+                        visible_lay=3;
+                        visible_pos=pos;
+                        notifyDataSetChanged();
                         return;
 
                     }

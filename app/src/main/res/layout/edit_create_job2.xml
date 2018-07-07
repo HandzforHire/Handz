@@ -264,15 +264,14 @@
 
                 <Button
                     android:id="@+id/post"
-                    android:layout_width="100sp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_gray"
-                    android:text="POST"
-                    android:layout_marginBottom="20sp"
-                    android:textStyle="bold"
-                    android:padding="5sp"
-                    android:textColor="#DCDCDC"
-                    android:textSize="24sp"/>
+                    android:layout_width="50sp"
+                    android:layout_height="50sp"
+                    android:textAllCaps="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/next_arrow"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20sp"/>
 
             </RelativeLayout>
         </LinearLayout>

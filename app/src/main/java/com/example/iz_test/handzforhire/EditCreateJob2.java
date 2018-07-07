@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -90,12 +91,13 @@ public class EditCreateJob2 extends Activity {
     static String latitude;
     static String longitude;
     String estimated_amount,flexible_status;
+    LocationTrack locationTrack;
+    String new_value = "0.0";
     Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_create_job2);
-
 
         dialog = new Dialog(EditCreateJob2.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -186,18 +188,23 @@ public class EditCreateJob2 extends Activity {
                 j_city = cit.getText().toString().trim();
                 j_state = stat.getText().toString().trim();
                 j_zipcode = zip.getText().toString().trim();
-                if (j_address.equals("") && j_city.equals("") && j_state.equals("") && j_zipcode.equals("")) {
+                if(j_address.equals("")&&j_city.equals("")&&j_state.equals("")&&j_zipcode.equals(""))
+                {
                     add.clearFocus();
                     cit.clearFocus();
                     stat.clearFocus();
                     zip.clearFocus();
                     linear.setVisibility(View.VISIBLE);
-                } else {
-                    add.clearFocus();
-                    cit.clearFocus();
-                    stat.clearFocus();
-                    zip.clearFocus();
-                    linear.setVisibility(View.GONE);
+
+
+
+
+
+
+                }
+                if(!j_address.equals("")&&!j_city.equals("")&&!j_state.equals("")&&!j_zipcode.equals(""))
+                {
+                    check1.setChecked(false);
                 }
 
             }
@@ -237,10 +244,24 @@ public class EditCreateJob2 extends Activity {
         check1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (check1.isChecked()) {
-                    relative.setVisibility(View.GONE);
-                } else {
-                    relative.setVisibility(View.VISIBLE);
+                if(check1.isChecked())
+                {
+                    add.setText("");
+                    cit.setText("");
+                    stat.setText("");
+                    zip.setText("");
+                    locationTrack = new LocationTrack(EditCreateJob2.this);
+                    if (locationTrack.canGetLocation()) {
+                        lon = locationTrack.getLongitude();
+                        lat = locationTrack.getLatitude();
+                        latitude = String.valueOf(lat);
+                        longitude = String.valueOf(lon);
+                        System.out.println("kkkkkkkkkkkkkk:latitude::check::"+latitude);
+                        System.out.println("kkkkkkkkkkkkkk:longitude:check::"+longitude);
+                        Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
+                    } else {
+                        locationTrack.showSettingsAlert();
+                    }
                 }
             }
         });
@@ -249,7 +270,7 @@ public class EditCreateJob2 extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    linear.setVisibility(View.GONE);
+                    check1.setChecked(false);
                 } else {
                     linear.setVisibility(View.VISIBLE);
                 }
@@ -259,7 +280,7 @@ public class EditCreateJob2 extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    linear.setVisibility(View.GONE);
+                    check1.setChecked(false);
                 } else {
                     linear.setVisibility(View.VISIBLE);
                 }
@@ -269,7 +290,7 @@ public class EditCreateJob2 extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    linear.setVisibility(View.GONE);
+                    check1.setChecked(false);
                 } else {
                     linear.setVisibility(View.VISIBLE);
                 }
@@ -279,13 +300,13 @@ public class EditCreateJob2 extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    linear.setVisibility(View.GONE);
+                    check1.setChecked(false);
                 } else {
                     linear.setVisibility(View.VISIBLE);
                 }
             }
         });
-        add.setOnKeyListener(new View.OnKeyListener() {
+       /* add.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
@@ -332,7 +353,7 @@ public class EditCreateJob2 extends Activity {
                 }
                 return false;
             }
-        });
+        });*/
 
     }
 
@@ -354,12 +375,24 @@ public class EditCreateJob2 extends Activity {
             System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lon);
             latitude = get_lat;
             longitude = get_lon;
+            System.out.println("kkkkkkkkkkkkkk:latitude:"+latitude);
+            System.out.println("kkkkkkkkkkkkkk:longitude:"+longitude);
         }
         if(check1.isChecked())
         {
             current_location = "yes";
-            latitude = String.valueOf(lat);
-            longitude = String.valueOf(lon);
+            locationTrack = new LocationTrack(EditCreateJob2.this);
+            if (locationTrack.canGetLocation()) {
+                lon = locationTrack.getLongitude();
+                lat = locationTrack.getLatitude();
+                latitude = String.valueOf(lat);
+                longitude = String.valueOf(lon);
+                System.out.println("kkkkkkkkkkkkkk:latitude::check::"+latitude);
+                System.out.println("kkkkkkkkkkkkkk:longitude:check::"+longitude);
+                Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
+            } else {
+                locationTrack.showSettingsAlert();
+            }
         }
         else
         {
@@ -371,6 +404,8 @@ public class EditCreateJob2 extends Activity {
             System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lon);
             latitude = get_lat;
             longitude = get_lon;
+            System.out.println("kkkkkkkkkkkkkk:latitude:"+latitude);
+            System.out.println("kkkkkkkkkkkkkk:longitude:"+longitude);
         }
         if (!check1.isChecked() && (j_address.equals("") || j_state.equals("") || j_city.equals("") || j_zipcode.equals(""))) {
             final Dialog dialog = new Dialog(EditCreateJob2.this);
@@ -393,7 +428,66 @@ public class EditCreateJob2 extends Activity {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         } else {
-            registerUser();
+            if(latitude.equals("0.0")||longitude.equals("0.0"))
+            {
+                final Dialog dialog = new Dialog(EditCreateJob2.this);
+                dialog.setContentView(R.layout.custom_dialog);
+
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("Please enter \"Valid Address\" Box");
+                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+                Window window = dialog.getWindow();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+            else
+            {
+                //registerUser();
+                Intent i = new Intent(EditCreateJob2.this,SummaryMultiply.class);
+                i.putExtra("key",value);
+                i.putExtra("userId", id);
+                i.putExtra("job_name",name);
+                i.putExtra("user_type", usertype);
+                i.putExtra("job_category", category);
+                i.putExtra("job_decription", description);
+                i.putExtra("job_date", date);
+                i.putExtra("job_start_date", start_time);
+                i.putExtra("job_end_date",end_time);
+                i.putExtra("start_time", start_time);
+                i.putExtra("end_time", end_time);
+                i.putExtra("payment_amount", amount);
+                i.putExtra("pocket_expense", pocket);
+                i.putExtra("payment_type", type);
+                i.putExtra("address",address);
+                i.putExtra("city", city);
+                i.putExtra("location", current_location);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                i.putExtra("post_address", post_address);
+                i.putExtra("latitude",latitude);
+                i.putExtra("longitude", longitude);
+                i.putExtra("job_address", address);
+                i.putExtra("job_city", city);
+                i.putExtra("job_state", state);
+                i.putExtra("job_zipcode", zipcode);
+                i.putExtra("estimated_payment",estimated_amount);
+                i.putExtra("flexible", flexible_status);
+                i.putExtra("paypal_fee", new_value);
+                i.putExtra("job_payout", flexible_status);
+                i.putExtra("fee_details", new_value);
+                startActivity(i);
+                finish();
+            }
         }
     }
 
@@ -412,7 +506,7 @@ public class EditCreateJob2 extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        dialog.dismiss();
+                        dialog.show();
                       /*  try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
