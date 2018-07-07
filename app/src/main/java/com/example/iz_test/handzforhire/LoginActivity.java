@@ -108,20 +108,10 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
         new_employee.setTypeface(tf2);
         forgot.setTypeface(tf2);
 
-<<<<<<< HEAD
         dialog = new Dialog(LoginActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-=======
-       /* progress_dialog = new ProgressDialog(LoginActivity.this);
-        progress_dialog.setMessage("Loading.Please wait");
-        progress_dialog.setIndeterminate(true);*/
-
-        /*progress_dialog = new ProgressDialog(LoginActivity.this);
-        progress_dialog.setMessage("Loading.Please wait");*/
-
->>>>>>> baskaran-dev
 
 
         permission();
@@ -319,21 +309,9 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
     }
 
 
-<<<<<<< HEAD
     public void login() {
 
        dialog.show();
-=======
-    public void login()
-    {
-
-        dialog = new Dialog(LoginActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
->>>>>>> baskaran-dev
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override

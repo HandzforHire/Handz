@@ -82,16 +82,10 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
         login = (Button) findViewById(R.id.login);
         logo = (ImageView) findViewById(R.id.logo);
 
-<<<<<<< HEAD
         dialog = new Dialog(LendLoginPage.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-=======
-        /*progress_dialog = new ProgressDialog(LendLoginPage.this);
-        progress_dialog.setMessage("Loading.Please wait");*/
-
->>>>>>> baskaran-dev
 
 
         permission();
@@ -184,19 +178,8 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
         });
     }
 
-<<<<<<< HEAD
     public void login() {
         dialog.show();
-=======
-    public void login()
-    {
-        dialog = new Dialog(LendLoginPage.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
->>>>>>> baskaran-dev
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -336,7 +319,6 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
-            dialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -25,7 +25,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -60,7 +59,7 @@ public class LendProfilePage extends Activity{
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     ProgressDialog progress_dialog;
-    ImageView profile,handz,menu,share_lend;
+    ImageView profile,handz,menu;
     TextView profile_name,rating_value;
     RelativeLayout rating_lay;
     SessionManager session;
@@ -79,6 +78,11 @@ public class LendProfilePage extends Activity{
         progress_dialog.show();*/
 
 
+        dialog = new Dialog(LendProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         handz = (ImageView) findViewById(R.id.handz);
         need_help = (Button) findViewById(R.id.need_help);
@@ -94,16 +98,6 @@ public class LendProfilePage extends Activity{
         job_history = (Button) findViewById(R.id.job_history);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
         menu = (ImageView)findViewById(R.id.menu);
-        share_lend=(ImageView)findViewById(R.id.sha_lend);
-        share_lend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                sharelend();
-            }
-        });
-
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
@@ -246,30 +240,8 @@ public class LendProfilePage extends Activity{
         });
     }
 
-    private void sharelend() {
-
-
-        Intent myIntent = new Intent(Intent.ACTION_SEND);
-        myIntent.setType("text/plain");
-        String Tittle="HandzLend";
-        String Text="https://www.handzforhire.com";
-        myIntent.putExtra(Intent.EXTRA_SUBJECT,Tittle);
-        myIntent.putExtra(Intent.EXTRA_TEXT, Text);
-        startActivity(Intent.createChooser(myIntent, "Share using"));
-
-
-
-    }
-
-
-    public void getUsername()
-    {
-        dialog = new Dialog(LendProfilePage.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void getUsername() {
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, USERNAME_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -325,7 +297,7 @@ public class LendProfilePage extends Activity{
 
     public void getProfileimage()
     {
-        //dialog.show();
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override

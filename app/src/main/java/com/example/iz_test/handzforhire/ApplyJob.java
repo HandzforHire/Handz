@@ -69,11 +69,10 @@ public class ApplyJob extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.apply_job);
 
-       /* progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
-
-
+        dialog = new Dialog(ApplyJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         TextView apply = (TextView) findViewById(R.id.apply);
         name = (TextView) findViewById(R.id.text1);
@@ -137,14 +136,7 @@ public class ApplyJob extends Activity{
 
     public void applyJob()
     {
-
-
-        dialog = new Dialog(ApplyJob.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, JOB_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -162,13 +154,16 @@ public class ApplyJob extends Activity{
                             JSONObject jsonObject = new JSONObject(responseBody);
                             System.out.println("error" + jsonObject);
                             String status = jsonObject.getString("msg");
-                            if(status.equals("You are not allowed to apply for the job"))
-                            {
+                            if(status.equals("You are not allowed to apply for the job")) {
+                                // custom dialog
                                 final Dialog dialog = new Dialog(ApplyJob.this);
                                 dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
                                 TextView text = (TextView) dialog.findViewById(R.id.text);
                                 text.setText("You are not allowed to apply for the job");
                                 Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
                                 dialogButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -178,10 +173,9 @@ public class ApplyJob extends Activity{
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            dialog.dismiss();
                         } catch (JSONException e) {
 
                         } catch (UnsupportedEncodingException error1) {
@@ -241,7 +235,7 @@ public class ApplyJob extends Activity{
 
                 dialog.show();
                 Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
             else
@@ -267,7 +261,7 @@ public class ApplyJob extends Activity{
 
                 dialog.show();
                 Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
 

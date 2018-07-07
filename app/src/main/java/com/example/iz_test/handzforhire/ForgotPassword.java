@@ -70,6 +70,10 @@ public class ForgotPassword extends Activity{
         /*progress_dialog = new ProgressDialog(ForgotPassword.this);
         progress_dialog.setMessage("Loading.Please wait");*/
 
+        dialog = new Dialog(ForgotPassword.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
         layout.setOnClickListener(new View.OnClickListener() {
@@ -121,18 +125,8 @@ public class ForgotPassword extends Activity{
         });
     }
 
-
-    public void forgotPassword()
-        {
-
-
-            dialog = new Dialog(ForgotPassword.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.progressbar);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            dialog.show();
-
-
+    public void forgotPassword() {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -182,9 +176,6 @@ public class ForgotPassword extends Activity{
 
             if (status.equals("success"))
             {
-
-                dialog.dismiss();
-
 
                 final Dialog dialog = new Dialog(ForgotPassword.this);
                 dialog.setContentView(R.layout.gray_custom);

@@ -67,7 +67,6 @@ public class EditPostedJobs extends Activity {
     int timeout = 60000;
     RelativeLayout rating_lay;
     Dialog dialog;
-    ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +77,10 @@ public class EditPostedJobs extends Activity {
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-
-        image = (ImageView)findViewById(R.id.default_image);
+        dialog = new Dialog(EditPostedJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
         profile = (ImageView)findViewById(R.id.profile_image);
@@ -190,16 +191,8 @@ public class EditPostedJobs extends Activity {
         }*/
     }
 
-
-    public void listPostedJobs()
-    {
-
-        dialog = new Dialog(EditPostedJobs.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void listPostedJobs() {
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -239,7 +232,7 @@ public class EditPostedJobs extends Activity {
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
                             else {
@@ -261,13 +254,9 @@ public class EditPostedJobs extends Activity {
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-
-                            dialog.dismiss();
-
-
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                             System.out.println("volley error ::"+e.getMessage());

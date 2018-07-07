@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -57,8 +56,8 @@ import java.util.Map;
         String user_id,address,city,state,zipcode,cat_type,cat_id,job_cat_name,name,date,amount,jobId;
         String emplrid,empleid;
 
-        String jobname,jobdate,pay,esti,jobstatus,get_status;
-        ImageView logo,green,gray,red;
+        String jobname,jobdate,pay,esti,jobstatus;
+        ImageView logo;
         ProgressDialog progress_dialog;
         String type = "applied";
         Button active_jobs,job_history;
@@ -73,13 +72,16 @@ import java.util.Map;
             progress_dialog.setMessage("Loading.Please wait....");
             progress_dialog.show();*/
 
+            dialog = new Dialog(PendingJobs.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressbar);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
             list = (ListView) findViewById(R.id.listview);
             logo = (ImageView) findViewById(R.id.logo);
             active_jobs = (Button) findViewById(R.id.btn1);
             job_history = (Button) findViewById(R.id.btn2);
-            green = (ImageView)findViewById(R.id.green);
-            gray = (ImageView) findViewById(R.id.gray);
-            red = (ImageView) findViewById(R.id.red);
 
             Intent i = getIntent();
             user_id = i.getStringExtra("userId");
@@ -95,7 +97,6 @@ import java.util.Map;
             System.out.println("11iiiiiiiiiiiiiiiiiiiii:cat_type::" + cat_type);
 
             searchJobList();
-
 
             logo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -131,16 +132,8 @@ import java.util.Map;
             });
         }
 
-
-        public void searchJobList()
-        {
-            dialog = new Dialog(PendingJobs.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.progressbar);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        public void searchJobList() {
             dialog.show();
-
-
             StringRequest stringRequest = new StringRequest(Request.Method.POST, SEARCH_URL,
                     new Response.Listener<String>() {
                         @Override
@@ -205,21 +198,22 @@ import java.util.Map;
             requestQueue.add(stringRequest);
         }
 
-        private void onResponserecieved(String response, int i) {
+        private void onResponserecieved(String response, int i)
+        {
             String status = null;
 
-            try {
+            try
+            {
                 JSONObject result = new JSONObject(response);
                 status = result.getString("status");
-
-
-                if (status.equals("success")) {
+                if(status.equals("success"))
+                {
                     job_list.clear();
-
                     String job = result.getString("job_lists");
-                    System.out.println("jjjjjjjjjjjjjjjob:" + job);
+                    System.out.println("jjjjjjjjjjjjjjjob:"+job);
                     JSONArray array = new JSONArray(job);
-                    for (int n = 0; n < array.length(); n++) {
+                    for(int n = 0; n < array.length(); n++)
+                    {
                         JSONObject object = (JSONObject) array.get(n);
                         String category = object.getString("job_category");
                         System.out.println("ressss::category:" + category);
@@ -228,31 +222,35 @@ import java.util.Map;
                         esti = object.getString("job_payment_type");
                         pay = object.getString("job_estimated_payment");
                         jobId = object.getString("id");
-                        jobstatus = object.getString("job_status");
-                        emplrid = object.getString("employer_id");
-                        get_status = object.getString("status");
+                        jobstatus=object.getString("job_status");
+                        emplrid=object.getString("employer_id");
 
-                        HashMap<String, String> map = new HashMap<String, String>();
+                        HashMap<String,String> map = new HashMap<String,String>();
                         map.put("name", jobname);
                         map.put("date", jobdate);
                         map.put("type", esti);
                         map.put("amount", pay);
-                        map.put("jobId", jobId);
-                        map.put("status", jobstatus);
-                        map.put("emrid", emplrid);
-                        map.put("employeeid", user_id);
+                        map.put("jobId",jobId);
+                        map.put("status",jobstatus);
+                        map.put("emrid",emplrid);
+                        map.put("employeeid",user_id);
                         job_list.add(map);
                     }
                     System.out.println("job_list:::" + job_list);
-                    PendingAdapter arrayAdapter = new PendingAdapter(this, job_list) {
+                    PendingAdapter arrayAdapter = new PendingAdapter(this, job_list)
+                    {
                         @Override
-                        public View getView(int position, View convertView, ViewGroup parent) {
+                        public View getView(int position, View convertView, ViewGroup parent)
+                        {
                             // Get the current item from ListView
-                            View view = super.getView(position, convertView, parent);
-                            if (position % 2 == 1) {
+                            View view = super.getView(position,convertView,parent);
+                            if(position %2 == 1)
+                            {
                                 // Set a background color for ListView regular row/item
                                 view.setBackgroundColor(Color.parseColor("#BF178487"));
-                            } else {
+                            }
+                            else
+                            {
                                 // Set the background color for alternate row/item
                                 view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
                             }
@@ -262,41 +260,32 @@ import java.util.Map;
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-
-                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                               /*view.setSelected(true);
+                               /* view.setSelected(true);
                                 String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
                                 System.out.println("ssssssssssselected:job_id:" + job_id);
                                 Intent i = new Intent(PendingJobs.this,JobDescription.class);
                                 i.putExtra("userId",user_id);
                                 i.putExtra("jobId",job_id);
                                 startActivity(i);*/
-
-                            Toast.makeText(PendingJobs.this, "hiiiiiiiiiiii", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
-            } catch (JSONException e) {
+            }catch (JSONException e){
                 e.printStackTrace();
+            }  {
             }
             {
+
             }
         }
 
 
-<<<<<<< HEAD
         public class PendingAdapter extends BaseAdapter {
-=======
-        public class PendingAdapter extends BaseAdapter
-        {
->>>>>>> baskaran-dev
             private  final String emp_reject = Constant.SERVER_URL + "employee_reject";
             private  final String job_list = Constant.SERVER_URL + "job_lists";
-
 
             public  String XAPP_KEY = "X-APP-KEY";
             String value = "HandzForHire@~";

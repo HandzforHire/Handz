@@ -75,6 +75,12 @@ public class MakePayment extends Activity{
         setContentView(R.layout.make_payment);
 
 
+        dialog = new Dialog(MakePayment.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
         ImageView logo = (ImageView) findViewById(R.id.logo);
         image = (ImageView) findViewById(R.id.imageView);
         name = (TextView) findViewById(R.id.text);
@@ -148,16 +154,8 @@ public class MakePayment extends Activity{
 
     }
 
-
-
-    public void getJobDetails()
-    {
-        dialog = new Dialog(MakePayment.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void getJobDetails() {
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -237,11 +235,11 @@ public class MakePayment extends Activity{
             status = jResult.getString("status");
             System.out.println("jjjjjjjjjjjjjjjob:::emp_data:::" + emp_data);
             if (status.equals("success")) {
-                if (i == 3) {
-                    Intent main = new Intent(MakePayment.this, ProfilePage.class);
+                if(i==3){
+                    Intent main = new Intent(MakePayment.this,ProfilePage.class);
                     startActivity(main);
                     finish();
-                } else {
+                }else {
                     emp_data = jResult.getString("emp_data");
                     JSONArray array = new JSONArray(emp_data);
                     for (int n = 0; n < array.length(); n++) {
@@ -263,50 +261,13 @@ public class MakePayment extends Activity{
                         }
 
                     }
-
-                    array = new JSONArray(emp_data);
-                    for (int n = 0; n < array.length(); n++) {
-                        JSONObject object = (JSONObject) array.get(n);
-                        final String username = object.getString("username");
-                        profile_image = object.getString("profile_image");
-                        employee = object.getString("employee_id");
-                        final String profilename = object.getString("profile_name");
-
-                        System.out.println("ressss:username::" + username);
-                        System.out.println("ressss:profile_image::" + profile_image);
-                        System.out.println("ressss:employee_id::" + employee);
-                        System.out.println("ressss:profilename::" + profilename);
-
-                        if (profile_image.equals("")) {
-
-                            dialog.dismiss();
-                        } else {
-                            java.net.URL url = new URL(profile_image);
-                            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-                            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-                            image.setImageBitmap(bmp);
-                        }
-                        if (profilename.equals("null")) {
-                            name.setText(username);
-                        } else {
-                            name.setText(profilename);
-                        }
-                        dialog.dismiss();
-                    }
                 }
             } else {
 
-
             }
-        } catch (IOException e) {
-
 
         } catch (JSONException e) {
             e.printStackTrace();
-
-        }
-
         } /*catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -314,11 +275,7 @@ public class MakePayment extends Activity{
         }
 
 */
-
-
-
-
-        
+    }
 
 
     protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor) {

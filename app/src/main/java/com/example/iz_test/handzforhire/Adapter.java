@@ -130,7 +130,7 @@ public class Adapter extends BaseAdapter {
             edit_layout.setVisibility(View.VISIBLE);
         }
 
-        leave_rating_btn.setOnClickListener(new View.OnClickListener() {
+        leave_rating_btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -191,7 +191,7 @@ public class Adapter extends BaseAdapter {
                 v.getContext().startActivity(i);
             }
         });
-        chat.setOnClickListener(new View.OnClickListener()
+        chat.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View view) {
@@ -219,7 +219,7 @@ public class Adapter extends BaseAdapter {
             }
         });
 
-        job_details.setOnClickListener(new View.OnClickListener() {
+        job_details.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 int pos= (int) v.getTag();

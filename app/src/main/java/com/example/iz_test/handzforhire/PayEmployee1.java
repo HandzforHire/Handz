@@ -1,7 +1,6 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +12,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -67,7 +65,6 @@ public class PayEmployee1 extends Activity{
     TextView name,date,total;
     String get_tip,get_amount,get_method,get_date,get_total,tip_value,payment_method_value,payment_amount_value,transaction_date_value;
     Integer total_value;
-    Dialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,14 +130,7 @@ public class PayEmployee1 extends Activity{
         });*/
     }
 
-    public void getJobDetails()
-    {
-        dialog = new Dialog(PayEmployee1.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
+    public void getJobDetails() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -193,7 +183,7 @@ public class PayEmployee1 extends Activity{
                     System.out.println("ressss:profilename::" + profilename);
 
                     if(profile_image.equals("")) {
-                        dialog.dismiss();
+                        progress_dialog.dismiss();
                     }
                     else {
 
@@ -205,7 +195,7 @@ public class PayEmployee1 extends Activity{
                     } else {
                         name.setText(profilename);
                     }
-                    dialog.dismiss();
+                    progress_dialog.dismiss();
                 }
 
             } else {

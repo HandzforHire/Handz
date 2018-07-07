@@ -59,7 +59,6 @@ public class ViewApplicant extends Activity {
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
-    ImageView image;
 
 
     @Override
@@ -71,8 +70,11 @@ public class ViewApplicant extends Activity {
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
+        dialog = new Dialog(ViewApplicant.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        image = (ImageView) findViewById(R.id.default_image);
 
         profile = (ImageView) findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
@@ -175,16 +177,9 @@ public class ViewApplicant extends Activity {
         }*/
     }
 
+    public void listPostedJobs() {
 
-    public void listPostedJobs()
-    {
-        dialog = new Dialog(ViewApplicant.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
-
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override

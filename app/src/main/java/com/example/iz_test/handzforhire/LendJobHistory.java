@@ -68,6 +68,11 @@ public class LendJobHistory extends Activity{
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
+        dialog = new Dialog(LendJobHistory.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         pending_job = (Button) findViewById(R.id.btn1);
         active_job = (Button)findViewById(R.id.btn2);
@@ -125,16 +130,8 @@ public class LendJobHistory extends Activity{
         });
     }
 
-
-    public void activeJobs()
-    {
-        dialog = new Dialog(LendJobHistory.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void activeJobs() {
         dialog.show();
-
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -173,7 +170,7 @@ public class LendJobHistory extends Activity{
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
 

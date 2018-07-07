@@ -53,10 +53,15 @@ public class JobDescription extends Activity {
     Dialog dialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_description);
+
+        dialog = new Dialog(JobDescription.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         profile_image = (ImageView) findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
@@ -115,16 +120,8 @@ public class JobDescription extends Activity {
         });
     }
 
-
-    public void getJobDetails()
-    {
-
-        dialog = new Dialog(JobDescription.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void getJobDetails() {
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
