@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -487,8 +489,24 @@ Dialog dialog;
         listViewDogs.setAdapter(adapter);
 
         // set the item click listener
-        listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
+        listViewDogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Context mContext = adapterView.getContext();
+                //   MainActivity mainActivity = ((MainActivity) mContext);
 
+                // add some animation when a list item was clicked
+                Animation fadeInAnimation = AnimationUtils.loadAnimation(adapterView.getContext(), android.R.anim.fade_in);
+                fadeInAnimation.setDuration(10);
+                adapterView.startAnimation(fadeInAnimation);
+
+                // dismiss the pop up
+                popupWindowDogs.dismiss();
+
+
+              // SetCategory(i);
+            }
+        });
         // some other visual settings
         popupWindow.setFocusable(true);
         popupWindow.setWidth(600);

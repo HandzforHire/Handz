@@ -116,6 +116,8 @@ public class Adapter extends BaseAdapter {
         leave_rating_btn.setTag(position);
         job_details.setTag(position);
         edit_layout.setTag(position);
+        rehire_layout.setTag(position);
+
         Glide.with(mContext).load(worldpopulationlist.get(position).getImage()).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(mContext,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
 
@@ -183,11 +185,14 @@ public class Adapter extends BaseAdapter {
         rehire_layout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                int pos= (int) v.getTag();
+                WorldPopulation item=worldpopulationlist.get(pos);
                 jobId = job_id.getText().toString();
                 System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
                 Intent i = new Intent(mContext,RehireJob.class);
-                i.putExtra("userId",userId);
-                i.putExtra("jobId",jobId);
+                i.putExtra("userId",item.getUserid());
+                i.putExtra("jobId", item.getJobId());
                 v.getContext().startActivity(i);
             }
         });
