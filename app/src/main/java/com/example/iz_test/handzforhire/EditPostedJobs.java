@@ -74,13 +74,7 @@ public class EditPostedJobs extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_posted_jobs);
 
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
-
-
         image = (ImageView)findViewById(R.id.default_image);
-
 
         profile = (ImageView)findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
@@ -128,7 +122,7 @@ public class EditPostedJobs extends Activity {
 
     public void getProfileimage()
     {
-        dialog.show();
+        //dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override

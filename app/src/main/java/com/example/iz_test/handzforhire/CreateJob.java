@@ -55,6 +55,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,11 +68,11 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
     Spinner list;
     LinearLayout layout;
-    String id,address,zipcode,state,city,name,description,date,start_time,end_time,amount,type,st_time,en_time;
-    private static final String URL = Constant.SERVER_URL+"job_category_lists";
+    String id, address, zipcode, state, city, name, description, date, start_time, end_time, amount, type, st_time, en_time;
+    private static final String URL = Constant.SERVER_URL + "job_category_lists";
     Button next;
-    static String category="0",categoryId="0";
-    EditText job_name,job_description;
+    static String category = "0", categoryId = "0";
+    EditText job_name, job_description, payamount;
     static TextView date_text;
     TextView start_time_text;
     TextView end_time_text;
@@ -81,18 +82,19 @@ public class CreateJob extends Activity implements View.OnClickListener {
     public static TextView textview;
     public static ImageView img_paint;
     private int mYear, mMonth, mDay, mHour, mMinute;
-    ImageView logo,arrow,img_arrow;
+    ImageView logo, arrow, img_arrow;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     static ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
-    String job_category_name,job_id,payment_type,pay_amount,flexible_status,job_estimated,paytext;
+    String job_category_name, job_id, payment_type, pay_amount, flexible_status, job_estimated, paytext;
     ProgressDialog progress_dialog;
-    RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
+    RelativeLayout pay_lay, payment_layout, date_layout, time_layout, estimate_layout;
     Integer cat;
     CheckBox checkBox;
     private String current = "";
-    EditText payamount;
+    String StringDateformat_US;
+
     Activity activity;
     private static final String BEGIN_WITH_DOLLAR = "$###,###.##";
     CustomJobListAdapter adapter;
@@ -133,13 +135,13 @@ public class CreateJob extends Activity implements View.OnClickListener {
         StrictMode.setThreadPolicy(policy);
 
 
-        layout = (LinearLayout)findViewById(R.id.relay);
+        layout = (LinearLayout) findViewById(R.id.relay);
         next = (Button) findViewById(R.id.next);
         job_name = (EditText) findViewById(R.id.descrip);
         job_description = (EditText) findViewById(R.id.detail);
         date_text = (TextView) findViewById(R.id.date_text);
         textview = (TextView) findViewById(R.id.textview);
-        img_paint=(ImageView)findViewById(R.id.img_paint);
+        img_paint = (ImageView) findViewById(R.id.img_paint);
         start_time_text = (TextView) findViewById(R.id.start_time_text);
         end_time_text = (TextView) findViewById(R.id.end_time_text);
         job_amount = (TextView) findViewById(R.id.amount);
@@ -147,8 +149,8 @@ public class CreateJob extends Activity implements View.OnClickListener {
         pay_text = (TextView) findViewById(R.id.payment_details);
         logo = (ImageView) findViewById(R.id.logo);
         arrow = (ImageView) findViewById(R.id.arrow);
-        img_arrow=(ImageView)findViewById(R.id.img_arrow);
-        list = (Spinner)findViewById(R.id.listview);
+        img_arrow = (ImageView) findViewById(R.id.img_arrow);
+        list = (Spinner) findViewById(R.id.listview);
         pay_lay = (RelativeLayout) findViewById(R.id.linear4);
         payment_layout = (RelativeLayout) findViewById(R.id.relay1);
         date_layout = (RelativeLayout) findViewById(R.id.linear1);
@@ -176,8 +178,8 @@ public class CreateJob extends Activity implements View.OnClickListener {
         String pattern2 = "hh:mm:ss";
         st_time = new SimpleDateFormat(pattern2).format(new Date());
         en_time = new SimpleDateFormat(pattern2).format(new Date());
-        System.out.println("777777777:time::::" + st_time+",,,,"+ en_time);
-        activity=this;
+        System.out.println("777777777:time::::" + st_time + ",,,," + en_time);
+        activity = this;
         /*job_amount.setPaintFlags(date_text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         start_time_text.setPaintFlags(date_text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         end_time_text.setPaintFlags(date_text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -251,7 +253,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 Button update = (Button) dialog.findViewById(R.id.update_btn);
                 final TextView text = (TextView) dialog.findViewById(R.id.text);
 
-                payamount.addTextChangedListener(tw);
+
 
                 close.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -348,7 +350,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                             String min = (minutes < 10) ? "0" + minutes : "" + minutes;
                             String hour_day = (hour < 10) ? "0" + hour : "" + hour;
                             st_time = hour_day + ":" + min + ":" + sec;
-                            System.out.println("77777777:start_time::::::"+st_time);
+                            System.out.println("77777777:start_time::::::" + st_time);
 
                             String timeSet = "";
                             if (hour > 12) {
@@ -357,27 +359,22 @@ public class CreateJob extends Activity implements View.OnClickListener {
                             } else if (hour == 0) {
                                 hour += 12;
                                 timeSet = "AM";
-                            }
-                            else if (hour == 12){
+                            } else if (hour == 12) {
                                 timeSet = "PM";
-                            }else{
+                            } else {
                                 timeSet = "AM";
                             }
 
                             String min1 = "";
-                            if (minutes < 10)
-                            {
-                                min1 = "0" + minutes ;
+                            if (minutes < 10) {
+                                min1 = "0" + minutes;
                             } else {
                                 min1 = String.valueOf(minutes);
                             }
                             String hour_day1 = "";
-                            if(hour < 10)
-                            {
-                                hour_day1 = "0" + hour ;
-                            }
-                            else
-                            {
+                            if (hour < 10) {
+                                hour_day1 = "0" + hour;
+                            } else {
                                 hour_day1 = String.valueOf(hour);
                             }
                             start_time_text.setText(hour_day1 + ":" + min1 + " " + timeSet);
@@ -394,7 +391,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                            new TimePickerDialog.OnTimeSetListener() {
+                    new TimePickerDialog.OnTimeSetListener() {
 
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
@@ -407,7 +404,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                             String hour_day = (hour < 10) ? "0" + hour : "" + hour;
                             //en_time = hour_day + ":" + min + ":" + sec;
                             en_time = hour_day;
-                            System.out.println("77777777:end_time::::::"+en_time);
+                            System.out.println("77777777:end_time::::::" + en_time);
 
                             String timeSet = "";
                             if (hour > 12) {
@@ -416,36 +413,27 @@ public class CreateJob extends Activity implements View.OnClickListener {
                             } else if (hour == 0) {
                                 hour += 12;
                                 timeSet = "AM";
-                            }
-                            else if (hour == 12){
+                            } else if (hour == 12) {
                                 timeSet = "PM";
-                            }else{
+                            } else {
                                 timeSet = "AM";
                             }
 
                             String min1 = "";
-                            if (minutes < 10)
-                            {
-                                min1 = "0" + minutes ;
-                            }
-                            else {
+                            if (minutes < 10) {
+                                min1 = "0" + minutes;
+                            } else {
                                 min1 = String.valueOf(minutes);
                             }
                             String hour_day1 = "";
-                            if(hour < 10)
-                            {
-                                hour_day1 = "0" + hour ;
-                            }
-                            else
-                            {
+                            if (hour < 10) {
+                                hour_day1 = "0" + hour;
+                            } else {
                                 hour_day1 = String.valueOf(hour);
                             }
-                            if(min1.equals("00"))
-                            {
+                            if (min1.equals("00")) {
                                 end_time_text.setText(hour_day1 + " Hours");
-                            }
-                            else
-                            {
+                            } else {
                                 end_time_text.setText(hour_day1 + " Hours" + " " + min1 + " Minutes");
                             }
                         }
@@ -454,8 +442,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
         }
     }
 
-    public void validate()
-    {
+    public void validate() {
         name = job_name.getText().toString().trim();
         description = job_description.getText().toString().trim();
         date = date_text.getText().toString().trim();
@@ -464,8 +451,8 @@ public class CreateJob extends Activity implements View.OnClickListener {
         amount = job_amount.getText().toString().trim();
         payment_type = amount_text.getText().toString().trim();
 
-        amount=amount.substring(1);
-        System.out.println("amount "+amount);
+        amount = amount.substring(1);
+        System.out.println("amount " + amount);
 
         if (TextUtils.isEmpty(name)) {
             // custom dialog
@@ -605,8 +592,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             return;
         }
-        if(category.equals("0"))
-        {
+        if (category.equals("0")) {
             final Dialog dialog = new Dialog(CreateJob.this);
             dialog.setContentView(R.layout.custom_dialog);
 
@@ -628,54 +614,47 @@ public class CreateJob extends Activity implements View.OnClickListener {
             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             return;
         }
-        if (checkBox.isChecked())
-        {
+        if (checkBox.isChecked()) {
             flexible_status = "yes";
-        }
-        else
-        {
+        } else {
             flexible_status = "no";
         }
-        if(!name.equals("")&&!description.equals("")&&!date.equals("")&&!start_time.equals("")&&!end_time.equals("")&&!amount.equals(""))
-        {
-            System.out.println("eeeeeeeee:time:::"+en_time+"...."+amount);
-            job_estimated = String.valueOf(Float.valueOf(en_time)*Float.valueOf(amount));
-            System.out.println("eeeeeeeee:estimated:::"+job_estimated);
+        if (!name.equals("") && !description.equals("") && !date.equals("") && !start_time.equals("") && !end_time.equals("") && !amount.equals("")) {
+            System.out.println("eeeeeeeee:time:::" + en_time + "...." + amount);
+            job_estimated = String.valueOf(Float.valueOf(en_time) * Float.valueOf(amount));
+            System.out.println("eeeeeeeee:estimated:::" + job_estimated);
             Intent i = new Intent(CreateJob.this, CreateJob2.class);
             i.putExtra("userId", id);
             i.putExtra("address", address);
             i.putExtra("city", city);
             i.putExtra("state", state);
             i.putExtra("zipcode", zipcode);
-            i.putExtra("name",name);
-            i.putExtra("category",categoryId);
-            i.putExtra("description",description);
+            i.putExtra("name", name);
+            i.putExtra("category", categoryId);
+            i.putExtra("description", description);
             i.putExtra("date", date);
-            i.putExtra("start_time",st_time);
-            i.putExtra("end_time",en_time);
-            i.putExtra("payment_amount",amount);
+            i.putExtra("start_time", st_time);
+            i.putExtra("end_time", en_time);
+            i.putExtra("payment_amount", amount);
             i.putExtra("payment_type", payment_type);
             i.putExtra("flexible_status", flexible_status);
             i.putExtra("estimated_amount", job_estimated);
             i.putExtra("jobPayout", "0.0");
             i.putExtra("paypalFee", "0.0");
             startActivity(i);
-        }
-        else
-        {
+        } else {
 
         }
     }
 
 
-    public void listCategory()
-    {
+    public void listCategory() {
 
-        dialog = new Dialog(CreateJob.this);
+        /*dialog = new Dialog(CreateJob.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
+        dialog.show();*/
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
@@ -683,13 +662,13 @@ public class CreateJob extends Activity implements View.OnClickListener {
                     public void onResponse(String response) {
                         System.out.println("resssssssssssssssss:" + response);
                         onResponserecieved1(response, 2);
-                        dialog.dismiss();
+                        //dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        dialog.dismiss();
+                        //dialog.dismiss();
                        /* try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -715,7 +694,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
     }
 
     public void onResponserecieved1(String jsonobject, int i) {
-        System.out.println("response from interface"+jsonobject);
+        System.out.println("response from interface" + jsonobject);
 
         String status = null;
         String categories = null;
@@ -724,27 +703,25 @@ public class CreateJob extends Activity implements View.OnClickListener {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             categories = jResult.getString("categories");
-            System.out.println("jjjjjjjjjjjjjjjob:::categories:::"+categories);
-            if(status.equals("success"))
-            {
+            System.out.println("jjjjjjjjjjjjjjjob:::categories:::" + categories);
+            if (status.equals("success")) {
 
                 JSONArray array = new JSONArray(categories);
-                for(int n = 0; n < array.length(); n++)
-                {
+                for (int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
                     job_category_name = object.getString("name");
                     System.out.println(":job_category_name::" + job_category_name);
                     job_id = object.getString("id");
                     System.out.println(":job_id::" + job_id);
 
-                    HashMap<String,String> map = new HashMap<String,String>();
+                    HashMap<String, String> map = new HashMap<String, String>();
                     map.put("job_category", job_category_name);
                     map.put("job_id", job_id);
                     job_title.add(map);
                     System.out.println("menuitems:::" + job_title);
                 }
 
-               // list.setAdapter(adapter);
+                // list.setAdapter(adapter);
 /*
                 PopupWindow popupWindow = new PopupWindow(this);
 
@@ -752,7 +729,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 ListView listcate = new ListView(this);
                 listcate.setAdapter(adapter);*/
 
-                dialog.dismiss();
+                //dialog.dismiss();
               /*  list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -782,10 +759,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 });*/
 
 
-
-            }
-            else
-            {
+            } else {
             }
 
         } catch (JSONException e) {
@@ -793,16 +767,16 @@ public class CreateJob extends Activity implements View.OnClickListener {
         }
     }
 
-    public static class datepickerClass extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+    public static class datepickerClass extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar calendar = Calendar.getInstance();
 
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH);
             int year = calendar.get(Calendar.YEAR);
-            DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,this,year,month,day);
+            DatePickerDialog datepickerdialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, this, year, month, day);
             datepickerdialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
             return datepickerdialog;
 
@@ -813,170 +787,165 @@ public class CreateJob extends Activity implements View.OnClickListener {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             // TODO Auto-generated method stub
 
-
             //TextView textview = (TextView) getActivity().findViewById(R.id.textView1);
 
             Calendar calander2 = Calendar.getInstance();
             calander2.setTimeInMillis(0);
             calander2.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
             Date SelectedDate = calander2.getTime();
-            DateFormat dateformat_US = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
-            String StringDateformat_US = dateformat_US.format(SelectedDate);
-            date_text.setText(StringDateformat_US);
-
-            /*DateFormat dateformat_UK = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-            String StringDateformat_UK = dateformat_UK.format(SelectedDate);
-            date_text.setText(date_text.getText() + StringDateformat_UK + "\n");*/
+            DateFormat dateformat_US = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
+            String Dateformat_US = dateformat_US.format(SelectedDate);
+            date_text.setText(Dateformat_US);
 
         }
+
     }
 
+            TextWatcher tw = new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    if (!s.toString().matches("^\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{2})?$")) {
+                        String userInput = "" + s.toString().replaceAll("[^\\d]", "");
+                        StringBuilder cashAmountBuilder = new StringBuilder(userInput);
+                        while (cashAmountBuilder.length() > 3 && cashAmountBuilder.charAt(0) == '0') {
+                            cashAmountBuilder.deleteCharAt(0);
+                        }
+                        while (cashAmountBuilder.length() < 3) {
+                            cashAmountBuilder.insert(0, '0');
+                        }
+                        cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
+
+                        payamount.removeTextChangedListener(this);
+                        payamount.setText(cashAmountBuilder.toString());
+
+                        payamount.setTextKeepState("$" + cashAmountBuilder.toString());
+                        Selection.setSelection(payamount.getText(), cashAmountBuilder.toString().length() + 1);
+
+                        payamount.addTextChangedListener(this);
+                    }
+                }
+            };
+
+        public PopupWindow popupWindowDogs() {
+
+            // initialize a pop up window type
+            PopupWindow popupWindow = new PopupWindow(this);
+
+            // the drop down list is a list view
 
 
+            LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layout = layoutInflater.inflate(R.layout.popupbackground, null);
 
-    TextWatcher tw = new TextWatcher() {
+            ListView listViewDogs = (ListView) layout.findViewById(R.id.list_category);
+            ;
+            // set our adapter and pass our pop up window contents
+            adapter = new CustomJobListAdapter(CreateJob.this, job_title, imageId);
+            listViewDogs.setAdapter(adapter);
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // set the item click listener
+            listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
+
+            // some other visual settings
+            popupWindow.setFocusable(true);
+            popupWindow.setWidth(600);
+            popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+            // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
+
+            // set the list view as pop up window content
+            popupWindow.setContentView(layout);
+
+            return popupWindow;
         }
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
 
-        @Override
-        public void afterTextChanged(Editable s) {
+        public static void SetCategory(int pos) {
 
-            if (!s.toString().matches("^\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{2})?$")) {
-                String userInput = "" + s.toString().replaceAll("[^\\d]", "");
-                StringBuilder cashAmountBuilder = new StringBuilder(userInput);
-                while (cashAmountBuilder.length() > 3 && cashAmountBuilder.charAt(0) == '0') {
-                    cashAmountBuilder.deleteCharAt(0);
-                }
-                while (cashAmountBuilder.length() < 3) {
-                    cashAmountBuilder.insert(0, '0');
-                }
-                cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
-
-                payamount.removeTextChangedListener(this);
-                payamount.setText(cashAmountBuilder.toString());
-
-                payamount.setTextKeepState("$" + cashAmountBuilder.toString());
-                Selection.setSelection(payamount.getText(), cashAmountBuilder.toString().length() + 1);
-
-                payamount.addTextChangedListener(this);
+            HashMap<String, String> map = job_title.get(pos);
+            String title = map.get("job_category");
+            category = title;
+            textview.setText(title);
+            categoryId = String.valueOf(pos);
+            switch (pos) {
+                case 0:
+                    img_paint.setImageResource(R.drawable.box_1);
+                    break;
+                case 1:
+                    img_paint.setImageResource(R.drawable.box_2);
+                    break;
+                case 2:
+                    img_paint.setImageResource(R.drawable.box_3);
+                    break;
+                case 3:
+                    img_paint.setImageResource(R.drawable.box_4);
+                    break;
+                case 4:
+                    img_paint.setImageResource(R.drawable.box_5);
+                    break;
+                case 5:
+                    img_paint.setImageResource(R.drawable.box_6);
+                    break;
+                case 6:
+                    img_paint.setImageResource(R.drawable.box_7);
+                    break;
+                case 7:
+                    img_paint.setImageResource(R.drawable.box_8);
+                    break;
+                case 8:
+                    img_paint.setImageResource(R.drawable.box_9);
+                    break;
+                case 9:
+                    img_paint.setImageResource(R.drawable.box_10);
+                    break;
+                case 10:
+                    img_paint.setImageResource(R.drawable.box_11);
+                    break;
+                case 11:
+                    img_paint.setImageResource(R.drawable.box_12);
+                    break;
+                case 12:
+                    img_paint.setImageResource(R.drawable.box_13);
+                    break;
+                case 13:
+                    img_paint.setImageResource(R.drawable.box_14);
+                    break;
+                case 14:
+                    img_paint.setImageResource(R.drawable.box_15);
+                    break;
+                case 15:
+                    img_paint.setImageResource(R.drawable.box_16);
+                    break;
+                case 16:
+                    img_paint.setImageResource(R.drawable.box_17);
+                    break;
+                case 17:
+                    img_paint.setImageResource(R.drawable.box_18);
+                    break;
+                case 18:
+                    img_paint.setImageResource(R.drawable.box_19);
+                    break;
+                case 19:
+                    img_paint.setImageResource(R.drawable.box_20);
+                    break;
+                case 20:
+                    img_paint.setImageResource(R.drawable.box_21);
+                    break;
+                default:
+                    break;
             }
-        }
-    };
 
-    public PopupWindow popupWindowDogs() {
-
-        // initialize a pop up window type
-        PopupWindow popupWindow = new PopupWindow(this);
-
-        // the drop down list is a list view
-
-
-        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = layoutInflater.inflate(R.layout.popupbackground,null);
-
-        ListView listViewDogs =(ListView) layout.findViewById(R.id.list_category);;
-        // set our adapter and pass our pop up window contents
-        adapter = new CustomJobListAdapter(CreateJob.this, job_title,imageId);
-        listViewDogs.setAdapter(adapter);
-
-        // set the item click listener
-        listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
-
-        // some other visual settings
-        popupWindow.setFocusable(true);
-        popupWindow.setWidth(600);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-       // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
-
-        // set the list view as pop up window content
-        popupWindow.setContentView(layout);
-
-        return popupWindow;
-    }
-
-
-    public static void SetCategory(int pos){
-
-        HashMap<String,String> map = job_title.get(pos);
-        String title =map.get("job_category");
-        category =title;
-        textview.setText(title);
-        categoryId=String.valueOf(pos);
-        switch (pos){
-            case 0:
-               img_paint.setImageResource(R.drawable.box_1);
-                break;
-            case 1:
-                img_paint.setImageResource(R.drawable.box_2);
-                break;
-            case 2:
-                img_paint.setImageResource(R.drawable.box_3);
-                break;
-            case 3:
-                img_paint.setImageResource(R.drawable.box_4);
-                break;
-            case 4:
-                img_paint.setImageResource(R.drawable.box_5);
-                break;
-            case 5:
-                img_paint.setImageResource(R.drawable.box_6);
-                break;
-            case 6:
-                img_paint.setImageResource(R.drawable.box_7);
-                break;
-            case 7:
-                img_paint.setImageResource(R.drawable.box_8);
-                break;
-            case 8:
-                img_paint.setImageResource(R.drawable.box_9);
-                break;
-            case 9:
-                img_paint.setImageResource(R.drawable.box_10);
-                break;
-            case 10:
-                img_paint.setImageResource(R.drawable.box_11);
-                break;
-            case 11:
-                img_paint.setImageResource(R.drawable.box_12);
-                break;
-            case 12:
-                img_paint.setImageResource(R.drawable.box_13);
-                break;
-            case 13:
-                img_paint.setImageResource(R.drawable.box_14);
-                break;
-            case 14:
-                img_paint.setImageResource(R.drawable.box_15);
-                break;
-            case 15:
-                img_paint.setImageResource(R.drawable.box_16);
-                break;
-            case 16:
-                img_paint.setImageResource(R.drawable.box_17);
-                break;
-            case 17:
-                img_paint.setImageResource(R.drawable.box_18);
-                break;
-            case 18:
-                img_paint.setImageResource(R.drawable.box_19);
-                break;
-            case 19:
-                img_paint.setImageResource(R.drawable.box_20);
-                break;
-            case 20:
-                img_paint.setImageResource(R.drawable.box_21);
-                break;
-         default:
-             break;
+            img_paint.setVisibility(View.VISIBLE);
         }
 
-        img_paint.setVisibility(View.VISIBLE);
     }
 
-}

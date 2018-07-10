@@ -66,6 +66,9 @@ public class LendProfilePage extends Activity{
     SessionManager session;
     Dialog dialog;
 
+    String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
+            "along with that website url and logo";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,18 +249,14 @@ public class LendProfilePage extends Activity{
         });
     }
 
-    private void sharelend() {
-
-
-        Intent myIntent = new Intent(Intent.ACTION_SEND);
-        myIntent.setType("text/plain");
-        String Tittle="HandzLend";
-        String Text="https://www.handzforhire.com";
-        myIntent.putExtra(Intent.EXTRA_SUBJECT,Tittle);
-        myIntent.putExtra(Intent.EXTRA_TEXT, Text);
-        startActivity(Intent.createChooser(myIntent, "Share using"));
-
-
+    private void sharelend()
+    {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");
+        share.putExtra(Intent.EXTRA_TEXT,tittle);
+        startActivity(Intent.createChooser(share, "Share link!"));
 
     }
 

@@ -143,7 +143,14 @@
         <activity android:name=".EditCreateJob2"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
-        <activity android:name=".ProfilePage"/>
+        <activity android:name=".ProfilePage">
+        <intent-filter>
+            <action android:name="android.intent.action.SEND" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="text/plain" />
+        </intent-filter>
+
+        </activity>
 
         <activity android:name=".CreateJob"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
@@ -229,6 +236,8 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
+
+
 
         <!--<activity android:name=".Progressbar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>-->

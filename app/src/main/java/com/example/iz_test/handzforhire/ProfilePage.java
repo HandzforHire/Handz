@@ -74,9 +74,10 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     LinearLayout posted,history,active;
     ProgressBar pb;
     Dialog dialog;
-    //String URL_TO_SHARE="https://www.handzforhire.com";
-    //String CONTENTS="HandzForHire";
-
+    Activity activity;
+    String description="https://www.handzforhire.com";
+    String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
+            "along with that website url and logo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -277,15 +278,17 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
     private void share()
     {
-        Intent myIntent = new Intent(Intent.ACTION_SEND);
-        myIntent.setType("text/plain");
-        String Tittle="HandzNeed";
-        String Text="https://www.handzforhire.com";
-        myIntent.putExtra(Intent.EXTRA_SUBJECT,Tittle);
-        myIntent.putExtra(Intent.EXTRA_TEXT, Text);
-        startActivity(Intent.createChooser(myIntent, "Share using"));
+
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");
+        share.putExtra(Intent.EXTRA_TEXT,tittle);
+        startActivity(Intent.createChooser(share, "Share link!"));
 
     }
+
+
 
     public void paymentCheck()
     {
