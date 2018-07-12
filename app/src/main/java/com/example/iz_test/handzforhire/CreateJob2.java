@@ -41,52 +41,17 @@ import java.util.Map;
 
 public class CreateJob2 extends AppCompatActivity {
 
-    String id,address,city,state,zipcode,name,category,date,start_time,end_time,amount,type,description;
-    private static final String URL = Constant.SERVER_URL+"create_job";
-    public static String USER_ID = "user_id";
-    public static String JOB_NAME = "job_name";
-    public static String JOB_CATEGORY = "job_category";
-    public static String JOB_DESCRIPTION = "job_description";
-    public static String JOB_DATE = "job_date";
-    public static String JOB_START_DATE = "job_start_date";
-    public static String JOB_END_DATE = "job_end_date";
-    public static String START_TIME = "start_time";
-    public static String END_TIME = "end_time";
-    public static String JOB_PAYMENT_AMOUNT = "job_payment_amount";
-    public static String JOB_PAYMENT_TYPE = "job_payment_type";
-    public static String ADDRESS = "address";
-    public static String CITY = "city";
-    public static String STATE = "state";
-    public static String ZIPCODE = "zipcode";
-    public static String POST_ADDRESS = "post_address";
-    public static String APP_KEY = "X-APP-KEY";
-    public static String LATITUDE = "lat";
-    public static String LONGITUDE = "lon";
-    public static String CURRENT_LOCATION = "currentlocation";
-    public static String POCKET_EXPENSE = "out_of_pocket_expense";
-    public static String USER_TYPE = "user_type";
-    public static String JOB_STATE = "job_state";
-    public static String ESTIMATED_PAYMENT = "job_estimated_payment";
-    public static String FLEXIBLE = "job_date_time_flexible";
-    public static String JOB_ZIPCODE = "job_zipcode";
-    public static String JOB_ADDRESS = "job_address";
-    public static String JOB_CITY = "job_city";
-    public static String JOB_PAYOUT = "jobPayout";
-    public static String PAYPAL_FEE = "paypalFee";
-    public static String FEE_DETAILS = "fee_details";
-    String value = "HandzForHire@~";
+    String id,address,city,state,zipcode,name,category,date,start_time,expected_hours,amount,type,description;
     TextView text,pros,cons;
     EditText add,cit,stat,zip;
     CheckBox check1,check2;
     LocationTrack locationTrack;
     Button next;
-    String j_address,j_city,j_state,j_zipcode,post_address,job_id;
+    String j_address,j_city,j_state,j_zipcode,post_address,job_id,job_expire;
     String pocket = "100";
     RelativeLayout address_layout;
     LinearLayout linear,layout;
     ImageView logo;
-    LocationManager locationManager;
-    String new_value = "0.0";
     double lat,lon;
     static String latitude="0.0";
     static String longitude="0.0";
@@ -95,35 +60,26 @@ public class CreateJob2 extends AppCompatActivity {
     static String get_lat="0.0";
     static String get_lon="0.0";
     String usertype = "employer";
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
-    Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_job_2);
 
-
-        dialog = new Dialog(CreateJob2.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
         Intent i = getIntent();
         id = i.getStringExtra("userId");
-        address = i.getStringExtra("address");
-        city = i.getStringExtra("city");
-        state = i.getStringExtra("state");
-        zipcode = i.getStringExtra("zipcode");
         name = i.getStringExtra("name");
         category = i.getStringExtra("category");
         description = i.getStringExtra("description");
         date = i.getStringExtra("date");
         start_time = i.getStringExtra("start_time");
-        end_time = i.getStringExtra("end_time");
+        expected_hours = i.getStringExtra("expected_hours");
         amount = i.getStringExtra("payment_amount");
         type = i.getStringExtra("payment_type");
         estimated_amount = i.getStringExtra("estimated_amount");
         flexible_status = i.getStringExtra("flexible_status");
+        job_expire = i.getStringExtra("job_expire");
+        System.out.println("777777777:" + id+".."+name+".."+category+".."+date+".."+start_time+".."+expected_hours+".."+amount+".."+type);
 
         text = (TextView)findViewById(R.id.bt1);
         add = (EditText)findViewById(R.id.address);
@@ -173,7 +129,7 @@ public class CreateJob2 extends AppCompatActivity {
             }
         });
 
-        address_layout.setOnClickListener(new View.OnClickListener() {
+       address_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -246,7 +202,7 @@ public class CreateJob2 extends AppCompatActivity {
                         longitude = String.valueOf(lon);
                         System.out.println("kkkkkkkkkkkkkk:latitude::check::"+latitude);
                         System.out.println("kkkkkkkkkkkkkk:longitude:check::"+longitude);
-                        Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
                     } else {
                         locationTrack.showSettingsAlert();
                     }
@@ -350,7 +306,7 @@ public class CreateJob2 extends AppCompatActivity {
         j_address = add.getText().toString().trim();
         j_city = cit.getText().toString().trim();
         j_state = stat.getText().toString().trim();
-        j_zipcode = zip.getText().toString().trim();
+        j_zipcode = zip.getText().toString().trim(); 
 
         if(check2.isChecked()) {
             post_address = "yes";
@@ -378,7 +334,7 @@ public class CreateJob2 extends AppCompatActivity {
                 longitude = String.valueOf(lon);
                 System.out.println("kkkkkkkkkkkkkk:latitude::check::"+latitude);
                 System.out.println("kkkkkkkkkkkkkk:longitude:check::"+longitude);
-                Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
             } else {
                 locationTrack.showSettingsAlert();
             }
@@ -392,8 +348,8 @@ public class CreateJob2 extends AppCompatActivity {
             getGeoCoordsFromAddress(this,address);
             System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lat);
             System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lon);
-            latitude = get_lat;
-            longitude = get_lon;
+                latitude = get_lat;
+                longitude = get_lon;
             System.out.println("kkkkkkkkkkkkkk:latitude:"+latitude);
             System.out.println("kkkkkkkkkkkkkk:longitude:"+longitude);
 
@@ -448,200 +404,24 @@ public class CreateJob2 extends AppCompatActivity {
             {
                 //registerUser();
                 Intent i = new Intent(CreateJob2.this,SummaryMultiply.class);
-                i.putExtra("key",value);
                 i.putExtra("userId", id);
                 i.putExtra("job_name",name);
-                i.putExtra("user_type", usertype);
                 i.putExtra("job_category", category);
                 i.putExtra("job_decription", description);
                 i.putExtra("job_date", date);
                 i.putExtra("job_start_date", start_time);
-                i.putExtra("job_end_date",end_time);
-                i.putExtra("start_time", start_time);
-                i.putExtra("end_time", end_time);
+                i.putExtra("expected_hours",expected_hours);
                 i.putExtra("payment_amount", amount);
-                i.putExtra("pocket_expense", pocket);
                 i.putExtra("payment_type", type);
-                i.putExtra("address",address);
-                i.putExtra("city", city);
                 i.putExtra("location", current_location);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
                 i.putExtra("post_address", post_address);
                 i.putExtra("latitude",latitude);
                 i.putExtra("longitude", longitude);
-                i.putExtra("job_address", address);
-                i.putExtra("job_city", city);
-                i.putExtra("job_state", state);
-                i.putExtra("job_zipcode", zipcode);
                 i.putExtra("estimated_payment",estimated_amount);
                 i.putExtra("flexible", flexible_status);
-                i.putExtra("paypal_fee", new_value);
-                i.putExtra("job_payout", flexible_status);
-                i.putExtra("fee_details", new_value);
+                i.putExtra("job_expire", job_expire);
                 startActivity(i);
-                finish();
             }
-        }
-    }
-
-    private void registerUser()
-    {
-        dialog.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //Toast.makeText(Registrationpage3.this,response,Toast.LENGTH_LONG).show();
-                        System.out.println("eeeee:createjob2"+response);
-                        onResponserecieved(response,1);
-                        dialog.dismiss();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        dialog.dismiss();
-                        /*try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            System.out.println("error" + jsonObject);
-                        } catch (JSONException e) {
-
-                        } catch (UnsupportedEncodingException error1) {
-
-                        }*/
-                        if(volleyError.networkResponse != null && volleyError.networkResponse.data != null){
-                            VolleyError error = new VolleyError(new String(volleyError.networkResponse.data));
-                            volleyError = error;
-                            System.out.println("error" + volleyError);
-                        }else{
-
-                        }
-                    }
-                }){
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put(APP_KEY,value);
-                params.put(USER_ID,id);
-                params.put(JOB_NAME,name);
-                params.put(USER_TYPE,usertype);
-                params.put(JOB_CATEGORY, category);
-                params.put(JOB_DESCRIPTION,description);
-                params.put(JOB_DATE,date);
-                params.put(JOB_START_DATE,start_time);
-                params.put(JOB_END_DATE,end_time);
-                params.put(START_TIME,start_time);
-                params.put(END_TIME,end_time);
-                params.put(JOB_PAYMENT_AMOUNT,amount);
-                params.put(POCKET_EXPENSE,pocket);
-                params.put(JOB_PAYMENT_TYPE,type);
-                params.put(ADDRESS,address);
-                params.put(CITY,j_city);
-                params.put(CURRENT_LOCATION,current_location);
-                params.put(STATE,state);
-                params.put(ZIPCODE,zipcode);
-                params.put(POST_ADDRESS,post_address);
-                params.put(LATITUDE,latitude);
-                params.put(LONGITUDE,longitude);
-                params.put(JOB_ADDRESS,address);
-                params.put(JOB_CITY,city);
-                params.put(JOB_STATE,state);
-                params.put(JOB_ZIPCODE,zipcode);
-                params.put(ESTIMATED_PAYMENT,estimated_amount);
-                params.put(FLEXIBLE,flexible_status);
-                params.put(PAYPAL_FEE,new_value);
-                params.put(JOB_PAYOUT,flexible_status);
-                params.put(FEE_DETAILS,new_value);
-                return params;
-            }
-
-        };
-
-     /*   System.out.println("vvvvvvv1:"+".."+value+".."+id+".."+name+".."+usertype+"..");
-        System.out.println("vvvvvvv2:"+".."+category+".."+description+".."+date+".."+start_time+"..");
-        System.out.println("vvvvvvv3:"+".."+end_time+".."+amount+".."+type+".."+address+"..");
-        System.out.println("vvvvvvv4:"+".."+city+".."+state+".."+zipcode+".."+post_address+"..");
-        System.out.println("vvvvvvv5:"+".."+latitude+".."+longitude+".."+estimated_amount+".."+flexible_status+"..");*/
-        System.out.println("USER_ID "+id);
-        System.out.println("JOB_NAME "+name);
-        System.out.println("USER_TYPE "+usertype);
-        System.out.println("JOB_CATEGORY "+category);
-        System.out.println("JOB_DESCRIPTION "+description);
-        System.out.println("JOB_START_DATE "+start_time);
-        System.out.println("END_TIME "+end_time);
-        System.out.println("JOB_PAYMENT_AMOUNT "+amount);
-        System.out.println("POCKET_EXPENSE "+pocket);
-        System.out.println("JOB_PAYMENT_TYPE "+type);
-        System.out.println("ADDRESS "+address);
-        System.out.println("CITY "+j_city);
-        System.out.println("CURRENT_LOCATION "+current_location);
-        System.out.println("STATE "+state);
-        System.out.println("ZIPCODE "+zipcode);
-        System.out.println("POST_ADDRESS "+post_address);
-        System.out.println("LATITUDE "+latitude);
-        System.out.println("LONGITUDE"+longitude);
-        System.out.println("ESTIMATED_PAYMENT "+estimated_amount);
-        System.out.println("FLEXIBLE "+flexible_status);
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
-
-    public void onResponserecieved(String jsonobject, int requesttype) {
-        System.out.println("response from interface"+jsonobject);
-
-        String status = null;
-
-        try {
-
-            JSONObject jResult = new JSONObject(jsonobject);
-
-            status = jResult.getString("status");
-            job_id = jResult.getString("job_id");
-            System.out.println("jjjjjjjjjjjob:id::"+job_id);
-
-            if(status.equals("success"))
-            {
-                // custom dialog
-                final Dialog dialog = new Dialog(CreateJob2.this);
-                dialog.setContentView(R.layout.gray_custom);
-
-                // set the custom dialog components - text, image and button
-                TextView text = (TextView) dialog.findViewById(R.id.text);
-                text.setText("Job Created Successfully");
-                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                // if button is clicked, close the custom dialog
-                dialogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                        Intent i = new Intent(CreateJob2.this,PostedJobs.class);
-                        i.putExtra("userId", id);
-                        i.putExtra("jobId",job_id);
-                        i.putExtra("address", address);
-                        i.putExtra("city", city);
-                        i.putExtra("state", state);
-                        i.putExtra("zipcode", zipcode);
-                        startActivity(i);
-                        finish();
-                    }
-                });
-
-                dialog.show();
-                Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
-            }
-            else
-            {
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 

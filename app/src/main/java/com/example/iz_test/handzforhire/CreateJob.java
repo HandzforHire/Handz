@@ -103,6 +103,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
     public static PopupWindow popupWindowDogs;
     public static Button buttonShowDropDown;
     MyOptionsPickerView threePicker;
+    public static String date_format;
     Dialog dialog;
     Integer[] imageId = {
             R.drawable.box_17,
@@ -704,28 +705,31 @@ public class CreateJob extends Activity implements View.OnClickListener {
         }
         if(!name.equals("")&&!description.equals("")&&!date.equals("")&&!start_time.equals("")&&!end_time.equals("")&&!amount.equals(""))
         {
-            String estim = end_time_text.getText().toString();
-            System.out.println("eeeeeeeee:time:::"+estim+"...."+amount);
-            job_estimated = String.valueOf(Float.valueOf(estim)*Float.valueOf(amount));
+            String expected_hours = end_time_text.getText().toString();
+            System.out.println("eeeeeeeee:time:::"+expected_hours+"...."+amount);
+            job_estimated = String.valueOf(Float.valueOf(expected_hours)*Float.valueOf(amount));
             System.out.println("eeeeeeeee:estimated:::"+job_estimated);
+            String job_expire = date_format + " " + st_time ;
+            System.out.println("eeeeeeeee:job_expire:::"+job_expire);
+
             Intent i = new Intent(CreateJob.this, CreateJob2.class);
             i.putExtra("userId", id);
-            i.putExtra("address", address);
-            i.putExtra("city", city);
-            i.putExtra("state", state);
-            i.putExtra("zipcode", zipcode);
+
+
+
+
             i.putExtra("name",name);
             i.putExtra("category",categoryId);
             i.putExtra("description",description);
-            i.putExtra("date", date);
+            i.putExtra("date", date_format);
             i.putExtra("start_time",st_time);
-            i.putExtra("end_time",estim);
+            i.putExtra("expected_hours",expected_hours);
             i.putExtra("payment_amount",amount);
             i.putExtra("payment_type", payment_type);
             i.putExtra("flexible_status", flexible_status);
             i.putExtra("estimated_amount", job_estimated);
-            i.putExtra("jobPayout", "0.0");
-            i.putExtra("paypalFee", "0.0");
+            i.putExtra("job_expire", job_expire);
+
             startActivity(i);
         }
         else
@@ -783,7 +787,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             categories = jResult.getString("categories");
-            System.out.println("jjjjjjjjjjjjjjjob:::categories:::"+categories);
             if(status.equals("success"))
             {
 
@@ -800,46 +803,10 @@ public class CreateJob extends Activity implements View.OnClickListener {
                     map.put("job_category", job_category_name);
                     map.put("job_id", job_id);
                     job_title.add(map);
-                    System.out.println("menuitems:::" + job_title);
+
                 }
 
                 // list.setAdapter(adapter);
-/*
-                PopupWindow popupWindow = new PopupWindow(this);
-
-                // the drop down list is a list view
-                ListView listcate = new ListView(this);
-                listcate.setAdapter(adapter);*/
-
-              /*  list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        category = parent.getItemAtPosition(position).toString();
-                        if(category.equals("Select Job Category"))
-                        {
-
-                        }
-                     else {
-                            System.out.println("ssssssssssselected:item:" + category);
-                            String value = "1";
-                            cat = Integer.parseInt(category) + Integer.parseInt(value);
-                            categoryId = String.valueOf(cat);
-                            System.out.println("ssssssssssselected:job_cat_name:response:" + categoryId);
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        category = "0";
-                        System.out.println("on nothing selected");
-                        list.setVisibility(View.GONE);
-                        img_arrow.setVisibility(View.VISIBLE);
-                        textview.setVisibility(View.VISIBLE);
-
-                    }
-                });*/
-
-
 
             }
             else
@@ -872,9 +839,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             // TODO Auto-generated method stub
 
-
-            //TextView textview = (TextView) getActivity().findViewById(R.id.textView1);
-
             Calendar calander2 = Calendar.getInstance();
 
             calander2.setTimeInMillis(0);
@@ -883,13 +847,14 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
             Date SelectedDate = calander2.getTime();
 
-            DateFormat dateformat_US = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US);
+            int mm = monthOfYear + 1;
+            String month = (mm < 10) ? "0" + mm : "" + mm;
+            date_format = year + "-" + month + "-" + dayOfMonth;
+
+            DateFormat dateformat_US = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
             String StringDateformat_US = dateformat_US.format(SelectedDate);
             date_text.setText(StringDateformat_US);
 
-            /*DateFormat dateformat_UK = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
-            String StringDateformat_UK = dateformat_UK.format(SelectedDate);
-            date_text.setText(date_text.getText() + StringDateformat_UK + "\n");*/
 
         }
     }

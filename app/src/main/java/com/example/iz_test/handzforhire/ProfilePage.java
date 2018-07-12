@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -39,6 +40,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
@@ -52,7 +55,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleGestureListener{
+public class ProfilePage extends Activity {
 
     TextView profile_name,rating,rating_value,posted_circle,active_circle,history_circle;
     private static final String USERNAME_URL = Constant.SERVER_URL+"get_username";
@@ -63,7 +66,6 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     Button create,edit,need_help;
-    private SimpleGestureFilter detector;
     String address,city,state,zipcode,profile_image,profilename,type;
     ImageView profile,logo,menu,share_need;
     ProgressDialog progress_dialog;
@@ -78,7 +80,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     String description="https://www.handzforhire.com";
     String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
             "along with that website url and logo";
-
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +93,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        detector = new SimpleGestureFilter(this,this);
+        swipe = new Swipe();
 
         Button edit_profile = (Button) findViewById(R.id.edit_user_profile);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
@@ -276,6 +278,53 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);
+            }
+        });
+
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(ProfilePage.this, ProfilePage.class);
+                i.putExtra("userId", id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+
+                Intent i = new Intent(ProfilePage.this, ProfilePage.class);
+                i.putExtra("userId", id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(ProfilePage.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(ProfilePage.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
             }
         });
     }
@@ -625,12 +674,14 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent me){
+    public boolean dispatchTouchEvent(MotionEvent event){
 
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
+
+/*
     @Override
     public void onSwipe(int direction) {
         String str = "";
@@ -663,6 +714,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     public void onDoubleTap() {
 
     }
+*/
 
 
     private void share()

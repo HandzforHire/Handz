@@ -54,15 +54,10 @@ dependencies {
     }
     compile files('libs/commons-net-3.3-ftp.jar')
     compile files('libs/simpleftp.jar')
-    /* compile 'com.google.android.gms:play-services-maps:10.0.1'
-    compile 'com.google.android.gms:play-services-location:10.0.1'
-    compile 'com.google.android.gms:play-services-places:10.0.1'*/
     compile files('libs/mint-5.2.2.jar')
-
-    //compile 'com.google.firebase:firebase-core:10.0.1'
-    //compile 'com.google.firebase:firebase-database:10.0.1'
     compile files('libs/picasso-2.5.2.jar')
-    //    apply plugin: 'com.google.gms.google-services'
+
+    compile 'com.github.pwittchen:swipe-rx2:0.3.0'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
