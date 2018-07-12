@@ -174,8 +174,8 @@
 
         <ImageView
             android:id="@+id/img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
             android:layout_marginLeft="10sp"
             android:visibility="gone"
             android:src="@drawable/checked_checkbox" />

@@ -137,6 +137,8 @@
 
         <activity android:name=".FindJobMap"/>
 
+        <activity android:name=".MakePaymentNew"></activity>
+
         <activity android:name=".EditCreateJob"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 

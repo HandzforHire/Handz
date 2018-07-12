@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
                 System.out.println("ppppppppppp:dispatch:" +loginstatus);
                 if(loginstatus == true)
                 {
-                    Intent i = new Intent(MainActivity.this, ProfilePage.class);
+                    Intent i = new Intent(MainActivity.this, MakePaymentNew.class);
                     startActivity(i);
                     finish();
                     String a = "if_condition";
