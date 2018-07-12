@@ -1,10 +1,17 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,9 +19,11 @@ import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -33,7 +42,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -46,18 +57,25 @@ public class ChatNeed extends Activity {
     EditText messageArea;
     ScrollView scrollView;
     Firebase reference1, reference2;
-    String get_user,job_id,channel_id,user_id,user_type,sender_id,child_id,key;
+    String get_user,job_id,channel_id,user_id,user_type,child_id,key;
+    public static String sender_id;
     TextView Tv,txt_sendmsg;
     SessionManager session;
     String current_user_id = "OGO6K8nyqKVJ8WQoE02WT5qFc1S2";
 
     //To upload images
     FirebaseStorage storage;
-    StorageReference storageReference;
-    String storepath="gs://handz-8ac86.appspot.com";
+    public static StorageReference storageReference;
+    public static String storepath="gs://handz-8ac86.appspot.com";
+    ListView messagesContainer;
+    ArrayList<ChatItems> messagelist;
 
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
+    ChatAdapter adapter;
+    String photourl="";
+    Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,11 +90,19 @@ public class ChatNeed extends Activity {
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         Tv = (TextView) findViewById(R.id.txt1);
         txt_sendmsg=(TextView)findViewById(R.id.txt_sendmsg);
+        messagesContainer=(ListView)findViewById(R.id.messagesContainer);
+
+        messagelist=new ArrayList<ChatItems>();
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         user_type = user.get(SessionManager.USER_TYPE);
-        System.out.println("uuuuuuuuuuu:chatneed:::user_type::::" + user_type);
+
+
+        dialog = new Dialog(ChatNeed.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");
@@ -100,7 +126,6 @@ public class ChatNeed extends Activity {
             @Override
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
-                System.out.println("uuuuuuuuuuu:chatneed:::messageText::::" + messageText);
 
                 if (!messageText.equals("")) {
                     Map<String, String> map = new HashMap<String, String>();
@@ -108,20 +133,23 @@ public class ChatNeed extends Activity {
                     map.put("senderName", get_user);
                     map.put("text", messageText);
                     reference1.child(child_id).child("messages").push().setValue(map);
-                    addMessageBox(messageText,sender_id);
+                   // addMessageBox(messageText,sender_id);
                     messageArea.setText("");
-                   /* if(user_type.equals("employer"))
-                    {
-                        addMessageBox("\n" + messageText, 1);
-                    }
-                    else{
-                        addMessageBox("\n"+ "" + messageText, 2);
-                    }*/
 
-                    System.out.println("senderid "+sender_id);
-                    System.out.println("senderName "+get_user);
-                    System.out.println("text "+messageText);
-                    System.out.println("child_id "+child_id);
+                    ChatItems item=new ChatItems();
+                    item.setSenderId(sender_id);
+                    item.setMessage(messageText);
+                    item.setPhotoURL("");
+                    item.setHas_Attachemnt(true);
+                    item.setHas_Attachemnt(false);
+                    if(messagelist.size()==0){
+                        messagelist.add(item);
+                        adapter = new ChatAdapter(ChatNeed.this, messagelist);
+                        messagesContainer.setAdapter(adapter);
+
+                    }else {
+                        displayMessage(item);
+                    }
                 }
             }
         });
@@ -142,41 +170,62 @@ public class ChatNeed extends Activity {
                 onBackPressed();
             }
         });
-
+        dialog.show();
         reference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                lin_layoutmsg.removeAllViews();
+                messagelist.clear();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     key = messageSnapshot.getKey();
-                    System.out.println("fffffffff:key::" + key.substring(0,3));
-                    System.out.println("message snapshot "+messageSnapshot);
                     if (key.equals(child_id)) {
                         for (DataSnapshot recipient : messageSnapshot.child("messages").getChildren()) {
 
+                            ChatItems item=new ChatItems();
+
+                            if(sender_id.equals(recipient.child("senderId").getValue()))
+                            {
+                                item.setMe(true);
+                            }else{
+                                item.setMe(false);
+                            }
+
+                            item.setSenderId(String.valueOf(recipient.child("senderId").getValue()));
+
                             if(recipient.hasChild("photoURL")) {
                                 String photoURL = String.valueOf(recipient.child("photoURL").getValue());
-                                DownloadImage(photoURL,String.valueOf(recipient.child("senderId").getValue()));
-                                System.out.println("photoURL " + photoURL);
+                                item.setMessage("");
+                                item.setPhotoURL(photoURL);
+                                item.setHas_Attachemnt(true);
+                                messagelist.add(item);
                             }else if(recipient.hasChild("text")){
+
                                 String text = String.valueOf(recipient.child("text").getValue());
-                                System.out.println("fffffffff:text::" + text);
-                                System.out.println("fffffffff:id::" + recipient.child("senderId").getValue());
                                 if(!text.equals("null")) {
-                                    addMessageBox(text,String.valueOf(recipient.child("senderId").getValue()));
+                                    item.setMessage(text);
+                                    item.setPhotoURL("");
+                                    item.setHas_Attachemnt(false);
+                                    messagelist.add(item);
                                 }
                             }
+
 
                         }
                     }
                 }
+                if(messagelist.size()>0) {
+                    adapter = new ChatAdapter(ChatNeed.this, messagelist);
+                    messagesContainer.setAdapter(adapter);
+                }
+                dialog.dismiss();
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                dialog.dismiss();
             }
+
+
+
         });
     }
 
@@ -199,108 +248,21 @@ public class ChatNeed extends Activity {
         }
     }
 
-
-       /* reference1.addChildEventListener(new ChildEventListener()
-        {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
-               *//* Map map = dataSnapshot.getValue(Map.class);
-                String message = map.get("Text").toString();
-                String channel_id = map.get("SenderId").toString();
-                String get_user=map.get("SenderName").toString();
-                System.out.println("uuuuuuuuuuu:chatneed:::message::::"+message);
-                System.out.println("uuuuuuuuuuu:chatneed:::channel_id::::"+channel_id);
-                System.out.println("uuuuuuuuuuu:chatneed:::get_user::::"+get_user);
-                System.out.println("uuuuuuuuuuu:chatneed:::user_type::::"+user_type);
-*//*
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s)
-            {
-
-            }
-
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });*/
-
-    public void addMessageBox(String message,String senderid)
-    {
-        TextView textView = new TextView(ChatNeed.this);
-        textView.setText(message);
-
-        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp2.weight = 2.0f;
-       // System.out.println("usr_type chatneed "+user_type);
-        if(sender_id.equals(senderid))
-        {
-            textView.setBackgroundResource(R.drawable.yellow_bg_c);
-            lp2.gravity = Gravity.LEFT;
-            textView.setGravity(View.FOCUS_LEFT);
-            textView.setTextColor(Color.parseColor("#000000"));
-            textView.setFitsSystemWindows(true);
-           // System.out.println("condtion matched");
-        }
-        else{
-
-            textView.setBackgroundResource(R.drawable.green_bg_c);
-            lp2.gravity = Gravity.RIGHT;
-            textView.setGravity(View.FOCUS_LEFT);
-            textView.setTextColor(Color.parseColor("#FFFFFF"));
-            textView.setFitsSystemWindows(true);
-        }
-        textView.setLayoutParams(lp2);
-        lin_layoutmsg.addView(textView);
-        scrollView.fullScroll(View.FOCUS_DOWN);
+    public void displayMessage(ChatItems message) {
+        adapter.add(message);
+        adapter.notifyDataSetChanged();
+        scroll();
     }
 
-    public void adImage(String url,String senderid)
-    {
-
-        ImageView img=new ImageView(ChatNeed.this);
-        System.out.println("url "+url);
-        Glide.with(ChatNeed.this).load(url).into(img);
-        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp2.setMargins(0, 10, 0, 0);
-        lp2.weight = 2.0f;
-        img.setMaxWidth(200);
-        img.setMinimumHeight(200);
-        // System.out.println("usr_type chatneed "+user_type);
-        if(sender_id.equals(senderid))
-        {
-
-            lp2.gravity = Gravity.LEFT;
-            // System.out.println("condtion matched");
-        }
-        else{
-            lp2.gravity = Gravity.RIGHT;
-        }
-        lin_layoutmsg.addView(img);
-        img.setLayoutParams(lp2);
-        scrollView.fullScroll(View.FOCUS_DOWN);
+    private void scroll() {
+        messagesContainer.setSelection(messagesContainer.getCount() - 1);
     }
 
     private void uploadImage() {
 
         if(filePath != null)
         {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+            dialog.show();
             String randomno=UUID.randomUUID().toString();
             final String photourl=storepath+"/"+child_id+"/"+randomno+".jpg";
             StorageReference ref = storageReference.child(child_id+"/"+randomno+".jpg");
@@ -309,21 +271,34 @@ public class ChatNeed extends Activity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
+                            dialog.dismiss();
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("senderId", sender_id);
                             map.put("senderName", get_user);
                             map.put("photoURL", photourl);
                             reference1.child(child_id).child("messages").push().setValue(map);
-                           // addMessageBox(messageText,sender_id);
-                            messageArea.setText("");
-                          //  Toast.makeText(ChatNeed.this, "Uploaded", Toast.LENGTH_SHORT).show();
+
+                            ChatItems item=new ChatItems();
+                            item.setSenderId(sender_id);
+                            item.setMessage("");
+                            item.setPhotoURL(photourl);
+                            item.setHas_Attachemnt(true);
+
+                            if(messagelist.size()==0){
+                                messagelist.add(item);
+                                adapter = new ChatAdapter(ChatNeed.this, messagelist);
+                                messagesContainer.setAdapter(adapter);
+
+                            }else {
+                                displayMessage(item);
+                            }
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
+                            dialog.dismiss();
                             Toast.makeText(ChatNeed.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -332,27 +307,15 @@ public class ChatNeed extends Activity {
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                                     .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
                     });
         }
     }
 
-    private void DownloadImage(String url, final String senderid){
-        System.out.println("url"+url);
-        String urls=url.replace(storepath,"");
-        storageReference.child(urls).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                System.out.println("URI "+uri);
-                adImage(uri.toString(),senderid);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-                System.out.println("URI "+exception.getMessage());
-            }
-        });
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Glide.with(getApplicationContext()).pauseRequests();
     }
 }

@@ -59,11 +59,14 @@ public class LendProfilePage extends Activity{
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     ProgressDialog progress_dialog;
-    ImageView profile,handz,menu;
+    ImageView profile,handz,menu,share_lend;
     TextView profile_name,rating_value;
     RelativeLayout rating_lay;
     SessionManager session;
     Dialog dialog;
+
+    String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
+            "along with that website url and logo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,12 +112,18 @@ public class LendProfilePage extends Activity{
         city = user.get(SessionManager.CITY);
         state = user.get(SessionManager.STATE);
         zipcode = user.get(SessionManager.ZIPCODE);
-        System.out.println("ssssssemail:" + email);
-        System.out.println("ssssssid:" + id);
-        System.out.println("ssssssaddress:" + address);
-        System.out.println("ssssss:city:" + city);
-        System.out.println("ssssssstate:" + state);
-        System.out.println("ssssssid:zipcode:" + zipcode);
+
+
+        share_lend=(ImageView)findViewById(R.id.sha_lend);
+        share_lend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                sharelend();
+            }
+        });
+
 
         getProfileimage();
         getUsername();
@@ -441,6 +450,17 @@ public class LendProfilePage extends Activity{
 
         // Return the bordered circular bitmap
         return dstBitmap;
+    }
+
+    private void sharelend()
+    {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");
+        share.putExtra(Intent.EXTRA_TEXT,tittle);
+        startActivity(Intent.createChooser(share, "Share link!"));
+
     }
 
 }

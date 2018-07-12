@@ -65,7 +65,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     Button create,edit,need_help;
     private SimpleGestureFilter detector;
     String address,city,state,zipcode,profile_image,profilename,type;
-    ImageView profile,logo,menu;
+    ImageView profile,logo,menu,share_need;
     ProgressDialog progress_dialog;
     ProgressBar progress;
     RelativeLayout rating_lay;
@@ -74,6 +74,10 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     ProgressBar pb;
     Dialog dialog;
 
+    Activity activity;
+    String description="https://www.handzforhire.com";
+    String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
+            "along with that website url and logo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,19 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         state = user.get(SessionManager.KEY_STATE);
         zipcode = user.get(SessionManager.KEY_ZIPCODE);
         type = user.get(SessionManager.TYPE);
+
+        share_need=(ImageView)findViewById(R.id.sha_need);
+        share_need.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+
+                share();
+
+
+            }
+        });
+
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
@@ -646,6 +663,20 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     public void onDoubleTap() {
 
     }
+
+
+    private void share()
+    {
+
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");
+        share.putExtra(Intent.EXTRA_TEXT,tittle);
+        startActivity(Intent.createChooser(share, "Share link!"));
+
+    }
+
 
     protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
         // Initialize a new Bitmap to make it bordered bitmap

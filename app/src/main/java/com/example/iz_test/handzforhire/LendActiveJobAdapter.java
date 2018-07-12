@@ -155,10 +155,7 @@ public class LendActiveJobAdapter extends BaseAdapter{
                 String username="";
                 String  jobId =  items.get("jobId");;
                 String channel_id=items.get("channel");
-                if(items.get("profile").isEmpty())
-                    username=items.get("user");
-                else
-                    username= items.get("profile");;
+                username=items.get("user");
                 String  userId=items.get("userId");
 
                 Intent i = new Intent(activity,ChatNeed.class);
