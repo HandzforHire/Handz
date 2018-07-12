@@ -26,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +35,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChangeCurrentEmailAddress extends Activity implements ResponseListener1,SimpleGestureFilter.SimpleGestureListener{
+public class ChangeCurrentEmailAddress extends Activity implements ResponseListener1{
 
     EditText email1,re_email,pass1,retype_pass;
     Button update;
@@ -51,15 +53,13 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
     public static String XAPP_KEY = "X-APP-KEY";
     public static String KEY_PASSWORD = "password";
     TextView o_email,text;
-    private SimpleGestureFilter detector;
-    String address,city,state,zipcode;
 
+    String address,city,state,zipcode;
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.change_current_email_address);
-
-        detector = new SimpleGestureFilter(this,this);
 
         email1 = (EditText) findViewById(R.id.email1);
         re_email = (EditText) findViewById(R.id.retype1);
@@ -76,7 +76,6 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
         city = i.getStringExtra("city");
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
-        System.out.println("hhhhhhhhhhhhh:" + uid);
 
         webservice();
 
@@ -345,6 +344,53 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
                 }
             }
         });
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(ChangeCurrentEmailAddress.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(ChangeCurrentEmailAddress.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(ChangeCurrentEmailAddress.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(ChangeCurrentEmailAddress.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
     }
 
     public void webservice() {
@@ -514,42 +560,10 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent me){
+    public boolean dispatchTouchEvent(MotionEvent event){
 
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
-
-        switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT:
-
-                Intent i = new Intent(ChangeCurrentEmailAddress.this, ProfilePage.class);
-                i.putExtra("userId", uid);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-                break;
-
-            case SimpleGestureFilter.SWIPE_LEFT:
-
-                Intent j = new Intent(ChangeCurrentEmailAddress.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                break;
-        }
-
-    }
-
-    @Override
-    public void onDoubleTap() {
-
-    }
 }

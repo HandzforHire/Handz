@@ -10,12 +10,16 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,7 +37,7 @@ public class EditRating extends Activity{
     ImageView profile,default_image;
     RelativeLayout rating_lay;
     Integer c1,c2,c3,c4,c5;
-
+    Swipe swipe;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,6 +207,53 @@ public class EditRating extends Activity{
             }
         });
 
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(EditRating.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(EditRating.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(EditRating.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(EditRating.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
+
     }
 
     protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
@@ -232,4 +283,12 @@ public class EditRating extends Activity{
         // Return the bordered circular bitmap
         return dstBitmap;
     }
+
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
+
 }

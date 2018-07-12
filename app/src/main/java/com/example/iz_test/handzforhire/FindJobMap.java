@@ -22,6 +22,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -37,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -85,7 +87,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     public static Fragment fragments;
     View rootView;
     int undisclosedjob=0;
-
+    Swipe swipe;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -492,4 +494,5 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             gps.showSettingsAlert();
         }
     }
+
 }

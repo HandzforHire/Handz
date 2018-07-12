@@ -24,6 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +40,7 @@ public class SummaryMultiply extends Activity {
     String job_id,job_expire;
     String value,id,name,usertype,category,description,date,start_time,expected_hours,end_time,amount,type,address,city,current_location;
     String state,zipcode,post_address,latitude,longitude,estimated_amount,flexible_status;
-
+    Swipe swipe;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +80,52 @@ public class SummaryMultiply extends Activity {
         pay_amount.addTextChangedListener(tw);
         hours.addTextChangedListener(tw1);
 
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(SummaryMultiply.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
 
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(SummaryMultiply.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(SummaryMultiply.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(SummaryMultiply.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,4 +275,10 @@ public class SummaryMultiply extends Activity {
             total.setText(estimated);
         }
     };
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -28,6 +29,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
@@ -60,7 +63,7 @@ public class CreateJob2 extends AppCompatActivity {
     static String get_lat="0.0";
     static String get_lon="0.0";
     String usertype = "employer";
-
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -251,55 +254,52 @@ public class CreateJob2 extends AppCompatActivity {
                 }
             }
         });
-      /*  add.setOnKeyListener(new View.OnKeyListener() {
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (cit.getText().toString().equals("") && stat.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(CreateJob2.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
             }
-        });
-        cit.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && stat.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });
-        stat.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && cit.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });
-        zip.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && cit.getText().toString().equals("") && stat.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });*/
 
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(CreateJob2.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(CreateJob2.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(CreateJob2.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
     }
 
     public void validate() {
@@ -453,4 +453,11 @@ public class CreateJob2 extends AppCompatActivity {
         }
 
     }
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
+
 }

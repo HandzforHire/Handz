@@ -15,23 +15,24 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class PayPalAccount extends Activity implements SimpleGestureFilter.SimpleGestureListener{
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
+
+public class PayPalAccount extends Activity{
 
     EditText email,password;
     Button save;
     TextView signup;
     ImageView h_logo;
-    private SimpleGestureFilter detector;
+
     String user_id;
     String address,city,state,zipcode;
     RelativeLayout layout;
-
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.paypal_account);
-
-        detector = new SimpleGestureFilter(this,this);
 
         email = (EditText) findViewById(R.id.pay_email);
         password = (EditText) findViewById(R.id.pay_pass);
@@ -91,44 +92,61 @@ public class PayPalAccount extends Activity implements SimpleGestureFilter.Simpl
             }
         });
 
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent me){
-
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
-    }
-
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
-
-        switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT:
-
-                Intent i = new Intent(PayPalAccount.this, ProfilePage.class);
-                i.putExtra("userId", user_id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(PayPalAccount.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
                 startActivity(i);
                 finish();
-                break;
+            }
 
-            case SimpleGestureFilter.SWIPE_LEFT:
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(PayPalAccount.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
 
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
                 Intent j = new Intent(PayPalAccount.this, SwitchingSide.class);
                 startActivity(j);
                 finish();
-                break;
-        }
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(PayPalAccount.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
+
+
     }
 
-    @Override
-    public void onDoubleTap() {
+    public boolean dispatchTouchEvent(MotionEvent event){
 
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
+
+
 }

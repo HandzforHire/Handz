@@ -23,6 +23,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.paypal.android.sdk.payments.PayPalAuthorization;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
@@ -48,13 +50,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class PaymentMethod extends Activity implements SimpleGestureFilter.SimpleGestureListener{
+public class PaymentMethod extends Activity{
 
     Button credit,account;
     LinearLayout paypal;
     ImageView logo;
     public static final int PAYPAL_REQUEST_CODE = 123;
-    private SimpleGestureFilter detector;
+
     String email;
     String add,ema,ev,ph,uv;
     String name,userid,address1,email1,phone;
@@ -75,7 +77,7 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
      String value = "HandzForHire@~";
      String usertype="employer";
      String verified;
-
+    Swipe swipe;
     private static PayPalConfiguration config = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
             // or live (ENVIRONMENT_PRODUCTION)
@@ -93,7 +95,7 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_method);
-        detector = new SimpleGestureFilter(this, this);
+
         credit = (Button) findViewById(R.id.add_credit);
         account = (Button) findViewById(R.id.add_account);
         paypal = (LinearLayout) findViewById(R.id.paypal_layout);
@@ -117,34 +119,52 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
         text1.setTypeface(tf);
         text.setTypeface(tf);
 
-        /*credit.setOnClickListener(new View.OnClickListener() {
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(PaymentMethod.this, CreditDebit.class);
-                i.putExtra("userId", user_id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(PaymentMethod.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
                 startActivity(i);
                 finish();
             }
-        });*/
 
-        /*account.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent i = new Intent(PaymentMethod.this, AddCheckingAccount.class);
-                i.putExtra("userId", user_id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(PaymentMethod.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
                 startActivity(i);
                 finish();
-            }
-        });*/
 
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(PaymentMethod.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(PaymentMethod.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -382,45 +402,10 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
             e.printStackTrace();
         }
     }
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent me){
 
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
-    }
+    public boolean dispatchTouchEvent(MotionEvent event){
 
-    @Override
-    public void onSwipe(int direction)
-    {
-        String str = "";
-
-        switch (direction)
-        {
-            case SimpleGestureFilter.SWIPE_RIGHT:
-
-                Intent i = new Intent(PaymentMethod.this, ProfilePage.class);
-                i.putExtra("userId", user_id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-                break;
-
-            case SimpleGestureFilter.SWIPE_LEFT:
-
-                Intent j = new Intent(PaymentMethod.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                break;
-        }
-    }
-
-    @Override
-    public void onDoubleTap()
-    {
-
-
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

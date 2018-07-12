@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -35,6 +36,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
@@ -67,7 +70,7 @@ public class LendProfilePage extends Activity{
 
     String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
             "along with that website url and logo";
-
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +115,14 @@ public class LendProfilePage extends Activity{
         city = user.get(SessionManager.CITY);
         state = user.get(SessionManager.STATE);
         zipcode = user.get(SessionManager.ZIPCODE);
+
+
+        Profilevalues.user_id=id;
+        Profilevalues.email=email;
+        Profilevalues.address=address;
+        Profilevalues.city=city;
+        Profilevalues.state=state;
+        Profilevalues.zipcode=zipcode;
 
 
         share_lend=(ImageView)findViewById(R.id.sha_lend);
@@ -245,6 +256,53 @@ public class LendProfilePage extends Activity{
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);
+            }
+        });
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(LendProfilePage.this,LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(LendProfilePage.this,LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(LendProfilePage.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(LendProfilePage.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
             }
         });
     }
@@ -462,5 +520,9 @@ public class LendProfilePage extends Activity{
         startActivity(Intent.createChooser(share, "Share link!"));
 
     }
+    public boolean dispatchTouchEvent(MotionEvent event){
 
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

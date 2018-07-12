@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -31,6 +32,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +66,7 @@ import java.util.Map;
         Button active_jobs,job_history;
         Dialog dialog;
         int visible_pos,visible_lay;
+        Swipe swipe;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -108,7 +112,7 @@ import java.util.Map;
             active_jobs.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(PendingJobs.this,ActiveJobs.class);
+                    Intent i = new Intent(PendingJobs.this,LendActiveJobs.class);
                     i.putExtra("userId", user_id);
                     i.putExtra("address", address);
                     i.putExtra("city", city);
@@ -121,13 +125,60 @@ import java.util.Map;
             job_history.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(PendingJobs.this,JobHistory.class);
+                    Intent i = new Intent(PendingJobs.this,LendJobHistory.class);
                     i.putExtra("userId", user_id);
                     i.putExtra("address", address);
                     i.putExtra("city", city);
                     i.putExtra("state", state);
                     i.putExtra("zipcode", zipcode);
                     startActivity(i);
+                }
+            });
+
+            swipe = new Swipe();
+            swipe.setListener(new SimpleSwipeListener() {
+                @Override
+                public void onSwipingLeft(MotionEvent event) {
+                    super.onSwipingLeft(event);
+                    Intent i = new Intent(PendingJobs.this,LendProfilePage.class);
+                    i.putExtra("userId", Profilevalues.user_id);
+                    i.putExtra("address", Profilevalues.address);
+                    i.putExtra("city", Profilevalues.city);
+                    i.putExtra("state", Profilevalues.state);
+                    i.putExtra("zipcode", Profilevalues.zipcode);
+                    startActivity(i);
+                    finish();
+                }
+
+                @Override
+                public boolean onSwipedLeft(MotionEvent event) {
+                    Intent i = new Intent(PendingJobs.this,LendProfilePage.class);
+                    i.putExtra("userId", Profilevalues.user_id);
+                    i.putExtra("address", Profilevalues.address);
+                    i.putExtra("city", Profilevalues.city);
+                    i.putExtra("state", Profilevalues.state);
+                    i.putExtra("zipcode", Profilevalues.zipcode);
+                    startActivity(i);
+                    finish();
+
+                    return super.onSwipedLeft(event);
+                }
+
+                @Override
+                public void onSwipingRight(MotionEvent event) {
+                    super.onSwipingRight(event);
+                    Intent j = new Intent(PendingJobs.this, SwitchingSide.class);
+                    startActivity(j);
+                    finish();
+
+                }
+
+                @Override
+                public boolean onSwipedRight(MotionEvent event) {
+                    Intent j = new Intent(PendingJobs.this, SwitchingSide.class);
+                    startActivity(j);
+                    finish();
+                    return super.onSwipedRight(event);
                 }
             });
         }
@@ -557,5 +608,11 @@ import java.util.Map;
             }
 
 
+        }
+
+        public boolean dispatchTouchEvent(MotionEvent event){
+
+            swipe.dispatchTouchEvent(event);
+            return super.dispatchTouchEvent(event);
         }
 }

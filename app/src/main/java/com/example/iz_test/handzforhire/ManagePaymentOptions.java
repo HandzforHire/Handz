@@ -26,6 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,10 +38,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ManagePaymentOptions extends Activity implements SimpleGestureFilter.SimpleGestureListener{
+public class ManagePaymentOptions extends Activity {
 
     ImageView logo;
-    private SimpleGestureFilter detector;
     String user_id;
     String address,city,state,zipcode;
     private static final String URL = Constant.SERVER_URL+"lists_employer_cards";
@@ -54,7 +55,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
     Button add;
     TextView text,t1,t2;
     Dialog dialog;
-
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +69,6 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-
-        detector = new SimpleGestureFilter(this,this);
 
         add = (Button) findViewById(R.id.payment);
         logo = (ImageView) findViewById(R.id.logo);
@@ -153,6 +151,54 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
                 finish();
             }
         });
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(ManagePaymentOptions.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(ManagePaymentOptions.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(ManagePaymentOptions.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(ManagePaymentOptions.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
+
 
     }
 
@@ -444,42 +490,9 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
 
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent me){
+    public boolean dispatchTouchEvent(MotionEvent event){
 
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
-    }
-
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
-
-        switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT:
-
-                Intent i = new Intent(ManagePaymentOptions.this, ProfilePage.class);
-                i.putExtra("userId", user_id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-                break;
-
-            case SimpleGestureFilter.SWIPE_LEFT:
-
-                Intent j = new Intent(ManagePaymentOptions.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                break;
-        }
-    }
-
-    @Override
-    public void onDoubleTap() {
-
-    }
+    swipe.dispatchTouchEvent(event);
+    return super.dispatchTouchEvent(event);
+}
 }

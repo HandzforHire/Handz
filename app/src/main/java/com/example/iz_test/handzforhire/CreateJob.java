@@ -22,6 +22,7 @@ import android.text.TextWatcher;
 
 import android.view.LayoutInflater;
 
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -52,6 +53,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bigkoo.pickerview.MyOptionsPickerView;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -128,7 +131,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
             R.drawable.box_4,
             R.drawable.box_6,
     };
-
+    Swipe swipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,12 +268,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
             numbers.add(j);
             System.out.println(numbers.get(j));
         }
-        /* ArrayList<String> threeItemsOptions1 = new ArrayList<String>();
-        threeItemsOptions1.add("AA");
-        threeItemsOptions1.add("BB");
-        threeItemsOptions1.add("CC");
-        threeItemsOptions1.add("DD");
-        threeItemsOptions1.add("EE");*/
+
 
         final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
         threeItemsOptions2.add("0.00");
@@ -357,6 +355,53 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 return;
 
+            }
+        });
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(CreateJob.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(CreateJob.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(CreateJob.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(CreateJob.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
             }
         });
     }
@@ -1049,6 +1094,10 @@ public class CreateJob extends Activity implements View.OnClickListener {
     }
 
 
+    public boolean dispatchTouchEvent(MotionEvent event){
 
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 
 }

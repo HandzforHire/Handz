@@ -25,6 +25,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LendCreditDebit extends Activity implements SimpleGestureFilter.SimpleGestureListener {
+public class LendCreditDebit extends Activity  {
 
     EditText card_name, card_no, mm, yy, cv, adress, cy, stat, zip;
     ImageView h_logo;
@@ -45,7 +47,7 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
     CheckBox default_card;
     String card_type = "visa";
     String name, card_number, exp_month, exp_year, cvv, address_card, sta, cit, zipcod, de_card, employer_id;
-    private SimpleGestureFilter detector;
+
 
     public static String NAME = "name";
     public static String CARD_NUMBER = "card_number";
@@ -66,13 +68,12 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
     static ArrayList<String> listOfPattern = new ArrayList<String>();
     String address, city, state, zipcode, cardtype;
     TextView add_card;
-
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.credit_debit);
 
-        detector = new SimpleGestureFilter(this, this);
 
         card_name = (EditText) findViewById(R.id.card);
         card_no = (EditText) findViewById(R.id.card_no);
@@ -124,6 +125,52 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
             }
         });
 
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(LendCreditDebit.this,LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(LendCreditDebit.this,LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(LendCreditDebit.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(LendCreditDebit.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
     }
 
     public void validate() {
@@ -533,42 +580,12 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
 
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent me) {
 
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
 
-        switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT:
-
-                Intent i = new Intent(LendCreditDebit.this, ProfilePage.class);
-                i.putExtra("userId", employer_id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-                break;
-
-            case SimpleGestureFilter.SWIPE_LEFT:
-
-                Intent j = new Intent(LendCreditDebit.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                break;
-        }
-    }
-
-    @Override
-    public void onDoubleTap() {
-
-    }
 }

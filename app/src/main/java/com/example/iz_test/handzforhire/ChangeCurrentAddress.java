@@ -25,6 +25,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +36,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChangeCurrentAddress extends Activity implements SimpleGestureFilter.SimpleGestureListener{
+public class ChangeCurrentAddress extends Activity {
 
     EditText address1,address2,city1,state1,zipcode1;
     String add1,add2,cit,stat,zip;
@@ -55,14 +57,11 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
     ImageView h_icon;
     TextView o_address,o_city,o_state,o_zip,text;
     String address;
-    private SimpleGestureFilter detector;
-
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.change_current_address);
-
-        detector = new SimpleGestureFilter(this,this);
 
         Intent i = getIntent();
         uid = i.getStringExtra("userId");
@@ -163,6 +162,54 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
                 i.putExtra("zipcode",zipcode);
                 startActivity(i);
                 finish();*/
+            }
+        });
+
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(ChangeCurrentAddress.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(ChangeCurrentAddress.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(ChangeCurrentAddress.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(ChangeCurrentAddress.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
             }
         });
     }
@@ -448,44 +495,12 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
             e.printStackTrace();
         }
     }
-
     @Override
-    public boolean dispatchTouchEvent(MotionEvent me){
+    public boolean dispatchTouchEvent(MotionEvent event){
 
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
 
-        switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT:
-
-                Intent i = new Intent(ChangeCurrentAddress.this, ProfilePage.class);
-                i.putExtra("userId", uid);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-                break;
-
-            case SimpleGestureFilter.SWIPE_LEFT:
-
-                Intent j = new Intent(ChangeCurrentAddress.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                break;
-        }
-
-    }
-
-    @Override
-    public void onDoubleTap() {
-
-    }
 }

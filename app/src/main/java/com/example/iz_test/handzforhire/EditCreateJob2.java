@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -28,6 +29,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
@@ -94,6 +97,7 @@ public class EditCreateJob2 extends Activity {
     LocationTrack locationTrack;
     String new_value = "0.0";
     Dialog dialog;
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,8 +125,6 @@ public class EditCreateJob2 extends Activity {
         type = i.getStringExtra("payment_type");
         estimated_amount = i.getStringExtra("estimated_amount");
         flexible_status = i.getStringExtra("flexible_status");
-        System.out.println("iiiiiiiiiiiiii:jobId::"+jobId);
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:" + id +","+ name +","+ category +","+ date+"," + start_time +","+ end_time +","+ amount +","+ type);
 
         text = (TextView) findViewById(R.id.bt1);
         add = (EditText) findViewById(R.id.address);
@@ -306,55 +308,52 @@ public class EditCreateJob2 extends Activity {
                 }
             }
         });
-       /* add.setOnKeyListener(new View.OnKeyListener() {
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (cit.getText().toString().equals("") && stat.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(EditCreateJob2.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
             }
-        });
-        cit.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && stat.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });
-        stat.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && cit.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });
-        zip.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && cit.getText().toString().equals("") && stat.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });*/
 
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(EditCreateJob2.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(EditCreateJob2.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(EditCreateJob2.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
     }
 
     public void validate() {
@@ -716,6 +715,12 @@ public class EditCreateJob2 extends Activity {
             return null;
         }
 
+    }
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

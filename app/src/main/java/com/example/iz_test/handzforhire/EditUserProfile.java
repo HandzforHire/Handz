@@ -47,6 +47,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -64,7 +66,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditUserProfile extends Activity implements SimpleGestureFilter.SimpleGestureListener {
+public class EditUserProfile extends Activity {
 
     ImageView image, photo_bg;
     Button home, email, update, paypal_login, terms_condition, logo;
@@ -80,7 +82,6 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
     public static String APP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     public static String id;
-    private SimpleGestureFilter detector;
     String email_id, address, city, state, zipcode,profile_image,employer_rating,profilename,posted_notification,pending_notification,active_notification,jobhistory_notification;
     String filename = "";
     private String userChoosenTask;
@@ -100,13 +101,12 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
-
+    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_user_profile);
 
-        detector = new SimpleGestureFilter(this, this);
         marshMallowPermission = new MarshMallowPermission(this);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -257,6 +257,53 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
             public void onClick(View view) {
                 Intent i = new Intent(EditUserProfile.this, ViewWeb.class);
                 startActivity(i);
+            }
+        });
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public void onSwipingLeft(MotionEvent event) {
+                super.onSwipingLeft(event);
+                Intent i = new Intent(EditUserProfile.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(EditUserProfile.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public void onSwipingRight(MotionEvent event) {
+                super.onSwipingRight(event);
+                Intent j = new Intent(EditUserProfile.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(EditUserProfile.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
             }
         });
     }
@@ -648,48 +695,6 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent me) {
-
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
-    }
-
-
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
-
-        switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT:
-
-                Intent i = new Intent(EditUserProfile.this, ProfilePage.class);
-                i.putExtra("userId", id);
-                i.putExtra("email", email_id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-                break;
-
-            case SimpleGestureFilter.SWIPE_LEFT:
-
-                Intent j = new Intent(EditUserProfile.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                break;
-        }
-
-    }
-
-    @Override
-    public void onDoubleTap() {
-
-    }
-
     protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
         // Initialize a new Bitmap to make it bordered bitmap
         Bitmap dstBitmap = Bitmap.createBitmap(
@@ -716,6 +721,12 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
         // Return the bordered circular bitmap
         return dstBitmap;
+    }
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }
