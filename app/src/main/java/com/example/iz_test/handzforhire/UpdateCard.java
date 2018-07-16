@@ -74,7 +74,11 @@ public class UpdateCard extends Activity{
         dialog.setMessage("Loading.Please wait.....");
         dialog.show();*/
 
-
+        dialog = new Dialog(UpdateCard.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
 
         card_name = (EditText) findViewById(R.id.up_card);
         card_number = (EditText) findViewById(R.id.up_card_no);
@@ -164,14 +168,7 @@ public class UpdateCard extends Activity{
 
     }
 
-    public void updateCard()
-    {
-        dialog = new Dialog(UpdateCard.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
+    public void updateCard() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL1,
                 new Response.Listener<String>() {
                     @Override
@@ -261,7 +258,6 @@ public class UpdateCard extends Activity{
             else
             {
             }
-            dialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();

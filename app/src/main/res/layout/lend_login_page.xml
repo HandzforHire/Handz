@@ -33,7 +33,7 @@
                 android:layout_marginTop="40sp"
                 android:textSize="18sp"
                 android:textColorHint="#000000"
-                android:hint="Email or Username"
+                android:hint="Email"
                 android:paddingLeft="10sp"
                 android:background="@drawable/shape" />
 
@@ -73,7 +73,7 @@
                 android:id="@+id/new_employee"
                 android:layout_width="match_parent"
                 android:layout_height="55sp"
-                android:text="New Employer? Sign Up!"
+                android:text="New to Handz? Sign Up!"
                 android:textStyle="italic"
                 android:gravity="center"
                 android:textSize="22sp"

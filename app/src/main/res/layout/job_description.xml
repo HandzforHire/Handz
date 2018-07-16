@@ -7,7 +7,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,7 +102,7 @@
                                     android:layout_marginRight="5sp"
                                     android:layout_centerVertical="true"
                                     android:layout_toLeftOf="@+id/text2"
-                                    android:background="@drawable/rating_btn"/>
+                                    android:background="@drawable/star_new"/>
 
                                 <TextView
                                     android:id="@+id/text3"

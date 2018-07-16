@@ -2,7 +2,7 @@ package com.example.iz_test.handzforhire;
 
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,13 +21,13 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.DecelerateInterpolator;
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +45,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-import android.widget.ProgressBar;
+
 
 
 import static android.Manifest.permission.READ_PHONE_STATE;
@@ -67,18 +67,15 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
     String value = "HandzForHire@~";
     String user_id, user_name, user_email, user_password, user_address, user_city, user_state, user_zipcode,user_type;
     TextView new_employee,forgot;
-    ProgressDialog progress_dialog;
+
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     String type;
     ImageView logo;
     private static final int REQUEST_PHONE_STATE = 0;
     SessionManager session;
     String userType = "employer";
-    ProgressBar mprogressBar;
-    RelativeLayout layoutt;
+
     Dialog dialog;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +83,9 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         session = new SessionManager(getApplicationContext());
+
         new_employee = (TextView) findViewById(R.id.new_employee);
         forgot = (TextView) findViewById(R.id.forgot_password);
         layout = (LinearLayout) findViewById(R.id.layout3);
@@ -109,13 +108,10 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
         new_employee.setTypeface(tf2);
         forgot.setTypeface(tf2);
 
-       /* progress_dialog = new ProgressDialog(LoginActivity.this);
-        progress_dialog.setMessage("Loading.Please wait");
-        progress_dialog.setIndeterminate(true);*/
-
-        /*progress_dialog = new ProgressDialog(LoginActivity.this);
-        progress_dialog.setMessage("Loading.Please wait");*/
-
+        dialog = new Dialog(LoginActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
         permission();
@@ -129,21 +125,9 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
             }
         });
 
-       /* email.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                email.setHint("");
-            }
-        });
-        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                password.setHint("");
-            }
-        });*/
 
-        new_employee.setOnClickListener(new View.OnClickListener()
-        {
+        new_employee.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(LoginActivity.this, RegisterPage2.class);
@@ -172,25 +156,26 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
         login.setOnClickListener(new View.OnClickListener() {
             @Override
 
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
+
 
 
                 email_id = email.getText().toString().trim();
                 pass = password.getText().toString().trim();
                 if (TextUtils.isEmpty(email_id)) {
-
+                    // custom dialog
                     final Dialog dialog = new Dialog(LoginActivity.this);
                     dialog.setContentView(R.layout.custom_dialog);
 
+                    // set the custom dialog components - text, image and button
                     TextView text = (TextView) dialog.findViewById(R.id.text);
-                    text.setText("Must Fill In \"Email Id\" Box");
+                    text.setText("Must Fill In \"Email\" Box");
                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-
+                    // if button is clicked, close the custom dialog
                     dialogButton.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v)
-                        {
+                        public void onClick(View v) {
+
                             dialog.dismiss();
                         }
                     });
@@ -201,8 +186,8 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     return;
                 }
-                if (TextUtils.isEmpty(pass))
-                {
+                if (TextUtils.isEmpty(pass)) {
+
                     // custom dialog
                     final Dialog dialog = new Dialog(LoginActivity.this);
                     dialog.setContentView(R.layout.custom_dialog);
@@ -229,10 +214,10 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                 {
                     type = "email";
                 }
-                else
-                {
-                    type = "username";
-                }
+
+
+
+
                 login();
             }
         });
@@ -324,26 +309,22 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
     }
 
 
-    public void login()
-    {
+    public void login() {
 
-        dialog = new Dialog(LoginActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        dialog.show();
-
+       dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("need:login:response::" + response);
                         onResponserecieved(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
@@ -372,8 +353,6 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-
-                            dialog.dismiss();
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                         } catch (UnsupportedEncodingException error1){
@@ -424,21 +403,9 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                     user_city = object.getString("city");
                     user_state = object.getString("state");
                     user_zipcode = object.getString("zipcode");
-
-                    System.out.println("user type"+user_type);
-                    System.out.println("pppppppppp:"+user_type+user_name+user_email+user_password);
-                   /* System.out.println("ressss:object::"+object);
-                    System.out.println("ressss:iiiiid::"+user_id);
-                    System.out.println("ressss::user_name:"+user_name);
-                    System.out.println("ressss:email::"+get_email);
-                    System.out.println("ressss:address::"+get_address);
-                    System.out.println("ressss:city::"+get_city);
-                    System.out.println("ressss:state::"+get_state);
-                    System.out.println("ressss:zipcode::"+get_zipcode);*/
                 }
                 if(user_type.equals("employee"))
                 {
-                   // dialog.dismiss();
                     final Dialog dialog = new Dialog(LoginActivity.this);
                     dialog.setContentView(R.layout.custom_dialog);
 
@@ -461,15 +428,8 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                 }
                 else
                 {
-                    //dialog.dismiss();
                     session.NeedLogin(user_email,user_password,user_name,user_type,user_id,user_address,user_city,user_state,user_zipcode,userType);
                     Intent i = new Intent(LoginActivity.this,ProfilePage.class);
-//                    i.putExtra("username",user_name);
-//                    i.putExtra("email",user_email);
-//                    i.putExtra("address",user_address);
-//                    i.putExtra("state",user_city);
-//                    i.putExtra("city",user_city);
-//                    i.putExtra("zipcode",user_zipcode);
                     startActivity(i);
                     finish();
                 }

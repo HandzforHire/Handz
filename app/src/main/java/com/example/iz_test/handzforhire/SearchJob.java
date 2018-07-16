@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -102,27 +104,11 @@ Dialog dialog;
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
 
-        //permission();
+        dialog = new Dialog(SearchJob.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-       /* // Get the location manager
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(provider);
-        System.out.println("kkkkkkkkkk:location::"+location);
-        double latit = location.getLatitude();
-        double longi = location.getLongitude();
-        System.out.println("kkkkkkkkkkk:latitude:::"+latit);
-        System.out.println("kkkkkkkkkkk:longitude:::"+longi);
-
-        // Initialize the location fields
-        if (location != null) {
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
-        }
-*/
 
         layout = (LinearLayout)findViewById(R.id.relay);
         list = (Spinner)findViewById(R.id.listview);
@@ -273,52 +259,45 @@ Dialog dialog;
         });
     }
 
-
-    public void listPostedJobs()
-    {
-        dialog = new Dialog(SearchJob.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void listPostedJobs() {
         dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("resssssssssssssssss:" + response);
+                        onResponserecieved1(response, 2);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        try {
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            System.out.println("resssssssssssssssss:" + response);
-                            onResponserecieved1(response, 2);
-                            dialog.dismiss();
+                            String responseBody = new String( error.networkResponse.data, "utf-8" );
+                            JSONObject jsonObject = new JSONObject( responseBody );
+                            System.out.println("error"+jsonObject);
+                        } catch ( JSONException e ) {
+                            //Handle a malformed json response
+                        } catch (UnsupportedEncodingException error1){
+
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            dialog.dismiss();
-                            try {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USERID, id);
+                return params;
+            }
+        };
 
-                                String responseBody = new String(error.networkResponse.data, "utf-8");
-                                JSONObject jsonObject = new JSONObject(responseBody);
-                                System.out.println("error" + jsonObject);
-                            } catch (JSONException e) {
-                                //Handle a malformed json response
-                            } catch (UnsupportedEncodingException error1) {
-
-                            }
-                        }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put(XAPP_KEY, value);
-                    params.put(KEY_USERID, id);
-                    return params;
-                }
-            };
-
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            requestQueue.add(stringRequest);
-        }
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
 
     public void onResponserecieved1(String jsonobject, int i) {
         System.out.println("response from interface" + jsonobject);
@@ -351,9 +330,6 @@ Dialog dialog;
 
                 CustomJobListAdapter adapter = new CustomJobListAdapter(SearchJob.this, job_title,imageId);
                 list.setAdapter(adapter);
-
-                dialog.dismiss();
-                //dialog.dismiss();
                 list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -513,8 +489,24 @@ Dialog dialog;
         listViewDogs.setAdapter(adapter);
 
         // set the item click listener
-        listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
+        listViewDogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Context mContext = adapterView.getContext();
+                //   MainActivity mainActivity = ((MainActivity) mContext);
 
+                // add some animation when a list item was clicked
+                Animation fadeInAnimation = AnimationUtils.loadAnimation(adapterView.getContext(), android.R.anim.fade_in);
+                fadeInAnimation.setDuration(10);
+                adapterView.startAnimation(fadeInAnimation);
+
+                // dismiss the pop up
+                popupWindowDogs.dismiss();
+
+
+              // SetCategory(i);
+            }
+        });
         // some other visual settings
         popupWindow.setFocusable(true);
         popupWindow.setWidth(600);

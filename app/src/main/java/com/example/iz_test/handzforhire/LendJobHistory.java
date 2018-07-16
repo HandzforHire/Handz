@@ -57,6 +57,7 @@ public class LendJobHistory extends Activity{
     String usertype = "employee";
     int timeout = 60000;
     Dialog dialog;
+    String rating_value,rating_id,category1,category2,category3,category4,category5;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +67,11 @@ public class LendJobHistory extends Activity{
         /*progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
         progress_dialog.show();*/
+
+        dialog = new Dialog(LendJobHistory.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
         pending_job = (Button) findViewById(R.id.btn1);
@@ -124,16 +130,8 @@ public class LendJobHistory extends Activity{
         });
     }
 
-
-    public void activeJobs()
-    {
-        dialog = new Dialog(LendJobHistory.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void activeJobs() {
         dialog.show();
-
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -172,7 +170,7 @@ public class LendJobHistory extends Activity{
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
 
@@ -230,6 +228,32 @@ public class LendJobHistory extends Activity{
                     System.out.println("ressss:employeeId:::"+employeeId);
                     final String channelid=object.getString("channel");
                     System.out.println("resss:channel_id::"+channelid);
+                    String rating=object.getString("rating");
+                    System.out.println("jjjjjjjjjjjjjjob:::success:::::"+rating);
+
+                    if(rating.equals("null"))
+                    {
+                        rating_value = "";
+                        rating_id = "";
+                        category1 = "";
+                        category2 = "";
+                        category3 = "";
+                        category4 = "";
+                        category5 = "";
+                    }
+                    else
+                    {
+                        JSONObject Result = new JSONObject(rating);
+                        rating_value = Result.getString("rating");
+                        rating_id = Result.getString("id");
+                        category1 = Result.getString("category1");
+                        category2 = Result.getString("category2");
+                        category3 = Result.getString("category3");
+                        category4 = Result.getString("category4");
+                        category5 = Result.getString("category5");
+                        System.out.println("jjjjjjjjjjjjjjob:::success::rating_value:::"+rating_value+"..."+rating_id);
+                        System.out.println("jjjjjjjjjjjjjjob:::success::category::"+category1+"..."+category2+",,"+category3+",,"+category4+",,"+category5);
+                    }
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("name",job_name);
                     map.put("image",image);
@@ -241,6 +265,13 @@ public class LendJobHistory extends Activity{
                     map.put("employee",employeeId);
                     map.put("user_id",user_id);
                     map.put("channel",channelid);
+                    map.put("ratingId",rating_id);
+                    map.put("rating",rating_value);
+                    map.put("category1",category1);
+                    map.put("category2",category2);
+                    map.put("category3",category3);
+                    map.put("category4",category4);
+                    map.put("category5",category5);
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
                     LendHistoryAdapter arrayAdapter = new LendHistoryAdapter(this, job_list) {

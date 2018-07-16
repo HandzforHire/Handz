@@ -62,7 +62,7 @@
                 android:id="@+id/star"
                 android:layout_width="45sp"
                 android:layout_height="45sp"
-                android:src="@drawable/rating_btn" />
+                android:src="@drawable/star_new" />
 
             <TextView
                 android:id="@+id/rating"

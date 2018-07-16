@@ -28,8 +28,6 @@
                 android:padding="3dp"
                 android:src="@drawable/default_profile"
                 android:background="@drawable/image_border" />
-
-
         </RelativeLayout>
 
         <LinearLayout
@@ -95,19 +93,23 @@
                 android:textSize="20sp" />
 
             <LinearLayout
+                android:id="@+id/rehire_lay"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40sp"
                 android:orientation="horizontal"
-                android:gravity="center"
+                android:layout_marginLeft="20sp"
+                android:gravity="center_vertical"
+                android:layout_marginRight="20sp"
+                android:background="@drawable/gray_box"
                 android:layout_marginTop="10sp">
 
                 <TextView
                     android:id="@+id/text2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:textAllCaps="true"
-                    android:text="you hired  "
+                    android:text="Rehire "
+                    android:paddingLeft="10sp"
                     android:textColor="#000000"
                     android:textSize="20sp" />
 
@@ -233,15 +235,54 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/leave_rating"
+            <LinearLayout
+                android:id="@+id/leave_lay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="leave a\n rating"
-                android:textAllCaps="true"
                 android:layout_gravity="center"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:background="@drawable/star_filled"/>
+
+                <TextView
+                    android:id="@+id/leave_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="leave \n rating"
+                    android:textAllCaps="true"
+                    android:paddingLeft="10sp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/edit_lay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="40sp"
+                    android:layout_height="40sp"
+                    android:background="@drawable/star_filled"/>
+
+                <TextView
+                    android:id="@+id/edit_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="edit \n rating"
+                    android:textAllCaps="true"
+                    android:paddingLeft="10sp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

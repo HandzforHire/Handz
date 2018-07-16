@@ -58,7 +58,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
     String value = "HandzForHire@~";
     String user_id, user_name, user_email, user_password, user_address, user_city, user_state, user_zipcode,user_type;
     TextView new_employee;
-    ProgressDialog progress_dialog;
+
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     String type;
     ImageView logo;
@@ -82,9 +82,10 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
         login = (Button) findViewById(R.id.login);
         logo = (ImageView) findViewById(R.id.logo);
 
-        /*progress_dialog = new ProgressDialog(LendLoginPage.this);
-        progress_dialog.setMessage("Loading.Please wait");*/
-
+        dialog = new Dialog(LendLoginPage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
         permission();
@@ -128,7 +129,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
 
                     // set the custom dialog components - text, image and button
                     TextView text = (TextView) dialog.findViewById(R.id.text);
-                    text.setText("Must Fill In \"Email Id\" Box");
+                    text.setText("Must Fill In \"Email\" Box");
                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                     // if button is clicked, close the custom dialog
                     dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -169,33 +170,29 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                 }
                 if (email_id.matches(emailPattern)) {
                     type = "email";
-                } else {
-                    type = "username";
+
+
                 }
                 login();
             }
         });
     }
 
-    public void login()
-    {
-        dialog = new Dialog(LendLoginPage.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void login() {
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("login:response:" + response);
                         onResponserecieved(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
@@ -223,7 +220,6 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            //dialog.dismiss();
                         } catch (JSONException e) {
                             //Handle a malformed json response
                         } catch (UnsupportedEncodingException error1) {
@@ -271,18 +267,10 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                     user_city = object.getString("city");
                     user_state = object.getString("state");
                     user_zipcode = object.getString("zipcode");
-                    System.out.println("pppppppppp:"+user_type+user_name+user_email+user_password);
-                       /* System.out.println("ressss:object::"+object);
-                        System.out.println("ressss:iiiiid::"+user_id);
-                        System.out.println("ressss::user_name:"+user_name);
-                        System.out.println("ressss:email::"+get_email);
-                        System.out.println("ressss:address::"+get_address);
-                        System.out.println("ressss:city::"+get_city);
-                        System.out.println("ressss:state::"+get_state);
-                        System.out.println("ressss:zipcode::"+get_zipcode);*/
+
                 }
                 if (user_type.equals("employer")) {
-                    //dialog.dismiss();
+
                     final Dialog dialog = new Dialog(LendLoginPage.this);
                     dialog.setContentView(R.layout.custom_dialog);
 
@@ -303,21 +291,9 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 } else {
-                    //dialog.dismiss();
                     session.LendLogin(user_email,user_password,user_name,user_type,user_id,user_address,user_city,user_state,user_zipcode,userType);
 
                     Intent i = new Intent(LendLoginPage.this,MapActivity.class);
-                    i.putExtra("userId",user_id);
-                   /* i.putExtra("username",user_name);
-                    Intent i = new Intent(LendLoginPage.this,LendProfilePage.class);
-                    /*i.putExtra("userId",user_id);
-                    i.putExtra("username",user_name);
-                    i.putExtra("email",user_email);
-                    i.putExtra("address",user_address);
-                    i.putExtra("state",user_city);
-                    i.putExtra("city",user_city);
-                    i.putExtra("zipcode",user_zipcode);
-                    */
                     startActivity(i);
                     finish();
                 }
@@ -343,7 +319,6 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
-            dialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();

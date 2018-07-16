@@ -51,14 +51,14 @@ import java.util.Map;
 
 public class EditPostedJobs extends Activity {
 
-    private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
-    private static final String URL = Constant.SERVER_URL+"job_lists";
+    private static final String GET_URL = Constant.SERVER_URL + "get_profile_image";
+    private static final String URL = Constant.SERVER_URL + "job_lists";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
-    ImageView profile,logo;
+    ImageView profile, logo;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
-    String address,city,state,zipcode,user_id,job_id,jobId,name,date,type,amount,profile_image,profilename;
+    String address, city, state, zipcode, user_id, job_id, jobId, name, date, type, amount, profile_image, profilename;
     TextView profile_name;
     ListView list;
     ProgressDialog progress_dialog;
@@ -74,11 +74,22 @@ public class EditPostedJobs extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_posted_jobs);
 
-        image = (ImageView)findViewById(R.id.default_image);
 
-        profile = (ImageView)findViewById(R.id.profile_image);
+        image = (ImageView) findViewById(R.id.default_image);
+
+        /*progress_dialog = new ProgressDialog(this);
+        progress_dialog.setMessage("Loading.Please wait....");
+        progress_dialog.show();*/
+
+        dialog = new Dialog(EditPostedJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
+        profile = (ImageView) findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
-        logo = (ImageView)findViewById(R.id.logo);
+        logo = (ImageView) findViewById(R.id.logo);
         list = (ListView) findViewById(R.id.listview);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
 
@@ -88,7 +99,7 @@ public class EditPostedJobs extends Activity {
         city = i.getStringExtra("city");
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:"+user_id);
+        System.out.println("iiiiiiiiiiiiiiiiiiiii:" + user_id);
 
         getProfileimage();
         listPostedJobs();
@@ -96,7 +107,7 @@ public class EditPostedJobs extends Activity {
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(EditPostedJobs.this,ProfilePage.class);
+                Intent i = new Intent(EditPostedJobs.this, ProfilePage.class);
                 i.putExtra("userId", user_id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
@@ -110,9 +121,9 @@ public class EditPostedJobs extends Activity {
         rating_lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(EditPostedJobs.this,ReviewRating.class);
+                Intent i = new Intent(EditPostedJobs.this, ReviewRating.class);
                 i.putExtra("userId", user_id);
-                i.putExtra("image",profile_image);
+                i.putExtra("image", profile_image);
                 i.putExtra("name", profilename);
                 startActivity(i);
             }
@@ -120,8 +131,7 @@ public class EditPostedJobs extends Activity {
 
     }
 
-    public void getProfileimage()
-    {
+    public void getProfileimage() {
         //dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
@@ -148,7 +158,7 @@ public class EditPostedJobs extends Activity {
             }
         };
 
-        System.out.println("values::"+value+".."+user_id);
+        System.out.println("values::" + value + ".." + user_id);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -157,21 +167,20 @@ public class EditPostedJobs extends Activity {
 
     public void onResponserecieved2(String jsonobject, int requesttype) {
         String status = null;
-         profile_image = null;
-         profilename = null;
+        profile_image = null;
+        profilename = null;
         try {
 
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
 
-            if(status.equals("success"))
-            {
+            if (status.equals("success")) {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
                 System.out.println("ggggggggget:profilename:" + profilename);
                 profile_name.setText(profilename);
                 System.out.println("ggggggggget:profile_image:" + profile_image);
-                Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
+                Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this, 0, Glideconstants.sCorner, Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 
             }
 
@@ -184,16 +193,8 @@ public class EditPostedJobs extends Activity {
         }*/
     }
 
-
-    public void listPostedJobs()
-    {
-
-        dialog = new Dialog(EditPostedJobs.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void listPostedJobs() {
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -209,12 +210,11 @@ public class EditPostedJobs extends Activity {
 
                         dialog.dismiss();
                         try {
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("eeeeeeeerror"+jsonObject);
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            System.out.println("eeeeeeeerror" + jsonObject);
                             String status = jsonObject.getString("msg");
-                            if(status.equals("No Jobs Found"))
-                            {
+                            if (status.equals("No Jobs Found")) {
                                 // custom dialog
                                 final Dialog dialog = new Dialog(EditPostedJobs.this);
                                 dialog.setContentView(R.layout.custom_dialog);
@@ -233,10 +233,9 @@ public class EditPostedJobs extends Activity {
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                            else {
+                            } else {
 
                                 final Dialog dialog = new Dialog(EditPostedJobs.this);
                                 dialog.setContentView(R.layout.custom_dialog);
@@ -255,18 +254,14 @@ public class EditPostedJobs extends Activity {
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-
-                            dialog.dismiss();
-
-
-                        } catch ( JSONException e ) {
+                        } catch (JSONException e) {
                             //Handle a malformed json response
-                            System.out.println("volley error ::"+e.getMessage());
-                        } catch (UnsupportedEncodingException errors){
-                            System.out.println("volley error ::"+errors.getMessage());
+                            System.out.println("volley error ::" + e.getMessage());
+                        } catch (UnsupportedEncodingException errors) {
+                            System.out.println("volley error ::" + errors.getMessage());
                         }
                     }
                 }) {
@@ -285,7 +280,7 @@ public class EditPostedJobs extends Activity {
     }
 
     public void onResponserecieved1(String jsonobject, int i) {
-        System.out.println("response from interface"+jsonobject);
+        System.out.println("response from interface" + jsonobject);
 
         String status = null;
         String jobList = null;
@@ -295,7 +290,7 @@ public class EditPostedJobs extends Activity {
             status = jResult.getString("status");
             jobList = jResult.getString("job_lists");
             System.out.println("jjjjjjjjjjjjjjjob:::list:::" + jobList);
-            if(status.equals("success")) {
+            if (status.equals("success")) {
                 JSONArray array = new JSONArray(jobList);
                 for (int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
@@ -357,9 +352,7 @@ public class EditPostedJobs extends Activity {
                     });
 
                 }
-            }
-            else
-            {
+            } else {
 
             }
 
@@ -369,11 +362,11 @@ public class EditPostedJobs extends Activity {
     }
 
 
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
+    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor) {
         // Initialize a new Bitmap to make it bordered bitmap
         Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
+                srcBitmap.getWidth() + borderWidth * 2, // Width
+                srcBitmap.getHeight() + borderWidth * 2, // Height
                 Bitmap.Config.ARGB_8888 // Config
         );
         Canvas canvas = new Canvas(dstBitmap);
@@ -389,11 +382,12 @@ public class EditPostedJobs extends Activity {
                 canvas.getWidth() - borderWidth / 2,
                 canvas.getHeight() - borderWidth / 2
         );
-        canvas.drawRect(rect,paint);
+        canvas.drawRect(rect, paint);
         canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
         srcBitmap.recycle();
 
         // Return the bordered circular bitmap
         return dstBitmap;
     }
+
 }

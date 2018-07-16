@@ -63,7 +63,6 @@ public class LendHistoryAdapter extends BaseAdapter{
             TextView amount = (TextView) vi.findViewById(R.id.amount);
             ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
             Button job_details = (Button) vi.findViewById(R.id.btn);
-            LinearLayout leave_rating = (LinearLayout) vi.findViewById(R.id.lay2);
             TextView date = (TextView) vi.findViewById(R.id.date);
             TextView month = (TextView) vi.findViewById(R.id.month);
             TextView year = (TextView) vi.findViewById(R.id.year);
@@ -71,6 +70,9 @@ public class LendHistoryAdapter extends BaseAdapter{
             final TextView employer_id = (TextView) vi.findViewById(R.id.employer_id);
             final TextView employee_id = (TextView) vi.findViewById(R.id.employee_id);
             LinearLayout chat = (LinearLayout) vi.findViewById(R.id.lay1);
+
+            LinearLayout leave_layout = (LinearLayout) vi.findViewById(R.id.leave_lay);
+            LinearLayout edit_layout = (LinearLayout) vi.findViewById(R.id.edit_lay);
 
             String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
             Typeface font = Typeface.createFromAsset(activity.getAssets(), fontPath);
@@ -88,6 +90,8 @@ public class LendHistoryAdapter extends BaseAdapter{
             final String get_employer = items.get("employer");
             final String get_employee = items.get("employee");
             final String channel_id=items.get("channel");
+            final String rating_value=items.get("rating");
+
             job_name.setText(get_name);
             job_name.setTypeface(font);
             amount.setText(get_amount);
@@ -95,23 +99,60 @@ public class LendHistoryAdapter extends BaseAdapter{
             employer_id.setText(get_employer);
             employee_id.setText(get_employee);
 
-            leave_rating.setTag(position);
+
+
+            if(rating_value.equals(""))
+            {
+                edit_layout.setVisibility(View.GONE);
+                leave_layout.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                leave_layout.setVisibility(View.GONE);
+                edit_layout.setVisibility(View.VISIBLE);
+            }
+
             chat.setTag(position);
             job_details.setTag(position);
+            leave_layout.setTag(position);
+            edit_layout.setTag(position);
 
-            leave_rating.setOnClickListener(new View.OnClickListener() {
+
+            leave_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     HashMap<String, String> items = new HashMap<String, String>();
                     items = data.get((Integer) v.getTag());
-
                     Intent intent = new Intent(activity, LendRating.class);
                     intent.putExtra("jobId",items.get("jobId"));
                     intent.putExtra("employer_id", items.get("employer"));
                     intent.putExtra("employee_id",items.get("employee"));
-                    intent.putExtra("user_id", items.get("user_id"));
-                    intent.putExtra("profilename", items.get("profile"));
+                    intent.putExtra("user_id",items.get("user_id"));
+                    intent.putExtra("profilename",items.get("profile"));
+                    v.getContext().startActivity(intent);
+                }
+            });
+
+            edit_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    HashMap<String, String> items = new HashMap<String, String>();
+                    items = data.get((Integer) v.getTag());
+                    Intent intent = new Intent(activity, EditRating.class);
+                    intent.putExtra("jobId",items.get("jobId"));
+                    intent.putExtra("employer_id", items.get("employer"));
+                    intent.putExtra("employee_id",items.get("employee"));
+                    intent.putExtra("user_id",items.get("user_id"));
+                    intent.putExtra("profilename",items.get("profile"));
+                    intent.putExtra("ratingId",items.get("ratingId"));
+                    intent.putExtra("cat1",items.get("category1"));
+                    intent.putExtra("cat2",items.get("category2"));
+                    intent.putExtra("cat3",items.get("category3"));
+                    intent.putExtra("cat4",items.get("category4"));
+                    intent.putExtra("cat5",items.get("category5"));
                     v.getContext().startActivity(intent);
                 }
             });

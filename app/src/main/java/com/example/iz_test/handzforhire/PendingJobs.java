@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.service.voice.VoiceInteractionSession;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,22 +48,23 @@ import java.util.Map;
     public class PendingJobs extends Activity {
 
         ListView list;
-        private static final String SEARCH_URL = Constant.SERVER_URL+"job_lists";
+        private static final String SEARCH_URL = Constant.SERVER_URL + "job_lists";
         ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
         public static String XAPP_KEY = "X-APP-KEY";
         String value = "HandzForHire@~";
         public static String KEY_USER = "user_id";
         public static String KEY_TYPE = "type";
         Calendar calendar;
-        String user_id,address,city,state,zipcode,cat_type,cat_id,job_cat_name,name,date,amount,jobId;
-        String emplrid,empleid;
+        String user_id, address, city, state, zipcode, cat_type, cat_id, job_cat_name, name, date, amount, jobId;
+        String emplrid, empleid;
 
-        String jobname,jobdate,pay,esti,jobstatus,get_status;
-        ImageView logo,green,gray,red;
+        String jobname, jobdate, pay, esti, jobstatus;
+        ImageView logo;
         ProgressDialog progress_dialog;
         String type = "applied";
-        Button active_jobs,job_history;
+        Button active_jobs, job_history;
         Dialog dialog;
+        int visible_pos, visible_lay;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +75,16 @@ import java.util.Map;
             progress_dialog.setMessage("Loading.Please wait....");
             progress_dialog.show();*/
 
+            dialog = new Dialog(PendingJobs.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressbar);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
             list = (ListView) findViewById(R.id.listview);
             logo = (ImageView) findViewById(R.id.logo);
             active_jobs = (Button) findViewById(R.id.btn1);
             job_history = (Button) findViewById(R.id.btn2);
-            green = (ImageView)findViewById(R.id.green);
-            gray = (ImageView) findViewById(R.id.gray);
-            red = (ImageView) findViewById(R.id.red);
 
             Intent i = getIntent();
             user_id = i.getStringExtra("userId");
@@ -96,7 +101,6 @@ import java.util.Map;
 
             searchJobList();
 
-
             logo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -107,7 +111,7 @@ import java.util.Map;
             active_jobs.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(PendingJobs.this,ActiveJobs.class);
+                    Intent i = new Intent(PendingJobs.this, ActiveJobs.class);
                     i.putExtra("userId", user_id);
                     i.putExtra("address", address);
                     i.putExtra("city", city);
@@ -120,7 +124,7 @@ import java.util.Map;
             job_history.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(PendingJobs.this,JobHistory.class);
+                    Intent i = new Intent(PendingJobs.this, JobHistory.class);
                     i.putExtra("userId", user_id);
                     i.putExtra("address", address);
                     i.putExtra("city", city);
@@ -131,21 +135,13 @@ import java.util.Map;
             });
         }
 
-
-        public void searchJobList()
-        {
-            dialog = new Dialog(PendingJobs.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.progressbar);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        public void searchJobList() {
             dialog.show();
-
-
             StringRequest stringRequest = new StringRequest(Request.Method.POST, SEARCH_URL,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            System.out.println("reeeeeeeeeeeeeeeee:pendingjobs:::" +response);
+                            System.out.println("reeeeeeeeeeeeeeeee:pendingjobs:::" + response);
                             onResponserecieved(response, 2);
                             dialog.dismiss();
                         }
@@ -159,8 +155,7 @@ import java.util.Map;
                                 JSONObject jsonObject = new JSONObject(responseBody);
                                 System.out.println("error" + jsonObject);
                                 String status = jsonObject.getString("msg");
-                                if(status.equals("No Jobs Found"))
-                                {
+                                if (status.equals("No Jobs Found")) {
                                     // custom dialog
                                     final Dialog dialog = new Dialog(PendingJobs.this);
                                     dialog.setContentView(R.layout.custom_dialog);
@@ -170,8 +165,7 @@ import java.util.Map;
                                     text.setText("No Jobs Found");
                                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                                     // if button is clicked, close the custom dialog
-                                    dialogButton.setOnClickListener(new View.OnClickListener()
-                                    {
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             dialog.dismiss();
@@ -182,9 +176,7 @@ import java.util.Map;
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 }
-                            }
-                            catch (JSONException e)
-                            {
+                            } catch (JSONException e) {
 
                             } catch (UnsupportedEncodingException error1) {
 
@@ -195,8 +187,8 @@ import java.util.Map;
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put(XAPP_KEY, value);
-                    params.put(KEY_USER,user_id);
-                    params.put(KEY_TYPE,type);
+                    params.put(KEY_USER, user_id);
+                    params.put(KEY_TYPE, type);
                     return params;
                 }
             };
@@ -211,11 +203,8 @@ import java.util.Map;
             try {
                 JSONObject result = new JSONObject(response);
                 status = result.getString("status");
-
-
                 if (status.equals("success")) {
                     job_list.clear();
-
                     String job = result.getString("job_lists");
                     System.out.println("jjjjjjjjjjjjjjjob:" + job);
                     JSONArray array = new JSONArray(job);
@@ -230,7 +219,6 @@ import java.util.Map;
                         jobId = object.getString("id");
                         jobstatus = object.getString("job_status");
                         emplrid = object.getString("employer_id");
-                        get_status = object.getString("status");
 
                         HashMap<String, String> map = new HashMap<String, String>();
                         map.put("name", jobname);
@@ -262,21 +250,16 @@ import java.util.Map;
 
                     // DataBind ListView with items from ArrayAdapter
                     list.setAdapter(arrayAdapter);
-
-                    dialog.dismiss();
                     list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                               /*view.setSelected(true);
+                               /* view.setSelected(true);
                                 String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
                                 System.out.println("ssssssssssselected:job_id:" + job_id);
                                 Intent i = new Intent(PendingJobs.this,JobDescription.class);
                                 i.putExtra("userId",user_id);
                                 i.putExtra("jobId",job_id);
                                 startActivity(i);*/
-
-                            Toast.makeText(PendingJobs.this, "hiiiiiiiiiiii", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -285,29 +268,31 @@ import java.util.Map;
             }
             {
             }
+            {
+
+            }
         }
 
 
-        public class PendingAdapter extends BaseAdapter
-        {
-            private  final String emp_reject = Constant.SERVER_URL + "employee_reject";
-            private  final String job_list = Constant.SERVER_URL + "job_lists";
+        public class PendingAdapter extends BaseAdapter {
+            private final String emp_reject = Constant.SERVER_URL + "employee_reject";
+            private final String job_list = Constant.SERVER_URL + "job_lists";
+            private final String emp_accept = Constant.SERVER_URL + "employee_accept";
 
-
-            public  String XAPP_KEY = "X-APP-KEY";
+            public String XAPP_KEY = "X-APP-KEY";
             String value = "HandzForHire@~";
             String type = "employee";
             String user_id;
             String get_jobid, get_emplrid, get_employeeid, get_status;
-            public  String KEY_JOBID = "job_id";
-            public  String KEY_EMPLOYERID = "employer_id";
-            public  String KEY_EMPLOYEEID = "employee_id";
-            public  String KEY_USERTYPE = "user_type";
-            public  String KEY_USER = "user_id";
+            public String KEY_JOBID = "job_id";
+            public String KEY_EMPLOYERID = "employer_id";
+            public String KEY_EMPLOYEEID = "employee_id";
+            public String KEY_USERTYPE = "user_type";
+            public String KEY_USER = "user_id";
             ProgressDialog progress_dialog;
             private Activity activity;
             private ArrayList<HashMap<String, String>> data;
-            private  LayoutInflater inflater = null;
+            private LayoutInflater inflater = null;
             private LayoutInflater layoutInflater;
 
 
@@ -345,13 +330,13 @@ import java.util.Map;
                 ImageView red = (ImageView) vi.findViewById(R.id.red);
                 ImageView green = (ImageView) vi.findViewById(R.id.green);
 
-                final LinearLayout lin_hold=(LinearLayout)vi.findViewById(R.id.lin_hold);
-                final LinearLayout lin_hire=(LinearLayout)vi.findViewById(R.id.lin_hire);
-                final LinearLayout lin_refuse=(LinearLayout)vi.findViewById(R.id.lin_refuse);
+                final LinearLayout lin_hold = (LinearLayout) vi.findViewById(R.id.lin_hold);
+                final LinearLayout lin_hire = (LinearLayout) vi.findViewById(R.id.lin_hire);
+                final LinearLayout lin_refuse = (LinearLayout) vi.findViewById(R.id.lin_refuse);
 
-                final LinearLayout layout_refuse=(LinearLayout)vi.findViewById(R.id.layout_refuse);
-                final LinearLayout layout_hold=(LinearLayout)vi.findViewById(R.id.layout_hold);
-                final LinearLayout layout_hire=(LinearLayout)vi.findViewById(R.id.layout_hire);
+                final LinearLayout layout_refuse = (LinearLayout) vi.findViewById(R.id.layout_refuse);
+                final LinearLayout layout_hold = (LinearLayout) vi.findViewById(R.id.layout_hold);
+                final LinearLayout layout_hire = (LinearLayout) vi.findViewById(R.id.layout_hire);
 
                 HashMap<String, String> items = new HashMap<String, String>();
                 items = data.get(position);
@@ -379,11 +364,37 @@ import java.util.Map;
 
                 }
 
+                System.out.println("pos " + visible_pos);
+                if (position == visible_pos) {
+                    if (visible_lay == 1) {
+                        lin_hold.setVisibility(View.VISIBLE);
+                        lin_hire.setVisibility(View.GONE);
+                        lin_refuse.setVisibility(View.GONE);
+                    } else if (visible_lay == 2) {
+                        lin_hold.setVisibility(View.GONE);
+                        lin_hire.setVisibility(View.GONE);
+                        lin_refuse.setVisibility(View.VISIBLE);
+                    } else if (visible_lay == 3) {
+                        lin_hold.setVisibility(View.GONE);
+                        lin_hire.setVisibility(View.VISIBLE);
+                        lin_refuse.setVisibility(View.GONE);
+                    }
+                } else {
+                    lin_hold.setVisibility(View.GONE);
+                    lin_hire.setVisibility(View.GONE);
+                    lin_refuse.setVisibility(View.GONE);
+                }
+
                 layout_refuse.setTag(position);
+                layout_hold.setTag(position);
+                layout_hire.setTag(position);
+
                 layout_hold.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         lin_hold.setVisibility(View.GONE);
+                        visible_pos = -1;
+                        visible_lay = 0;
                     }
                 });
 
@@ -391,42 +402,49 @@ import java.util.Map;
                     @Override
                     public void onClick(View view) {
                         lin_hire.setVisibility(View.GONE);
+                        visible_pos = -1;
+                        visible_lay = 0;
+
                     }
                 });
 
                 layout_refuse.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        visible_pos = -1;
+                        visible_lay = 0;
                         lin_refuse.setVisibility(View.GONE);
                         HashMap<String, String> items = new HashMap<String, String>();
                         items = data.get((Integer) view.getTag());
                         get_jobid = items.get("jobId");
                         get_emplrid = items.get("emrid");
                         get_employeeid = items.get("employeeid");
-                        type="employee";
+                        type = "employee";
                         refusee();
                     }
                 });
 
 
-
-
+                gray.setTag(position);
+                red.setTag(position);
+                green.setTag(position);
                 gray.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lin_hold.setVisibility(View.VISIBLE);
-                        lin_hire.setVisibility(View.GONE);
-                        lin_refuse.setVisibility(View.GONE);
+                        int pos = (int) v.getTag();
+                        visible_pos = pos;
+                        visible_lay = 1;
+                        notifyDataSetChanged();
                         return;
                     }
                 });
                 red.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lin_hold.setVisibility(View.GONE);
-                        lin_hire.setVisibility(View.GONE);
-                        lin_refuse.setVisibility(View.VISIBLE);
-
+                        int pos = (int) v.getTag();
+                        visible_pos = pos;
+                        visible_lay = 2;
+                        notifyDataSetChanged();
                         return;
                     }
 
@@ -434,9 +452,10 @@ import java.util.Map;
                 green.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lin_hold.setVisibility(View.GONE);
-                        lin_hire.setVisibility(View.VISIBLE);
-                        lin_refuse.setVisibility(View.GONE);
+                        int pos = (int) v.getTag();
+                        visible_lay = 3;
+                        visible_pos = pos;
+                        notifyDataSetChanged();
                         return;
 
                     }
@@ -530,4 +549,8 @@ import java.util.Map;
 
 
         }
-}
+    }
+
+
+
+

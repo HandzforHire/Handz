@@ -25,7 +25,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -82,6 +81,11 @@ public class LendProfilePage extends Activity{
         progress_dialog.show();*/
 
 
+        dialog = new Dialog(LendProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         handz = (ImageView) findViewById(R.id.handz);
         need_help = (Button) findViewById(R.id.need_help);
@@ -97,16 +101,6 @@ public class LendProfilePage extends Activity{
         job_history = (Button) findViewById(R.id.job_history);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
         menu = (ImageView)findViewById(R.id.menu);
-        share_lend=(ImageView)findViewById(R.id.sha_lend);
-        share_lend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                sharelend();
-            }
-        });
-
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
@@ -118,12 +112,18 @@ public class LendProfilePage extends Activity{
         city = user.get(SessionManager.CITY);
         state = user.get(SessionManager.STATE);
         zipcode = user.get(SessionManager.ZIPCODE);
-        System.out.println("ssssssemail:" + email);
-        System.out.println("ssssssid:" + id);
-        System.out.println("ssssssaddress:" + address);
-        System.out.println("ssssss:city:" + city);
-        System.out.println("ssssssstate:" + state);
-        System.out.println("ssssssid:zipcode:" + zipcode);
+
+
+        share_lend=(ImageView)findViewById(R.id.sha_lend);
+        share_lend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                sharelend();
+            }
+        });
+
 
         getProfileimage();
         getUsername();
@@ -249,16 +249,8 @@ public class LendProfilePage extends Activity{
         });
     }
 
-    private void sharelend()
-    {
-        Intent share = new Intent(android.content.Intent.ACTION_SEND);
-        share.setType("text/plain");
-        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");
-        share.putExtra(Intent.EXTRA_TEXT,tittle);
-        startActivity(Intent.createChooser(share, "Share link!"));
 
-    }
+
 
 
     public void getUsername()
@@ -268,7 +260,6 @@ public class LendProfilePage extends Activity{
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, USERNAME_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -324,7 +315,7 @@ public class LendProfilePage extends Activity{
 
     public void getProfileimage()
     {
-        //dialog.show();
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -468,6 +459,17 @@ public class LendProfilePage extends Activity{
 
         // Return the bordered circular bitmap
         return dstBitmap;
+    }
+
+    private void sharelend()
+    {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");
+        share.putExtra(Intent.EXTRA_TEXT,tittle);
+        startActivity(Intent.createChooser(share, "Share link!"));
+
     }
 
 }

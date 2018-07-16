@@ -62,6 +62,7 @@ public class JobHistory extends Activity {
     int timeout = 60000;
     EditText editsearch;
     ArrayList<WorldPopulation> arraylist = new ArrayList<WorldPopulation>();
+    String rating_value,rating_id,category1,category2,category3,category4,category5;
     Adapter adapter;
     Dialog dialog;
 
@@ -73,6 +74,12 @@ public class JobHistory extends Activity {
             /*progress_dialog = new ProgressDialog(this);
             progress_dialog.setMessage("Loading.Please wait....");
             progress_dialog.show();*/
+
+            dialog = new Dialog(JobHistory.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressbar);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
             posted_job = (Button) findViewById(R.id.btn1);
             active_job = (Button)findViewById(R.id.btn2);
@@ -153,15 +160,8 @@ public class JobHistory extends Activity {
             });
         }
 
-        public void activeJobs()
-        {
-
-            dialog = new Dialog(JobHistory.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.progressbar);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        public void activeJobs() {
             dialog.show();
-
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                     new Response.Listener<String>() {
                         @Override
@@ -200,7 +200,7 @@ public class JobHistory extends Activity {
 
                                     dialog.show();
                                     Window window = dialog.getWindow();
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 }
                             } catch ( JSONException e ) {
@@ -259,7 +259,34 @@ public class JobHistory extends Activity {
                         final String channelid=object.getString("channel");
                         System.out.println("resss:channel_id::"+channelid);
 
-                        WorldPopulation wp = new WorldPopulation(job_name,image,profilename,username,jobId,employerId,employeeId,channelid,user_id);
+                        String rating=object.getString("rating");
+                        System.out.println("jjjjjjjjjjjjjjob:::success:::::"+rating);
+
+                        if(rating.equals("null"))
+                        {
+                            rating_value = "";
+                            rating_id = "";
+                            category1 = "";
+                            category2 = "";
+                            category3 = "";
+                            category4 = "";
+                            category5 = "";
+                        }
+                        else
+                        {
+                            JSONObject Result = new JSONObject(rating);
+                            rating_value = Result.getString("rating");
+                            rating_id = Result.getString("id");
+                            category1 = Result.getString("category1");
+                            category2 = Result.getString("category2");
+                            category3 = Result.getString("category3");
+                            category4 = Result.getString("category4");
+                            category5 = Result.getString("category5");
+                            System.out.println("jjjjjjjjjjjjjjob:::success::rating_value:::"+rating_value+"..."+rating_id);
+                            System.out.println("jjjjjjjjjjjjjjob:::success::category::"+category1+"..."+category2+",,"+category3+",,"+category4+",,"+category5);
+                        }
+
+                        WorldPopulation wp = new WorldPopulation(job_name,image,profilename,username,jobId,employerId,employeeId,channelid,user_id,rating_id,rating_value,category1,category2,category3,category4,category5);
                         // Binds all strings into an array
                         arraylist.add(wp);
                         System.out.println("aaaaaaaaarraylist:::" + arraylist);

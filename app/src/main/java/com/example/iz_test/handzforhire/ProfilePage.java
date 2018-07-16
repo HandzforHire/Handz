@@ -29,7 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -74,6 +73,10 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     LinearLayout posted,history,active;
     ProgressBar pb;
     Dialog dialog;
+
+
+
+
     Activity activity;
     String description="https://www.handzforhire.com";
     String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
@@ -86,7 +89,10 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-
+        dialog = new Dialog(ProfilePage.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         detector = new SimpleGestureFilter(this,this);
 
@@ -108,18 +114,6 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         active_circle = (TextView) findViewById(R.id.circle2);
         history_circle = (TextView) findViewById(R.id.circle3);
 
-        share_need=(ImageView)findViewById(R.id.sha_need);
-        share_need.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-
-                share();
-
-
-            }
-        });
-
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
@@ -132,6 +126,19 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         state = user.get(SessionManager.KEY_STATE);
         zipcode = user.get(SessionManager.KEY_ZIPCODE);
         type = user.get(SessionManager.TYPE);
+
+        share_need=(ImageView)findViewById(R.id.sha_need);
+        share_need.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+
+                share();
+
+
+            }
+        });
+
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
@@ -276,29 +283,10 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         });
     }
 
-    private void share()
-    {
-
-        Intent share = new Intent(android.content.Intent.ACTION_SEND);
-        share.setType("text/plain");
-        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");
-        share.putExtra(Intent.EXTRA_TEXT,tittle);
-        startActivity(Intent.createChooser(share, "Share link!"));
-
-    }
-
-
 
     public void paymentCheck()
     {
-
-
-        dialog = new Dialog(ProfilePage.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, PAYMENT_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -380,13 +368,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
     public void getProfileimage()
     {
-
-        dialog = new Dialog(ProfilePage.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -425,7 +407,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 return;
                             }
@@ -449,7 +431,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 return;
                             }
@@ -582,10 +564,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     }
 
 
-
     public void getUsername() {
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, USERNAME_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -687,6 +667,20 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     public void onDoubleTap() {
 
     }
+
+
+    private void share()
+    {
+
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");
+        share.putExtra(Intent.EXTRA_TEXT,tittle);
+        startActivity(Intent.createChooser(share, "Share link!"));
+
+    }
+
 
     protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
         // Initialize a new Bitmap to make it bordered bitmap

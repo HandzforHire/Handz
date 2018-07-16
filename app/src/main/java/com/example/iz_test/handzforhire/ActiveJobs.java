@@ -63,6 +63,13 @@ public class ActiveJobs extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.active_jobs);
 
+
+        dialog = new Dialog(ActiveJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+
         posted_job = (Button) findViewById(R.id.btn1);
         job_history = (Button)findViewById(R.id.btn2);
         logo = (ImageView)findViewById(R.id.logo);
@@ -120,16 +127,8 @@ public class ActiveJobs extends Activity{
 
     }
 
-
-    public void activeJobs()
-    {
-
-        dialog = new Dialog(ActiveJobs.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    public void activeJobs() {
         dialog.show();
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -144,11 +143,12 @@ public class ActiveJobs extends Activity{
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
                         try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            System.out.println("error" + jsonObject);
+                            String responseBody = new String( error.networkResponse.data, "utf-8" );
+                            JSONObject jsonObject = new JSONObject( responseBody );
+                            System.out.println("error"+jsonObject);
                             String status = jsonObject.getString("msg");
-                            if (status.equals("No Jobs Found")) {
+                            if(status.equals("No Jobs Found"))
+                            {
                                 // custom dialog
                                 final Dialog dialog = new Dialog(ActiveJobs.this);
                                 dialog.setContentView(R.layout.custom_dialog);
@@ -167,35 +167,9 @@ public class ActiveJobs extends Activity{
 
                                 dialog.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-
-                           else {
-
-                                final Dialog dialog = new Dialog(ActiveJobs.this);
-                                dialog.setContentView(R.layout.custom_dialog);
-
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText("Please try again");
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-
-                           dialog.dismiss();
-
                         } catch ( JSONException e ) {
                             //Handle a malformed json response
                             System.out.println("volley error ::"+e.getMessage());
