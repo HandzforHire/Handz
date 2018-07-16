@@ -15,6 +15,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -31,6 +32,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
@@ -67,7 +70,7 @@ public class MakePayment extends Activity{
 
     String employee,profile_image,profile_name,user_name,employerId,employeeId;
     Dialog dialog;
-
+    Swipe swipe;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,6 +154,32 @@ public class MakePayment extends Activity{
             name.setText(profile_name);
 
         }
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(MakePayment.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(MakePayment.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
 
     }
 
@@ -335,4 +364,12 @@ public class MakePayment extends Activity{
         dialog.show();
 
     }
+
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
+
 }

@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 final Boolean loginstatus = session.getLoginStatus();
-                System.out.println("ppppppppppp:dispatch:" +loginstatus);
+                Profilevalues.usertype="1";
                 if(loginstatus == true)
                 {
                     Intent i = new Intent(MainActivity.this, ProfilePage.class);
@@ -95,6 +95,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 final Boolean status = session.isLoggedIn();
+                Profilevalues.usertype="2";
                 System.out.println("ppppppppp:florist:" +status);
                 if(status == true)
                 {

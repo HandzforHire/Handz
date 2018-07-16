@@ -160,18 +160,6 @@ public class PostedJobs extends Activity {
 
         swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public void onSwipingLeft(MotionEvent event) {
-                super.onSwipingLeft(event);
-                Intent i = new Intent(PostedJobs.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-            }
 
             @Override
             public boolean onSwipedLeft(MotionEvent event) {
@@ -187,14 +175,6 @@ public class PostedJobs extends Activity {
                 return super.onSwipedLeft(event);
             }
 
-            @Override
-            public void onSwipingRight(MotionEvent event) {
-                super.onSwipingRight(event);
-                Intent j = new Intent(PostedJobs.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-
-            }
 
             @Override
             public boolean onSwipedRight(MotionEvent event) {
@@ -476,6 +456,8 @@ public class PostedJobs extends Activity {
             TextView type = (TextView) vi.findViewById(R.id.text8);
             final TextView jobId = (TextView) vi.findViewById(R.id.job_id);
             final TextView applicants = (TextView) vi.findViewById(R.id.no_applicants);
+            RelativeLayout rel_viewapplicant=(RelativeLayout)vi.findViewById(R.id.rel_viewapplicant);
+
             ImageView checked=(ImageView)vi.findViewById(R.id.img);
             ImageView unchecked=(ImageView)vi.findViewById(R.id.img1);
 
@@ -505,6 +487,7 @@ public class PostedJobs extends Activity {
 
             checked.setTag(position);
             unchecked.setTag(position);
+            rel_viewapplicant.setTag(position);
 
             if (dlist.equals("no"))
             {
@@ -581,11 +564,13 @@ public class PostedJobs extends Activity {
             type.setTypeface(font1);
             jobId.setText(job_id);
 
-            applicants.setOnClickListener(new View.OnClickListener()
+            rel_viewapplicant.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v) {
-                    if (get_applicants.equals("0")) {
+                    int pos= (int) v.getTag();
+                    HashMap<String, String> items = data.get(pos);
+                    if (items.get("no_of_applicants").equals("0")) {
                         final Dialog dialog = new Dialog(activity);
                         dialog.setContentView(R.layout.custom_dialog);
 
@@ -608,13 +593,13 @@ public class PostedJobs extends Activity {
                         return;
                     } else {
                         Intent i = new Intent(activity, ViewApplicant.class);
-                        i.putExtra("jobId", job_id);
-                        i.putExtra("userId",user_id);
-                        i.putExtra("address", address);
-                        i.putExtra("city",city);
-                        i.putExtra("zipcode", zipcode);
-                        i.putExtra("state",state);
-                        i.putExtra("jobname",get_name);
+                        i.putExtra("jobId", items.get("jobId"));
+                        i.putExtra("userId",items.get("userId"));
+                        i.putExtra("address",  items.get("address"));
+                        i.putExtra("city", items.get("city"));
+                        i.putExtra("zipcode",  items.get("zipcode"));
+                        i.putExtra("state", items.get("state"));
+                        i.putExtra("jobname", items.get("name"));
                         v.getContext().startActivity(i);
                     }
                 }

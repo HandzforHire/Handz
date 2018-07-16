@@ -4,29 +4,39 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
-public class PromoVideo extends Activity{
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerInitListener;
+
+
+public class PromoVideo extends Activity {
 
     VideoView video;
+    public static final String API_KEY = "AIzaSyAUcI4AwDX_DF4dGnRN3ls1reqJcA_MtSE";
 
+    public static final String VIDEO_ID1 = "nBERaM6P9rQ";
+    public static final String VIDEO_ID2 = "V92fm3pEfQk";
+    public static final String VIDEO_ID3 = "QVmYR4nUd0I";
+    public static final String VIDEO_ID4 = "aGwbVMGJS7I";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.promo_video);
 
-        video = (VideoView)findViewById(R.id.promo);
-        ImageView logo = (ImageView) findViewById(R.id.logo);
-
-       /* MediaController mediaController= new MediaController(this);
-        mediaController.setAnchorView(video);*/
+       /* ImageView logo = (ImageView) findViewById(R.id.logo);
         String path = "android.resource://" + getPackageName() + "/" + R.raw.video;
-        //video.setMediaController(mediaController);
-        video.setVideoURI(Uri.parse(path));
-        video.start();
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,5 +46,88 @@ public class PromoVideo extends Activity{
                 finish();
             }
         });
+
+        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.list);
+      //  recyclerView.setHasFixedSize(true);
+        //to use RecycleView, you need a layout manager. default is LinearLayoutManager
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        RecyclerAdapter adapter=new RecyclerAdapter(PromoVideo.this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setNestedScrollingEnabled(false);*/
+
+
+        YouTubePlayerView youTubePlayerView = (YouTubePlayerView)findViewById(R.id.youtube_player_view1);
+        youTubePlayerView.initialize(
+                new YouTubePlayerInitListener() {
+
+                    @Override
+                    public void onInitSuccess(
+                            final YouTubePlayer initializedYouTubePlayer) {
+
+                        initializedYouTubePlayer.addListener(
+                                new AbstractYouTubePlayerListener() {
+                                    @Override
+                                    public void onReady() {
+                                        initializedYouTubePlayer.cueVideo(VIDEO_ID1, 0);
+                                    }
+                                });
+                    }
+                }, true);
+        YouTubePlayerView youTubePlayerView2 = (YouTubePlayerView)findViewById(R.id.youtube_player_view2);
+        youTubePlayerView2.initialize(
+                new YouTubePlayerInitListener() {
+
+                    @Override
+                    public void onInitSuccess(
+                            final YouTubePlayer initializedYouTubePlayer) {
+
+                        initializedYouTubePlayer.addListener(
+                                new AbstractYouTubePlayerListener() {
+                                    @Override
+                                    public void onReady() {
+                                        initializedYouTubePlayer.cueVideo(VIDEO_ID2, 0);
+                                    }
+                                });
+                    }
+                }, true);
+
+        YouTubePlayerView youTubePlayerView3 = (YouTubePlayerView)findViewById(R.id.youtube_player_view3);
+        youTubePlayerView3.initialize(
+                new YouTubePlayerInitListener() {
+
+                    @Override
+                    public void onInitSuccess(
+                            final YouTubePlayer initializedYouTubePlayer) {
+
+                        initializedYouTubePlayer.addListener(
+                                new AbstractYouTubePlayerListener() {
+                                    @Override
+                                    public void onReady() {
+                                        initializedYouTubePlayer.cueVideo(VIDEO_ID3, 0);
+                                    }
+                                });
+                    }
+                }, true);
+        YouTubePlayerView youTubePlayerView4 = (YouTubePlayerView)findViewById(R.id.youtube_player_view4);
+        youTubePlayerView4.initialize(
+                new YouTubePlayerInitListener() {
+
+                    @Override
+                    public void onInitSuccess(
+                            final YouTubePlayer initializedYouTubePlayer) {
+
+                        initializedYouTubePlayer.addListener(
+                                new AbstractYouTubePlayerListener() {
+                                    @Override
+                                    public void onReady() {
+                                        initializedYouTubePlayer.cueVideo(VIDEO_ID4, 0);
+                                    }
+                                });
+                    }
+                }, true);
+
     }
+
 }

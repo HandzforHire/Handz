@@ -90,18 +90,6 @@ public class LendRating extends Activity{
 
         swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public void onSwipingLeft(MotionEvent event) {
-                super.onSwipingLeft(event);
-                Intent i = new Intent(LendRating.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-            }
 
             @Override
             public boolean onSwipedLeft(MotionEvent event) {
@@ -115,15 +103,6 @@ public class LendRating extends Activity{
                 finish();
 
                 return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public void onSwipingRight(MotionEvent event) {
-                super.onSwipingRight(event);
-                Intent j = new Intent(LendRating.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-
             }
 
             @Override

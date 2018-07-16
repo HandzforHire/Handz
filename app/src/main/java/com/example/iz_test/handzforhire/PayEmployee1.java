@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +27,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
@@ -65,7 +68,7 @@ public class PayEmployee1 extends Activity{
     TextView name,date,total;
     String get_tip,get_amount,get_method,get_date,get_total,tip_value,payment_method_value,payment_amount_value,transaction_date_value;
     Integer total_value;
-
+    Swipe swipe;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,36 +101,31 @@ public class PayEmployee1 extends Activity{
 
         System.out.println("hhhhhhhhhhh:payemployee::"+job_id+"..."+employee_id+".."+employer_id+".."+job_name);
 
-        //getJobDetails();
-       /* Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("MM-dd-yyyy");
-        String strDate = mdformat.format(calendar.getTime());
-        System.out.println("DDDDDDDd:date::"+strDate);
-        date.setText(strDate);
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
 
-
-        logo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onSwipedLeft(MotionEvent event) {
                 Intent i = new Intent(PayEmployee1.this,ProfilePage.class);
-                i.putExtra("userId",employer_id);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
                 startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(PayEmployee1.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
             }
         });
-
-        submit_payment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                get_tip = tip.getText().toString().trim();
-                get_amount = payment_amount.getText().toString().trim();
-                get_method = payment_method.getText().toString().trim();
-                get_date = date.getText().toString().trim();
-                total_value = Integer.parseInt(get_amount)+Integer.parseInt(get_tip);
-                get_total = String.valueOf(total_value);
-                total.setText(get_total);
-                payment();
-            }
-        });*/
     }
 
     public void getJobDetails() {
@@ -269,31 +267,9 @@ public class PayEmployee1 extends Activity{
         }
     }
 
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor) {
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth * 2, // Width
-                srcBitmap.getHeight() + borderWidth * 2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
+    public boolean dispatchTouchEvent(MotionEvent event){
 
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect, paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

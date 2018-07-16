@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
@@ -67,7 +70,7 @@ public class NeedComments extends Activity{
     ImageView profile;
     RelativeLayout rating_lay;
     TextView pn_needcmd;
-
+    Swipe swipe;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,21 +102,32 @@ public class NeedComments extends Activity{
         t3.setText(rating);
         System.out.println("rrrrrrrrrrrr" + rating+"..."+image);
 
-        /*System.out.println("1111111"+value);
-        System.out.println("2222222"+job_id);
-        System.out.println("3333333"+employer_id);
-        System.out.println("0444444"+rating);
-        System.out.println("5555555"+comments);
-        System.out.println("6666666"+type);
-        System.out.println("7777777"+employee_id);
-        System.out.println("8888888"+category1);
-        System.out.println("9999999"+category2);
-        System.out.println("aaaaaaa"+category3);
-        System.out.println("bbbbbbb"+category4);
-        System.out.println("ccccccc"+category5);
-        System.out.println("ddddddd"+employer_id);
-        System.out.println("eeeeeee"+employee_id);
-        System.out.println("fffffff"+rating);*/
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(NeedComments.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(NeedComments.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
 
 
         if(image.equals(""))
@@ -247,5 +261,12 @@ public class NeedComments extends Activity{
 
         // Return the bordered circular bitmap
         return dstBitmap;
+    }
+
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

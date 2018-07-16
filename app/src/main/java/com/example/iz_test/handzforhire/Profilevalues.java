@@ -5,13 +5,11 @@ package com.example.iz_test.handzforhire;
  */
 
 public class Profilevalues {
-
     public static String user_id;
     public static String address;
     public static String city;
     public static String state;
     public static String zipcode;
     public static String email;
-
-
+    public static String usertype="1";
 }

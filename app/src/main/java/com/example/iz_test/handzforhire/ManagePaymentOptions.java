@@ -154,18 +154,7 @@ public class ManagePaymentOptions extends Activity {
 
         swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public void onSwipingLeft(MotionEvent event) {
-                super.onSwipingLeft(event);
-                Intent i = new Intent(ManagePaymentOptions.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-            }
+
 
             @Override
             public boolean onSwipedLeft(MotionEvent event) {
@@ -181,14 +170,6 @@ public class ManagePaymentOptions extends Activity {
                 return super.onSwipedLeft(event);
             }
 
-            @Override
-            public void onSwipingRight(MotionEvent event) {
-                super.onSwipingRight(event);
-                Intent j = new Intent(ManagePaymentOptions.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-
-            }
 
             @Override
             public boolean onSwipedRight(MotionEvent event) {

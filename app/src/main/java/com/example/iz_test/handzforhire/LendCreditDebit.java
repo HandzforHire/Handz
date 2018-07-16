@@ -127,18 +127,6 @@ public class LendCreditDebit extends Activity  {
 
         swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public void onSwipingLeft(MotionEvent event) {
-                super.onSwipingLeft(event);
-                Intent i = new Intent(LendCreditDebit.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-            }
 
             @Override
             public boolean onSwipedLeft(MotionEvent event) {
@@ -154,14 +142,6 @@ public class LendCreditDebit extends Activity  {
                 return super.onSwipedLeft(event);
             }
 
-            @Override
-            public void onSwipingRight(MotionEvent event) {
-                super.onSwipingRight(event);
-                Intent j = new Intent(LendCreditDebit.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-
-            }
 
             @Override
             public boolean onSwipedRight(MotionEvent event) {

@@ -28,34 +28,59 @@
                 android:layout_marginTop="20sp"
                 android:background="#DCDCDC"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:textColor="#DCDCDC"
-        android:layout_marginTop="5sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="5sp"
-        android:gravity="center"
-        android:textAllCaps="true"
-        android:text="you are currently using \n the &quot;need a hand&quot; side. \n would you like to switch? "/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:id="@+id/lend_txt"
+                android:textColor="#DCDCDC"
+                android:layout_marginTop="5sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="5sp"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:text="you are currently using \n the &quot;need a hand&quot; side. \n would you like to switch? "/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/need_txt"
+                android:textSize="22sp"
+                android:textColor="#DCDCDC"
+                android:layout_marginTop="5sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="5sp"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:visibility="gone"
+                android:text="you are currently using \n the &quot;lend a hand&quot; side. \n would you like to switch? "/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="#DCDCDC"/>
 
-    <Button
-        android:id="@+id/lend_hand"
-        android:layout_width="match_parent"
-        android:layout_height="80sp"
-        android:text="lend a hand"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:layout_marginTop="20sp"
-        android:background="#007779"
-        android:textAllCaps="true"/>
-
+            <Button
+               android:id="@+id/lend_hand"
+               android:layout_width="match_parent"
+               android:layout_height="80sp"
+               android:text="lend a hand"
+               android:textSize="40sp"
+               android:textStyle="bold"
+               android:layout_marginTop="20sp"
+               android:background="#007779"
+               android:textAllCaps="true"/>
+            <Button
+                android:id="@+id/need_hand"
+                android:layout_width="match_parent"
+                android:layout_height="80sp"
+                android:text="need a hand"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20sp"
+                android:background="#E8C64B"
+                android:textAllCaps="true"
+                android:visibility="gone"/>
             <LinearLayout
                 android:id="@+id/promo_video"
                 android:layout_width="wrap_content"

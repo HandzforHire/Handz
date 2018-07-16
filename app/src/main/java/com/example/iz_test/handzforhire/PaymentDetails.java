@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -23,7 +27,7 @@ public class PaymentDetails extends Activity {
     EditText amount;
     String id,address,zipcode,state,city,pay_text;
     private String current = "";
-
+    Swipe swipe;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,32 @@ public class PaymentDetails extends Activity {
             }
         });
 
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(PaymentDetails.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(PaymentDetails.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
+
     }
 
     private TextWatcher onTextChangedListener() {
@@ -139,5 +169,11 @@ public class PaymentDetails extends Activity {
                 amount.addTextChangedListener(this);*/
             }
         };
+    }
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

@@ -347,18 +347,6 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
 
         swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public void onSwipingLeft(MotionEvent event) {
-                super.onSwipingLeft(event);
-                Intent i = new Intent(ChangeCurrentEmailAddress.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-            }
 
             @Override
             public boolean onSwipedLeft(MotionEvent event) {
@@ -372,15 +360,6 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
                 finish();
 
                 return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public void onSwipingRight(MotionEvent event) {
-                super.onSwipingRight(event);
-                Intent j = new Intent(ChangeCurrentEmailAddress.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-
             }
 
             @Override

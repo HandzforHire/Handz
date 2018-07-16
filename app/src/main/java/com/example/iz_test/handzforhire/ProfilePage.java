@@ -290,18 +290,6 @@ public class ProfilePage extends Activity {
         });
 
         swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public void onSwipingLeft(MotionEvent event) {
-                super.onSwipingLeft(event);
-                Intent i = new Intent(ProfilePage.this, ProfilePage.class);
-                i.putExtra("userId", id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-            }
 
             @Override
             public boolean onSwipedLeft(MotionEvent event) {
@@ -316,15 +304,6 @@ public class ProfilePage extends Activity {
                 finish();
 
                 return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public void onSwipingRight(MotionEvent event) {
-                super.onSwipingRight(event);
-                Intent j = new Intent(ProfilePage.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-
             }
 
             @Override

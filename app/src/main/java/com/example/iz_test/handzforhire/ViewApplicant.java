@@ -122,19 +122,6 @@ public class ViewApplicant extends Activity {
         swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
             @Override
-            public void onSwipingLeft(MotionEvent event) {
-                super.onSwipingLeft(event);
-                Intent i = new Intent(ViewApplicant.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-            }
-
-            @Override
             public boolean onSwipedLeft(MotionEvent event) {
                 Intent i = new Intent(ViewApplicant.this,ProfilePage.class);
                 i.putExtra("userId", Profilevalues.user_id);
@@ -147,16 +134,6 @@ public class ViewApplicant extends Activity {
 
                 return super.onSwipedLeft(event);
             }
-
-            @Override
-            public void onSwipingRight(MotionEvent event) {
-                super.onSwipingRight(event);
-                Intent j = new Intent(ViewApplicant.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-
-            }
-
             @Override
             public boolean onSwipedRight(MotionEvent event) {
                 Intent j = new Intent(ViewApplicant.this, SwitchingSide.class);

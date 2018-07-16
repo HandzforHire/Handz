@@ -1,19 +1,24 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 
+import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
+import com.github.pwittchen.swipe.library.rx2.Swipe;
 /**
  * Created by IZ-Parimala on 26-06-2018.
  */
 
 public class MapActivity extends AppCompatActivity {
     Fragment fragment = null;
+    Swipe swipe;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +31,33 @@ public class MapActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.container_body, fragment).addToBackStack("map");
             fragmentTransaction.commit();
         }
+
+
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(MapActivity.this,LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(MapActivity.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
 
     }
 }

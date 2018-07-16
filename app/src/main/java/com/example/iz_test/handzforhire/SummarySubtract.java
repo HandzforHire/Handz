@@ -88,6 +88,8 @@ public class SummarySubtract extends Activity{
     String job_category_color = "red";
     String expense,fee,payout;
     Swipe swipe;
+    Dialog dialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,10 +122,10 @@ public class SummarySubtract extends Activity{
         flexible_status = i.getStringExtra("flexible");
         job_expire = i.getStringExtra("job_expire");
 
-        System.out.println("sssssssssssss:subtract::"+id+"..."+name+"..."+category+".."+description+".."+current_location);
-        System.out.println("sssssssssssss:subtract::"+date+"..."+start_time+"..."+expected_hours+".."+amount+".."+type);
-        System.out.println("sssssssssssss:subtract::"+post_address+"..."+latitude+"..."+longitude);
-        System.out.println("sssssssssssss:subtract::"+estimated_amount+"..."+flexible_status+".."+job_expire);
+        dialog = new Dialog(SummarySubtract.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         hourly_value.setText(amount);
         expected_value.setText(expected_hours);
@@ -182,18 +184,6 @@ public class SummarySubtract extends Activity{
 
         swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public void onSwipingLeft(MotionEvent event) {
-                super.onSwipingLeft(event);
-                Intent i = new Intent(SummarySubtract.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-            }
 
             @Override
             public boolean onSwipedLeft(MotionEvent event) {
@@ -210,15 +200,6 @@ public class SummarySubtract extends Activity{
             }
 
             @Override
-            public void onSwipingRight(MotionEvent event) {
-                super.onSwipingRight(event);
-                Intent j = new Intent(SummarySubtract.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-
-            }
-
-            @Override
             public boolean onSwipedRight(MotionEvent event) {
                 Intent j = new Intent(SummarySubtract.this, SwitchingSide.class);
                 startActivity(j);
@@ -230,6 +211,7 @@ public class SummarySubtract extends Activity{
 
     private void registerUser()
     {
+        dialog.show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
@@ -238,11 +220,13 @@ public class SummarySubtract extends Activity{
                         //Toast.makeText(Registrationpage3.this,response,Toast.LENGTH_LONG).show();
                         System.out.println("eeeee:createjob2"+response);
                         onResponserecieved(response,1);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        dialog.dismiss();
                         try {
                             String responseBody = new String(volleyError.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);

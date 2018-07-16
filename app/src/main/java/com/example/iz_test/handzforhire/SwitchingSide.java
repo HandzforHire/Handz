@@ -33,7 +33,8 @@ public class SwitchingSide extends Activity{
     String user_id = "70";
     SessionManager session;
     LinearLayout promo;
-
+    TextView need_txt,lend_txt;
+    Button need_hand;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,22 @@ public class SwitchingSide extends Activity{
         ImageView logo = (ImageView) findViewById(R.id.logo);
         Button lend_hand = (Button) findViewById(R.id.lend_hand);
         final TextView signOut = (TextView) findViewById(R.id.sign_out);
+        lend_txt=(TextView)findViewById(R.id.lend_txt);
+        need_txt=(TextView)findViewById(R.id.need_txt);
+        need_hand=(Button)findViewById(R.id.need_hand);
+
+        if(Profilevalues.usertype.equals("1")){
+            lend_txt.setVisibility(View.VISIBLE);
+            lend_hand.setVisibility(View.VISIBLE);
+            need_txt.setVisibility(View.GONE);
+            need_hand.setVisibility(View.GONE);
+        }
+        if(Profilevalues.usertype.equals("2")){
+            lend_txt.setVisibility(View.GONE);
+            lend_hand.setVisibility(View.GONE);
+            need_txt.setVisibility(View.VISIBLE);
+            need_hand.setVisibility(View.VISIBLE);
+        }
 
         promo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +75,14 @@ public class SwitchingSide extends Activity{
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SwitchingSide.this,MapActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        need_hand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SwitchingSide.this,ProfilePage.class);
                 startActivity(i);
                 finish();
             }
