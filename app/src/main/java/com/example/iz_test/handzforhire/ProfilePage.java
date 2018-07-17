@@ -32,9 +32,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -55,9 +60,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfilePage extends Activity {
+import okio.Timeout;
 
-    TextView profile_name,rating,rating_value,posted_circle,active_circle,history_circle;
+public class ProfilePage extends Activity  {
+
+    TextView profile_name,rating,rating_value;
+    TextView txt_postedjobcnt,txt_activejobscnt,job_historycnt;
     private static final String USERNAME_URL = Constant.SERVER_URL+"get_username";
     private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
     private static final String PAYMENT_URL = Constant.SERVER_URL+"check_if_payment_mode";
@@ -109,9 +117,9 @@ public class ProfilePage extends Activity {
         profile = (ImageView)findViewById(R.id.profile_image);
         menu = (ImageView)findViewById(R.id.menu);
         rating = (TextView) findViewById(R.id.text2);
-        posted_circle = (TextView) findViewById(R.id.circle1);
-        active_circle = (TextView) findViewById(R.id.circle2);
-        history_circle = (TextView) findViewById(R.id.circle3);
+        txt_postedjobcnt = (TextView) findViewById(R.id.txt_postedjobcnt);
+        txt_activejobscnt = (TextView) findViewById(R.id.txt_activejobscnt);
+        job_historycnt = (TextView) findViewById(R.id.job_historycnt);
 
 
         session = new SessionManager(getApplicationContext());
@@ -413,64 +421,72 @@ public class ProfilePage extends Activity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        try {
-                            dialog.dismiss();
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("eeeeeeeeeeeeeeeror:"+jsonObject);
-                            String status = jsonObject.getString("msg");
-                            if(!status.equals(""))
-                            {
-                                // custom dialog
-                                final Dialog dialog = new Dialog(ProfilePage.this);
-                                dialog.setContentView(R.layout.custom_dialog);
+                        dialog.dismiss();
 
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText(status);
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
 
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                return;
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                String status = jsonObject.getString("msg");
+                                if (!status.equals("")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(ProfilePage.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    return;
+                                } else {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(ProfilePage.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText("Registration Failed");
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    return;
+                                }
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                            } catch (UnsupportedEncodingException error1) {
+
                             }
-                            else
-                            {
-                                // custom dialog
-                                final Dialog dialog = new Dialog(ProfilePage.this);
-                                dialog.setContentView(R.layout.custom_dialog);
-
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText("Registration Failed");
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                return;
-                            }
-                        } catch ( JSONException e ) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1){
-
                         }
                         //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
                     }
@@ -515,15 +531,24 @@ public class ProfilePage extends Activity {
                 rating_value.setText(employer_rating);
                 if(!posted_notification.equals("0"))
                 {
-                    posted_circle.setText(posted_notification);
+                    txt_postedjobcnt.setText(posted_notification);
+                    txt_postedjobcnt.setVisibility(View.VISIBLE);
+                }else{
+                    txt_postedjobcnt.setVisibility(View.INVISIBLE);
                 }
                 if(!active_notification.equals("0"))
                 {
-                    active_circle.setText(active_notification);
+                    txt_activejobscnt.setText(active_notification);
+                    txt_activejobscnt.setVisibility(View.VISIBLE);
+                 }else{
+                    txt_activejobscnt.setVisibility(View.INVISIBLE);
                 }
                 if(!jobhistory_notification.equals("0"))
                 {
-                    history_circle.setText(jobhistory_notification);
+                    job_historycnt.setText(jobhistory_notification);
+                    job_historycnt.setVisibility(View.VISIBLE);
+                }else{
+                    job_historycnt.setVisibility(View.INVISIBLE);
                 }
                 if(!profile_image.equals("")&&!profilename.equals("null"))
                 {
@@ -611,15 +636,25 @@ public class ProfilePage extends Activity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
-                        try {
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("eeeeeeeeeeeeeeeror:"+jsonObject);
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("eeeeeeeeeeeeeeeror:" + jsonObject);
 
-                        } catch ( JSONException e ) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1){
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                            } catch (UnsupportedEncodingException error1) {
 
+                            }
                         }
                         //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
                     }

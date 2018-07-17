@@ -87,7 +87,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="10sp"
                             android:layout_toLeftOf="@+id/text2"
-                            android:background="@drawable/rating_btn"/>
+                            android:background="@drawable/starnew"/>
 
                         <TextView
                             android:id="@+id/text3"

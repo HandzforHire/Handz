@@ -193,6 +193,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
+
                         try {
                             String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);

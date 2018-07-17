@@ -61,7 +61,7 @@
                 android:layout_width="40sp"
                 android:layout_height="40sp"
                 android:layout_marginRight="5sp"
-                android:src="@drawable/rating_btn" />
+                android:src="@drawable/starnew" />
 
             <TextView
                 android:id="@+id/txt1"

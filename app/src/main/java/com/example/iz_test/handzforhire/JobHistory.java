@@ -96,7 +96,6 @@ public class JobHistory extends Activity {
             city = i.getStringExtra("city");
             state = i.getStringExtra("state");
             zipcode = i.getStringExtra("zipcode");
-            System.out.println("iiiiiiiiiiiiiiiiiiiii:"+user_id);
 
             activeJobs();
 

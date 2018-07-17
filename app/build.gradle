@@ -62,6 +62,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.4.0'
 
     compile 'com.github.pwittchen:swipe-rx2:0.3.0'
+
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
