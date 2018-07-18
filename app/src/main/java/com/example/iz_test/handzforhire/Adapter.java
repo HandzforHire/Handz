@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,7 +27,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
-public class Adapter extends BaseAdapter {
+public class Adapter extends BaseAdapter implements Filterable {
 
     // Declare Variables
     Context mContext;
@@ -54,6 +56,11 @@ public class Adapter extends BaseAdapter {
         inflater = LayoutInflater.from(mContext);
         this.arraylist = new ArrayList<WorldPopulation>();
         this.arraylist.addAll(worldpopulationlist);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return null;
     }
 
     public class ViewHolder {
@@ -240,7 +247,7 @@ public class Adapter extends BaseAdapter {
     }
 
     // Filter Class
-    public void filter(String charText) {
+   public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
         worldpopulationlist.clear();
         if (charText.length() == 0) {
@@ -250,7 +257,7 @@ public class Adapter extends BaseAdapter {
         {
             for (WorldPopulation wp : arraylist)
             {
-                if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText))
+                if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText)||wp.getTransaction_date().toLowerCase(Locale.getDefault()).contains(charText)||wp.getProfilename().toLowerCase(Locale.getDefault()).contains(charText)||wp.getJob_category().toLowerCase(Locale.getDefault()).contains(charText)||wp.getUsername().toLowerCase(Locale.getDefault()).contains(charText)||wp.getDescription().toLowerCase(Locale.getDefault()).contains(charText))
                 {
                     worldpopulationlist.add(wp);
                 }
@@ -258,4 +265,51 @@ public class Adapter extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
+
+
+
+
+    /*private class HistoryFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+// We implement here the filter logic
+            if (constraint == null || constraint.length() == 0) {
+// No filter implemented we return all the list
+                results.values = worldpopulationlist;
+                results.count = worldpopulationlist.size();
+            }
+            else {
+// We perform filtering operation
+                List nPlanetList = new ArrayList();
+
+                for (int i=0;i<worldpopulationlist.size();i++) {
+                    WorldPopulation wp=worldpopulationlist.get(i);
+                    if (wp.getT.toUpperCase().startsWith(constraint.toString().toUpperCase()))
+                        nPlanetList.add(p);
+                }
+
+                results.values = nPlanetList;
+                results.count = nPlanetList.size();
+
+            }
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint,
+                                      FilterResults results) {
+
+// Now we have to inform the adapter about the new list filtered
+            if (results.count == 0)
+                notifyDataSetInvalidated();
+            else {
+                planetList = (List) results.values;
+                notifyDataSetChanged();
+            }
+        }
+    }
+*/
 }

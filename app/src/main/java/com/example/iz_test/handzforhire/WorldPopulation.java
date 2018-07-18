@@ -9,6 +9,9 @@ public class WorldPopulation {
     private String employerId;
     private String employeeId;
     private String channelid;
+    private String transaction_date;
+    private String job_category;
+    private String description;
     private String userid;
     private String rating;
     private String rating_id;
@@ -18,7 +21,7 @@ public class WorldPopulation {
     private String cat4;
     private String cat5;
 
-    public WorldPopulation(String jobname, String image, String profilename, String username, String jobId, String employerId, String employeeId, String channelid,String userid,String ratingId,String ratingValue,String category1,String category2,String category3,String category4,String category5) {
+    public WorldPopulation(String jobname, String image, String profilename, String username, String jobId, String employerId, String employeeId, String channelid,String userid,String ratingId,String ratingValue,String category1,String category2,String category3,String category4,String category5,String transaction_date,String job_category,String description) {
         this.jobname = jobname;
         this.image = image;
         this.profilename = profilename;
@@ -27,6 +30,9 @@ public class WorldPopulation {
         this.employerId = employerId;
         this.employeeId = employeeId;
         this.channelid = channelid;
+        this.transaction_date = transaction_date;
+        this.job_category=job_category;
+        this.description=description;
         this.userid = userid;
         this.rating_id = ratingId;
         this.rating = ratingValue;
@@ -97,5 +103,15 @@ public class WorldPopulation {
         return this.cat5;
     }
 
+    public String getTransaction_date() {
+        return transaction_date;
+    }
 
+    public String getJob_category() {
+        return job_category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

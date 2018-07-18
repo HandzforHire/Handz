@@ -29,16 +29,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class LendHistoryAdapter extends BaseAdapter{
 
         private Activity activity;
         private ArrayList<HashMap<String, String>> data;
+        private ArrayList<HashMap<String, String>> tempdata=new ArrayList<HashMap<String, String>>();
         private static LayoutInflater inflater = null;
     String jobId;
         public LendHistoryAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
             activity = a;
             data = d;
+            tempdata=d;
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -206,5 +209,24 @@ public class LendHistoryAdapter extends BaseAdapter{
             return vi;
         }
 
-
+    // Filter Class
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        data.clear();
+        if (charText.length() == 0) {
+            data.addAll(tempdata);
+        }
+        else
+        {
+            for (HashMap<String,String> map : tempdata)
+            {
+                if (map.get("job_name").toLowerCase(Locale.getDefault()).contains(charText)||map.get("transaction_date").toLowerCase(Locale.getDefault()).contains(charText)||map.get("profile_name").toLowerCase(Locale.getDefault()).contains(charText)||map.get("job_category").toLowerCase(Locale.getDefault()).contains(charText)||map.get("username").toLowerCase(Locale.getDefault()).contains(charText)||map.get("description").toLowerCase(Locale.getDefault()).contains(charText))
+                {
+                    data.add(map);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
+
+}

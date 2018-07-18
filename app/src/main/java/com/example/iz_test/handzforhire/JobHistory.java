@@ -106,6 +106,7 @@ public class JobHistory extends Activity {
                     // TODO Auto-generated method stub
                     String text = editsearch.getText().toString().toLowerCase(Locale.getDefault());
                     adapter.filter(text);
+                    //JobHistory.this.adapter.getFilter().filter(cs);
                 }
 
                 @Override
@@ -265,31 +266,24 @@ public class JobHistory extends Activity {
                 JSONObject jResult = new JSONObject(jsonobject);
                 status = jResult.getString("status");
                 jobList = jResult.getString("job_lists");
-                System.out.println("jjjjjjjjjjjjjjjob:::list:::" + jobList);
+
                 if(status.equals("success"))
                 {
                     JSONArray array = new JSONArray(jobList);
                     for(int n = 0; n < array.length(); n++) {
                         JSONObject object = (JSONObject) array.get(n);
                         final String job_name = object.getString("job_name");
-                        System.out.println("ressss:job_name::" + job_name);
                         final String image = object.getString("profile_image");
-                        System.out.println("ressss:profile_image:::"+image);
                         final String profilename = object.getString("profile_name");
-                        System.out.println("ressss:profilename:::"+profilename);
                         final String username = object.getString("username");
-                        System.out.println("ressss:username:::"+username);
                         final String jobId = object.getString("job_id");
-                        System.out.println("ressss:jobId:::"+jobId);
                         final String employerId = object.getString("employer_id");
-                        System.out.println("ressss:employerId:::"+employerId);
                         final String employeeId = object.getString("employee_id");
-                        System.out.println("ressss:employeeId:::"+employeeId);
                         final String channelid=object.getString("channel");
-                        System.out.println("resss:channel_id::"+channelid);
-
+                        final String tran_date=object.getString("transaction_date");
+                        final String job_category=object.getString("job_category");
+                        final String description=object.getString("description");
                         String rating=object.getString("rating");
-                        System.out.println("jjjjjjjjjjjjjjob:::success:::::"+rating);
 
                         if(rating.equals("null"))
                         {
@@ -311,29 +305,11 @@ public class JobHistory extends Activity {
                             category3 = Result.getString("category3");
                             category4 = Result.getString("category4");
                             category5 = Result.getString("category5");
-                            System.out.println("jjjjjjjjjjjjjjob:::success::rating_value:::"+rating_value+"..."+rating_id);
-                            System.out.println("jjjjjjjjjjjjjjob:::success::category::"+category1+"..."+category2+",,"+category3+",,"+category4+",,"+category5);
                         }
 
-                        WorldPopulation wp = new WorldPopulation(job_name,image,profilename,username,jobId,employerId,employeeId,channelid,user_id,rating_id,rating_value,category1,category2,category3,category4,category5);
+                        WorldPopulation wp = new WorldPopulation(job_name,image,profilename,username,jobId,employerId,employeeId,channelid,user_id,rating_id,rating_value,category1,category2,category3,category4,category5,tran_date,job_category,description);
                         // Binds all strings into an array
                         arraylist.add(wp);
-                        System.out.println("aaaaaaaaarraylist:::" + arraylist);
-                        System.out.println("wwwwwwwwwwwwwwwwppp:::" + wp);
-
-
-                       /* HashMap<String, String> map = new HashMap<String, String>();
-                        map.put("name",job_name);
-                        map.put("image",image);
-                        map.put("profile",profilename);
-                        map.put("user",username);
-                        map.put("jobId",jobId);
-                        map.put("employer",employerId);
-                        map.put("employee",employeeId);
-                        map.put("channel",channelid);
-                        map.put("user_id",user_id);
-                        job_list.add(map);
-                        System.out.println("job_list:::" + job_list);*/
 
                     }
 

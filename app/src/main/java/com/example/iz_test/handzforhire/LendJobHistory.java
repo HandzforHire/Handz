@@ -12,12 +12,15 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -41,6 +44,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class LendJobHistory extends Activity{
@@ -54,6 +58,7 @@ public class LendJobHistory extends Activity{
     String value = "HandzForHire@~";
     String address,city,state,zipcode,user_id,job_id;
     TextView profile_name;
+    EditText ed_search;
     Button pending_job,active_job;
     ListView list;
     ProgressDialog progress_dialog;
@@ -62,6 +67,7 @@ public class LendJobHistory extends Activity{
     Dialog dialog;
     String rating_value,rating_id,category1,category2,category3,category4,category5;
     Swipe swipe;
+    LendHistoryAdapter arrayAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +87,7 @@ public class LendJobHistory extends Activity{
         active_job = (Button)findViewById(R.id.btn2);
         logo = (ImageView)findViewById(R.id.logo);
         list = (ListView) findViewById(R.id.listview);
+        ed_search=(EditText)findViewById(R.id.ed_search);
 
         Intent i = getIntent();
         user_id = i.getStringExtra("userId");
@@ -88,9 +95,31 @@ public class LendJobHistory extends Activity{
         city = i.getStringExtra("city");
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:"+user_id);
 
         activeJobs();
+
+        ed_search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
+                String text = ed_search.getText().toString().toLowerCase(Locale.getDefault());
+                arrayAdapter.filter(text);
+                //JobHistory.this.adapter.getFilter().filter(cs);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+                // TODO Auto-generated method stub
+            }
+        });
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,22 +273,18 @@ public class LendJobHistory extends Activity{
                 for(int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
                     final String job_name = object.getString("job_name");
-                    System.out.println("ressss:job_name::" + job_name);
                     final String image = object.getString("profile_image");
-                    System.out.println("ressss:profile_image:::"+image);
                     final String profilename = object.getString("profile_name");
                     final String username = object.getString("username");
                     final String payment = object.getString("job_payment_amount");
                     final String jobId = object.getString("job_id");
-                    System.out.println("ressss:jobId:::"+jobId);
                     final String employerId = object.getString("employer_id");
-                    System.out.println("ressss:employerId:::"+employerId);
                     final String employeeId = object.getString("employee_id");
-                    System.out.println("ressss:employeeId:::"+employeeId);
                     final String channelid=object.getString("channel");
-                    System.out.println("resss:channel_id::"+channelid);
                     String rating=object.getString("rating");
-                    System.out.println("jjjjjjjjjjjjjjob:::success:::::"+rating);
+                    final String tran_date=object.getString("transaction_date");
+                    final String job_category=object.getString("job_category");
+                    final String description=object.getString("description");
 
                     if(rating.equals("null"))
                     {
@@ -281,9 +306,7 @@ public class LendJobHistory extends Activity{
                         category3 = Result.getString("category3");
                         category4 = Result.getString("category4");
                         category5 = Result.getString("category5");
-                        System.out.println("jjjjjjjjjjjjjjob:::success::rating_value:::"+rating_value+"..."+rating_id);
-                        System.out.println("jjjjjjjjjjjjjjob:::success::category::"+category1+"..."+category2+",,"+category3+",,"+category4+",,"+category5);
-                    }
+                         }
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("name",job_name);
                     map.put("image",image);
@@ -302,9 +325,12 @@ public class LendJobHistory extends Activity{
                     map.put("category3",category3);
                     map.put("category4",category4);
                     map.put("category5",category5);
+                    map.put("transaction_date",tran_date);
+                    map.put("job_category",job_category);
+                    map.put("description",description);
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
-                    LendHistoryAdapter arrayAdapter = new LendHistoryAdapter(this, job_list) {
+                     arrayAdapter = new LendHistoryAdapter(this, job_list) {
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent) {
                             // Get the current item from ListView
