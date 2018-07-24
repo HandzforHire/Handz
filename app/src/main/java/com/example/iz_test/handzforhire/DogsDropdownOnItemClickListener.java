@@ -33,7 +33,7 @@ public class DogsDropdownOnItemClickListener implements OnItemClickListener {
         CreateJob.popupWindowDogs.dismiss();
 
 
-        CreateJob.SetCategory(arg2);
+       // CreateJob.SetCategory(arg2);
     }
 
 }

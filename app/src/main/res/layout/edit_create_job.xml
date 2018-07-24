@@ -44,24 +44,15 @@
                             android:background="#000000"/>
 
                         <LinearLayout
-                            android:id="@+id/rela1"
+                            android:id="@+id/linear"
                             android:layout_width="match_parent"
                             android:layout_height="40sp"
                             android:layout_below="@+id/descrip"
                             android:background="#3B3B3B"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:layout_width="20sp"
-                                android:layout_height="20sp"
-                                android:id="@+id/img_paint"
-                                android:layout_marginLeft="10sp"
-                                android:visibility="gone"
-                                android:layout_gravity="center"
-                                android:src="@drawable/box_1" />
-
                             <TextView
-                                android:id="@+id/textview"
+                                android:id="@+id/cat_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Select Job Category"
@@ -75,24 +66,10 @@
                             <ImageView
                                 android:layout_width="20sp"
                                 android:layout_height="20sp"
-                                android:id="@+id/img_arrow"
                                 android:layout_marginLeft="10sp"
                                 android:visibility="visible"
                                 android:layout_gravity="center"
                                 android:src="@drawable/arrow_right" />
-
-                            <Spinner
-                                android:id="@+id/listview"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:textSize="16sp"
-                                android:visibility="gone"
-                                android:layout_centerVertical="true"
-                                android:background="@android:color/transparent" />
-
-                            <ListView android:id="@+id/list_cat"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
 
                         </LinearLayout>
 
@@ -391,6 +368,7 @@
                                 android:layout_centerVertical="true"
                                 android:src="@drawable/arrow_right" />
 
+
                             <RelativeLayout
                                 android:id="@+id/relay1"
                                 android:layout_width="wrap_content"
@@ -405,17 +383,16 @@
                                     android:layout_height="wrap_content"
                                     android:textSize="16sp"
                                     android:text="$"
-                                    android:gravity="center"
-                                    android:textColor="#DCDCDC"
-                                    android:layout_gravity="center"/>
+                                    android:textColor="#DCDCDC" />
 
                                 <TextView
                                     android:id="@+id/amount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="16sp"
-                                    android:layout_marginLeft="5sp"
                                     android:layout_toRightOf="@+id/symbol"
+                                    android:layout_marginLeft="5sp"
+                                    android:layout_gravity="center"
                                     android:textColor="#DCDCDC" />
 
                                 <TextView

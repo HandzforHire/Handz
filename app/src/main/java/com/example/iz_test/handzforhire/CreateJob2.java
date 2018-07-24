@@ -58,11 +58,12 @@ public class CreateJob2 extends AppCompatActivity {
     double lat,lon;
     static String latitude="0.0";
     static String longitude="0.0";
-    String estimated_amount,flexible_status;
+    String estimated_amount,flexible_status,job_category_color,sub_category,duration;
     String current_location;
     static String get_lat="0.0";
     static String get_lon="0.0";
     String usertype = "employer";
+    String edit_job = "no";
     Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +72,10 @@ public class CreateJob2 extends AppCompatActivity {
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
-        name = i.getStringExtra("name");
-        category = i.getStringExtra("category");
-        description = i.getStringExtra("description");
-        date = i.getStringExtra("date");
+        name = i.getStringExtra("job_name");
+        category = i.getStringExtra("job_category");
+        description = i.getStringExtra("job_decription");
+        date = i.getStringExtra("job_date");
         start_time = i.getStringExtra("start_time");
         expected_hours = i.getStringExtra("expected_hours");
         amount = i.getStringExtra("payment_amount");
@@ -82,7 +83,11 @@ public class CreateJob2 extends AppCompatActivity {
         estimated_amount = i.getStringExtra("estimated_amount");
         flexible_status = i.getStringExtra("flexible_status");
         job_expire = i.getStringExtra("job_expire");
+        job_category_color = i.getStringExtra("job_category_color");
+        sub_category = i.getStringExtra("sub_category");
+        duration = i.getStringExtra("duration");
         System.out.println("777777777:" + id+".."+name+".."+category+".."+date+".."+start_time+".."+expected_hours+".."+amount+".."+type);
+        System.out.println("777777777:" +".."+job_category_color+".."+sub_category);
 
         text = (TextView)findViewById(R.id.bt1);
         add = (EditText)findViewById(R.id.address);
@@ -100,6 +105,33 @@ public class CreateJob2 extends AppCompatActivity {
         logo = (ImageView)findViewById(R.id.logo);
 
         text.setText(name);
+
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(CreateJob2.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(CreateJob2.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
 
         pros.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +164,7 @@ public class CreateJob2 extends AppCompatActivity {
             }
         });
 
-       address_layout.setOnClickListener(new View.OnClickListener() {
+        address_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -254,41 +286,62 @@ public class CreateJob2 extends AppCompatActivity {
                 }
             }
         });
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-
+      /*  add.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(CreateJob2.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(CreateJob2.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+                if (keyCode == KeyEvent.KEYCODE_DEL) {
+                    if (cit.getText().toString().equals("") && stat.getText().toString().equals("") && zip.getText().toString().equals("")) {
+                        linear.setVisibility(View.VISIBLE);
+                    }
+                }
+                return false;
             }
         });
+        cit.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+                if (keyCode == KeyEvent.KEYCODE_DEL) {
+                    if (add.getText().toString().equals("") && stat.getText().toString().equals("") && zip.getText().toString().equals("")) {
+                        linear.setVisibility(View.VISIBLE);
+                    }
+                }
+                return false;
+            }
+        });
+        stat.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+                if (keyCode == KeyEvent.KEYCODE_DEL) {
+                    if (add.getText().toString().equals("") && cit.getText().toString().equals("") && zip.getText().toString().equals("")) {
+                        linear.setVisibility(View.VISIBLE);
+                    }
+                }
+                return false;
+            }
+        });
+        zip.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+                if (keyCode == KeyEvent.KEYCODE_DEL) {
+                    if (add.getText().toString().equals("") && cit.getText().toString().equals("") && stat.getText().toString().equals("")) {
+                        linear.setVisibility(View.VISIBLE);
+                    }
+                }
+                return false;
+            }
+        });*/
+
     }
 
     public void validate() {
         j_address = add.getText().toString().trim();
         j_city = cit.getText().toString().trim();
         j_state = stat.getText().toString().trim();
-        j_zipcode = zip.getText().toString().trim(); 
+        j_zipcode = zip.getText().toString().trim();
 
         if(check2.isChecked()) {
             post_address = "yes";
@@ -316,7 +369,7 @@ public class CreateJob2 extends AppCompatActivity {
                 longitude = String.valueOf(lon);
                 System.out.println("kkkkkkkkkkkkkk:latitude::check::"+latitude);
                 System.out.println("kkkkkkkkkkkkkk:longitude:check::"+longitude);
-               // Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
             } else {
                 locationTrack.showSettingsAlert();
             }
@@ -330,8 +383,8 @@ public class CreateJob2 extends AppCompatActivity {
             getGeoCoordsFromAddress(this,address);
             System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lat);
             System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lon);
-                latitude = get_lat;
-                longitude = get_lon;
+            latitude = get_lat;
+            longitude = get_lon;
             System.out.println("kkkkkkkkkkkkkk:latitude:"+latitude);
             System.out.println("kkkkkkkkkkkkkk:longitude:"+longitude);
 
@@ -389,19 +442,23 @@ public class CreateJob2 extends AppCompatActivity {
                 i.putExtra("userId", id);
                 i.putExtra("job_name",name);
                 i.putExtra("job_category", category);
+                i.putExtra("job_category_color", job_category_color);
+                i.putExtra("sub_category", sub_category);
                 i.putExtra("job_decription", description);
                 i.putExtra("job_date", date);
-                i.putExtra("job_start_date", start_time);
+                i.putExtra("start_time", start_time);
                 i.putExtra("expected_hours",expected_hours);
                 i.putExtra("payment_amount", amount);
                 i.putExtra("payment_type", type);
-                i.putExtra("location", current_location);
+                i.putExtra("current_location", current_location);
                 i.putExtra("post_address", post_address);
                 i.putExtra("latitude",latitude);
                 i.putExtra("longitude", longitude);
-                i.putExtra("estimated_payment",estimated_amount);
-                i.putExtra("flexible", flexible_status);
+                i.putExtra("estimated_amount",estimated_amount);
+                i.putExtra("flexible_status", flexible_status);
                 i.putExtra("job_expire", job_expire);
+                i.putExtra("edit_job", edit_job);
+                i.putExtra("duration", duration);
                 startActivity(i);
             }
         }
@@ -436,10 +493,11 @@ public class CreateJob2 extends AppCompatActivity {
 
     }
 
+
+    @Override
     public boolean dispatchTouchEvent(MotionEvent event){
 
         swipe.dispatchTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
-
 }

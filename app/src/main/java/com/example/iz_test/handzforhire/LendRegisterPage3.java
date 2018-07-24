@@ -50,13 +50,13 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
         private static final String REGISTER_URL = Constant.SERVER_URL+"user_register";
         String get_email,get_address,get_city,get_state,get_zipcode,user_id;
 
-        public static String USERNAME = "username";
         public static String PASS = "password";
         public static String EMAIL = "email";
         public static String FNAME = "firstname";
         public static String LNAME = "lastname";
         public static String ADDRESS = "address";
         public static String CITY = "city";
+        public static String MERCHANTID = "merchantID";
         public static String STATE = "state";
         public static String ZIPCODE = "zipcode";
         public static String USERTYPE = "usertype";
@@ -80,7 +80,6 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
             next = (Button) findViewById(R.id.next1);
             check1 = (CheckBox) findViewById(R.id.checkBox1);
             check2 = (CheckBox) findViewById(R.id.checkBox2);
-            u_name = (EditText) findViewById(R.id.username);
             pass = (EditText) findViewById(R.id.password);
             re_pass = (EditText) findViewById(R.id.retype_password);
             layout = (RelativeLayout) findViewById(R.id.layout);
@@ -176,33 +175,9 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
                 @Override
                 public void onClick(View view) {
 
-                    user_name = u_name.getText().toString().trim();
                     password = pass.getText().toString().trim();
                     retype_password = re_pass.getText().toString().trim();
 
-                    if (TextUtils.isEmpty(user_name)) {
-                        // custom dialog
-                        final Dialog dialog = new Dialog(LendRegisterPage3.this);
-                        dialog.setContentView(R.layout.custom_dialog);
-
-                        // set the custom dialog components - text, image and button
-                        TextView text = (TextView) dialog.findViewById(R.id.text);
-                        text.setText("Must Fill In \"User Name\" Box");
-                        Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                        // if button is clicked, close the custom dialog
-                        dialogButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        dialog.show();
-                        Window window = dialog.getWindow();
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        return;
-                    }
                     if (TextUtils.isEmpty(password)) {
                         // custom dialog
                         final Dialog dialog = new Dialog(LendRegisterPage3.this);
@@ -426,7 +401,6 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
                     Map<String,String> params = new HashMap<String, String>();
 
                     params.put(XAPP_KEY,value);
-                    params.put(USERNAME,user_name);
                     params.put(PASS,password);
                     params.put(EMAIL, email);
                     params.put(FNAME,first);
@@ -437,12 +411,13 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
                     params.put(ZIPCODE,zip);
                     params.put(USERTYPE,usertype);
                     params.put(DEVICETOKEN,deviceId);
+                    params.put(MERCHANTID,"123");
                     return params;
                 }
 
             };
 
-            System.out.println("values::"+value+".."+user_name+".."+password+".."+email+".."+first+".."+last+".."+address+".."+city+".."+state+".."+zip+".."+usertype+".."+deviceId);
+            System.out.println("values::"+value+".."+password+".."+email+".."+first+".."+last+".."+address+".."+city+".."+state+".."+zip+".."+usertype+".."+deviceId);
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

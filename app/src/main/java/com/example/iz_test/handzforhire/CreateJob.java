@@ -22,19 +22,21 @@ import android.text.TextWatcher;
 
 import android.view.LayoutInflater;
 
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+
+
 import android.view.inputmethod.InputMethodManager;
 
-import android.widget.AdapterView;
+
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -56,6 +58,7 @@ import com.bigkoo.pickerview.MyOptionsPickerView;
 import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
 import com.github.pwittchen.swipe.library.rx2.Swipe;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +71,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -78,7 +82,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
     String id,address,zipcode,state,city,name,description,date,start_time,end_time,amount,type,st_time,en_time;
     private static final String URL = Constant.SERVER_URL+"job_category_lists";
     Button next;
-    static String category="0",categoryId="0";
+    String categoryId,job_category_color,sub_category,header,child;
     EditText job_name,job_description;
     static TextView date_text;
     TextView start_time_text;
@@ -88,26 +92,28 @@ public class CreateJob extends Activity implements View.OnClickListener {
     TextView amount_text,hour;
     public static TextView textview;
     public static ImageView img_paint;
-    private int mYear, mMonth, mDay, mHour, mMinute;
+    private int mHour, mMinute;
     ImageView logo,arrow,img_arrow;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     static ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
     String job_category_name,job_id,payment_type,pay_amount,flexible_status,job_estimated,paytext;
+    ProgressDialog progress_dialog;
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     Integer cat;
     CheckBox checkBox;
-    private String current = "";
+
     EditText payamount;
     Activity activity;
-    private static final String BEGIN_WITH_DOLLAR = "$###,###.##";
+
     CustomJobListAdapter adapter;
     public static PopupWindow popupWindowDogs;
-    public static Button buttonShowDropDown;
+
     MyOptionsPickerView threePicker;
     public static String date_format;
-    Dialog dialog;
+    TextView select_category;
+    Swipe swipe;
     Integer[] imageId = {
             R.drawable.box_17,
             R.drawable.box_10,
@@ -131,8 +137,13 @@ public class CreateJob extends Activity implements View.OnClickListener {
             R.drawable.box_4,
             R.drawable.box_6,
     };
-    Swipe swipe;
 
+    ExpandableListAdapter listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
+
+    Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +158,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         layout = (LinearLayout)findViewById(R.id.relay);
+        select_category = (TextView)findViewById(R.id.cat_name);
         next = (Button) findViewById(R.id.next);
         job_name = (EditText) findViewById(R.id.descrip);
         job_description = (EditText) findViewById(R.id.detail);
@@ -178,8 +190,31 @@ public class CreateJob extends Activity implements View.OnClickListener {
         zipcode = i.getStringExtra("zipcode");
         System.out.println("iiiiiiiiiiiiiiiiiiiii:" + id);
 
-        //String currentDate = DateFormat.getDateInstance().format(new Date());
-        //date_text.setText(dateInString);
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(CreateJob.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(CreateJob.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
 
         String pattern1 = "hh:mm a";
         String timeFormat = new SimpleDateFormat(pattern1).format(new Date());
@@ -225,7 +260,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
         time_layout.setOnClickListener(this);
         estimate_layout.setOnClickListener(this);
 
-        popupWindowDogs = popupWindowDogs();
+        //popupWindowDogs = popupWindowDogs();
         textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -349,40 +384,242 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
                 dialog.show();
                 Window window = dialog.getWindow();
-                dialog.getWindow().
 
-                        setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 return;
 
             }
         });
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
 
+
+
+        select_category.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(CreateJob.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
+            public void onClick(View v) {
 
-                return super.onSwipedLeft(event);
-            }
 
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(CreateJob.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
+                final Dialog dialog = new Dialog(CreateJob.this);
+                dialog.setContentView(R.layout.category_popup);
+
+                expListView = (ExpandableListView) dialog.findViewById(R.id.lvExp);
+
+                // preparing list data
+                prepareListData();
+
+                listAdapter = new ExpandableListAdapter(CreateJob.this, listDataHeader, listDataChild);
+
+                // setting list adapter
+                expListView.setAdapter(listAdapter);
+
+                // Listview Group click listener
+                expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+                    @Override
+                    public boolean onGroupClick(ExpandableListView parent, View v,
+                                                int groupPosition, long id) {
+                        // Toast.makeText(getApplicationContext(),
+                        // "Group Clicked " + listDataHeader.get(groupPosition),
+                        // Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                });
+
+                // Listview Group expanded listener
+                expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+                    @Override
+                    public void onGroupExpand(int groupPosition) {
+                        Toast.makeText(getApplicationContext(),
+                                listDataHeader.get(groupPosition) + " Expanded",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // Listview Group collasped listener
+                expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+                    @Override
+                    public void onGroupCollapse(int groupPosition) {
+                        Toast.makeText(getApplicationContext(),
+                                listDataHeader.get(groupPosition) + " Collapsed",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                // Listview on child click listener
+                expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+                    @Override
+                    public boolean onChildClick(ExpandableListView parent, View v,
+                                                int groupPosition, int childPosition, long id) {
+                        // TODO Auto-generated method stub
+                        Toast.makeText(
+                                getApplicationContext(),
+                                listDataHeader.get(groupPosition)
+                                        + " : "
+                                        + listDataChild.get(
+                                        listDataHeader.get(groupPosition)).get(
+                                        childPosition), Toast.LENGTH_SHORT)
+                                .show();
+                        int pos = groupPosition+1;
+                        categoryId = String.valueOf(pos);
+                        header =  listDataHeader.get(groupPosition);
+                        sub_category =  listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
+                        System.out.println("ccccccccc:"+header+",,"+sub_category+",,"+pos+"id:"+categoryId);
+                        select_category.setText(header+" - "+sub_category);
+                        dialog.dismiss();
+                        return false;
+                    }
+                });
+
+                dialog.show();
+                Window window = dialog.getWindow();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                return;
+
             }
         });
+
+    }
+
+    public void prepareListData() {
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+
+        // Adding child data
+        listDataHeader.add("CARE GIVING");
+        listDataHeader.add("COACHING");
+        listDataHeader.add("HOLIDAYS");
+        listDataHeader.add("INSIDE THE HOME");
+        listDataHeader.add("OUTSIDE THE HOME");
+        listDataHeader.add("PERSONAL SERVICES");
+        listDataHeader.add("PETCARE");
+        listDataHeader.add("TUTORING");
+
+        // Adding child data
+        List<String> care = new ArrayList<String>();
+        care.add("Babysitting");
+        care.add("Elder Care");
+        care.add("Other");
+        care.add("Respite Care");
+
+        List<String> coach = new ArrayList<String>();
+        coach.add("Baseball");
+        coach.add("Basketball");
+        coach.add("Dance");
+        coach.add("Field Hockey");
+        coach.add("Football");
+        coach.add("Gymnastics");
+        coach.add("Ice Hockey");
+        coach.add("Lacrosse");
+        coach.add("Life Coach/Mentor");
+        coach.add("Other");
+        coach.add("Running");
+        coach.add("Soccer");
+        coach.add("Surfing");
+        coach.add("Swimming");
+        coach.add("Tennis");
+        coach.add("Track & Field");
+        coach.add("Volleyball");
+        coach.add("Wrestling");
+
+
+        List<String> holiday = new ArrayList<String>();
+        holiday.add("Decorations (Setup or Cleanup)");
+        holiday.add("Gift Wrapping");
+        holiday.add("Holiday Baking");
+        holiday.add("Holiday Shopping");
+        holiday.add("Light Hanging");
+        holiday.add("Other");
+        holiday.add("Party Help (Setup, Cleanup, Serving)");
+        holiday.add("Tree Delivery");
+        holiday.add("Tree (Setup or Cleanup)");
+
+        List<String> inside = new ArrayList<String>();
+        inside.add("Box Packing / Unpacking");
+        inside.add("Cleaning");
+        inside.add("Electronics Setup");
+        inside.add("Furniture Assembling");
+        inside.add("Heavy Lifting / Moving");
+        inside.add("House Sitting");
+        inside.add("Organizing");
+        inside.add("Other");
+        inside.add("Painting");
+        inside.add("Plant Care");
+        inside.add("Smart Home Setup");
+        inside.add("Wall Hanging");
+        inside.add("Window Washing");
+
+        List<String> outside = new ArrayList<String>();
+        outside.add("Car Washing / Detailing");
+        outside.add("Cleaning");
+        outside.add("Gutters");
+        outside.add("Digging / Shoveling");
+        outside.add("Garage Organizing");
+        outside.add("Heavy Lifting / Moving");
+        outside.add("Landscaping");
+        outside.add("Lawn Mowing");
+        outside.add("Mulching");
+        outside.add("Other");
+        outside.add("Painting");
+        outside.add("Planting");
+        outside.add("Pool Cleaning");
+        outside.add("Power Washing");
+        outside.add("Snow Removal");
+        outside.add("Window Washing");
+        outside.add("Yard Cleanup");
+
+        List<String> personal = new ArrayList<String>();
+        personal.add("Cooking / Baking");
+        personal.add("Data Entry");
+        personal.add("Drop off / Pick up Driver");
+        personal.add("Errands");
+        personal.add("Event Server / Bartender");
+        personal.add("Exercise Buddy");
+        personal.add("Grocery Shopper");
+        personal.add("Heavy Lifting / Moving");
+        personal.add("Meal Preparation");
+        personal.add("Other");
+        personal.add("Party Help (Setup, Cleanup, Serving)");
+        personal.add("Tax Preparation");
+        personal.add("Wait in Line");
+
+        List<String> pet = new ArrayList<String>();
+        pet.add("Other");
+        pet.add("Pet Bathing");
+        pet.add("Pet Sitting");
+        pet.add("Pet Walking");
+
+        List<String> tutor = new ArrayList<String>();
+        tutor.add("Computer Coding");
+        tutor.add("Computer / Software");
+        tutor.add("English");
+        tutor.add("Foreign Language");
+        tutor.add("Google Apps Training");
+        tutor.add("Graphic Design (Photoshop/Illustrator)");
+        tutor.add("History");
+        tutor.add("Language Arts");
+        tutor.add("Math");
+        tutor.add("Microsoft Office");
+        tutor.add("Musical Instrument");
+        tutor.add("Other");
+        tutor.add("Reading");
+        tutor.add("Science");
+        tutor.add("Singing / Voice");
+
+        listDataChild.put(listDataHeader.get(0), care); // Header, Child data
+        listDataChild.put(listDataHeader.get(1), coach);
+        listDataChild.put(listDataHeader.get(2), holiday);
+        listDataChild.put(listDataHeader.get(3), inside);
+        listDataChild.put(listDataHeader.get(4), outside);
+        listDataChild.put(listDataHeader.get(5), personal);
+        listDataChild.put(listDataHeader.get(6), pet);
+        listDataChild.put(listDataHeader.get(7), tutor);
     }
 
     @Override
@@ -409,9 +646,11 @@ public class CreateJob extends Activity implements View.OnClickListener {
                                               int monthOfYear, int dayOfMonth) {
                             int mm = monthOfYear + 1;
                             String month = (mm < 10) ? "0" + mm : "" + mm;
-                            date_text.setText(year + "-" + month + "-" + dayOfMonth);
-                            String pattern = "MMM d,yyyy";
-                            String dateInString = new SimpleDateFormat(pattern).format(new Date());
+                            String date = year + "-" + month + "-" + dayOfMonth;
+                            *//*String pattern = "MMMM dd,yyyy";
+                            String dateInString = new SimpleDateFormat(pattern).format(new Date());*//*
+                            System.out.println("dddddddddd:date:::"+date);
+                            //date_text.setText(dateInString);
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -553,11 +792,47 @@ public class CreateJob extends Activity implements View.OnClickListener {
         end_time = end_time_text.getText().toString();
         amount = job_amount.getText().toString().trim();
         payment_type = amount_text.getText().toString().trim();
+        if(header.equals("CARE GIVING"))
+        {
+            job_category_color = "#FF87FA";
+            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
+        }
+        if(header.equals("COACHING"))
+        {
+            job_category_color = "#BED2EA";
+            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
 
-      //  amount=amount.substring(1);
-
-        System.out.println("amount "+amount);
-
+        }
+        if(header.equals("HOLIDAYS"))
+        {
+            job_category_color = "#FF4B13";
+            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
+        }
+        if(header.equals("INSIDE THE HOME"))
+        {
+            job_category_color = "#FFFB86";
+            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
+        }
+        if(header.equals("OUTSIDE THE HOME"))
+        {
+            job_category_color = "#00D034";
+            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
+        }
+        if(header.equals("PERSONAL SERVICES"))
+        {
+            job_category_color = "#FFC834";
+            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
+        }
+        if(header.equals("PETCARE"))
+        {
+            job_category_color = "#AA84FA";
+            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
+        }
+        if(header.equals("TUTORING"))
+        {
+            job_category_color = "#6BAEFB";
+            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
+        }
         if (TextUtils.isEmpty(name)) {
             // custom dialog
             final Dialog dialog = new Dialog(CreateJob.this);
@@ -696,7 +971,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             return;
         }
-        if(category.equals("0"))
+        if(categoryId.equals("0"))
         {
             final Dialog dialog = new Dialog(CreateJob.this);
             dialog.setContentView(R.layout.custom_dialog);
@@ -735,6 +1010,9 @@ public class CreateJob extends Activity implements View.OnClickListener {
             System.out.println("eeeeeeeee:estimated:::"+job_estimated);
             String job_expire = date_format + " " + st_time ;
             System.out.println("eeeeeeeee:job_expire:::"+job_expire);
+            String hours = hour.getText().toString();
+            String duration = expected_hours+" "+hours;
+            System.out.println("eeeeeeeee:duration:::"+duration);
 
             Intent i = new Intent(CreateJob.this, CreateJob2.class);
             i.putExtra("userId", id);
@@ -742,14 +1020,17 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
 
 
-            i.putExtra("name",name);
-            i.putExtra("category",categoryId);
-            i.putExtra("description",description);
-            i.putExtra("date", date_format);
+            i.putExtra("job_name",name);
+            i.putExtra("job_category",categoryId);
+            i.putExtra("job_category_color", job_category_color);
+            i.putExtra("sub_category", sub_category);
+            i.putExtra("job_decription",description);
+            i.putExtra("job_date", date_format);
             i.putExtra("start_time",st_time);
             i.putExtra("expected_hours",expected_hours);
+            i.putExtra("duration",duration);
             i.putExtra("payment_amount",amount);
-            i.putExtra("payment_type", payment_type);
+            i.putExtra("payment_type", expected_hours);
             i.putExtra("flexible_status", flexible_status);
             i.putExtra("estimated_amount", job_estimated);
             i.putExtra("job_expire", job_expire);
@@ -811,6 +1092,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             categories = jResult.getString("categories");
+            System.out.println("jjjjjjjjjjjjjjjob:::categories:::"+categories);
             if(status.equals("success"))
             {
 
@@ -827,10 +1109,47 @@ public class CreateJob extends Activity implements View.OnClickListener {
                     map.put("job_category", job_category_name);
                     map.put("job_id", job_id);
                     job_title.add(map);
-
+                    System.out.println("menuitems:::" + job_title);
                 }
 
                 // list.setAdapter(adapter);
+/*
+                PopupWindow popupWindow = new PopupWindow(this);
+
+                // the drop down list is a list view
+                ListView listcate = new ListView(this);
+                listcate.setAdapter(adapter);*/
+
+                progress_dialog.dismiss();
+              /*  list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        category = parent.getItemAtPosition(position).toString();
+                        if(category.equals("Select Job Category"))
+                        {
+
+                        }
+                     else {
+                            System.out.println("ssssssssssselected:item:" + category);
+                            String value = "1";
+                            cat = Integer.parseInt(category) + Integer.parseInt(value);
+                            categoryId = String.valueOf(cat);
+                            System.out.println("ssssssssssselected:job_cat_name:response:" + categoryId);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        category = "0";
+                        System.out.println("on nothing selected");
+                        list.setVisibility(View.GONE);
+                        img_arrow.setVisibility(View.VISIBLE);
+                        textview.setVisibility(View.VISIBLE);
+
+                    }
+                });*/
+
+
 
             }
             else
@@ -863,6 +1182,9 @@ public class CreateJob extends Activity implements View.OnClickListener {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             // TODO Auto-generated method stub
 
+
+            //TextView textview = (TextView) getActivity().findViewById(R.id.textView1);
+
             Calendar calander2 = Calendar.getInstance();
 
             calander2.setTimeInMillis(0);
@@ -874,11 +1196,15 @@ public class CreateJob extends Activity implements View.OnClickListener {
             int mm = monthOfYear + 1;
             String month = (mm < 10) ? "0" + mm : "" + mm;
             date_format = year + "-" + month + "-" + dayOfMonth;
+            System.out.println("dddddddddd:date_format:::"+date_format);
 
             DateFormat dateformat_US = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
             String StringDateformat_US = dateformat_US.format(SelectedDate);
             date_text.setText(StringDateformat_US);
 
+            /*DateFormat dateformat_UK = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.UK);
+            String StringDateformat_UK = dateformat_UK.format(SelectedDate);
+            date_text.setText(date_text.getText() + StringDateformat_UK + "\n");*/
 
         }
     }
@@ -921,7 +1247,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
         }
     };
 
-    public PopupWindow popupWindowDogs() {
+   /* public PopupWindow popupWindowDogs() {
 
         // initialize a pop up window type
         PopupWindow popupWindow = new PopupWindow(this);
@@ -938,48 +1264,48 @@ public class CreateJob extends Activity implements View.OnClickListener {
         listViewDogs.setAdapter(adapter);
 
         // set the item click listener
-        listViewDogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Context mContext = adapterView.getContext();
-                //   MainActivity mainActivity = ((MainActivity) mContext);
-
-                // add some animation when a list item was clicked
-                Animation fadeInAnimation = AnimationUtils.loadAnimation(adapterView.getContext(), android.R.anim.fade_in);
-                fadeInAnimation.setDuration(10);
-                adapterView.startAnimation(fadeInAnimation);
-
-                // dismiss the pop up
-               popupWindowDogs.dismiss();
+        listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
 
 
-               SetCategory(i);
-            }
-        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // some other visual settings
         popupWindow.setFocusable(true);
         popupWindow.setWidth(600);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
+       // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
 
         // set the list view as pop up window content
         popupWindow.setContentView(layout);
 
         return popupWindow;
     }
+*/
 
-
-    public static void SetCategory(int pos){
+   /* public static void SetCategory(int pos){
 
         HashMap<String,String> map = job_title.get(pos);
         String title =map.get("job_category");
-        category =title;
+
         textview.setText(title);
         categoryId=String.valueOf(pos);
         switch (pos){
             case 0:
-                img_paint.setImageResource(R.drawable.box_17);
+               img_paint.setImageResource(R.drawable.box_17);
                 break;
             case 1:
                 img_paint.setImageResource(R.drawable.box_10);
@@ -1041,12 +1367,14 @@ public class CreateJob extends Activity implements View.OnClickListener {
             case 20:
                 img_paint.setImageResource(R.drawable.box_6);
                 break;
-            default:
-                break;
+
+
+         default:
+             break;
         }
 
         img_paint.setVisibility(View.VISIBLE);
-    }
+    }*/
 
     public static class DatePickerDialogTheme4 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
@@ -1073,6 +1401,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
     }
 
 
+    @Override
     public boolean dispatchTouchEvent(MotionEvent event){
 
         swipe.dispatchTouchEvent(event);
