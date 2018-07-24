@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -21,26 +19,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
 import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CreateJob2 extends AppCompatActivity {
 
@@ -51,7 +36,6 @@ public class CreateJob2 extends AppCompatActivity {
     LocationTrack locationTrack;
     Button next;
     String j_address,j_city,j_state,j_zipcode,post_address,job_id,job_expire;
-    String pocket = "100";
     RelativeLayout address_layout;
     LinearLayout linear,layout;
     ImageView logo;
@@ -420,7 +404,7 @@ public class CreateJob2 extends AppCompatActivity {
 
                 // set the custom dialog components - text, image and button
                 TextView text = (TextView) dialog.findViewById(R.id.text);
-                text.setText("Please enter \"Valid Address\" Box");
+                text.setText("Entered Address Could Not Be Located");
                 Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                 // if button is clicked, close the custom dialog
                 dialogButton.setOnClickListener(new View.OnClickListener() {

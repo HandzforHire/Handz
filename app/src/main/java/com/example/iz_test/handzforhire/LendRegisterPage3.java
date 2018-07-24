@@ -42,7 +42,7 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
 
         Button next;
         EditText u_name, pass, re_pass;
-        CheckBox check1, check2;
+        CheckBox check1, check2,check3,check4;
         String user_name, password, retype_password, address;
         RelativeLayout layout;
         String first, last, add1, add2, city, state, zip, email, re_email;
@@ -67,7 +67,7 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
         String usertype = "employee";
         String value = "HandzForHire@~";
         String deviceId;
-    int timeout = 60000;
+         int timeout = 60000;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,8 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
             handz_condition = (TextView) findViewById(R.id.handz_condition);
             feature = (TextView) findViewById(R.id.features);
             ImageView logo = (ImageView)findViewById(R.id.logo);
+            check3 = (CheckBox) findViewById(R.id.checkBox3);
+            check4 = (CheckBox) findViewById(R.id.checkBox4);
 
             handz_condition.setPaintFlags(handz_condition.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             feature.setPaintFlags(feature.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -94,10 +96,12 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
             deviceId = LendLoginPage.deviceId;
             System.out.println("8888888:device:register:::"+deviceId);
 
-            String fontPath = "fonts/LibreFranklin_Medium.ttf";
+            String fontPath = "fonts/calibri.ttf";
             Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
             check1.setTypeface(tf);
             check2.setTypeface(tf);
+            check3.setTypeface(tf);
+            check4.setTypeface(tf);
 
             Intent i = getIntent();
             first = i.getStringExtra("firstname");
@@ -293,39 +297,17 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
                         window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         return;
                     }
-                    if (check1.isChecked()) {
-                        if (check2.isChecked()) {
-                            registerUser();
-                        } else {
-                            // custom dialog
-                            final Dialog dialog = new Dialog(LendRegisterPage3.this);
-                            dialog.setContentView(R.layout.custom_dialog);
-
-                            // set the custom dialog components - text, image and button
-                            TextView text = (TextView) dialog.findViewById(R.id.text);
-                            text.setText("Please agree to terms and conditions");
-                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                            // if button is clicked, close the custom dialog
-                            dialogButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            dialog.show();
-                            Window window = dialog.getWindow();
-                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        }
-                    } else {
+                    if (check1.isChecked()&&check2.isChecked()&&check3.isChecked()&&check4.isChecked()) {
+                        registerUser();
+                    }
+                    else {
                         // custom dialog
                         final Dialog dialog = new Dialog(LendRegisterPage3.this);
                         dialog.setContentView(R.layout.custom_dialog);
 
                         // set the custom dialog components - text, image and button
                         TextView text = (TextView) dialog.findViewById(R.id.text);
-                        text.setText("Please provide access to camera and location");
+                        text.setText("Please fill all the required fields");
                         Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                         // if button is clicked, close the custom dialog
                         dialogButton.setOnClickListener(new View.OnClickListener() {

@@ -11,20 +11,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
-
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-
-
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -32,13 +25,10 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -51,8 +41,6 @@ import com.bigkoo.pickerview.MyOptionsPickerView;
 import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
 import com.github.pwittchen.swipe.library.rx2.Swipe;
 
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -73,7 +61,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
     Spinner list;
     LinearLayout layout;
     String id, address, zipcode, state, city, name,job_category,description,date,start_time,end_time,amount,st_time,en_time, type;
-
     private static final String GET_JOB = Constant.SERVER_URL+"job_detail_view";
     Button next;
     EditText job_name, job_description,payamount;
@@ -83,11 +70,8 @@ public class RehireJob extends Activity implements View.OnClickListener{
     TextView job_amount,symbol;
     TextView pay_text;
     TextView amount_text;
-
     public static TextView textview;
-
     static String category="0",categoryId="0";
-
     private int mHour, mMinute;
     ImageView logo,arrow;
     public static String KEY_USERID = "user_id";
@@ -95,7 +79,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
     public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
     String job_id,jobId,paytext,pay_amount,flexible_status,job_estimated,hourr,latitude,longitude;
-
+    ProgressDialog progress_dialog;
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     CheckBox checkBox;
     Activity activity;
@@ -106,10 +90,10 @@ public class RehireJob extends Activity implements View.OnClickListener{
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
-    String header,sub_category,job_category_color,job_expire,expected_hours,post_address,current_location;
-    String edit_job = "no";
+    String header,sub_category,job_category_color,job_expire,expected_hours,post_address;
     Swipe swipe;
     Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,32 +103,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(RehireJob.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(RehireJob.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
 
         layout = (LinearLayout)findViewById(R.id.relay);
         category_name = (TextView)findViewById(R.id.cat_name);
@@ -166,7 +124,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
         time_layout = (RelativeLayout) findViewById(R.id.linear2);
         estimate_layout = (RelativeLayout) findViewById(R.id.linear3);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
-
         symbol = (TextView) findViewById(R.id.symbol);
 
         Intent i = getIntent();
@@ -184,8 +141,33 @@ public class RehireJob extends Activity implements View.OnClickListener{
         System.out.println("777777777:time::::" + st_time+",,,,"+ en_time);
         activity=this;
 
-
         getJobDetails();
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(RehireJob.this,ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(RehireJob.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
 
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,7 +195,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
         start_time_text.setOnClickListener(this);
         end_time_text.setOnClickListener(this);
 
-
         end_time_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,7 +211,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
             numbers.add(j);
             System.out.println(numbers.get(j));
         }
-
 
         final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
         threeItemsOptions2.add("0.00");
@@ -256,7 +236,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 System.out.println("aaaaaaaaaaa:::"+numa+"..."+numb+"..."+a+"...."+b);
                 float c = numa + numb;
                 System.out.println("aaaaaaaaaaa::cccc:"+c);
-
                 String option = threeItemsOptions3.get(options3);
                 end_time_text.setText(String.valueOf(c)+" "+option);
                 // Toast.makeText(CreateJob.this, "" + numbers.get(options1) + " " + threeItemsOptions2.get(option2) + " " + threeItemsOptions3.get(options3), Toast.LENGTH_SHORT).show();
@@ -304,7 +283,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
                         job_amount.setText(pay_amount);
                         amount_text.setText(paytext);
                         pay_text.setVisibility(View.GONE);
-
                         arrow.setVisibility(View.GONE);
                         dialog.dismiss();
                     }
@@ -356,9 +334,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
 
                     @Override
                     public void onGroupExpand(int groupPosition) {
-                        Toast.makeText(getApplicationContext(),
-                                listDataHeader.get(groupPosition) + " Expanded",
-                                Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -367,9 +343,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
 
                     @Override
                     public void onGroupCollapse(int groupPosition) {
-                        Toast.makeText(getApplicationContext(),
-                                listDataHeader.get(groupPosition) + " Collapsed",
-                                Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Collapsed", Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -381,14 +355,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
                     public boolean onChildClick(ExpandableListView parent, View v,
                                                 int groupPosition, int childPosition, long id) {
                         // TODO Auto-generated method stub
-                        Toast.makeText(
-                                getApplicationContext(),
-                                listDataHeader.get(groupPosition)
-                                        + " : "
-                                        + listDataChild.get(
-                                        listDataHeader.get(groupPosition)).get(
-                                        childPosition), Toast.LENGTH_SHORT)
-                                .show();
+                        //Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
                         int pos = groupPosition+1;
                         categoryId = String.valueOf(pos);
                         header =  listDataHeader.get(groupPosition);
@@ -405,12 +372,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 return;
-
-
-
-
-
-
 
             }
         });
@@ -561,7 +522,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
 
         if (v == date_text) {
 
-            DialogFragment dialogfragment = new RehireJob.datepickerClass();
+            DialogFragment dialogfragment = new datepickerClass();
 
             dialogfragment.show(getFragmentManager(), "DatePickerDialog");
 
@@ -629,7 +590,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         }
-
     }
 
     public void validate() {
@@ -705,31 +665,23 @@ public class RehireJob extends Activity implements View.OnClickListener{
         System.out.println("eeeeeeeee:job_expire:::"+job_expire);
         String duration = expected_hours;
 
-        Intent i = new Intent(RehireJob.this, SummaryMultiply.class);
+        Intent i = new Intent(RehireJob.this, RehireMultiply.class);
         i.putExtra("userId", id);
         i.putExtra("job_name",name);
         i.putExtra("job_category",categoryId);
         i.putExtra("job_id",job_id);
         i.putExtra("job_category_color", job_category_color);
         i.putExtra("sub_category", sub_category);
-
         i.putExtra("job_decription",description);
         i.putExtra("job_date", date_format);
-
         i.putExtra("start_time",st_time);
         i.putExtra("expected_hours",first);
         i.putExtra("payment_type", expected_hours);
         i.putExtra("payment_amount",amount);
-
         i.putExtra("flexible_status", flexible_status);
         i.putExtra("estimated_amount", job_estimated);
         i.putExtra("job_expire", job_expire);
-        i.putExtra("current_location", current_location);
-        i.putExtra("post_address", post_address);
         i.putExtra("duration", duration);
-        i.putExtra("edit_job", edit_job);
-        i.putExtra("latitude",latitude);
-        i.putExtra("longitude", longitude);
         startActivity(i);
     }
 
@@ -796,8 +748,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 System.out.println("nnnnnnnnnnn:date::" + get_date);
                 String get_start_time = object.getString("start_time");
                 System.out.println("nnnnnnnnnnn:start_time::" + get_start_time);
-
-
                 String get_amount = object.getString("job_payment_amount");
                 System.out.println("nnnnnnnnnnn:amount::" + get_amount);
                 String get_type = object.getString("job_payment_type");
@@ -814,6 +764,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 System.out.println("nnnnnnnnnnn:job_expire_date_time::" + job_expire_date_time);
                 job_id = object.getString("job_id");
                 System.out.println("nnnnnnnnnnn:job_id::" + job_id);
+/*
                 post_address = object.getString("post_address");
                 System.out.println("nnnnnnnnnnn:post_address::" + post_address);
                 current_location = object.getString("currentlocation");
@@ -822,6 +773,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 System.out.println("nnnnnnnnnnn:latitude::" + latitude);
                 longitude = object.getString("lon");
                 System.out.println("nnnnnnnnnnn:longitude::" + longitude);
+*/
 
                 name = get_name;
                 categoryId = job_category;
@@ -865,14 +817,8 @@ public class RehireJob extends Activity implements View.OnClickListener{
                     e.printStackTrace();
                 }
 
-
-
-
-
                 job_name.setText(get_name);
                 job_description.setText(get_description);
-
-
                 end_time_text.setText(get_type);
                 pay_text.setVisibility(View.GONE);
                 arrow.setVisibility(View.GONE);
@@ -919,10 +865,10 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 }
                 category_name.setText(header+" - "+sub_cat);
 
+                progress_dialog.dismiss();
 
             } else {
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1012,10 +958,10 @@ public class RehireJob extends Activity implements View.OnClickListener{
         }
     };
 
-    @Override
     public boolean dispatchTouchEvent(MotionEvent event){
 
         swipe.dispatchTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
+
 }

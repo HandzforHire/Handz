@@ -42,7 +42,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
 
     Button next;
     EditText u_name, pass, re_pass;
-    CheckBox check1, check2;
+    CheckBox check1, check2,check3,check4;
     String user_name, password, retype_password, address;
     RelativeLayout layout;
     String first, last, add1, add2, city, state, zip, email, re_email;
@@ -90,6 +90,8 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         handz_condition = (TextView) findViewById(R.id.handz_condition);
         feature = (TextView) findViewById(R.id.features);
         ImageView logo = (ImageView)findViewById(R.id.logo);
+        check3 = (CheckBox) findViewById(R.id.checkBox3);
+        check4 = (CheckBox) findViewById(R.id.checkBox4);
 
         handz_condition.setPaintFlags(handz_condition.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         feature.setPaintFlags(feature.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -102,6 +104,8 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
         check1.setTypeface(tf);
         check2.setTypeface(tf);
+        check3.setTypeface(tf);
+        check4.setTypeface(tf);
 
         String fontPath1 = "fonts/calibriItalic.ttf";
         Typeface tf1 = Typeface.createFromAsset(getAssets(), fontPath1);
@@ -110,7 +114,6 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
 
         String fontPath2 = "fonts/calibri.ttf";
         Typeface tf2 = Typeface.createFromAsset(getAssets(), fontPath2);
-        u_name.setTypeface(tf2);
         pass.setTypeface(tf2);
         re_pass.setTypeface(tf2);
 
@@ -333,39 +336,17 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     return;
                 }
-                if (check1.isChecked()) {
-                    if (check2.isChecked()) {
-                        registerUser();
-                    } else {
-                        // custom dialog
-                        final Dialog dialog = new Dialog(RegisterPage3.this);
-                        dialog.setContentView(R.layout.custom_dialog);
-
-                        // set the custom dialog components - text, image and button
-                        TextView text = (TextView) dialog.findViewById(R.id.text);
-                        text.setText("Please agree to terms and conditions");
-                        Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                        // if button is clicked, close the custom dialog
-                        dialogButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        dialog.show();
-                        Window window = dialog.getWindow();
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    }
-                } else {
+                if (check1.isChecked()&&check2.isChecked()&&check3.isChecked()&&check4.isChecked()) {
+                    registerUser();
+                }
+                else {
                     // custom dialog
                     final Dialog dialog = new Dialog(RegisterPage3.this);
                     dialog.setContentView(R.layout.custom_dialog);
 
                     // set the custom dialog components - text, image and button
                     TextView text = (TextView) dialog.findViewById(R.id.text);
-                    text.setText("Please provide access to camera and location");
+                    text.setText("Please fill all the required fields");
                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                     // if button is clicked, close the custom dialog
                     dialogButton.setOnClickListener(new View.OnClickListener() {

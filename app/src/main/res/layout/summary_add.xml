@@ -95,7 +95,7 @@
                         android:paddingLeft="10sp"
                         android:inputType="number"
                         android:background="@drawable/shape"
-                        android:textStyle="italic"
+                        android:textStyle="bold|italic"
                         android:textAllCaps="true"
                         android:layout_marginLeft="20sp"
                         android:textColor="#000000"
@@ -137,7 +137,7 @@
                         android:layout_height="30sp"
                         android:textSize="20sp"
                         android:background="@drawable/shape"
-                        android:textStyle="italic"
+                        android:textStyle="bold|italic"
                         android:inputType="number"
                         android:paddingLeft="10sp"
                         android:textAllCaps="true"
@@ -187,8 +187,8 @@
                         android:id="@+id/ajp"
                         android:layout_width="100sp"
                         android:layout_height="30sp"
-                        android:textSize="22sp"
-                        android:textStyle="italic"
+                        android:textSize="26sp"
+                        android:textStyle="bold|italic"
                         android:textAllCaps="true"
                         android:layout_marginLeft="10sp"
                         android:textColor="#000000"
@@ -348,9 +348,9 @@
                         android:id="@+id/ope"
                         android:layout_width="100sp"
                         android:layout_height="30sp"
-                        android:textSize="22sp"
+                        android:textSize="26sp"
                         android:background="@null"
-                        android:textStyle="italic"
+                        android:textStyle="bold|italic"
                         android:textAllCaps="true"
                         android:layout_marginLeft="20sp"
                         android:textColor="#000000"
@@ -385,25 +385,52 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/create_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5sp"
-                android:textColor="#BEBEBE"
-                android:paddingLeft="30sp"
-                android:paddingRight="30sp"
-                android:paddingBottom="5sp"
-                android:layout_marginTop="10sp"
-                android:textAllCaps="true"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/border_gray"
-                android:paddingTop="5sp"
-                android:text="create this job"
-                android:textStyle="bold"
-                android:textSize="26sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/create_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5sp"
+                    android:textColor="#BEBEBE"
+                    android:paddingLeft="30sp"
+                    android:paddingRight="30sp"
+                    android:paddingBottom="10sp"
+                    android:layout_marginTop="10sp"
+                    android:textAllCaps="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/border_gray"
+                    android:paddingTop="5sp"
+                    android:text="create this job"
+                    android:textStyle="bold"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:id="@+id/edit_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5sp"
+                    android:textColor="#BEBEBE"
+                    android:paddingLeft="30sp"
+                    android:paddingRight="30sp"
+                    android:visibility="invisible"
+                    android:paddingBottom="10sp"
+                    android:layout_marginTop="10sp"
+                    android:textAllCaps="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/border_gray"
+                    android:paddingTop="5sp"
+                    android:text="Edit this job"
+                    android:textStyle="bold"
+                    android:textSize="26sp" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 
