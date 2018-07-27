@@ -99,7 +99,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
     String value = "HandzForHire@~";
     static ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
     String job_category_name,job_id,payment_type,pay_amount,flexible_status,job_estimated,paytext;
-    ProgressDialog progress_dialog;
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     Integer cat;
     CheckBox checkBox;
@@ -190,8 +189,8 @@ public class CreateJob extends Activity implements View.OnClickListener {
         zipcode = i.getStringExtra("zipcode");
         System.out.println("iiiiiiiiiiiiiiiiiiiii:" + id);
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
+       swipe = new Swipe();
+       /*  swipe.setListener(new SimpleSwipeListener() {
 
 
             @Override
@@ -214,7 +213,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 finish();
                 return super.onSwipedRight(event);
             }
-        });
+        });*/
 
         String pattern1 = "hh:mm a";
         String timeFormat = new SimpleDateFormat(pattern1).format(new Date());
@@ -1120,7 +1119,6 @@ public class CreateJob extends Activity implements View.OnClickListener {
                 ListView listcate = new ListView(this);
                 listcate.setAdapter(adapter);*/
 
-                progress_dialog.dismiss();
               /*  list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -1401,11 +1399,11 @@ public class CreateJob extends Activity implements View.OnClickListener {
     }
 
 
-    @Override
+ /*   @Override
     public boolean dispatchTouchEvent(MotionEvent event){
 
         swipe.dispatchTouchEvent(event);
         return super.dispatchTouchEvent(event);
-    }
+    }*/
 
 }

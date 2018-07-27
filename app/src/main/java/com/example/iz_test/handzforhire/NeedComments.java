@@ -134,7 +134,7 @@ public class NeedComments extends Activity{
         {
         }
         else {
-            profile.setVisibility(View.INVISIBLE);
+          //  profile.setVisibility(View.INVISIBLE);
             Glide.with(this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 
         }

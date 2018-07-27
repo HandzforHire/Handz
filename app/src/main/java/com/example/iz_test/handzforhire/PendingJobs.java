@@ -46,168 +46,538 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-    public class PendingJobs extends Activity {
+public class PendingJobs extends Activity {
 
-        ListView list;
-        private static final String SEARCH_URL = Constant.SERVER_URL+"job_lists";
-        ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
-        public static String XAPP_KEY = "X-APP-KEY";
-        String value = "HandzForHire@~";
-        public static String KEY_USER = "user_id";
-        public static String KEY_TYPE = "type";
-        Calendar calendar;
-        String user_id,address,city,state,zipcode,cat_type,cat_id,job_cat_name,name,date,amount,jobId;
-        String emplrid,empleid;
+    ListView list;
+    private static final String SEARCH_URL = Constant.SERVER_URL+"job_lists";
+    ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
+    public static String XAPP_KEY = "X-APP-KEY";
+    String value = "HandzForHire@~";
+    public static String KEY_USER = "user_id";
+    public static String KEY_TYPE = "type";
+    Calendar calendar;
+    String user_id,address,city,state,zipcode,cat_type,cat_id,job_cat_name,name,date,amount,jobId;
+    String emplrid,empleid;
 
-        String jobname,jobdate,pay,esti,jobstatus;
-        ImageView logo;
-        ProgressDialog progress_dialog;
-        String type = "applied";
-        Button active_jobs,job_history;
-        Dialog dialog;
-        int visible_pos,visible_lay;
-        Swipe swipe;
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.pending_jobs);
+    String jobname,jobdate,pay,esti,jobstatus;
+    ImageView logo;
+    ProgressDialog progress_dialog;
+    String type = "applied";
+    Button active_jobs,job_history;
+    Dialog dialog;
+    int visible_pos,visible_lay;
+    Swipe swipe;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.pending_jobs);
 
            /* progress_dialog = new ProgressDialog(this);
             progress_dialog.setMessage("Loading.Please wait....");
             progress_dialog.show();*/
 
-            dialog = new Dialog(PendingJobs.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.progressbar);
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog = new Dialog(PendingJobs.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
-            list = (ListView) findViewById(R.id.listview);
-            logo = (ImageView) findViewById(R.id.logo);
-            active_jobs = (Button) findViewById(R.id.btn1);
-            job_history = (Button) findViewById(R.id.btn2);
+        list = (ListView) findViewById(R.id.listview);
+        logo = (ImageView) findViewById(R.id.logo);
+        active_jobs = (Button) findViewById(R.id.btn1);
+        job_history = (Button) findViewById(R.id.btn2);
 
-            Intent i = getIntent();
-            user_id = i.getStringExtra("userId");
-            address = i.getStringExtra("address");
-            city = i.getStringExtra("city");
-            state = i.getStringExtra("state");
-            zipcode = i.getStringExtra("zipcode");
-            cat_type = i.getStringExtra("type");
-            cat_id = i.getStringExtra("categoryId");
-            job_cat_name = i.getStringExtra("category");
-            System.out.println("11iiiiiiiiiiiiiiiiiiiii:user_id;;;" + user_id);
-            System.out.println("11iiiiiiiiiiiiiiiiiiiii:cat_id::" + cat_id);
-            System.out.println("11iiiiiiiiiiiiiiiiiiiii:cat_type::" + cat_type);
+        Intent i = getIntent();
+        user_id = i.getStringExtra("userId");
+        address = i.getStringExtra("address");
+        city = i.getStringExtra("city");
+        state = i.getStringExtra("state");
+        zipcode = i.getStringExtra("zipcode");
+        cat_type = i.getStringExtra("type");
+        cat_id = i.getStringExtra("categoryId");
+        job_cat_name = i.getStringExtra("category");
+        System.out.println("11iiiiiiiiiiiiiiiiiiiii:user_id;;;" + user_id);
+        System.out.println("11iiiiiiiiiiiiiiiiiiiii:cat_id::" + cat_id);
+        System.out.println("11iiiiiiiiiiiiiiiiiiiii:cat_type::" + cat_type);
 
-            searchJobList();
+        searchJobList();
 
-            logo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        active_jobs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PendingJobs.this,LendActiveJobs.class);
+                i.putExtra("userId", user_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+            }
+        });
+
+        job_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PendingJobs.this,LendJobHistory.class);
+                i.putExtra("userId", user_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+            }
+        });
+
+        swipe = new Swipe();
+        swipe.setListener(new SimpleSwipeListener() {
+
+            @Override
+            public boolean onSwipedLeft(MotionEvent event) {
+                Intent i = new Intent(PendingJobs.this,LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                return super.onSwipedLeft(event);
+            }
+
+            @Override
+            public boolean onSwipedRight(MotionEvent event) {
+                Intent j = new Intent(PendingJobs.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
+                return super.onSwipedRight(event);
+            }
+        });
+    }
+
+    public void searchJobList() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SEARCH_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("reeeeeeeeeeeeeeeee:pendingjobs:::" +response);
+                        onResponserecieved(response, 2);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        try {
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            System.out.println("error" + jsonObject);
+                            String status = jsonObject.getString("msg");
+                            if(status.equals("No Jobs Found"))
+                            {
+                                // custom dialog
+                                final Dialog dialog = new Dialog(PendingJobs.this);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText("No Jobs Found");
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            }
+                        }
+                        catch (JSONException e)
+                        {
+
+                        } catch (UnsupportedEncodingException error1) {
+
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USER,user_id);
+                params.put(KEY_TYPE,type);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void onResponserecieved(String response, int i)
+    {
+        String status = null;
+
+        try
+        {
+            JSONObject result = new JSONObject(response);
+            status = result.getString("status");
+            if(status.equals("success"))
+            {
+                job_list.clear();
+                String job = result.getString("job_lists");
+                System.out.println("jjjjjjjjjjjjjjjob:"+job);
+                JSONArray array = new JSONArray(job);
+                for(int n = 0; n < array.length(); n++)
+                {
+                    JSONObject object = (JSONObject) array.get(n);
+                    String category = object.getString("job_category");
+                    System.out.println("ressss::category:" + category);
+                    jobname = object.getString("job_name");
+                    jobdate = object.getString("job_date");
+                    esti = object.getString("job_payment_type");
+                    pay = object.getString("job_estimated_payment");
+                    jobId = object.getString("id");
+                    jobstatus=object.getString("job_status");
+                    emplrid=object.getString("employer_id");
+
+                    HashMap<String,String> map = new HashMap<String,String>();
+                    map.put("name", jobname);
+                    map.put("date", jobdate);
+                    map.put("type", esti);
+                    map.put("amount", pay);
+                    map.put("jobId",jobId);
+                    map.put("status",jobstatus);
+                    map.put("emrid",emplrid);
+                    map.put("employeeid",user_id);
+                    job_list.add(map);
                 }
-            });
+                System.out.println("job_list:::" + job_list);
+                PendingAdapter arrayAdapter = new PendingAdapter(this, job_list)
+                {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent)
+                    {
+                        // Get the current item from ListView
+                        View view = super.getView(position,convertView,parent);
+                        if(position %2 == 1)
+                        {
+                            // Set a background color for ListView regular row/item
+                            view.setBackgroundColor(Color.parseColor("#BF178487"));
+                        }
+                        else
+                        {
+                            // Set the background color for alternate row/item
+                            view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
+                        }
+                        return view;
+                    }
+                };
 
-            active_jobs.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(PendingJobs.this,LendActiveJobs.class);
-                    i.putExtra("userId", user_id);
-                    i.putExtra("address", address);
-                    i.putExtra("city", city);
-                    i.putExtra("state", state);
-                    i.putExtra("zipcode", zipcode);
-                    startActivity(i);
-                }
-            });
+                // DataBind ListView with items from ArrayAdapter
+                list.setAdapter(arrayAdapter);
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                               /* view.setSelected(true);
+                                String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
+                                System.out.println("ssssssssssselected:job_id:" + job_id);
+                                Intent i = new Intent(PendingJobs.this,JobDescription.class);
+                                i.putExtra("userId",user_id);
+                                i.putExtra("jobId",job_id);
+                                startActivity(i);*/
+                    }
+                });
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }  {
+    }
+        {
 
-            job_history.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(PendingJobs.this,LendJobHistory.class);
-                    i.putExtra("userId", user_id);
-                    i.putExtra("address", address);
-                    i.putExtra("city", city);
-                    i.putExtra("state", state);
-                    i.putExtra("zipcode", zipcode);
-                    startActivity(i);
-                }
-            });
+        }
+    }
 
-            swipe = new Swipe();
-            swipe.setListener(new SimpleSwipeListener() {
 
-                @Override
-                public boolean onSwipedLeft(MotionEvent event) {
-                    Intent i = new Intent(PendingJobs.this,LendProfilePage.class);
-                    i.putExtra("userId", Profilevalues.user_id);
-                    i.putExtra("address", Profilevalues.address);
-                    i.putExtra("city", Profilevalues.city);
-                    i.putExtra("state", Profilevalues.state);
-                    i.putExtra("zipcode", Profilevalues.zipcode);
-                    startActivity(i);
-                    finish();
+    public class PendingAdapter extends BaseAdapter {
+        private  final String emp_reject = Constant.SERVER_URL + "employee_reject";
+        private  final String job_list = Constant.SERVER_URL + "job_lists";
 
-                    return super.onSwipedLeft(event);
-                }
+        public  String XAPP_KEY = "X-APP-KEY";
+        String value = "HandzForHire@~";
+        String type = "employee";
+        String user_id;
+        String get_jobid, get_emplrid, get_employeeid, get_status;
+        public  String KEY_JOBID = "job_id";
+        public  String KEY_EMPLOYERID = "employer_id";
+        public  String KEY_EMPLOYEEID = "employee_id";
+        public  String KEY_USERTYPE = "user_type";
+        public  String KEY_USER = "user_id";
+        ProgressDialog progress_dialog;
+        private Activity activity;
+        private ArrayList<HashMap<String, String>> data;
+        private  LayoutInflater inflater = null;
+        private LayoutInflater layoutInflater;
 
-                @Override
-                public boolean onSwipedRight(MotionEvent event) {
-                    Intent j = new Intent(PendingJobs.this, SwitchingSide.class);
-                    startActivity(j);
-                    finish();
-                    return super.onSwipedRight(event);
-                }
-            });
+
+        public PendingAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
+            activity = a;
+            data = d;
+
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
-        public void searchJobList() {
-            dialog.show();
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, SEARCH_URL,
+        public int getCount() {
+            return data.size();
+        }
+
+        public Object getItem(int position) {
+            return position;
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View vi = convertView;
+
+            if (convertView == null)
+                vi = inflater.inflate(R.layout.pending_job_list, null);
+
+            TextView job_name = (TextView) vi.findViewById(R.id.job);
+            TextView job_date = (TextView) vi.findViewById(R.id.whe);
+            TextView pay = (TextView) vi.findViewById(R.id.pay);
+            TextView job_type = (TextView) vi.findViewById(R.id.esti);
+            TextView jobId = (TextView) vi.findViewById(R.id.job_id);
+            ImageView gray = (ImageView) vi.findViewById(R.id.gray);
+            ImageView red = (ImageView) vi.findViewById(R.id.red);
+            ImageView green = (ImageView) vi.findViewById(R.id.green);
+            TextView gry=(TextView)vi.findViewById(R.id.gra);
+            TextView re=(TextView)vi.findViewById(R.id.redd);
+            TextView gre=(TextView)vi.findViewById(R.id.gr);
+
+            final LinearLayout lin_hold=(LinearLayout)vi.findViewById(R.id.lin_hold);
+            final LinearLayout lin_hire=(LinearLayout)vi.findViewById(R.id.lin_hire);
+            final LinearLayout lin_refuse=(LinearLayout)vi.findViewById(R.id.lin_refuse);
+
+            final LinearLayout layout_refuse=(LinearLayout)vi.findViewById(R.id.layout_refuse);
+            final LinearLayout layout_hold=(LinearLayout)vi.findViewById(R.id.layout_hold);
+            final LinearLayout layout_hire=(LinearLayout)vi.findViewById(R.id.layout_hire);
+
+            HashMap<String, String> items = new HashMap<String, String>();
+            items = data.get(position);
+            final String get_jobname = items.get("name");
+            final String get_jobdate = items.get("date");
+            final String get_pay = items.get("amount");
+            final String get_esti = items.get("type");
+            get_status = items.get("status");
+            user_id = items.get("employeeid");
+
+            if (get_status.equals("Hired")) {
+                green.setVisibility(View.VISIBLE);
+                gray.setVisibility(View.INVISIBLE);
+                red.setVisibility(View.INVISIBLE);
+                gre.setVisibility(View.VISIBLE);
+                re.setVisibility(View.INVISIBLE);
+                gry.setVisibility(View.INVISIBLE);
+
+            } else if (get_status.equals("Hold")) {
+                gray.setVisibility(View.VISIBLE);
+                green.setVisibility(View.INVISIBLE);
+                red.setVisibility(View.INVISIBLE);
+                gre.setVisibility(View.INVISIBLE);
+                re.setVisibility(View.INVISIBLE);
+                gry.setVisibility(View.VISIBLE);
+
+
+
+            } else {
+                red.setVisibility(View.VISIBLE);
+                green.setVisibility(View.INVISIBLE);
+                gray.setVisibility(View.INVISIBLE);
+                gre.setVisibility(View.INVISIBLE);
+                re.setVisibility(View.VISIBLE);
+                gry.setVisibility(View.INVISIBLE);
+
+
+            }
+
+            System.out.println("pos "+visible_pos);
+
+            if(position==visible_pos){
+                if(visible_lay==1){
+                    lin_hold.setVisibility(View.VISIBLE);
+                    lin_hire.setVisibility(View.GONE);
+                    lin_refuse.setVisibility(View.GONE);
+                }else if(visible_lay==2){
+                    lin_hold.setVisibility(View.GONE);
+                    lin_hire.setVisibility(View.GONE);
+                    lin_refuse.setVisibility(View.VISIBLE);
+                }else if(visible_lay==3){
+                    lin_hold.setVisibility(View.GONE);
+                    lin_hire.setVisibility(View.VISIBLE);
+                    lin_refuse.setVisibility(View.GONE);
+                }
+            }else{
+                lin_hold.setVisibility(View.GONE);
+                lin_hire.setVisibility(View.GONE);
+                lin_refuse.setVisibility(View.GONE);
+            }
+
+            layout_refuse.setTag(position);
+            layout_hold.setTag(position);
+            layout_hire.setTag(position);
+
+            layout_hold.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    lin_hold.setVisibility(View.GONE);
+                    visible_pos=-1;
+                    visible_lay=0;
+                }
+            });
+
+            layout_hire.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    lin_hire.setVisibility(View.GONE);
+                    visible_pos=-1;
+                    visible_lay=0;
+                }
+            });
+
+            layout_refuse.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    visible_pos=-1;
+                    visible_lay=0;
+                    lin_refuse.setVisibility(View.GONE);
+                    HashMap<String, String> items = new HashMap<String, String>();
+                    items = data.get((Integer) view.getTag());
+                    get_jobid = items.get("jobId");
+                    get_emplrid = items.get("emrid");
+                    get_employeeid = items.get("employeeid");
+                    type="employee";
+                    refusee();
+                }
+            });
+
+
+            gray.setTag(position);
+            red.setTag(position);
+            green.setTag(position);
+            gray.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos= (int) v.getTag();
+                    visible_pos=pos;
+                    visible_lay=1;
+
+                    notifyDataSetChanged();
+                    return;
+                }
+            });
+            red.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos= (int) v.getTag();
+                    visible_pos=pos;
+                    visible_lay=2;;
+                    notifyDataSetChanged();
+
+                    return;
+                }
+
+            });
+            green.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos= (int) v.getTag();
+                    visible_lay=3;
+                    visible_pos=pos;
+                    notifyDataSetChanged();
+                    return;
+
+                }
+            });
+
+
+            get_jobid = items.get("jobId");
+            get_emplrid = items.get("emrid");
+            get_employeeid = items.get("employeeid");
+
+
+            DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+            DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+            try {
+                java.util.Date dates = srcDf.parse(get_jobdate);
+                System.out.println("date " + get_jobdate);
+                System.out.println("converted " + destDf.format(dates));
+                job_name.setText("" + get_jobname);
+                job_date.setText("WHEN:" + destDf.format(dates));
+                pay.setText("PAY:" + get_pay);
+                job_type.setText("ESTIMATED DURATION:" + get_esti);
+                //jobId.setText(get_id);
+                //job_name.setText("PAY"+get_jobname);
+
+            } catch (Exception e) {
+                System.out.println("error " + e.getMessage());
+            }
+            System.out.println("today date " + dateInstance.format(Calendar.getInstance().getTime()));
+            return vi;
+        }
+
+        private void refusee() {
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, emp_reject,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            System.out.println("reeeeeeeeeeeeeeeee:pendingjobs:::" +response);
-                            onResponserecieved(response, 2);
-                            dialog.dismiss();
+                            System.out.println("resss::emp_reject" + response);
+                            String status = null;
+
+                            try {
+                                JSONObject result = new JSONObject(response);
+                                status = result.getString("status");
+                                if (status.equals("success"))
+                                {
+                                    searchJobList();
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            dialog.dismiss();
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
                                 System.out.println("error" + jsonObject);
                                 String status = jsonObject.getString("msg");
-                                if(status.equals("No Jobs Found"))
-                                {
-                                    // custom dialog
-                                    final Dialog dialog = new Dialog(PendingJobs.this);
-                                    dialog.setContentView(R.layout.custom_dialog);
+                                if (status.equals("success")) {
 
-                                    // set the custom dialog components - text, image and button
-                                    TextView text = (TextView) dialog.findViewById(R.id.text);
-                                    text.setText("No Jobs Found");
-                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                    // if button is clicked, close the custom dialog
-                                    dialogButton.setOnClickListener(new View.OnClickListener()
-                                    {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    dialog.show();
-                                    Window window = dialog.getWindow();
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
                                 }
-                            }
-                            catch (JSONException e)
-                            {
+                            } catch (JSONException e) {
 
                             } catch (UnsupportedEncodingException error1) {
 
@@ -218,380 +588,26 @@ import java.util.Map;
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put(XAPP_KEY, value);
-                    params.put(KEY_USER,user_id);
-                    params.put(KEY_TYPE,type);
+                    params.put(KEY_JOBID, get_jobid);
+                    params.put(KEY_EMPLOYERID, get_emplrid);
+                    params.put(KEY_EMPLOYEEID, get_employeeid);
+                    params.put(KEY_USERTYPE, type);
                     return params;
                 }
+
             };
 
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            RequestQueue requestQueue = Volley.newRequestQueue(activity);
             requestQueue.add(stringRequest);
-        }
-
-        private void onResponserecieved(String response, int i)
-        {
-            String status = null;
-
-            try
-            {
-                JSONObject result = new JSONObject(response);
-                status = result.getString("status");
-                if(status.equals("success"))
-                {
-                    job_list.clear();
-                    String job = result.getString("job_lists");
-                    System.out.println("jjjjjjjjjjjjjjjob:"+job);
-                    JSONArray array = new JSONArray(job);
-                    for(int n = 0; n < array.length(); n++)
-                    {
-                        JSONObject object = (JSONObject) array.get(n);
-                        String category = object.getString("job_category");
-                        System.out.println("ressss::category:" + category);
-                        jobname = object.getString("job_name");
-                        jobdate = object.getString("job_date");
-                        esti = object.getString("job_payment_type");
-                        pay = object.getString("job_estimated_payment");
-                        jobId = object.getString("id");
-                        jobstatus=object.getString("job_status");
-                        emplrid=object.getString("employer_id");
-
-                        HashMap<String,String> map = new HashMap<String,String>();
-                        map.put("name", jobname);
-                        map.put("date", jobdate);
-                        map.put("type", esti);
-                        map.put("amount", pay);
-                        map.put("jobId",jobId);
-                        map.put("status",jobstatus);
-                        map.put("emrid",emplrid);
-                        map.put("employeeid",user_id);
-                        job_list.add(map);
-                    }
-                    System.out.println("job_list:::" + job_list);
-                    PendingAdapter arrayAdapter = new PendingAdapter(this, job_list)
-                    {
-                        @Override
-                        public View getView(int position, View convertView, ViewGroup parent)
-                        {
-                            // Get the current item from ListView
-                            View view = super.getView(position,convertView,parent);
-                            if(position %2 == 1)
-                            {
-                                // Set a background color for ListView regular row/item
-                                view.setBackgroundColor(Color.parseColor("#BF178487"));
-                            }
-                            else
-                            {
-                                // Set the background color for alternate row/item
-                                view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
-                            }
-                            return view;
-                        }
-                    };
-
-                    // DataBind ListView with items from ArrayAdapter
-                    list.setAdapter(arrayAdapter);
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                               /* view.setSelected(true);
-                                String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
-                                System.out.println("ssssssssssselected:job_id:" + job_id);
-                                Intent i = new Intent(PendingJobs.this,JobDescription.class);
-                                i.putExtra("userId",user_id);
-                                i.putExtra("jobId",job_id);
-                                startActivity(i);*/
-                        }
-                    });
-                }
-            }catch (JSONException e){
-                e.printStackTrace();
-            }  {
-            }
-            {
-
-            }
-        }
-
-
-        public class PendingAdapter extends BaseAdapter {
-            private  final String emp_reject = Constant.SERVER_URL + "employee_reject";
-            private  final String job_list = Constant.SERVER_URL + "job_lists";
-
-            public  String XAPP_KEY = "X-APP-KEY";
-            String value = "HandzForHire@~";
-            String type = "employee";
-            String user_id;
-            String get_jobid, get_emplrid, get_employeeid, get_status;
-            public  String KEY_JOBID = "job_id";
-            public  String KEY_EMPLOYERID = "employer_id";
-            public  String KEY_EMPLOYEEID = "employee_id";
-            public  String KEY_USERTYPE = "user_type";
-            public  String KEY_USER = "user_id";
-            ProgressDialog progress_dialog;
-            private Activity activity;
-            private ArrayList<HashMap<String, String>> data;
-            private  LayoutInflater inflater = null;
-            private LayoutInflater layoutInflater;
-
-
-            public PendingAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
-                activity = a;
-                data = d;
-
-                inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            }
-
-            public int getCount() {
-                return data.size();
-            }
-
-            public Object getItem(int position) {
-                return position;
-            }
-
-            public long getItemId(int position) {
-                return position;
-            }
-
-            public View getView(final int position, View convertView, ViewGroup parent) {
-                View vi = convertView;
-
-                if (convertView == null)
-                    vi = inflater.inflate(R.layout.pending_job_list, null);
-
-                TextView job_name = (TextView) vi.findViewById(R.id.job);
-                TextView job_date = (TextView) vi.findViewById(R.id.whe);
-                TextView pay = (TextView) vi.findViewById(R.id.pay);
-                TextView job_type = (TextView) vi.findViewById(R.id.esti);
-                TextView jobId = (TextView) vi.findViewById(R.id.job_id);
-                ImageView gray = (ImageView) vi.findViewById(R.id.gray);
-                ImageView red = (ImageView) vi.findViewById(R.id.red);
-                ImageView green = (ImageView) vi.findViewById(R.id.green);
-
-                final LinearLayout lin_hold=(LinearLayout)vi.findViewById(R.id.lin_hold);
-                final LinearLayout lin_hire=(LinearLayout)vi.findViewById(R.id.lin_hire);
-                final LinearLayout lin_refuse=(LinearLayout)vi.findViewById(R.id.lin_refuse);
-
-                final LinearLayout layout_refuse=(LinearLayout)vi.findViewById(R.id.layout_refuse);
-                final LinearLayout layout_hold=(LinearLayout)vi.findViewById(R.id.layout_hold);
-                final LinearLayout layout_hire=(LinearLayout)vi.findViewById(R.id.layout_hire);
-
-                HashMap<String, String> items = new HashMap<String, String>();
-                items = data.get(position);
-                final String get_jobname = items.get("name");
-                final String get_jobdate = items.get("date");
-                final String get_pay = items.get("amount");
-                final String get_esti = items.get("type");
-                get_status = items.get("status");
-                user_id = items.get("employeeid");
-
-                if (get_status.equals("Hired")) {
-                    green.setVisibility(View.VISIBLE);
-                    gray.setVisibility(View.INVISIBLE);
-                    red.setVisibility(View.INVISIBLE);
-
-                } else if (get_status.equals("Hold")) {
-                    gray.setVisibility(View.VISIBLE);
-                    green.setVisibility(View.INVISIBLE);
-                    red.setVisibility(View.INVISIBLE);
-
-                } else {
-                    red.setVisibility(View.VISIBLE);
-                    green.setVisibility(View.INVISIBLE);
-                    gray.setVisibility(View.INVISIBLE);
-
-                }
-
-                System.out.println("pos "+visible_pos);
-                if(position==visible_pos){
-                    if(visible_lay==1){
-                        lin_hold.setVisibility(View.VISIBLE);
-                        lin_hire.setVisibility(View.GONE);
-                        lin_refuse.setVisibility(View.GONE);
-                    }else if(visible_lay==2){
-                        lin_hold.setVisibility(View.GONE);
-                        lin_hire.setVisibility(View.GONE);
-                        lin_refuse.setVisibility(View.VISIBLE);
-                    }else if(visible_lay==3){
-                        lin_hold.setVisibility(View.GONE);
-                        lin_hire.setVisibility(View.VISIBLE);
-                        lin_refuse.setVisibility(View.GONE);
-                    }
-                }else{
-                    lin_hold.setVisibility(View.GONE);
-                    lin_hire.setVisibility(View.GONE);
-                    lin_refuse.setVisibility(View.GONE);
-                }
-
-                layout_refuse.setTag(position);
-                layout_hold.setTag(position);
-                layout_hire.setTag(position);
-
-                layout_hold.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        lin_hold.setVisibility(View.GONE);
-                        visible_pos=-1;
-                        visible_lay=0;
-                    }
-                });
-
-                layout_hire.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        lin_hire.setVisibility(View.GONE);
-                        visible_pos=-1;
-                        visible_lay=0;
-                    }
-                });
-
-                layout_refuse.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        visible_pos=-1;
-                        visible_lay=0;
-                        lin_refuse.setVisibility(View.GONE);
-                        HashMap<String, String> items = new HashMap<String, String>();
-                        items = data.get((Integer) view.getTag());
-                        get_jobid = items.get("jobId");
-                        get_emplrid = items.get("emrid");
-                        get_employeeid = items.get("employeeid");
-                        type="employee";
-                        refusee();
-                    }
-                });
-
-
-                gray.setTag(position);
-                red.setTag(position);
-                green.setTag(position);
-                gray.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int pos= (int) v.getTag();
-                        visible_pos=pos;
-                        visible_lay=1;
-
-                        notifyDataSetChanged();
-                        return;
-                    }
-                });
-                red.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int pos= (int) v.getTag();
-                        visible_pos=pos;
-                        visible_lay=2;;
-                        notifyDataSetChanged();
-
-                        return;
-                    }
-
-                });
-                green.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int pos= (int) v.getTag();
-                        visible_lay=3;
-                        visible_pos=pos;
-                        notifyDataSetChanged();
-                        return;
-
-                    }
-                });
-
-
-                get_jobid = items.get("jobId");
-                get_emplrid = items.get("emrid");
-                get_employeeid = items.get("employeeid");
-
-
-                DateFormat dateInstance = SimpleDateFormat.getDateInstance();
-                DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
-                try {
-                    java.util.Date dates = srcDf.parse(get_jobdate);
-                    System.out.println("date " + get_jobdate);
-                    System.out.println("converted " + destDf.format(dates));
-                    job_name.setText("" + get_jobname);
-                    job_date.setText("WHEN:" + destDf.format(dates));
-                    pay.setText("PAY:" + get_pay);
-                    job_type.setText("ESTIMATED DURATION:" + get_esti);
-                    //jobId.setText(get_id);
-                    //job_name.setText("PAY"+get_jobname);
-
-                } catch (Exception e) {
-                    System.out.println("error " + e.getMessage());
-                }
-                System.out.println("today date " + dateInstance.format(Calendar.getInstance().getTime()));
-                return vi;
-            }
-
-            private void refusee() {
-
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, emp_reject,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                System.out.println("resss::emp_reject" + response);
-                                String status = null;
-
-                                try {
-                                    JSONObject result = new JSONObject(response);
-                                    status = result.getString("status");
-                                    if (status.equals("success"))
-                                    {
-                                        searchJobList();
-
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                try {
-                                    String responseBody = new String(error.networkResponse.data, "utf-8");
-                                    JSONObject jsonObject = new JSONObject(responseBody);
-                                    System.out.println("error" + jsonObject);
-                                    String status = jsonObject.getString("msg");
-                                    if (status.equals("success")) {
-
-
-                                    }
-                                } catch (JSONException e) {
-
-                                } catch (UnsupportedEncodingException error1) {
-
-                                }
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put(XAPP_KEY, value);
-                        params.put(KEY_JOBID, get_jobid);
-                        params.put(KEY_EMPLOYERID, get_emplrid);
-                        params.put(KEY_EMPLOYEEID, get_employeeid);
-                        params.put(KEY_USERTYPE, type);
-                        return params;
-                    }
-
-                };
-
-                RequestQueue requestQueue = Volley.newRequestQueue(activity);
-                requestQueue.add(stringRequest);
-
-            }
-
 
         }
 
-        public boolean dispatchTouchEvent(MotionEvent event){
 
-            swipe.dispatchTouchEvent(event);
-            return super.dispatchTouchEvent(event);
-        }
+    }
+
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        swipe.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

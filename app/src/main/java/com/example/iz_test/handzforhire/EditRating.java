@@ -3,9 +3,9 @@ package com.example.iz_test.handzforhire;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.graphics.Canvas;
-import android.graphics.Color;
+
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -18,25 +18,29 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
 import com.github.pwittchen.swipe.library.rx2.Swipe;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+
+
+
 
 public class EditRating extends Activity{
 
     Button nxt;
     private RatingBar rb1,rb2,rb3,rb4,rb5;
     TextView ra,pname;
-    float average;
+
     String job_id,employer_id,employee_id,user_id,image,profilename;
     String category1,category2,category3,category4,category5;
     String cat1,cat2,cat3,cat4,cat5;
-    ImageView profile,default_image;
+    ImageView profile_image,default_image;
     RelativeLayout rating_lay;
-    Integer c1,c2,c3,c4,c5;
+
     Swipe swipe;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,8 +55,8 @@ public class EditRating extends Activity{
         rb5 = (RatingBar) findViewById(R.id.ratingBar5);
         ra = (TextView) findViewById(R.id.text3);
         pname=(TextView)findViewById(R.id.text1);
-        profile = (ImageView) findViewById(R.id.profile_image);
-        default_image = (ImageView) findViewById(R.id.default_image);
+
+        profile_image = (ImageView) findViewById(R.id.profile_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
 
         Intent i = getIntent();
@@ -70,7 +74,7 @@ public class EditRating extends Activity{
         //c1 = Integer.valueOf(cat1);
         pname.setText(profilename);
         System.out.println("jjjjjjjjjjjj:rating:jobid::"+job_id+".."+employer_id+".."+employee_id+profilename);
-        System.out.println("jjjjjjjjjjjj:rating:image::"+image+",,,"+c1);
+        System.out.println("jjjjjjjjjjjj:rating:image::"+image);
         System.out.println("jjjjjjjjjjjj:rating:cat::"+cat1+cat2+cat3+cat4+cat5);
 
         rb1.setNumStars(5);
@@ -81,36 +85,8 @@ public class EditRating extends Activity{
         rb3.setRating(Float.parseFloat(cat3));
         rb4.setRating(Float.parseFloat(cat4));
         rb5.setRating(Float.parseFloat(cat5));
-        //rb1.setRating(0.5f);
 
-       /* float ratingValue = 1.5f;
-        rb1.setRating(ratingValue); // to set rating value
-        rb1.setStepSize(ratingValue);*/
-        //System.out.println("jjjjjjjjjjjj:rating:d::"+d);
-
-
-        if(image.equals(""))
-        {
-            default_image.setVisibility(View.VISIBLE);
-        }
-        else {
-            URL url = null;
-            try {
-                url = new URL(image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            Bitmap bmp = null;
-            try {
-                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            bmp = addBorderToBitmap(bmp, 10, Color.BLACK);
-            bmp = addBorderToBitmap(bmp, 3, Color.BLACK);
-            default_image.setVisibility(View.INVISIBLE);
-            profile.setImageBitmap(bmp);
-        }
+        Glide.with(this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
 
         nxt.setOnClickListener(new View.OnClickListener()
         {
@@ -207,7 +183,7 @@ public class EditRating extends Activity{
             }
         });
 
-        swipe = new Swipe();
+    /*    swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
 
             @Override
@@ -231,7 +207,7 @@ public class EditRating extends Activity{
                 finish();
                 return super.onSwipedRight(event);
             }
-        });
+        });*/
 
     }
 
@@ -264,10 +240,10 @@ public class EditRating extends Activity{
     }
 
 
-    public boolean dispatchTouchEvent(MotionEvent event){
+    /*public boolean dispatchTouchEvent(MotionEvent event){
 
         swipe.dispatchTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
-
+*/
 }

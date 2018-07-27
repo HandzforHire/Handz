@@ -78,9 +78,10 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     public static int  MY_PERMISSIONS_REQUEST_READ_CONTACTS=1;
     public static Double lat,lon;
     TextView txt_undisclosedjob;
-    ImageView logo,menu;
+    ImageView logo,menu,categprylist,key;
     private static Hashtable<String, String> markers =new Hashtable<String, String>();
-    private static ArrayList<String> undisclosedjobs=new ArrayList<String>();
+    public static ArrayList<String> undisclosedjobs=new ArrayList<String>();
+    public static JSONArray undisclosedjobsarray=new JSONArray();
     SessionManager session;
     String id,address,city,state,zipcode,profile_image,profilename,email,user_name;
 
@@ -119,16 +120,30 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
         txt_undisclosedjob=(TextView)rootView.findViewById(R.id.txt_undisclosedjob);
         logo = (ImageView) rootView.findViewById(R.id.logo);
         menu = (ImageView) rootView.findViewById(R.id.menu);
-
+        categprylist = (ImageView) rootView.findViewById(R.id.categprylist);
+        key = (ImageView) rootView.findViewById(R.id.key);
         //initilizeMap();
         /// Changing map type
 
         // create class object
         gps = new GPSTracker(getActivity());
 
+        key.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(categprylist.getVisibility()==View.VISIBLE)
+                    categprylist.setVisibility(View.GONE);
+                else
+                    categprylist.setVisibility(View.VISIBLE);
+            }
+        });
 
-
-        menu.setOnClickListener(new View.OnClickListener() {
+        categprylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                categprylist.setVisibility(View.VISIBLE);
+            }
+        });        menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), LendProfilePage.class);
@@ -162,7 +177,8 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             public void onClick(View view) {
 
                 if(undisclosedjob>0){
-                   Intent in_job_list=new Intent(getActivity(),SearchJob.class);
+                   Intent in_job_list=new Intent(getActivity(),ViewSearchJob.class);
+                    in_job_list.putExtra("type","undisclosed");
                     startActivity(in_job_list);
                 }
             }
@@ -319,6 +335,8 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     @Override
     public void onResponseReceived(JSONObject responseObj, int requestType) {
         try{
+            undisclosedjobs.clear();
+            undisclosedjobsarray=new JSONArray();
             String status=responseObj.getString("status");
             System.out.println("response "+responseObj);
             if(status.equals("error"))
@@ -439,6 +457,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                         final Marker groupMarker = googleMap.addMarker(marker);
                         markers.put(groupMarker.getId(), object.toString());
                     }else{
+                        undisclosedjobsarray.put(object);
                         undisclosedjobs.add(object.toString());
                     }
                 }

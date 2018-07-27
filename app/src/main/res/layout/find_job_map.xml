@@ -32,11 +32,31 @@
         android:layout_height="100sp"
         android:src="@drawable/logo"
         android:layout_marginLeft="20sp"
-        android:layout_above="@+id/lin_bottom" />
+        android:layout_above="@+id/lin_bottom"
+        />
     <ImageView
         android:id="@+id/menu"
         android:layout_width="70sp"
         android:layout_height="70sp"
         android:src="@drawable/menu"
-        android:layout_marginLeft="0sp"/>
+        android:layout_marginLeft="0sp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"/>
+    <ImageView
+        android:id="@+id/key"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/key"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="30dp"/>
+    <ImageView
+        android:id="@+id/categprylist"
+        android:layout_width="150dp"
+        android:layout_height="300dp"
+        android:src="@drawable/categorylist"
+        android:layout_marginLeft="70sp"
+        android:layout_marginTop="90dp"
+        android:visibility="invisible"
+        />
 </RelativeLayout>

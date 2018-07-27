@@ -47,6 +47,7 @@
                     android:padding="10dp"
                     android:textStyle="bold"
                     android:textSize="18sp"
+                    android:gravity="left|right"
                     android:text="Our mission is to conveniently connect you with local neighbors, who have the interest and skill set to fulfill your job needs!  Your time is valuable... and sometimes you just need a hand!  If you're able to lend a hand, start applying for jobs today at your convenience!\n Please feel free to visit our website, handzforhire.com or view the commercials below for more information."/>
 
                 <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView

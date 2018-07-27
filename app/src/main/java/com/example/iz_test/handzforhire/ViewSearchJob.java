@@ -92,74 +92,49 @@ public class ViewSearchJob extends Activity{
         map_view = (ImageView) findViewById(R.id.map_view);
 
         Intent i = getIntent();
-        user_id = i.getStringExtra("userId");
-        address = i.getStringExtra("address");
-        city = i.getStringExtra("city");
-        state = i.getStringExtra("state");
-        zipcode = i.getStringExtra("zipcode");
-        radius = i.getStringExtra("radius");
-        category = i.getStringExtra("categoryId");
-        zip = i.getStringExtra("zip");
-        alljobs = i.getStringExtra("alljobs");
+        String type = i.getStringExtra("type");
+        if(type.equals("search")) {
+            user_id = i.getStringExtra("userId");
+            address = i.getStringExtra("address");
+            city = i.getStringExtra("city");
+            state = i.getStringExtra("state");
+            zipcode = i.getStringExtra("zipcode");
+            radius = i.getStringExtra("radius");
+            category = i.getStringExtra("categoryId");
+            zip = i.getStringExtra("zip");
+            alljobs = i.getStringExtra("alljobs");
 
-        if(!category.equals(""))
-        {
-            type = "category";
-            searchJobList();
-        }
-        else if(!zip.equals(""))
-        {
-            type = "zipcode";
-            searchJobList();
-        }
-        else if(!radius.equals(""))
-        {
-            type = "location";
-            searchJobList();
-        }
-        else if(!category.equals("")&&!zip.equals(""))
-        {
-            type = "category,zipcode";
-            searchJobList();
-        }
-        else if (!category.equals("")&&!radius.equals(""))
-        {
-            type = "category,location";
-            searchJobList();
-        }
-        else if(!zip.equals("")&&!radius.equals(""))
-        {
-            type = "zipcode,location";
-            searchJobList();
-        }
-        else if(!category.equals("")&&!zip.equals("")&&!radius.equals(""))
-        {
-            type = "display_all";
-            searchJobList();
-        }
-        else if(!alljobs.equals(""))
-        {
-            type = "employee";
-            joblist();
-        }
-       /* else if(!alljobs.equals("")&&!zip.equals(""))
-        {
-            type = "employee";
-            joblist();
-        }
-        else if (!alljobs.equals("")&&!radius.equals(""))
-        {
-            type = "employee";
-            joblist();
-        }
-        else if (!alljobs.equals("")&&!zip.equals("")&&!radius.equals(""))
-        {
-            type = "employee";
-            joblist();
-        }*/
-        else {
-            type = "employee";
-            joblist();
+            if (!category.equals("")) {
+                type = "category";
+                searchJobList();
+            } else if (!zip.equals("")) {
+                type = "zipcode";
+                searchJobList();
+            } else if (!radius.equals("")) {
+                type = "location";
+                searchJobList();
+            } else if (!category.equals("") && !zip.equals("")) {
+                type = "category,zipcode";
+                searchJobList();
+            } else if (!category.equals("") && !radius.equals("")) {
+                type = "category,location";
+                searchJobList();
+            } else if (!zip.equals("") && !radius.equals("")) {
+                type = "zipcode,location";
+                searchJobList();
+            } else if (!category.equals("") && !zip.equals("") && !radius.equals("")) {
+                type = "display_all";
+                searchJobList();
+            } else if (!alljobs.equals("")) {
+                type = "employee";
+                joblist();
+            }
+            else {
+                type = "employee";
+                joblist();
+            }
+        }else{
+            showundisclosedjob(FindJobMap.undisclosedjobsarray);
         }
 
         System.out.println("vvvvvvv:type:::::"+type);
@@ -349,7 +324,7 @@ public class ViewSearchJob extends Activity{
             if(status.equals("success"))
             {
                 String job = result.getString("job_lists");
-                System.out.println("jjjjjjjjjjjjjjjob:"+job);
+
                 JSONArray array = new JSONArray(job);
                 for(int n = 0; n < array.length(); n++)
                 {
@@ -363,12 +338,7 @@ public class ViewSearchJob extends Activity{
                         jobId = object.getString("id");
                         image = object.getString("profile_image");
 
-                        System.out.println("ressss:name::"+name);
-                        System.out.println("ressss:date::"+date);
-                        System.out.println("ressss:pay_type::" + pay_type);
-                        System.out.println("ressss::amount:" + amount);
-                        System.out.println("ressss::jobId:" + jobId);
-                        System.out.println("ressss::image:" + image);
+
                     HashMap<String,String> map = new HashMap<String,String>();
                     map.put("name", name);
                     map.put("date", date);
@@ -405,7 +375,6 @@ public class ViewSearchJob extends Activity{
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             view.setSelected(true);
                             String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
-                            System.out.println("ssssssssssselected:job_id:" + job_id);
                             Intent i = new Intent(ViewSearchJob.this,JobDescription.class);
                             i.putExtra("userId",user_id);
                             i.putExtra("jobId",job_id);
@@ -498,6 +467,67 @@ public class ViewSearchJob extends Activity{
             }
         }catch (JSONException e){
             e.printStackTrace();
+        }
+    }
+
+    public void showundisclosedjob(JSONArray array){
+        try {
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = (JSONObject) array.get(i);
+                String category = object.getString("job_category");
+                System.out.println("ressss::category:" + category);
+                name = object.getString("job_name");
+                date = object.getString("job_date");
+                pay_type = object.getString("job_payment_type");
+                amount = object.getString("job_payment_amount");
+                jobId = object.getString("id");
+                image = object.getString("profile_image");
+
+
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("name", name);
+                map.put("date", date);
+                map.put("type", pay_type);
+                map.put("amount", amount);
+                map.put("jobId", jobId);
+                map.put("image", image);
+                job_list.add(map);
+                System.out.println("job_list:::" + job_list);
+                CustomList arrayAdapter = new CustomList(this, job_list) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        // Get the current item from ListView
+                        View view = super.getView(position, convertView, parent);
+                        if (position % 2 == 1) {
+                            // Set a background color for ListView regular row/item
+                            view.setBackgroundColor(Color.parseColor("#BF178487"));
+                        } else {
+                            // Set the background color for alternate row/item
+                            view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
+                        }
+                        return view;
+                    }
+                };
+
+                // DataBind ListView with items from ArrayAdapter
+                list.setAdapter(arrayAdapter);
+
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        view.setSelected(true);
+                        String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
+                        Intent i = new Intent(ViewSearchJob.this, JobDescription.class);
+                        i.putExtra("userId", user_id);
+                        i.putExtra("jobId", job_id);
+                        startActivity(i);
+                    }
+                });
+
+            }
+
+        }catch (Exception e){
+            System.out.println("exception "+e.getMessage());
         }
     }
 

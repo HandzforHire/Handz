@@ -129,7 +129,7 @@ Dialog dialog;
         zipcode = i.getStringExtra("zipcode");
         System.out.println("iiiiiiiiiiiiiiiiiiiii:" + id);
 
-        listPostedJobs();
+       // listPostedJobs();
 
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,6 +246,7 @@ Dialog dialog;
                         all_jobs = "";
                     }
                     Intent i = new Intent(SearchJob.this,ViewSearchJob.class);
+                    i.putExtra("type","search");
                     i.putExtra("userId",id);
                     i.putExtra("address",address);
                     i.putExtra("city",city);
@@ -318,6 +319,8 @@ Dialog dialog;
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
+                System.out.println("Id "+id);
+                System.out.println("appkey "+value);
                 return params;
             }
         };

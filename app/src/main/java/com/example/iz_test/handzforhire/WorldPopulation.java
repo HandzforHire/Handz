@@ -20,8 +20,10 @@ public class WorldPopulation {
     private String cat3;
     private String cat4;
     private String cat5;
+    private String msg_notification;
+    private String star_notification;
 
-    public WorldPopulation(String jobname, String image, String profilename, String username, String jobId, String employerId, String employeeId, String channelid,String userid,String ratingId,String ratingValue,String category1,String category2,String category3,String category4,String category5,String transaction_date,String job_category,String description) {
+    public WorldPopulation(String jobname, String image, String profilename, String username, String jobId, String employerId, String employeeId, String channelid,String userid,String ratingId,String ratingValue,String category1,String category2,String category3,String category4,String category5,String transaction_date,String job_category,String description,String message,String star) {
         this.jobname = jobname;
         this.image = image;
         this.profilename = profilename;
@@ -36,6 +38,8 @@ public class WorldPopulation {
         this.userid = userid;
         this.rating_id = ratingId;
         this.rating = ratingValue;
+        this.msg_notification = message;
+        this.star_notification = star;
         this.cat1 = category1;
         this.cat2 = category2;
         this.cat3 = category3;
@@ -113,5 +117,13 @@ public class WorldPopulation {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getMsg_notification() {
+        return msg_notification;
+    }
+
+    public String getStar_notification() {
+        return star_notification;
     }
 }

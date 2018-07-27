@@ -98,7 +98,7 @@
                 android:layout_height="40sp"
                 android:orientation="horizontal"
                 android:layout_marginLeft="20sp"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:layout_marginRight="20sp"
                 android:background="@drawable/gray_box"
                 android:layout_marginTop="10sp">
@@ -174,13 +174,14 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/red1"
+                    android:id="@+id/msg_notify"
                     android:layout_width="30sp"
                     android:layout_height="30sp"
                     android:background="@drawable/circle_shape"
                     android:textColor="#ffffff"
                     android:visibility="invisible"
                     android:textSize="16sp"
+                    android:gravity="center"
                     android:textStyle="bold"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
@@ -221,12 +222,13 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/red2"
+                    android:id="@+id/star_notify"
                     android:layout_width="30sp"
                     android:layout_height="30sp"
                     android:background="@drawable/circle_shape"
                     android:textColor="#ffffff"
                     android:textSize="16sp"
+                    android:gravity="center"
                     android:visibility="invisible"
                     android:textStyle="bold"
                     android:layout_alignParentTop="true"

@@ -47,9 +47,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.iz_test.handzforhire.R.id.job;
-import static com.example.iz_test.handzforhire.R.id.username;
-
 public class MakePayment extends Activity{
 
     String job_id,user_id,job_name;
@@ -101,13 +98,6 @@ public class MakePayment extends Activity{
         employerId=i.getStringExtra("employer");
         employeeId=i.getStringExtra("employee");
 
-        System.out.println("iiiiiiiiiiii:user_id:makepayment:::"+user_id);
-        System.out.println("iiiiiiiiiiii:job_name:makepayment:::"+job_name);
-        System.out.println("iiiiiiiiiiii:jobid:makepayment:::"+job_id);
-        System.out.println("iiiiiiiiiiii:profile_image:makepayment:::"+profile_image);
-        System.out.println("iiiiiiiiiiii:profile_image:employerId:::"+employerId);
-        System.out.println("iiiiiiiiiiii:profile_image:employeeId:::"+employeeId);
-        System.out.println("iiiiiiiiiiii:profile_image:profile_name:::"+profile_name+"..."+user_name);
 
         //getJobDetails();
 

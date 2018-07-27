@@ -91,7 +91,7 @@ public class CreateJob2 extends AppCompatActivity {
         text.setText(name);
 
 
-        swipe = new Swipe();
+       /* swipe = new Swipe();
         swipe.setListener(new SimpleSwipeListener() {
 
 
@@ -116,7 +116,7 @@ public class CreateJob2 extends AppCompatActivity {
                 return super.onSwipedRight(event);
             }
         });
-
+*/
         pros.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -478,10 +478,10 @@ public class CreateJob2 extends AppCompatActivity {
     }
 
 
-    @Override
+    /*@Override
     public boolean dispatchTouchEvent(MotionEvent event){
 
         swipe.dispatchTouchEvent(event);
         return super.dispatchTouchEvent(event);
-    }
+    }*/
 }
