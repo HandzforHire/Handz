@@ -70,6 +70,7 @@ public class CreateJob2 extends AppCompatActivity {
         job_category_color = i.getStringExtra("job_category_color");
         sub_category = i.getStringExtra("sub_category");
         duration = i.getStringExtra("duration");
+        System.out.println("estimated amount "+estimated_amount);
         System.out.println("777777777:" + id+".."+name+".."+category+".."+date+".."+start_time+".."+expected_hours+".."+amount+".."+type);
         System.out.println("777777777:" +".."+job_category_color+".."+sub_category);
 

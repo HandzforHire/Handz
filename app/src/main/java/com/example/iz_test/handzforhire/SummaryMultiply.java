@@ -24,8 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
-import com.github.pwittchen.swipe.library.rx2.Swipe;
+
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,10 +37,10 @@ public class SummaryMultiply extends Activity {
 
     EditText pay_amount,hours;
     TextView add,subtract,total;
-    String job_id,job_expire;
+    String job_id,job_expire,job_category_color,sub_category,edit_job,duration;
     String value,id,name,usertype,category,description,date,start_time,expected_hours,end_time,amount,type,address,city,current_location;
     String state,zipcode,post_address,latitude,longitude,estimated_amount,flexible_status;
-    Swipe swipe;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,17 +59,22 @@ public class SummaryMultiply extends Activity {
         category = i.getStringExtra("job_category");
         description = i.getStringExtra("job_decription");
         date = i.getStringExtra("job_date");
-        start_time = i.getStringExtra("job_start_date");
+        start_time = i.getStringExtra("start_time");
+        job_category_color = i.getStringExtra("job_category_color");
+        sub_category = i.getStringExtra("sub_category");
         expected_hours = i.getStringExtra("expected_hours");
         amount = i.getStringExtra("payment_amount");
         type = i.getStringExtra("payment_type");
-        current_location = i.getStringExtra("location");
+        current_location = i.getStringExtra("current_location");
         post_address = i.getStringExtra("post_address");
         latitude = i.getStringExtra("latitude");
         longitude = i.getStringExtra("longitude");
-        estimated_amount = i.getStringExtra("estimated_payment");
-        flexible_status = i.getStringExtra("flexible");
+        estimated_amount = i.getStringExtra("estimated_amount");
+        flexible_status = i.getStringExtra("flexible_status");
         job_expire = i.getStringExtra("job_expire");
+        edit_job = i.getStringExtra("edit_job");
+        job_id = i.getStringExtra("job_id");
+        duration = i.getStringExtra("duration");
 
         System.out.println("sssssssssssss:amount::"+amount+"..."+estimated_amount+"..."+expected_hours+"..."+job_expire);
 
@@ -80,30 +85,30 @@ public class SummaryMultiply extends Activity {
         pay_amount.addTextChangedListener(tw);
         hours.addTextChangedListener(tw1);
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
 
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(SummaryMultiply.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
 
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(SummaryMultiply.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,19 +120,24 @@ public class SummaryMultiply extends Activity {
                 i.putExtra("userId", id);
                 i.putExtra("job_name",name);
                 i.putExtra("job_category", category);
+                i.putExtra("job_category_color", job_category_color);
+                i.putExtra("sub_category", sub_category);
                 i.putExtra("job_decription", description);
                 i.putExtra("job_date", date);
-                i.putExtra("job_start_date", start_time);
+                i.putExtra("start_time", start_time);
                 i.putExtra("expected_hours", expectedhour);
                 i.putExtra("payment_amount", paymentamount);
                 i.putExtra("payment_type", type);
-                i.putExtra("location", current_location);
+                i.putExtra("current_location", current_location);
                 i.putExtra("post_address", post_address);
                 i.putExtra("latitude",latitude);
                 i.putExtra("longitude", longitude);
-                i.putExtra("estimated_payment",estimated_amount);
-                i.putExtra("flexible", flexible_status);
+                i.putExtra("estimated_amount",estimated_amount);
+                i.putExtra("flexible_status", flexible_status);
                 i.putExtra("job_expire", job_expire);
+                i.putExtra("edit_job", edit_job);
+                i.putExtra("job_id", job_id);
+                i.putExtra("duration", duration);
                 startActivity(i);
             }
         });
@@ -143,19 +153,24 @@ public class SummaryMultiply extends Activity {
                 i.putExtra("userId", id);
                 i.putExtra("job_name",name);
                 i.putExtra("job_category", category);
+                i.putExtra("job_category_color", job_category_color);
+                i.putExtra("sub_category", sub_category);
                 i.putExtra("job_decription", description);
                 i.putExtra("job_date", date);
-                i.putExtra("job_start_date", start_time);
+                i.putExtra("start_time", start_time);
                 i.putExtra("expected_hours", expectedhour);
                 i.putExtra("payment_amount", paymentamount);
                 i.putExtra("payment_type", type);
-                i.putExtra("location", current_location);
+                i.putExtra("current_location", current_location);
                 i.putExtra("post_address", post_address);
                 i.putExtra("latitude",latitude);
                 i.putExtra("longitude", longitude);
-                i.putExtra("estimated_payment",estimated_amount);
-                i.putExtra("flexible", flexible_status);
+                i.putExtra("estimated_amount",estimated_amount);
+                i.putExtra("flexible_status", flexible_status);
                 i.putExtra("job_expire", job_expire);
+                i.putExtra("edit_job", edit_job);
+                i.putExtra("job_id", job_id);
+                i.putExtra("duration", duration);
                 startActivity(i);
             }
         });
@@ -203,7 +218,7 @@ public class SummaryMultiply extends Activity {
                 pay_amount.addTextChangedListener(this);
             }
 
-           String new_pay_amount = pay_amount.getText().toString();
+            String new_pay_amount = pay_amount.getText().toString();
             System.out.println("sssssssssssss::new_pay_amount:"+new_pay_amount);
             String new_hours = hours.getText().toString();
             String job_estimated = String.valueOf(Float.valueOf(new_pay_amount)*Float.valueOf(new_hours));
@@ -254,9 +269,4 @@ public class SummaryMultiply extends Activity {
         }
     };
 
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

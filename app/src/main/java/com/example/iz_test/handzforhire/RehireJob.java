@@ -79,7 +79,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
     public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
     String job_id,jobId,paytext,pay_amount,flexible_status,job_estimated,hourr,latitude,longitude;
-    ProgressDialog progress_dialog;
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     CheckBox checkBox;
     Activity activity;
@@ -865,7 +864,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 }
                 category_name.setText(header+" - "+sub_cat);
 
-                progress_dialog.dismiss();
 
             } else {
             }

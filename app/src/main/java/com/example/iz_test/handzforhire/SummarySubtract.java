@@ -10,7 +10,7 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -25,8 +25,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
-import com.github.pwittchen.swipe.library.rx2.Swipe;
+
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +38,7 @@ import java.util.Map;
 public class SummarySubtract extends Activity{
 
     private static final String URL = Constant.SERVER_URL+"create_job";
+    private static final String EDIT_URL = Constant.SERVER_URL+"edit_job";
     public static String USER_ID = "user_id";
     public static String JOB_NAME = "job_name";
     public static String JOB_CATEGORY = "job_category";
@@ -72,6 +73,8 @@ public class SummarySubtract extends Activity{
     public static String JOB_EXPIRE = "job_expire";
     public static String SUB_CATEGORY = "sub_category";
     public static String CATEGORY_COLOR = "job_category_color";
+    public static String DELIST = "delist";
+    public static String JOB_ID = "job_id";
     String key = "HandzForHire@~";
     String job_id, hour_expected,job_expire;
     TextView job_payout,pocket_expense,paypal_merchant;
@@ -84,12 +87,12 @@ public class SummarySubtract extends Activity{
     String state = "Tamil Nadu";
     String zipcode = "600087";
     String usertype = "employer";
-    String sub_category = "sub_category";
-    String job_category_color = "red";
-    String expense,fee,payout;
-    Swipe swipe;
-    Dialog dialog;
+    String sub_category;
+    String job_category_color;
+    String expense,fee,payout,edit_job,duration;
+    String delist = "yes";
 
+    Dialog dialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,11 +101,19 @@ public class SummarySubtract extends Activity{
         ImageView logo = (ImageView) findViewById(R.id.logo);
         ImageView back = (ImageView) findViewById(R.id.back);
         TextView create_job = (TextView) findViewById(R.id.create_btn);
+        TextView edit = (TextView) findViewById(R.id.edit_btn);
         pocket_expense = (TextView) findViewById(R.id.ope);
         paypal_merchant = (TextView) findViewById(R.id.pmpf);
         job_payout = (TextView) findViewById(R.id.ajp);
         hourly_value = (EditText) findViewById(R.id.hourly_text);
         expected_value = (EditText) findViewById(R.id.expected_text);
+
+
+        dialog = new Dialog(SummarySubtract.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -110,22 +121,38 @@ public class SummarySubtract extends Activity{
         category = i.getStringExtra("job_category");
         description = i.getStringExtra("job_decription");
         date = i.getStringExtra("job_date");
-        start_time = i.getStringExtra("job_start_date");
+        start_time = i.getStringExtra("start_time");
         expected_hours = i.getStringExtra("expected_hours");
         amount = i.getStringExtra("payment_amount");
         type = i.getStringExtra("payment_type");
-        current_location = i.getStringExtra("location");
+        current_location = i.getStringExtra("current_location");
         post_address = i.getStringExtra("post_address");
         latitude = i.getStringExtra("latitude");
         longitude = i.getStringExtra("longitude");
-        estimated_amount = i.getStringExtra("estimated_payment");
-        flexible_status = i.getStringExtra("flexible");
+        estimated_amount = i.getStringExtra("estimated_amount");
+        flexible_status = i.getStringExtra("flexible_status");
         job_expire = i.getStringExtra("job_expire");
+        job_category_color = i.getStringExtra("job_category_color");
+        sub_category = i.getStringExtra("sub_category");
+        edit_job = i.getStringExtra("edit_job");
+        duration = i.getStringExtra("duration");
+        job_id = i.getStringExtra("job_id");
 
-        dialog = new Dialog(SummarySubtract.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        System.out.println("sssssssssssss:subtract::"+id+"..."+name+"..."+category+".."+description+".."+current_location);
+        System.out.println("sssssssssssss:subtract::"+date+"..."+start_time+"..."+expected_hours+".."+amount+".."+type);
+        System.out.println("sssssssssssss:subtract::"+post_address+"..."+latitude+"..."+longitude+",,"+job_id);
+        System.out.println("sssssssssssss:subtract::"+estimated_amount+"..."+flexible_status+".."+job_expire);
+
+        if(edit_job.equals("yes"))
+        {
+            create_job.setVisibility(View.INVISIBLE);
+            edit.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            edit.setVisibility(View.INVISIBLE);
+            create_job.setVisibility(View.VISIBLE);
+        }
 
         hourly_value.setText(amount);
         expected_value.setText(expected_hours);
@@ -180,31 +207,14 @@ public class SummarySubtract extends Activity{
             }
         });
 
-
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(SummarySubtract.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(SummarySubtract.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
+            public void onClick(View v) {
+                payout = job_payout.getText().toString();
+                expense = "$ " + pocket_expense.getText().toString();
+                fee = "$ " + paypal_merchant.getText().toString();
+                System.out.println("sssssssssssss:add:pay:expe:fee:"+payout+".."+expense+".."+fee);
+                editJob();
             }
         });
     }
@@ -261,7 +271,7 @@ public class SummarySubtract extends Activity{
                 params.put(END_TIME,start_time);
                 params.put(JOB_PAYMENT_AMOUNT,amount);
                 params.put(POCKET_EXPENSE,expense);
-                params.put(JOB_PAYMENT_TYPE,type);
+                params.put(JOB_PAYMENT_TYPE,duration);
                 params.put(ADDRESS,address);
                 params.put(CITY,city);
                 params.put(CURRENT_LOCATION,current_location);
@@ -282,6 +292,7 @@ public class SummarySubtract extends Activity{
                 params.put(JOB_EXPIRE,job_expire);
                 params.put(SUB_CATEGORY,sub_category);
                 params.put(CATEGORY_COLOR,job_category_color);
+                params.put(DELIST,delist);
                 return params;
             }
 
@@ -305,7 +316,7 @@ public class SummarySubtract extends Activity{
         System.out.println("66666666-END_TIME- "+start_time);
         System.out.println("66666666-JOB_PAYMENT_AMOUNT- "+amount);
         System.out.println("66666666-POCKET_EXPENSE- "+expense);
-        System.out.println("66666666-JOB_PAYMENT_TYPE- "+type);
+        System.out.println("66666666-JOB_PAYMENT_TYPE- "+duration);
         System.out.println("66666666-ADDRESS- "+address);
         System.out.println("66666666-CITY- "+city);
         System.out.println("66666666-CURRENT_LOCATION- "+current_location);
@@ -326,6 +337,7 @@ public class SummarySubtract extends Activity{
         System.out.println("66666666-JOB_EXPIRE- "+job_expire);
         System.out.println("66666666-SUB_CATEGORY- "+sub_category);
         System.out.println("66666666-CATEGORY_COLOR- "+job_category_color);
+        System.out.println("66666666-DELIST- "+delist);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
@@ -516,11 +528,142 @@ public class SummarySubtract extends Activity{
         }
     };
 
+    private void editJob() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, EDIT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Toast.makeText(Registrationpage3.this,response,Toast.LENGTH_LONG).show();
+                        System.out.println("eeeee:" + response);
+                        onResponserecieved1(response, 1);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        try {
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            System.out.println("eeeeeeeeeeeeror:" + jsonObject);
 
-    public boolean dispatchTouchEvent(MotionEvent event){
+                        } catch (JSONException e) {
+                            //Handle a malformed json response
+                        } catch (
+                                UnsupportedEncodingException error1) {
+                        }
 
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put(APP_KEY,key);
+                params.put(USER_ID,id);
+                params.put(JOB_NAME,name);
+                params.put(USER_TYPE,usertype);
+                params.put(JOB_CATEGORY, category);
+                params.put(JOB_DESCRIPTION,description);
+                params.put(JOB_DATE,date);
+                params.put(JOB_START_DATE,start_time);
+                params.put(JOB_END_DATE,start_time);
+                params.put(START_TIME,start_time);
+                params.put(END_TIME,start_time);
+                params.put(JOB_PAYMENT_AMOUNT,amount);
+                params.put(POCKET_EXPENSE,expense);
+                params.put(JOB_PAYMENT_TYPE,duration);
+                params.put(ADDRESS,address);
+                params.put(CITY,city);
+                params.put(CURRENT_LOCATION,current_location);
+                params.put(STATE,state);
+                params.put(ZIPCODE,zipcode);
+                params.put(POST_ADDRESS,post_address);
+                params.put(LATITUDE,latitude);
+                params.put(LONGITUDE,longitude);
+                params.put(JOB_ADDRESS,address);
+                params.put(JOB_CITY,city);
+                params.put(JOB_STATE,state);
+                params.put(JOB_ZIPCODE,zipcode);
+                params.put(ESTIMATED_PAYMENT,expense);
+                params.put(FLEXIBLE,flexible_status);
+                params.put(PAYPAL_FEE,fee);
+                params.put(JOB_PAYOUT,payout);
+                params.put(FEE_DETAILS,fee_details);
+                params.put(JOB_EXPIRE,job_expire);
+                params.put(SUB_CATEGORY,sub_category);
+                params.put(CATEGORY_COLOR,job_category_color);
+                params.put(DELIST,delist);
+                params.put(ESTIMATED_PAYMENT,estimated_amount);
+                params.put(JOB_ID,job_id);
+                return params;
+            }
+        };
+
+        System.out.println("vvvvvvv1:"+".."+key+".."+id+".."+name+".."+usertype+".."+job_expire);
+        System.out.println("vvvvvvv2:"+".."+category+".."+description+".."+date+".."+start_time+".."+job_category_color);
+        System.out.println("vvvvvvv3:"+".."+job_id+".."+amount+".."+duration+".."+address+".."+fee_details);
+        System.out.println("vvvvvvv4:"+".."+city+".."+state+".."+zipcode+".."+post_address+".."+sub_category);
+        System.out.println("vvvvvvv5:"+".."+latitude+".."+longitude+".."+estimated_amount+".."+flexible_status+".."+payout);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    public void onResponserecieved1(String jsonobject, int requesttype) {
+        System.out.println("response from interface" + jsonobject);
+
+        String status = null;
+
+        try {
+
+            JSONObject jResult = new JSONObject(jsonobject);
+
+            status = jResult.getString("status");
+            job_id = jResult.getString("job_id");
+            System.out.println("jjjjjjjjjjjob:id::" + job_id);
+
+            if (status.equals("success")) {
+                // custom dialog
+                final Dialog dialog = new Dialog(SummarySubtract.this);
+                dialog.setContentView(R.layout.gray_custom);
+
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("Job Updated Successfully");
+                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        Intent i = new Intent(SummarySubtract.this, EditPostedJobs.class);
+                        i.putExtra("userId", id);
+                        i.putExtra("jobId", job_id);
+                        i.putExtra("address", address);
+                        i.putExtra("city", city);
+                        i.putExtra("state", state);
+                        i.putExtra("zipcode", zipcode);
+                        startActivity(i);
+                        finish();
+                    }
+                });
+
+                dialog.show();
+                Window window = dialog.getWindow();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                return;
+            } else {
+
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

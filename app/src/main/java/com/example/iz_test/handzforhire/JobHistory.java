@@ -108,7 +108,7 @@ public class JobHistory extends Activity {
             zipcode = i.getStringExtra("zipcode");
 
             activeJobs();
-
+            adapter = new Adapter(this, arraylist);
 
             editsearch.addTextChangedListener(new TextWatcher() {
                 private List<WorldPopulation> worldpopulationlist =  new ArrayList<WorldPopulation>();
