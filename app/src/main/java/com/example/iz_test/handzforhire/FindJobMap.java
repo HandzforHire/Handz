@@ -38,7 +38,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.pwittchen.swipe.library.rx2.Swipe;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -57,6 +61,7 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,6 +94,9 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     View rootView;
     int undisclosedjob=0;
     Swipe swipe;
+    Dialog dialog;
+
+    public static String job_id;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,6 +108,10 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
         SupportMapFragment fragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map);
         fragment.getMapAsync(this);
 
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         session = new SessionManager(getActivity());
         HashMap<String, String> user = session.getUserDetails();
@@ -115,7 +127,6 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
        /* Intent intent = getIntent();
         user_id = intent.getStringExtra("userId");*/
         user_id=user.get(SessionManager.ID);
-        System.out.println("iiiiiiiiiiii:userid:findjob:"+user_id);
 
         txt_undisclosedjob=(TextView)rootView.findViewById(R.id.txt_undisclosedjob);
         logo = (ImageView) rootView.findViewById(R.id.logo);
@@ -229,6 +240,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
 
             LinearLayout lin_job_view=(LinearLayout)view.findViewById(R.id.lin_job_view);
             TextView txt_jobcat=(TextView)view.findViewById(R.id.txt_jobcat);
+            final TextView txt_obj=(TextView)view.findViewById(R.id.txt_obj);
             TextView txt_amount=(TextView)view.findViewById(R.id.txt_amount);
             TextView txt_when=(TextView)view.findViewById(R.id.txt_when);
             TextView txt_dur=(TextView)view.findViewById(R.id.txt_duration);
@@ -238,7 +250,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             txt_jobcat.setText(job_name);
             txt_amount.setText("PAY $"+job_payment_amount);
             txt_dur.setText("EXPECTED DURATION: "+duration);
-
+            txt_obj.setText(object.toString());
 
             DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
@@ -267,7 +279,20 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             lin_job_view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   // new
+                    //Intent i = new Intent(getActivity(),ApplyJob.class);
+                    System.out.println("current obj "+txt_obj.getText().toString());
+                    try {
+                        JSONObject obj = new JSONObject(txt_obj.getText().toString());
+                        job_id=obj.getString("id");
+
+                        RestClientPost rest = new RestClientPost(getActivity(), 2);
+                        rest.execute1(RestClientPost.RequestMethod.POST, getActivity(), FindJobMap.this);
+
+                    }catch (Exception e){
+                        System.out.println("Exception e"+e.getMessage());;
+                    }
+                  /*  */
+                   // startActivity(i);
                 }
             });
 
@@ -316,140 +341,128 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     @Override
     public void onResponseReceived(JSONObject responseObj, int requestType) {
         try{
-            undisclosedjobs.clear();
-            undisclosedjobsarray=new JSONArray();
-            String status=responseObj.getString("status");
-            System.out.println("response "+responseObj);
-            if(status.equals("error"))
-            {
-                undisclosedjob=0;
-                txt_undisclosedjob.setText("0 disclosed Locations");
-            }else {
-                googleMap.clear();
-                JSONArray joblist = responseObj.getJSONArray("job_lists");
-                for (int i = 0; i < joblist.length(); i++) {
-                    JSONObject object = joblist.getJSONObject(i);
-                    String postaddress = object.getString("post_address");
-                    if (postaddress.equals("yes")) {
-                        String lat = object.getString("lat");
-                        String lon = object.getString("lon");
-                        String job_category=object.getString("job_category");
-                        Bitmap icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_1);
-                        if(job_category.equals("Painting (Interior / Exterior)")){
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_1);
-                        }else if(job_category.equals("Moving Items"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_2);
-                        }
-                        else if(job_category.equals("Heavy Lifting"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_3);
-                        }
-                        else if(job_category.equals("Unpacking Boxes"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_4);
-                        }
-                        else if(job_category.equals("Landscaping"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_5);
-                        }
-                        else if(job_category.equals("Lawnmowing"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_6);
-                        }
-                        else if(job_category.equals("Raking Leaves"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_7);
 
-                        }
-                        else if(job_category.equals("Babysitting"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_8);
+            if(requestType==1) {
+                undisclosedjobs.clear();
+                undisclosedjobsarray = new JSONArray();
+                String status = responseObj.getString("status");
+                System.out.println("response " + responseObj);
+                if (status.equals("error")) {
+                    undisclosedjob = 0;
+                    txt_undisclosedjob.setText("0 disclosed Locations");
+                } else {
+                    googleMap.clear();
+                    JSONArray joblist = responseObj.getJSONArray("job_lists");
+                    for (int i = 0; i < joblist.length(); i++) {
+                        JSONObject object = joblist.getJSONObject(i);
+                        String postaddress = object.getString("post_address");
+                        if (postaddress.equals("yes")) {
+                            String lat = object.getString("lat");
+                            String lon = object.getString("lon");
+                            String job_category = object.getString("job_category");
+                            Bitmap icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_1);
+                            if (job_category.equals("Painting (Interior / Exterior)")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_1);
+                            } else if (job_category.equals("Moving Items")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_2);
+                            } else if (job_category.equals("Heavy Lifting")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_3);
+                            } else if (job_category.equals("Unpacking Boxes")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_4);
+                            } else if (job_category.equals("Landscaping")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_5);
+                            } else if (job_category.equals("Lawnmowing")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_6);
+                            } else if (job_category.equals("Raking Leaves")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_7);
 
-                        }
-                        else if(job_category.equals("Digging (trench/hole)"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_9);
+                            } else if (job_category.equals("Babysitting")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_8);
 
-                        }
-                        else if(job_category.equals("Assembling Furniture/Object"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_10);
+                            } else if (job_category.equals("Digging (trench/hole)")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_9);
 
-                        }
-                        else if(job_category.equals("Dog Walking"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_11);
+                            } else if (job_category.equals("Assembling Furniture/Object")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_10);
 
-                        }
-                        else if(job_category.equals("Pet Care"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_12);
+                            } else if (job_category.equals("Dog Walking")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_11);
 
-                        }
-                        else if(job_category.equals("Workout Partner/Coach"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_13);
+                            } else if (job_category.equals("Pet Care")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_12);
 
-                        }
-                        else if(job_category.equals("Server(s) for Dinner Party"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_14);
+                            } else if (job_category.equals("Workout Partner/Coach")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_13);
 
-                        }
-                        else if(job_category.equals("Bartender for House Party"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_15);
+                            } else if (job_category.equals("Server(s) for Dinner Party")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_14);
 
-                        }
-                        else if(job_category.equals("Shoveling Snow"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_16);
+                            } else if (job_category.equals("Bartender for House Party")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_15);
 
-                        }
-                        else if(job_category.equals("Apprentice for Skilled Laborer"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_17);
+                            } else if (job_category.equals("Shoveling Snow")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_16);
 
-                        }
-                        else if(job_category.equals("Cleaning"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_18);
+                            } else if (job_category.equals("Apprentice for Skilled Laborer")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_17);
 
-                        }
-                        else if(job_category.equals("Organizing"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_19);
+                            } else if (job_category.equals("Cleaning")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_18);
 
-                        }
-                        else if(job_category.equals("Food Shopping"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_20);
+                            } else if (job_category.equals("Organizing")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_19);
 
-                        }
-                        else if(job_category.equals("Other"))
-                        {
-                            icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_21);
+                            } else if (job_category.equals("Food Shopping")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_20);
 
-                        }
+                            } else if (job_category.equals("Other")) {
+                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_21);
 
-                        MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon))).icon(BitmapDescriptorFactory.fromBitmap(icon));
-                        googleMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) FindJobMap.this);
-                        final Marker groupMarker = googleMap.addMarker(marker);
-                        markers.put(groupMarker.getId(), object.toString());
-                    }else{
-                        undisclosedjobsarray.put(object);
-                        undisclosedjobs.add(object.toString());
+                            }
+
+                            MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon))).icon(BitmapDescriptorFactory.fromBitmap(icon));
+                            googleMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) FindJobMap.this);
+                            final Marker groupMarker = googleMap.addMarker(marker);
+                            markers.put(groupMarker.getId(), object.toString());
+                        } else {
+                            undisclosedjobsarray.put(object);
+                            undisclosedjobs.add(object.toString());
+                        }
                     }
+                    undisclosedjob = undisclosedjobs.size();
+                    if (undisclosedjobs.size() > 0)
+                        txt_undisclosedjob.setText(undisclosedjobs.size() + " Additional Undisclosed Locations\n Within the Parameters of this map\n(Click Here for ListView the Job Details)");
+                    else
+                        txt_undisclosedjob.setText("0 Undisclosed Locations ");
+
                 }
-                undisclosedjob=undisclosedjobs.size();
-                if(undisclosedjobs.size()>0)
-                    txt_undisclosedjob.setText(undisclosedjobs.size()+" Additional Undisclosed Locations\n Within the Parameters of this map\n(Click Here for ListView the Job Details)");
-                else
-                    txt_undisclosedjob.setText("0 Undisclosed Locations " );
+            }else if(requestType==2){
+                System.out.println("response "+responseObj);
+                String status = responseObj.getString("status");
+                if (status.equals("success")) {
+                   String job_data = responseObj.getString("job_data");
+
+                    JSONObject object = new JSONObject(job_data);
+                    if(object.getString("profile_name").isEmpty()){
+
+                    }
+                    Intent i = new Intent(getActivity(),ApplyJob.class);
+                    i.putExtra("userId",user_id);
+                    i.putExtra("jobId",job_id);
+                    i.putExtra("employerId",object.getString("employer_id"));
+                    i.putExtra("job_name",object.getString("job_name"));
+                    i.putExtra("date",object.getString("job_date"));
+                    i.putExtra("start_time",object.getString("start_time"));
+                    i.putExtra("end_time",object.getString("end_time"));
+                    i.putExtra("profile_name",object.getString("profile_name"));
+                    i.putExtra("amount",object.getString("job_payment_amount"));
+                    i.putExtra("type",object.getString("job_payment_type"));
+                    i.putExtra("image",object.getString("profile_image"));
+                    startActivity(i);
+                } else {
+                }
 
             }
-
         }catch (Exception e){
             System.out.println("Error "+e.getMessage());
         }

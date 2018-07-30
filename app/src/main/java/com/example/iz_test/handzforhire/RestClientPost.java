@@ -31,6 +31,8 @@ public class RestClientPost {
     private String TAG="Json Response";
     private String tag_json_obj = "jobj_req", tag_json_arry = "jarray_req";
     private ProgressDialog pDialog;
+    public static String APP_KEY = "X-APP-KEY";
+    public static String JOB_ID = "job_id";
     ConnectionDetector cd;
     Context context;
     public enum RequestMethod
@@ -125,5 +127,64 @@ public class RestClientPost {
         }
     }
 
+    public void execute1(RequestMethod method, Activity activity,Fragment fragment)
+            throws Exception {
+        Log.d("", "Request params " + url);
+        this.context=activity;
+        getjobdetail(url, activity,(ResponseListener)fragment);
+    }
+    private void getjobdetail(String url, final Context activity, final ResponseListener replist) {
+
+        if(cd.isConnectingToInternet()) {
+
+            //queue = Volley.newRequestQueue(activity);
+            if (queue == null) {
+                queue = Volley.newRequestQueue(activity);
+            }
+            int timeout = 60000; // 60 seconds - time out
+
+            StringRequest postRequest = new StringRequest(Request.Method.POST, Constant.SERVER_URL+"job_detail_view",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                System.out.println("response on restclinet"+response);
+                                JSONObject jsonResponse = new JSONObject(response);
+                                replist.onResponseReceived(jsonResponse,requestType);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            String s="{\"status\":\"error\",\"request_type\":\"job_lists\",\"msg\":\"No Jobs Found\",\"error_code\":\"8\"}";
+                            System.out.println("volley error "+error.getMessage());
+                            try {
+                                JSONObject jsonResponse = new JSONObject(s);
+                                replist.onResponseReceived(jsonResponse,requestType);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+            ) {
+                @Override
+                protected Map<String, String> getParams()
+                {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put(APP_KEY, "HandzForHire@~");
+                    params.put(JOB_ID, FindJobMap.job_id);
+                    return params;
+                }
+            };
+            postRequest.setRetryPolicy(new DefaultRetryPolicy(timeout,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            queue.add(postRequest);
+        }
+    }
 
 }

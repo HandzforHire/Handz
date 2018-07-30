@@ -240,6 +240,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                 Intent i = new Intent(mContext,RehireJob.class);
                 i.putExtra("userId",item.getUserid());
                 i.putExtra("jobId", item.getJobId());
+                i.putExtra("employeeId", item.getEmployeeId());
                 v.getContext().startActivity(i);
             }
         });

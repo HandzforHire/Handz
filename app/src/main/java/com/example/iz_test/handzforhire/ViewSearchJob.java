@@ -184,7 +184,7 @@ public class ViewSearchJob extends Activity{
             showundisclosedjob(FindJobMap.undisclosedjobsarray);
         }
 
-        System.out.println("vvvvvvv:type:::::"+type);
+
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -414,10 +414,10 @@ public class ViewSearchJob extends Activity{
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             view.setSelected(true);
-                            String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
+                            HashMap<String, String> map=job_list.get(position);
                             Intent i = new Intent(ViewSearchJob.this,JobDescription.class);
                             i.putExtra("userId",user_id);
-                            i.putExtra("jobId",job_id);
+                            i.putExtra("jobId",map.get("jobId"));
                             startActivity(i);
                         }
                     });
@@ -488,11 +488,10 @@ public class ViewSearchJob extends Activity{
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             view.setSelected(true);
-                            String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
-                            System.out.println("ssssssssssselected:job_id:" + job_id);
+                            HashMap<String, String> map=job_list.get(position);
                             Intent i = new Intent(ViewSearchJob.this,JobDescription.class);
                             i.putExtra("userId",user_id);
-                            i.putExtra("jobId",job_id);
+                            i.putExtra("jobId",map.get("jobId"));
                             startActivity(i);
                         }
                     });
