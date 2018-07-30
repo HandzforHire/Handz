@@ -50,6 +50,8 @@ public class SessionManager {
     public static final String CITY = "city";
     public static final String STATE = "state";
     public static final String ZIPCODE = "zipcode";
+    public static final String LATITUDE = "lat";
+    public static final String LONGITUDE = "lon";
 
      // Email address (make variable public to access from outside)
     public static final String KEY_PASS = "password";
@@ -109,6 +111,25 @@ public class SessionManager {
 
         editor.commit();
     }
+
+    public void savelocation(String lat,String lon){
+
+        // Storing name in preferences
+        editor.putString(LATITUDE, lat);
+        editor.putString(LONGITUDE, lon);
+
+        editor.commit();
+    }
+
+    public  HashMap<String, String> getlocation(){
+        HashMap<String, String> loc = new HashMap<String, String>();
+        // Storing name in preferences
+        loc.put(LATITUDE, pref.getString(LATITUDE, ""));
+        loc.put(LONGITUDE, pref.getString(LONGITUDE, ""));
+
+       return loc;
+    }
+
 
     public void checkLogin(){
         // Check login status

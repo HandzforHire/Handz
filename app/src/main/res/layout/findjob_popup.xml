@@ -5,7 +5,8 @@
     android:background="#0E7B7E"
     android:alpha="0.7"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/lin_job_view">
 
 
     <ImageView

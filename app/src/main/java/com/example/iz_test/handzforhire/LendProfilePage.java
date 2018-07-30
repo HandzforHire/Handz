@@ -8,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -24,6 +22,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,14 +44,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LendProfilePage extends Activity{
 
-    Button job_list,edit,find_map,pending,active_job,job_history,need_help;
+    Button job_list,edit,find_map,need_help;
     String id,address,city,state,zipcode,profile_image,profilename,email,username;
     String employee_rating,pending_notification,posted_notification,active_notification,jobhistory_notification;
     TextView user;
@@ -66,8 +63,9 @@ public class LendProfilePage extends Activity{
     TextView profile_name,rating_value;
     RelativeLayout rating_lay;
     SessionManager session;
+    LinearLayout pending,active_job,job_history;
     Dialog dialog;
-
+    TextView txt_postedjobcnt,txt_activejobscnt,job_historycnt;
     String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
             "along with that website url and logo";
     Swipe swipe;
@@ -99,11 +97,14 @@ public class LendProfilePage extends Activity{
         profile = (ImageView)findViewById(R.id.profile_image);
         profile_name = (TextView) findViewById(R.id.text1);
         find_map = (Button) findViewById(R.id.find_job);
-        pending = (Button) findViewById(R.id.pending_job);
-        active_job = (Button) findViewById(R.id.active_job);
-        job_history = (Button) findViewById(R.id.job_history);
+        pending = (LinearLayout) findViewById(R.id.pending_job);
+        active_job = (LinearLayout) findViewById(R.id.active_job);
+        job_history = (LinearLayout) findViewById(R.id.job_history);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
         menu = (ImageView)findViewById(R.id.menu);
+        txt_postedjobcnt = (TextView) findViewById(R.id.txt_postedjobcnt);
+        txt_activejobscnt = (TextView) findViewById(R.id.txt_activejobscnt);
+        job_historycnt = (TextView) findViewById(R.id.job_historycnt);
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
@@ -399,12 +400,33 @@ public class LendProfilePage extends Activity{
                 posted_notification = jResult.getString("notificationCountPosted");
                 System.out.println("resssssss:employer_rating:" + posted_notification);
                 pending_notification = jResult.getString("notificationCountPending");
-                System.out.println("resssssss:employer_rating:" + pending_notification);
+                System.out.println("resssssss:pending_notification:" + pending_notification);
                 active_notification = jResult.getString("notificationCountActive");
-                System.out.println("resssssss:employer_rating:" + active_notification);
+                System.out.println("resssssss:active_notification:" + active_notification);
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
-                System.out.println("resssssss:employer_rating:" + jobhistory_notification);
+                System.out.println("resssssss:jobhistory_notification:" + jobhistory_notification);
                 rating_value.setText(employee_rating);
+                if(!pending_notification.equals("0"))
+                {
+                    txt_postedjobcnt.setText(pending_notification);
+                    txt_postedjobcnt.setVisibility(View.VISIBLE);
+                }else{
+                    txt_postedjobcnt.setVisibility(View.INVISIBLE);
+                }
+                if(!active_notification.equals("0"))
+                {
+                    txt_activejobscnt.setText(active_notification);
+                    txt_activejobscnt.setVisibility(View.VISIBLE);
+                }else{
+                    txt_activejobscnt.setVisibility(View.INVISIBLE);
+                }
+                if(!jobhistory_notification.equals("0"))
+                {
+                    job_historycnt.setText(jobhistory_notification);
+                    job_historycnt.setVisibility(View.VISIBLE);
+                }else{
+                    job_historycnt.setVisibility(View.INVISIBLE);
+                }
                 if (!profile_image.equals("") && !profilename.equals("")) {
                     profile_name.setText(profilename);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
@@ -492,7 +514,7 @@ public class LendProfilePage extends Activity{
 
     private void sharelend()
     {
-        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
         share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         share.putExtra(Intent.EXTRA_SUBJECT,"HandzForHire");

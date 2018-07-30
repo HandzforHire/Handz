@@ -89,6 +89,9 @@ public class ProfilePage extends Activity  {
     String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
             "along with that website url and logo";
     Swipe swipe;
+
+    float x1,x2;
+    float y1, y2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -297,7 +300,7 @@ public class ProfilePage extends Activity  {
             }
         });
 
-        swipe.setListener(new SimpleSwipeListener() {
+/*        swipe.setListener(new SimpleSwipeListener() {
 
             @Override
             public boolean onSwipedLeft(MotionEvent event) {
@@ -321,7 +324,7 @@ public class ProfilePage extends Activity  {
                 finish();
                 return super.onSwipedRight(event);
             }
-        });
+        });*/
     }
 
     public void paymentCheck()
@@ -695,13 +698,13 @@ public class ProfilePage extends Activity  {
 
     }
 
-    @Override
+   /* @Override
     public boolean dispatchTouchEvent(MotionEvent event){
 
         swipe.dispatchTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
-
+*/
 
 /*
     @Override
@@ -779,4 +782,53 @@ public class ProfilePage extends Activity  {
         // Return the bordered circular bitmap
         return dstBitmap;
     }
+
+
+
+    public boolean onTouchEvent(MotionEvent touchevent)
+    {
+        switch (touchevent.getAction())
+        {
+            // when user first touches the screen we get x and y coordinate
+            case MotionEvent.ACTION_DOWN:
+            {
+                x1 = touchevent.getX();
+                y1 = touchevent.getY();
+                break;
+            }
+            case MotionEvent.ACTION_UP:
+            {
+                x2 = touchevent.getX();
+                y2 = touchevent.getY();
+
+                if (x1 < x2)
+                {
+                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_LONG).show();
+                }
+
+                // if right to left sweep event on screen
+                if (x1 > x2)
+                {
+                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_LONG).show();
+                }
+
+                // if UP to Down sweep event on screen
+                if (y1 < y2)
+                {
+                    Toast.makeText(this, "UP to Down Swap Performed", Toast.LENGTH_LONG).show();
+                }
+                if (y1 > y2)
+                {
+                    Toast.makeText(this, "Down to UP Swap Performed", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
 }

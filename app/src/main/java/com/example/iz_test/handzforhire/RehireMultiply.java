@@ -21,7 +21,7 @@ public class RehireMultiply extends Activity {
 
     EditText pay_amount,hours;
     TextView add,subtract,total;
-    String job_id,job_expire,job_category_color,sub_category,duration;
+    String job_id,job_expire,job_category_color,sub_category,duration,employeeId;
     String value,id,name,usertype,category,description,date,start_time,expected_hours,end_time,amount,type,address,city,current_location;
     String state,zipcode,post_address,latitude,longitude,estimated_amount,flexible_status;
     Swipe swipe;
@@ -55,8 +55,9 @@ public class RehireMultiply extends Activity {
         job_expire = i.getStringExtra("job_expire");
         job_id = i.getStringExtra("job_id");
         duration = i.getStringExtra("duration");
+        employeeId = i.getStringExtra("employeeId");
 
-        System.out.println("sssssssssssss:amount::"+amount+"..."+estimated_amount+"..."+expected_hours+"..."+job_expire);
+        System.out.println("sssssssssssss:amount::"+amount+"..."+estimated_amount+"..."+expected_hours+"..."+job_expire+"e,"+employeeId);
 
         pay_amount.setText(amount);
         hours.setText(expected_hours);
@@ -114,6 +115,7 @@ public class RehireMultiply extends Activity {
                 i.putExtra("job_expire", job_expire);
                 i.putExtra("job_id", job_id);
                 i.putExtra("duration", duration);
+                i.putExtra("employeeId", employeeId);
                 startActivity(i);
             }
         });
@@ -142,6 +144,7 @@ public class RehireMultiply extends Activity {
                 i.putExtra("job_expire", job_expire);
                 i.putExtra("job_id", job_id);
                 i.putExtra("duration", duration);
+                i.putExtra("employeeId", employeeId);
                 startActivity(i);
             }
         });

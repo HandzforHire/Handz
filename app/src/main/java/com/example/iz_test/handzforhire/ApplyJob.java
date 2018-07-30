@@ -109,12 +109,8 @@ public class ApplyJob extends Activity{
         text.setText(profile_name);
         job.setText(job_name);
 
-        if(image.equals(""))
-        {
-        }
-        else {
             Glide.with(ApplyJob.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
-        }
+
 
 
         apply.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +218,12 @@ public class ApplyJob extends Activity{
                 params.put(EMPLOYEE_ID, user_id);
                 params.put(EMPLOYER_ID, employer_id);
                 params.put(COMMENTS, comments);
+
+                System.out.println("jobiEMPLOYEE_IDd "+job_id);
+                System.out.println("USER_TYPE "+usertype);
+                System.out.println("EMPLOYEE_ID "+user_id);
+                System.out.println("EMPLOYER_ID "+employer_id);
+                System.out.println("COMMENTS "+comments);
                 return params;
             }
         };

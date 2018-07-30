@@ -14,19 +14,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -35,8 +35,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
-import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +43,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SearchJob extends Activity {
@@ -57,46 +56,29 @@ public class SearchJob extends Activity {
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     String id,address,zipcode,state,city,name,job_category_name,job_id,categoryId,item,job_cat_name;
-    ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
+    static ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
     Spinner list;
-    ImageView logo;
+    ImageView logo,img_arrow;
+    TextView category_name;
     Button search;
     EditText zip,radius;
     CheckBox checkBox;
     LocationManager locationManager;
-    String get_zipcode,get_radius,all_jobs;
+    String get_zipcode,get_radius,all_jobs,header,sub_category;
     Integer cat;
-    TextView textview;
     ImageView img_dropdown;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public static PopupWindow popupWindowDogs;
     CustomJobListAdapter adapter;
-    Swipe swipe;
-    Integer[] imageId = {
-            R.drawable.box_1,
-            R.drawable.box_2,
-            R.drawable.box_3,
-            R.drawable.box_4,
-            R.drawable.box_5,
-            R.drawable.box_6,
-            R.drawable.box_7,
-            R.drawable.box_8,
-            R.drawable.box_9,
-            R.drawable.box_10,
-            R.drawable.box_11,
-            R.drawable.box_12,
-            R.drawable.box_13,
-            R.drawable.box_14,
-            R.drawable.box_15,
-            R.drawable.box_16,
-            R.drawable.box_17,
-            R.drawable.box_18,
-            R.drawable.box_19,
-            R.drawable.box_20,
-            R.drawable.box_21,
+    public static TextView textview;
+    public static ImageView img_paint;
+    static String category="0",category_id="0";
+    ExpandableListAdapter listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
 
-    };
-Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,23 +86,39 @@ Dialog dialog;
 
       /*  progress_dialog = new ProgressDialog(this);
         progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
+        progress_dialog.show();
+*/
+        //permission();
 
-        dialog = new Dialog(SearchJob.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+       /* // Get the location manager
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Define the criteria how to select the locatioin provider -> use
+        // default
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(provider);
+        System.out.println("kkkkkkkkkk:location::"+location);
+        double latit = location.getLatitude();
+        double longi = location.getLongitude();
+        System.out.println("kkkkkkkkkkk:latitude:::"+latit);
+        System.out.println("kkkkkkkkkkk:longitude:::"+longi);
 
-
+        // Initialize the location fields
+        if (location != null) {
+            System.out.println("Provider " + provider + " has been selected.");
+            onLocationChanged(location);
+        }
+*/
         layout = (LinearLayout)findViewById(R.id.relay);
-        list = (Spinner)findViewById(R.id.listview);
+        category_name = (TextView)findViewById(R.id.cat_name);
         logo = (ImageView) findViewById(R.id.logo);
         search = (Button)findViewById(R.id.search);
         zip = (EditText) findViewById(R.id.zip);
         radius = (EditText) findViewById(R.id.radius);
         checkBox = (CheckBox) findViewById(R.id.checkBox1);
-        img_dropdown=(ImageView)findViewById(R.id.img_dropdown);
-        textview=(TextView)findViewById(R.id.textview);
+        img_arrow=(ImageView)findViewById(R.id.img_arrow);
+        textview = (TextView) findViewById(R.id.textview);
+        img_paint=(ImageView)findViewById(R.id.img_paint);
         Intent i = getIntent();
         id = i.getStringExtra("userId");
         address = i.getStringExtra("address");
@@ -128,24 +126,12 @@ Dialog dialog;
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
         System.out.println("iiiiiiiiiiiiiiiiiiiii:" + id);
-
-       // listPostedJobs();
-
+        categoryId = "";
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            }
-        });
-
-        list.setOnTouchListener(new View.OnTouchListener() {
-            // Setting on Touch Listener for handling the touch inside ScrollView
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // Disallow the touch request for parent scroll on touch of child view
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
             }
         });
 
@@ -171,32 +157,6 @@ Dialog dialog;
             }
         });*/
 
-        popupWindowDogs = popupWindowDogs();
-        textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                /*list.setVisibility(View.VISIBLE);
-                list.performClick();
-
-                if(list.getSelectedItem() == null) { // user selected nothing...
-                    list.performClick();
-                }
-                img_arrow.setVisibility(View.GONE);
-                textview.setVisibility(View.GONE);*/
-                popupWindowDogs.showAsDropDown(v, -5, 0);
-
-            }
-        });
-
-        img_dropdown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                popupWindowDogs.showAsDropDown(v, -5, 0);
-
-            }
-        });
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,8 +170,9 @@ Dialog dialog;
 
                 get_zipcode = zip.getText().toString().trim();
                 get_radius = radius.getText().toString().trim();
+                System.out.println("ccccccccccccc:categoryId:::"+categoryId+",,,"+get_zipcode+",,,,"+get_radius);
 
-                if(job_cat_name.equals("0")&&TextUtils.isEmpty(get_zipcode)&&TextUtils.isEmpty(get_radius)&&!checkBox.isChecked()) {
+                if(categoryId==null&&TextUtils.isEmpty(get_zipcode)&&TextUtils.isEmpty(get_radius)&&!checkBox.isChecked()) {
                     final Dialog dialog = new Dialog(SearchJob.this);
                     dialog.setContentView(R.layout.custom_dialog);
 
@@ -247,7 +208,7 @@ Dialog dialog;
                     }
                     Intent i = new Intent(SearchJob.this,ViewSearchJob.class);
                     i.putExtra("type","search");
-                    i.putExtra("userId",id);
+                    i.putExtra("userId",Profilevalues.user_id);
                     i.putExtra("address",address);
                     i.putExtra("city",city);
                     i.putExtra("state",state);
@@ -261,135 +222,94 @@ Dialog dialog;
             }
         });
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
+        category_name.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(SearchJob.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
+            public void onClick(View v) {
 
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(SearchJob.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
-    }
+                final Dialog dialog = new Dialog(SearchJob.this);
+                dialog.setContentView(R.layout.category_popup);
 
-    public void listPostedJobs() {
-        dialog.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println("resssssssssssssssss:" + response);
-                        onResponserecieved1(response, 2);
-                        dialog.dismiss();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        dialog.dismiss();
-                        try {
+                expListView = (ExpandableListView) dialog.findViewById(R.id.lvExp);
 
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("error"+jsonObject);
-                        } catch ( JSONException e ) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1){
+                // preparing list data
+                prepareListData();
 
-                        }
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(XAPP_KEY, value);
-                params.put(KEY_USERID, id);
-                System.out.println("Id "+id);
-                System.out.println("appkey "+value);
-                return params;
-            }
-        };
+                listAdapter = new ExpandableListAdapter(SearchJob.this, listDataHeader, listDataChild);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
-    }
+                // setting list adapter
+                expListView.setAdapter(listAdapter);
 
-    public void onResponserecieved1(String jsonobject, int i) {
-        System.out.println("response from interface" + jsonobject);
-
-        String status = null;
-        String categories = null;
-
-        try {
-            JSONObject jResult = new JSONObject(jsonobject);
-            status = jResult.getString("status");
-            categories = jResult.getString("categories");
-            System.out.println("jjjjjjjjjjjjjjjob:::categories:::"+categories);
-            if(status.equals("success"))
-            {
-                JSONArray array = new JSONArray(categories);
-                for(int n = 0; n < array.length(); n++)
-                {
-                    JSONObject object = (JSONObject) array.get(n);
-                    job_category_name = object.getString("name");
-                    System.out.println(":job_category_name::" + job_category_name);
-                    job_id = object.getString("id");
-                    System.out.println(":job_id::" + job_id);
-
-                    HashMap<String,String> map = new HashMap<String,String>();
-                    map.put("job_category", job_category_name);
-                    map.put("job_id", job_id);
-                    job_title.add(map);
-                    System.out.println("menuitems:::" + job_title);
-                }
-
-                CustomJobListAdapter adapter = new CustomJobListAdapter(SearchJob.this, job_title,imageId);
-                list.setAdapter(adapter);
-                list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        view.setSelected(true);
-                        job_cat_name = parent.getItemAtPosition(position).toString();
-                        String value = "1";
-                        cat = Integer.parseInt(job_cat_name)+ Integer.parseInt(value);
-                        categoryId = String.valueOf(cat);
-                        System.out.println("ssssssssssselected:categoryId:response11:" + categoryId);
-                        checkBox.setChecked(false);
-                        all_jobs = "";
-                        job_cat_name = categoryId;
-                        System.out.println("ssssssssssselected:job_cat_name:response22:" + job_cat_name);
-                    }
+                // Listview Group click listener
+                expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
                     @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                       /* categoryId = "";
-                        job_cat_name = "";*/
+                    public boolean onGroupClick(ExpandableListView parent, View v,
+                                                int groupPosition, long id) {
+                        // Toast.makeText(getApplicationContext(),
+                        // "Group Clicked " + listDataHeader.get(groupPosition),
+                        // Toast.LENGTH_SHORT).show();
+                        return false;
                     }
                 });
-            }
-            else
-            {
+
+                // Listview Group expanded listener
+                expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+                    @Override
+                    public void onGroupExpand(int groupPosition) {
+                        Toast.makeText(getApplicationContext(),
+                                listDataHeader.get(groupPosition) + " Expanded",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                // Listview Group collasped listener
+                expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+                    @Override
+                    public void onGroupCollapse(int groupPosition) {
+                        Toast.makeText(getApplicationContext(),
+                                listDataHeader.get(groupPosition) + " Collapsed",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+                // Listview on child click listener
+                expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+                    @Override
+                    public boolean onChildClick(ExpandableListView parent, View v,
+                                                int groupPosition, int childPosition, long id) {
+                        // TODO Auto-generated method stub
+                        Toast.makeText(
+                                getApplicationContext(),
+                                listDataHeader.get(groupPosition)
+                                        + " : "
+                                        + listDataChild.get(
+                                        listDataHeader.get(groupPosition)).get(
+                                        childPosition), Toast.LENGTH_SHORT)
+                                .show();
+                        int pos = groupPosition+1;
+                        categoryId = String.valueOf(pos);
+                        header =  listDataHeader.get(groupPosition);
+                        sub_category =  listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
+                        System.out.println("ccccccccc:"+header+",,"+sub_category+",,"+pos+"id:"+categoryId);
+                        category_name.setText(header+" - "+sub_category);
+                        dialog.dismiss();
+                        return false;
+                    }
+                });
+
+                dialog.show();
+                Window window = dialog.getWindow();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                return;
 
             }
+        });
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     /*@Override
@@ -502,55 +422,138 @@ Dialog dialog;
                 .show();
     }*/
 
-    public PopupWindow popupWindowDogs() {
+    public void prepareListData() {
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
 
-        // initialize a pop up window type
-        PopupWindow popupWindow = new PopupWindow(this);
+        // Adding child data
+        listDataHeader.add("CARE GIVING");
+        listDataHeader.add("COACHING");
+        listDataHeader.add("HOLIDAYS");
+        listDataHeader.add("INSIDE THE HOME");
+        listDataHeader.add("OUTSIDE THE HOME");
+        listDataHeader.add("PERSONAL SERVICES");
+        listDataHeader.add("PETCARE");
+        listDataHeader.add("TUTORING");
 
-        // the drop down list is a list view
+        // Adding child data
+        List<String> care = new ArrayList<String>();
+        care.add("Babysitting");
+        care.add("Elder Care");
+        care.add("Other");
+        care.add("Respite Care");
+
+        List<String> coach = new ArrayList<String>();
+        coach.add("Baseball");
+        coach.add("Basketball");
+        coach.add("Dance");
+        coach.add("Field Hockey");
+        coach.add("Football");
+        coach.add("Gymnastics");
+        coach.add("Ice Hockey");
+        coach.add("Lacrosse");
+        coach.add("Life Coach/Mentor");
+        coach.add("Other");
+        coach.add("Running");
+        coach.add("Soccer");
+        coach.add("Surfing");
+        coach.add("Swimming");
+        coach.add("Tennis");
+        coach.add("Track & Field");
+        coach.add("Volleyball");
+        coach.add("Wrestling");
 
 
-        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = layoutInflater.inflate(R.layout.popupbackground,null);
+        List<String> holiday = new ArrayList<String>();
+        holiday.add("Decorations (Setup or Cleanup)");
+        holiday.add("Gift Wrapping");
+        holiday.add("Holiday Baking");
+        holiday.add("Holiday Shopping");
+        holiday.add("Light Hanging");
+        holiday.add("Other");
+        holiday.add("Party Help (Setup, Cleanup, Serving)");
+        holiday.add("Tree Delivery");
+        holiday.add("Tree (Setup or Cleanup)");
 
-        ListView listViewDogs =(ListView) layout.findViewById(R.id.list_category);;
-        // set our adapter and pass our pop up window contents
-        adapter = new CustomJobListAdapter(SearchJob.this, job_title,imageId);
-        listViewDogs.setAdapter(adapter);
+        List<String> inside = new ArrayList<String>();
+        inside.add("Box Packing / Unpacking");
+        inside.add("Cleaning");
+        inside.add("Electronics Setup");
+        inside.add("Furniture Assembling");
+        inside.add("Heavy Lifting / Moving");
+        inside.add("House Sitting");
+        inside.add("Organizing");
+        inside.add("Other");
+        inside.add("Painting");
+        inside.add("Plant Care");
+        inside.add("Smart Home Setup");
+        inside.add("Wall Hanging");
+        inside.add("Window Washing");
 
-        // set the item click listener
-        listViewDogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Context mContext = adapterView.getContext();
-                //   MainActivity mainActivity = ((MainActivity) mContext);
+        List<String> outside = new ArrayList<String>();
+        outside.add("Car Washing / Detailing");
+        outside.add("Cleaning");
+        outside.add("Gutters");
+        outside.add("Digging / Shoveling");
+        outside.add("Garage Organizing");
+        outside.add("Heavy Lifting / Moving");
+        outside.add("Landscaping");
+        outside.add("Lawn Mowing");
+        outside.add("Mulching");
+        outside.add("Other");
+        outside.add("Painting");
+        outside.add("Planting");
+        outside.add("Pool Cleaning");
+        outside.add("Power Washing");
+        outside.add("Snow Removal");
+        outside.add("Window Washing");
+        outside.add("Yard Cleanup");
 
-                // add some animation when a list item was clicked
-                Animation fadeInAnimation = AnimationUtils.loadAnimation(adapterView.getContext(), android.R.anim.fade_in);
-                fadeInAnimation.setDuration(10);
-                adapterView.startAnimation(fadeInAnimation);
+        List<String> personal = new ArrayList<String>();
+        personal.add("Cooking / Baking");
+        personal.add("Data Entry");
+        personal.add("Drop off / Pick up Driver");
+        personal.add("Errands");
+        personal.add("Event Server / Bartender");
+        personal.add("Exercise Buddy");
+        personal.add("Grocery Shopper");
+        personal.add("Heavy Lifting / Moving");
+        personal.add("Meal Preparation");
+        personal.add("Other");
+        personal.add("Party Help (Setup, Cleanup, Serving)");
+        personal.add("Tax Preparation");
+        personal.add("Wait in Line");
 
-                // dismiss the pop up
-                popupWindowDogs.dismiss();
+        List<String> pet = new ArrayList<String>();
+        pet.add("Other");
+        pet.add("Pet Bathing");
+        pet.add("Pet Sitting");
+        pet.add("Pet Walking");
 
+        List<String> tutor = new ArrayList<String>();
+        tutor.add("Computer Coding");
+        tutor.add("Computer / Software");
+        tutor.add("English");
+        tutor.add("Foreign Language");
+        tutor.add("Google Apps Training");
+        tutor.add("Graphic Design (Photoshop/Illustrator)");
+        tutor.add("History");
+        tutor.add("Language Arts");
+        tutor.add("Math");
+        tutor.add("Microsoft Office");
+        tutor.add("Musical Instrument");
+        tutor.add("Other");
+        tutor.add("Reading");
+        tutor.add("Science");
+        tutor.add("Singing / Voice");
 
-              // SetCategory(i);
-            }
-        });
-        // some other visual settings
-        popupWindow.setFocusable(true);
-        popupWindow.setWidth(600);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
-
-        // set the list view as pop up window content
-        popupWindow.setContentView(layout);
-
-        return popupWindow;
-    }
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
+        listDataChild.put(listDataHeader.get(0), care); // Header, Child data
+        listDataChild.put(listDataHeader.get(1), coach);
+        listDataChild.put(listDataHeader.get(2), holiday);
+        listDataChild.put(listDataHeader.get(3), inside);
+        listDataChild.put(listDataHeader.get(4), outside);
+        listDataChild.put(listDataHeader.get(5), personal);
+        listDataChild.put(listDataHeader.get(6), pet);
+        listDataChild.put(listDataHeader.get(7), tutor);
     }
 }

@@ -187,32 +187,6 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
         return rootView;
     }
 
-    /*@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.find_job_map);
-
-        *//*MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*//*
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //initilizeMap();
-    }*/
-
-   /* private void initilizeMap() {
-        if (googleMap == null) {
-            googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-
-            if (googleMap == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        }
-    }*/
 
     private double[] createRandLocation(double latitude, double longitude) {
 
@@ -253,6 +227,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             builder.setView(view);
             final AlertDialog alert = builder.create();
 
+            LinearLayout lin_job_view=(LinearLayout)view.findViewById(R.id.lin_job_view);
             TextView txt_jobcat=(TextView)view.findViewById(R.id.txt_jobcat);
             TextView txt_amount=(TextView)view.findViewById(R.id.txt_amount);
             TextView txt_when=(TextView)view.findViewById(R.id.txt_when);
@@ -289,7 +264,12 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                     .into(img_profile);
             alert.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             alert.show();
-
+            lin_job_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   // new
+                }
+            });
 
         }catch (Exception e){
             System.out.println("Exception "+e.getMessage());
@@ -325,6 +305,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             LatLng latLng=cameraPosition.target;
             lat=latLng.latitude;
             lon=latLng.longitude;
+           // session.savelocation(String.valueOf(lat),String.valueOf(lon));
             RestClientPost rest = new RestClientPost(getActivity(), 1);
             rest.execute(RestClientPost.RequestMethod.POST, getActivity(),FindJobMap.this);
         }catch (Exception e){
@@ -497,6 +478,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                             longitude)).zoom(15).build();
             lat=latitude;
             lon=longitude;
+            session.savelocation(String.valueOf(lat),String.valueOf(lon));
             googleMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(cameraPosition));
             try {

@@ -74,6 +74,7 @@ public class RehireSubtract extends Activity {
     public static String CATEGORY_COLOR = "job_category_color";
     public static String DELIST = "delist";
     public static String JOB_ID = "job_id";
+    public static String EMPLOYEE_ID = "employee_id";
     String key = "HandzForHire@~";
     String job_id, hour_expected,job_expire;
     TextView job_payout,pocket_expense,paypal_merchant;
@@ -88,12 +89,12 @@ public class RehireSubtract extends Activity {
     String usertype = "employer";
     String sub_category;
     String job_category_color;
-    String expense,fee,payout,duration;
+    String expense,fee,payout,duration,employeeId;
     String delist = "yes";
-    String post_address = "no";
-    String latitude = "0.0";
-    String longitude = "0.0";
-    String current_location = "no";
+    String post_address = "";
+    String latitude = "";
+    String longitude = "";
+    String current_location = "";
     Swipe swipe;
     Dialog dialog;
 
@@ -101,6 +102,11 @@ public class RehireSubtract extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.summary_subtract);
+
+        dialog = new Dialog(RehireSubtract.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         ImageView back = (ImageView) findViewById(R.id.back);
@@ -128,16 +134,12 @@ public class RehireSubtract extends Activity {
         sub_category = i.getStringExtra("sub_category");
         duration = i.getStringExtra("duration");
         job_id = i.getStringExtra("job_id");
-
-        dialog = new Dialog(RehireSubtract.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.progressbar);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        employeeId = i.getStringExtra("employeeId");
 
         System.out.println("sssssssssssss:subtract::"+id+"..."+name+"..."+category+".."+description+".."+current_location);
         System.out.println("sssssssssssss:subtract::"+date+"..."+start_time+"..."+expected_hours+".."+amount+".."+type);
         System.out.println("sssssssssssss:subtract::"+post_address+"..."+latitude+"..."+longitude+",,"+job_id);
-        System.out.println("sssssssssssss:subtract::"+estimated_amount+"..."+flexible_status+".."+job_expire);
+        System.out.println("sssssssssssss:subtract::"+estimated_amount+"..."+flexible_status+".."+job_expire+",,"+employeeId);
 
         hourly_value.setText(amount);
         expected_value.setText(expected_hours);
@@ -293,6 +295,7 @@ public class RehireSubtract extends Activity {
                 params.put(SUB_CATEGORY,sub_category);
                 params.put(CATEGORY_COLOR,job_category_color);
                 params.put(DELIST,delist);
+                params.put(EMPLOYEE_ID,employeeId);
                 return params;
             }
 
@@ -338,6 +341,7 @@ public class RehireSubtract extends Activity {
         System.out.println("66666666-SUB_CATEGORY- "+sub_category);
         System.out.println("66666666-CATEGORY_COLOR- "+job_category_color);
         System.out.println("66666666-DELIST- "+delist);
+        System.out.println("66666666-EMPLOYEEID- "+employeeId);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
@@ -353,8 +357,6 @@ public class RehireSubtract extends Activity {
             JSONObject jResult = new JSONObject(jsonobject);
 
             status = jResult.getString("status");
-            job_id = jResult.getString("job_id");
-            System.out.println("jjjjjjjjjjjob:id::"+job_id);
 
             if(status.equals("success"))
             {
@@ -373,7 +375,6 @@ public class RehireSubtract extends Activity {
                         dialog.dismiss();
                         Intent i = new Intent(RehireSubtract.this,ProfilePage.class);
                         i.putExtra("userId", id);
-                        i.putExtra("jobId",job_id);
                         i.putExtra("address", address);
                         i.putExtra("city", city);
                         i.putExtra("state", state);

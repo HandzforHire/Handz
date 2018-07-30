@@ -82,7 +82,7 @@ public class JobDescription extends Activity {
         job_id = i.getStringExtra("jobId");
         user_id = i.getStringExtra("userId");
         System.out.println("ssssssssssselected:job_id:" + job_id);
-
+        System.out.println("ssssssssssselected:user_id:" + user_id);
         getJobDetails();
 
         apply.setOnClickListener(new View.OnClickListener() {

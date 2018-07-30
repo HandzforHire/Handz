@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
+
+
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
+
+
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -285,6 +285,14 @@ public class LendJobHistory extends Activity{
                     final String tran_date=object.getString("transaction_date");
                     final String job_category=object.getString("job_category");
                     final String description=object.getString("description");
+                    final String employee_id = object.getString("employee_id");
+                    System.out.println("jjjjjjjjjjjjjjjob:::employee_id:::" + employee_id);
+                    final String msg_notification = object.getString("employee_notificationCountMsgJobhistory");
+                    System.out.println("jjjjjjjjjjjjjjjob:::msg_notification:::" + msg_notification);
+                    final String star_notification = object.getString("employee_notificationCountStarRating");
+                    System.out.println("jjjjjjjjjjjjjjjob:::star_notification:::" + star_notification);
+                    final String transaction_date = object.getString("transaction_date");
+                    System.out.println("jjjjjjjjjjjjjjjob:::transaction_date:::" + transaction_date);
 
                     if(rating.equals("null"))
                     {
@@ -306,7 +314,7 @@ public class LendJobHistory extends Activity{
                         category3 = Result.getString("category3");
                         category4 = Result.getString("category4");
                         category5 = Result.getString("category5");
-                         }
+                    }
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("name",job_name);
                     map.put("image",image);
@@ -328,9 +336,12 @@ public class LendJobHistory extends Activity{
                     map.put("transaction_date",tran_date);
                     map.put("job_category",job_category);
                     map.put("description",description);
+                    map.put("message_count",msg_notification);
+                    map.put("star_count",star_notification);
+                    map.put("transaction_date",transaction_date);
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
-                     arrayAdapter = new LendHistoryAdapter(this, job_list) {
+                    arrayAdapter = new LendHistoryAdapter(this, job_list) {
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent) {
                             // Get the current item from ListView

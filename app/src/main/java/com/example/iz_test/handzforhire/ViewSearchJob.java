@@ -52,10 +52,14 @@ public class ViewSearchJob extends Activity{
     public static String CATEGORY = "category";
     public static String ZIPCODE = "zipcode";
     public static String USER_ID = "user_id";
+    public static String LAT = "lat";
+    public static String LON = "lon";
+    public static String EMPLOYEE_ID = "employee_id";
+    public static String MILES = "miles";
     public static String TYPE = "type";
     String user_id,address,city,state,zipcode,radius,category,name,date,pay_type,amount,jobId,image,zip,alljobs;
     ImageView logo;
-    ProgressDialog progress_dialog;
+   // ProgressDialog progress_dialog;
     String cat = "category";
     String zip_type = "zipcode";
     String display_all = "display_all";
@@ -67,6 +71,9 @@ public class ViewSearchJob extends Activity{
     ImageView new_search,map_view;
     Dialog dialog;
     Swipe swipe;
+    SessionManager session;
+    HashMap<String, String> location;
+    Map<String, String> params = new HashMap<String, String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +82,9 @@ public class ViewSearchJob extends Activity{
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-       /* progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
-*/
+
+        session = new SessionManager(ViewSearchJob.this);
+        location = session.getlocation();
 
         dialog = new Dialog(ViewSearchJob.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -92,8 +98,8 @@ public class ViewSearchJob extends Activity{
         map_view = (ImageView) findViewById(R.id.map_view);
 
         Intent i = getIntent();
-        String type = i.getStringExtra("type");
-        if(type.equals("search")) {
+        String setype = i.getStringExtra("type");
+        if(setype.equals("search")) {
             user_id = i.getStringExtra("userId");
             address = i.getStringExtra("address");
             city = i.getStringExtra("city");
@@ -104,35 +110,76 @@ public class ViewSearchJob extends Activity{
             zip = i.getStringExtra("zip");
             alljobs = i.getStringExtra("alljobs");
 
-            if (!category.equals("")) {
-                type = "category";
+
+            if(alljobs.equals("all_jobs")){
+                params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_SEARCHTYPE,"location");
+                params.put(CATEGORY,category);
+                params.put(ZIPCODE,zip);
+                params.put(LAT,location.get(SessionManager.LATITUDE));
+                params.put(LON,location.get(SessionManager.LONGITUDE));
+                params.put(MILES,"5");
+                params.put(EMPLOYEE_ID,user_id);
                 searchJobList();
-            } else if (!zip.equals("")) {
-                type = "zipcode";
-                searchJobList();
-            } else if (!radius.equals("")) {
-                type = "location";
-                searchJobList();
-            } else if (!category.equals("") && !zip.equals("")) {
-                type = "category,zipcode";
-                searchJobList();
-            } else if (!category.equals("") && !radius.equals("")) {
-                type = "category,location";
+
+            }else if (!category.equals("") && !zip.equals("")){
+                params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_SEARCHTYPE,"category,zipcode");
+                params.put(CATEGORY,category);
+                params.put(ZIPCODE,zip);
+                params.put(MILES,"5");
+                params.put(EMPLOYEE_ID,user_id);
                 searchJobList();
             } else if (!zip.equals("") && !radius.equals("")) {
-                type = "zipcode,location";
+                params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_SEARCHTYPE,"zipcode,location");
+                params.put(ZIPCODE,zip);
+                params.put(LAT,location.get(SessionManager.LATITUDE));
+                params.put(LON,location.get(SessionManager.LONGITUDE));
+                params.put(MILES,radius);
+                params.put(EMPLOYEE_ID,user_id);
                 searchJobList();
-            } else if (!category.equals("") && !zip.equals("") && !radius.equals("")) {
-                type = "display_all";
+            }else if (!category.equals("") && !radius.equals("")) {
+                params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_SEARCHTYPE,"category,location");
+                params.put(CATEGORY,category);
+                params.put(LAT,location.get(SessionManager.LATITUDE));
+                params.put(LON,location.get(SessionManager.LONGITUDE));
+                params.put(MILES,radius);
+                params.put(EMPLOYEE_ID,user_id);
                 searchJobList();
-            } else if (!alljobs.equals("")) {
-                type = "employee";
-                joblist();
+            } else if (!category.equals("")&&zip.equals("")&&radius.equals("")) {
+                params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_SEARCHTYPE,"category");
+                params.put(CATEGORY,category);
+                params.put(MILES,"5");
+                params.put(EMPLOYEE_ID,user_id);
+                searchJobList();
+            }else if (!zip.equals("")&&category.equals("")&&radius.equals("")) {
+                params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_SEARCHTYPE,"zipcode");
+                params.put(ZIPCODE,zip);
+                params.put(MILES,"5");
+                params.put(EMPLOYEE_ID,user_id);
+                searchJobList();
+            }else if (!radius.equals("")) {
+                params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_SEARCHTYPE,"location");
+                params.put(LAT,location.get(SessionManager.LATITUDE));
+                params.put(LON,location.get(SessionManager.LONGITUDE));
+                params.put(MILES,radius);
+                params.put(EMPLOYEE_ID,user_id);
             }
-            else {
-                type = "employee";
-                joblist();
-            }
+
+            System.out.println("params "+params);
+
         }else{
             showundisclosedjob(FindJobMap.undisclosedjobsarray);
         }
@@ -150,11 +197,11 @@ public class ViewSearchJob extends Activity{
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ViewSearchJob.this,SearchJob.class);
-                i.putExtra("userId",user_id);
-                i.putExtra("address",address);
-                i.putExtra("city",city);
-                i.putExtra("state",state);
-                i.putExtra("zipcode",zipcode);
+                i.putExtra("userId",Profilevalues.user_id);
+                i.putExtra("address",Profilevalues.address);
+                i.putExtra("city",Profilevalues.city);
+                i.putExtra("state",Profilevalues.state);
+                i.putExtra("zipcode",Profilevalues.zipcode);
                 startActivity(i);
             }
         });
@@ -163,11 +210,11 @@ public class ViewSearchJob extends Activity{
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ViewSearchJob.this,MapActivity.class);
-                i.putExtra("userId",user_id);
-                i.putExtra("address",address);
-                i.putExtra("city",city);
-                i.putExtra("state",state);
-                i.putExtra("zipcode",zipcode);
+                i.putExtra("userId",Profilevalues.user_id);
+                i.putExtra("address",Profilevalues.address);
+                i.putExtra("city",Profilevalues.city);
+                i.putExtra("state",Profilevalues.state);
+                i.putExtra("zipcode",Profilevalues.zipcode);
                 startActivity(i);
             }
         });
@@ -267,24 +314,24 @@ public class ViewSearchJob extends Activity{
                             if(status.equals("No Jobs Found"))
                             {
                                 // custom dialog
-                                final Dialog dialog = new Dialog(ViewSearchJob.this);
-                                dialog.setContentView(R.layout.custom_dialog);
+                                final Dialog dialogs = new Dialog(ViewSearchJob.this);
+                                dialogs.setContentView(R.layout.custom_dialog);
 
                                 // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                TextView text = (TextView) dialogs.findViewById(R.id.text);
                                 text.setText("No Active Jobs Found");
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                Button dialogButton = (Button) dialogs.findViewById(R.id.ok);
                                 // if button is clicked, close the custom dialog
                                 dialogButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        dialog.dismiss();
+                                        dialogs.dismiss();
                                     }
                                 });
 
-                                dialog.show();
+                                dialogs.show();
                                 Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
                         } catch (JSONException e) {
@@ -297,17 +344,10 @@ public class ViewSearchJob extends Activity{
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(XAPP_KEY, value);
-                params.put(KEY_SEARCHTYPE,type);
-                params.put(CATEGORY,category);
-                params.put(ZIPCODE,zip);
-                params.put(RADIUS,radius);
                 return params;
             }
         };
 
-        System.out.println("vvvvvvv:searchjoblist:::::"+value+".."+type+".."+category+".."+zip+".."+radius);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -413,13 +453,6 @@ public class ViewSearchJob extends Activity{
                     amount = object.getString("job_payment_amount");
                     jobId = object.getString("id");
                     image = object.getString("profile_image");
-
-                    System.out.println("ressss:name::"+name);
-                    System.out.println("ressss:date::"+date);
-                    System.out.println("ressss:pay_type::" + pay_type);
-                    System.out.println("ressss::amount:" + amount);
-                    System.out.println("ressss::jobId:" + jobId);
-                    System.out.println("ressss::image:" + image);
                     HashMap<String,String> map = new HashMap<String,String>();
                     map.put("name", name);
                     map.put("date", date);
@@ -516,10 +549,10 @@ public class ViewSearchJob extends Activity{
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         view.setSelected(true);
-                        String job_id = ((TextView) view.findViewById(R.id.job_id)).getText().toString();
+                        HashMap<String, String> map=job_list.get(position);
                         Intent i = new Intent(ViewSearchJob.this, JobDescription.class);
-                        i.putExtra("userId", user_id);
-                        i.putExtra("jobId", job_id);
+                        i.putExtra("userId", Profilevalues.user_id);
+                        i.putExtra("jobId", map.get("jobId"));
                         startActivity(i);
                     }
                 });

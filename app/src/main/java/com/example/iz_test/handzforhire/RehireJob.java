@@ -78,7 +78,8 @@ public class RehireJob extends Activity implements View.OnClickListener{
     public static String XAPP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
-    String job_id,jobId,paytext,pay_amount,flexible_status,job_estimated,hourr,latitude,longitude;
+    String job_id,jobId,paytext,pay_amount,flexible_status,job_estimated,hourr,latitude,longitude,employeeId;
+    ProgressDialog progress_dialog;
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     CheckBox checkBox;
     Activity activity;
@@ -132,7 +133,8 @@ public class RehireJob extends Activity implements View.OnClickListener{
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
         jobId = i.getStringExtra("jobId");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:jobId::::" + jobId);
+        employeeId = i.getStringExtra("employeeId");
+        System.out.println("iiiiiiiiiiiiiiiiiiiii:jobId::::" + jobId+",,,"+employeeId);
 
         String pattern2 = "hh:mm:ss";
         st_time = new SimpleDateFormat(pattern2).format(new Date());
@@ -277,7 +279,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
                     public void onClick(View v) {
                         pay_amount = payamount.getText().toString().trim();
                         paytext = text.getText().toString().trim();
-
                         payment_layout.setVisibility(View.VISIBLE);
                         job_amount.setText(pay_amount);
                         amount_text.setText(paytext);
@@ -681,6 +682,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
         i.putExtra("estimated_amount", job_estimated);
         i.putExtra("job_expire", job_expire);
         i.putExtra("duration", duration);
+        i.putExtra("employeeId", employeeId);
         startActivity(i);
     }
 
@@ -864,6 +866,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 }
                 category_name.setText(header+" - "+sub_cat);
 
+                dialog.dismiss();
 
             } else {
             }
