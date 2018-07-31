@@ -55,8 +55,10 @@ public class LendProfilePage extends Activity{
     TextView user;
     private static final String USERNAME_URL = Constant.SERVER_URL+"get_username";
     private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
+    private static final String GET_AVERAGERAT = Constant.SERVER_URL+"get_average_rating";
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
+    public static String TYPE = "type";
     String value = "HandzForHire@~";
     ProgressDialog progress_dialog;
     ImageView profile,handz,menu,share_lend;
@@ -139,6 +141,7 @@ public class LendProfilePage extends Activity{
 
         getProfileimage();
         getUsername();
+        getAverageRatigng();
 
         handz.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -392,20 +395,11 @@ public class LendProfilePage extends Activity{
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
                 username = jResult.getString("username");
-                System.out.println("ggggggggget:profile_image:" + profile_image);
-                System.out.println("ggggggggget:profilename:" + profilename);
-                System.out.println("ggggggggget:username:" + username);
                 employee_rating = jResult.getString("employee_rating");
-                System.out.println("resssssss:employee_rating:" + employee_rating);
                 posted_notification = jResult.getString("notificationCountPosted");
-                System.out.println("resssssss:employer_rating:" + posted_notification);
                 pending_notification = jResult.getString("notificationCountPending");
-                System.out.println("resssssss:pending_notification:" + pending_notification);
                 active_notification = jResult.getString("notificationCountActive");
-                System.out.println("resssssss:active_notification:" + active_notification);
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
-                System.out.println("resssssss:jobhistory_notification:" + jobhistory_notification);
-                rating_value.setText(employee_rating);
                 if(!pending_notification.equals("0"))
                 {
                     txt_postedjobcnt.setText(pending_notification);
@@ -510,6 +504,45 @@ public class LendProfilePage extends Activity{
 
         // Return the bordered circular bitmap
         return dstBitmap;
+    }
+
+    public void getAverageRatigng() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_AVERAGERAT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("average rat:" + response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            rating_value.setText(object.getString("average_rating"));
+                        }catch (Exception e){
+                            System.out.println("exception "+e.getMessage());
+                        }
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        dialog.dismiss();
+                        //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put(XAPP_KEY, value);
+                map.put(KEY_USERID, id);
+                map.put(TYPE, "employee");
+                System.out.println(" Map "+map);
+                return map;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
     private void sharelend()

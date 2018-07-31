@@ -65,7 +65,7 @@
                 android:src="@drawable/starnew" />
 
             <TextView
-                android:id="@+id/rating"
+                android:id="@+id/txt2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10sp"
@@ -77,13 +77,13 @@
                 android:textStyle="italic" />
 
             <TextView
-                android:id="@+id/txt2"
+                android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10sp"
-                android:layout_toRightOf="@+id/rating"
+                android:layout_toRightOf="@+id/txt2"
                 android:text="4.5"
                 android:textColor="#000000"
                 android:textSize="24sp" />

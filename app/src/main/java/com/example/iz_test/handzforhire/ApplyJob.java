@@ -50,15 +50,18 @@ import java.util.Map;
 public class ApplyJob extends Activity{
 
     private static final String JOB_URL = Constant.SERVER_URL+"apply_jobs";
+    private static final String GET_AVERAGERAT = Constant.SERVER_URL+"get_average_rating";
     public static String APP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
     public static String EMPLOYER_ID = "employer_id";
     public static String EMPLOYEE_ID = "employee_id";
     public static String COMMENTS = "comments";
     public static String USER_TYPE = "user_type";
+    public static String KEY_USERID = "user_id";
+    public static String TYPE = "type";
     String value = "HandzForHire@~";
     String job_id,user_id,employer_id,job_name,profile_name,image,date,start_time,end_time,amount,type,comments;
-    TextView name,dat,amt,pay,text,job;
+    TextView name,dat,amt,pay,text,job,rat_val;
     ProgressDialog progress_dialog;
     ImageView profile_image;
     EditText com;
@@ -84,6 +87,7 @@ public class ApplyJob extends Activity{
         pay = (TextView) findViewById(R.id.tv5);
         text = (TextView) findViewById(R.id.tv7);
         job = (TextView) findViewById(R.id.tv1);
+        rat_val=(TextView)findViewById(R.id.text3);
         com = (EditText) findViewById(R.id.edit);
         profile_image = (ImageView) findViewById(R.id.profile_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
@@ -100,8 +104,7 @@ public class ApplyJob extends Activity{
         amount = i.getStringExtra("amount");
         type = i.getStringExtra("type");
         image = i.getStringExtra("image");
-
-
+        usertype=i.getStringExtra("usertype");
         name.setText(profile_name);
         dat.setText(date);
         amt.setText(amount);
@@ -111,7 +114,7 @@ public class ApplyJob extends Activity{
 
             Glide.with(ApplyJob.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
 
-
+        getAverageRatigng();
 
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +162,44 @@ public class ApplyJob extends Activity{
             }
         });
     }
+    public void getAverageRatigng() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_AVERAGERAT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("average rat:" + response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                           rat_val.setText(object.getString("average_rating"));
+                        }catch (Exception e){
+                            System.out.println("exception "+e.getMessage());
+                        }
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
+                        dialog.dismiss();
+                        //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put(APP_KEY, value);
+                map.put(KEY_USERID, user_id);
+                map.put(TYPE, usertype);
+                System.out.println(" Map "+map);
+                return map;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
     public void applyJob()
     {
         dialog.show();

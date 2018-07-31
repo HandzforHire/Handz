@@ -458,6 +458,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                     i.putExtra("amount",object.getString("job_payment_amount"));
                     i.putExtra("type",object.getString("job_payment_type"));
                     i.putExtra("image",object.getString("profile_image"));
+                    i.putExtra("usertype",object.getString("usertype"));
                     startActivity(i);
                 } else {
                 }

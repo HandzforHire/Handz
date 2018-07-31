@@ -43,14 +43,14 @@ import java.util.Map;
 public class JobDescription extends Activity {
 
     ImageView profile_image,close;
-    TextView profile_name, description, date, time, amount, type,name,apply;
+    TextView profile_name, description, date, time, amount, type,name,apply,rat_val;
     private static final String URL = Constant.SERVER_URL+"job_detail_view";
     public static String APP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
     public static String EMPLOYER_ID = "employer_id";
     public static String EMPLOYEE_ID = "employee_id";
     String value = "HandzForHire@~";
-    String job_id,user_id,employerId,get_name,get_start_time,get_date,get_amount,get_end_time,get_type,get_profile_name,image,profileimage,profilename;
+    String job_id,user_id,employerId,get_name,get_start_time,get_date,get_amount,get_end_time,get_type,get_profile_name,image,profileimage,profilename,usertype;
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
@@ -76,11 +76,13 @@ public class JobDescription extends Activity {
         type = (TextView) findViewById(R.id.type);
         apply = (TextView) findViewById(R.id.apply_btn);
         close = (ImageView) findViewById(R.id.close_btn);
+        rat_val=(TextView)findViewById(R.id.text3);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
 
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");
         user_id = i.getStringExtra("userId");
+        rat_val.setText(i.getStringExtra("average_rating"));
         System.out.println("ssssssssssselected:job_id:" + job_id);
         System.out.println("ssssssssssselected:user_id:" + user_id);
         getJobDetails();
@@ -100,6 +102,7 @@ public class JobDescription extends Activity {
                 i.putExtra("amount",get_amount);
                 i.putExtra("type",get_type);
                 i.putExtra("image",image);
+                i.putExtra("usertype",usertype);
                 startActivity(i);
             }
         });
@@ -218,6 +221,7 @@ public class JobDescription extends Activity {
                 image = object.getString("profile_image");
                 System.out.println("ressss::image:" + image);
                 employerId = object.getString("employer_id");
+                usertype = object.getString("usertype");
                 System.out.println("ressss::employerId:" + employerId);
                 profile_name.setText(get_profile_name);
                 description.setText(get_description);

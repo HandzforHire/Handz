@@ -356,7 +356,7 @@ public class ViewSearchJob extends Activity{
 
     private void onResponserecieved(String response, int i) {
         String status = null;
-
+        System.out.println("Resposne "+response);
         try
         {
             JSONObject result = new JSONObject(response);
@@ -377,7 +377,7 @@ public class ViewSearchJob extends Activity{
                         amount = object.getString("job_payment_amount");
                         jobId = object.getString("id");
                         image = object.getString("profile_image");
-
+                     String  average_rating=object.getString("average_rating");
 
                     HashMap<String,String> map = new HashMap<String,String>();
                     map.put("name", name);
@@ -386,6 +386,7 @@ public class ViewSearchJob extends Activity{
                     map.put("amount", amount);
                     map.put("jobId",jobId);
                     map.put("image",image);
+                    map.put("average_rating",average_rating);
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
                     CustomList arrayAdapter = new CustomList(this, job_list){
@@ -417,6 +418,7 @@ public class ViewSearchJob extends Activity{
                             HashMap<String, String> map=job_list.get(position);
                             Intent i = new Intent(ViewSearchJob.this,JobDescription.class);
                             i.putExtra("userId",user_id);
+                            i.putExtra("average_rating",map.get("average_rating"));
                             i.putExtra("jobId",map.get("jobId"));
                             startActivity(i);
                         }
@@ -440,7 +442,6 @@ public class ViewSearchJob extends Activity{
             if(status.equals("success"))
             {
                 String job = result.getString("job_lists");
-                System.out.println("jjjjjjjjjjjjjjjob:"+job);
                 JSONArray array = new JSONArray(job);
                 for(int n = 0; n < array.length(); n++)
                 {
@@ -507,14 +508,14 @@ public class ViewSearchJob extends Activity{
             for (int i = 0; i < array.length(); i++) {
                 JSONObject object = (JSONObject) array.get(i);
                 String category = object.getString("job_category");
-                System.out.println("ressss::category:" + category);
+
                 name = object.getString("job_name");
                 date = object.getString("job_date");
                 pay_type = object.getString("job_payment_type");
                 amount = object.getString("job_payment_amount");
                 jobId = object.getString("id");
                 image = object.getString("profile_image");
-
+                String  average_rating=object.getString("average_rating");
 
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("name", name);
@@ -523,6 +524,7 @@ public class ViewSearchJob extends Activity{
                 map.put("amount", amount);
                 map.put("jobId", jobId);
                 map.put("image", image);
+                map.put("average_rating",average_rating);
                 job_list.add(map);
                 System.out.println("job_list:::" + job_list);
                 CustomList arrayAdapter = new CustomList(this, job_list) {
@@ -551,6 +553,7 @@ public class ViewSearchJob extends Activity{
                         HashMap<String, String> map=job_list.get(position);
                         Intent i = new Intent(ViewSearchJob.this, JobDescription.class);
                         i.putExtra("userId", Profilevalues.user_id);
+                        i.putExtra("average_rating",map.get("average_rating"));
                         i.putExtra("jobId", map.get("jobId"));
                         startActivity(i);
                     }

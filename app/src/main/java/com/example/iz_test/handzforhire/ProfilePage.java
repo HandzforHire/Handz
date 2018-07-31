@@ -69,9 +69,11 @@ public class ProfilePage extends Activity  {
     private static final String USERNAME_URL = Constant.SERVER_URL+"get_username";
     private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
     private static final String PAYMENT_URL = Constant.SERVER_URL+"check_if_payment_mode";
+    private static final String GET_AVERAGERAT = Constant.SERVER_URL+"get_average_rating";
     String id,user_name,email,employer_rating,posted_notification,pending_notification,active_notification,jobhistory_notification;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
+    public static String TYPE = "type";
     String value = "HandzForHire@~";
     Button create,edit,need_help;
     String address,city,state,zipcode,profile_image,profilename,type;
@@ -176,7 +178,7 @@ public class ProfilePage extends Activity  {
         //paymentCheck();
         getProfileimage();
         getUsername();
-
+        getAverageRatigng();
         edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -326,7 +328,44 @@ public class ProfilePage extends Activity  {
             }
         });*/
     }
+    public void getAverageRatigng() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_AVERAGERAT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("average rat:" + response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            rating_value.setText(object.getString("average_rating"));
+                        }catch (Exception e){
+                            System.out.println("exception "+e.getMessage());
+                        }
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
+                        dialog.dismiss();
+                        //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put(XAPP_KEY, value);
+                map.put(KEY_USERID, id);
+                map.put(TYPE, "employer");
+                System.out.println(" Map "+map);
+                return map;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
     public void paymentCheck()
     {
         dialog.show();
@@ -346,7 +385,7 @@ public class ProfilePage extends Activity  {
                         try {
                             String responseBody = new String( error.networkResponse.data, "utf-8" );
                             JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("cccccccccccccheck:payment:error" + jsonObject);
+
                             String status = jsonObject.getString("status");
                             if(status.equals("error"))
                             {
@@ -528,10 +567,7 @@ public class ProfilePage extends Activity  {
                 posted_notification = jResult.getString("notificationCountPosted");
                 pending_notification = jResult.getString("notificationCountPending");
                 active_notification = jResult.getString("notificationCountActive");
-                System.out.println("resssssss:employer_rating:" + active_notification);
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
-                System.out.println("resssssss:employer_rating:" + jobhistory_notification);
-                rating_value.setText(employer_rating);
                 if(!posted_notification.equals("0"))
                 {
                     txt_postedjobcnt.setText(posted_notification);

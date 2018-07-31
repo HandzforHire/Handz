@@ -59,28 +59,25 @@ public class CustomList extends BaseAdapter {
         TextView amount = (TextView) vi.findViewById(R.id.text7);
         TextView type = (TextView) vi.findViewById(R.id.text8);
         TextView jobId = (TextView) vi.findViewById(R.id.job_id);
+        TextView rating = (TextView) vi.findViewById(R.id.rating);
         ImageView profile = (ImageView) vi.findViewById(R.id.img2);
 
         HashMap<String, String> items = new HashMap<String, String>();
         items = data.get(position);
         final String get_name = items.get("name");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_name::" + get_name);
         final String get_date = items.get("date");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_date::" + get_date);
         String get_amount = items.get("amount");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_amount::" + get_amount);
         String get_type = items.get("type");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_recur::" + get_type);
         String get_id = items.get("jobId");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_id::" + get_id);
         String get_image = items.get("image");
-        System.out.println("iiiiiiiiiiiiiiiiiiid:get_image::" + get_image);
+        String average_rating = items.get("average_rating");
 
         job_name.setText(get_name);
         date.setText(get_date);
         amount.setText(get_amount);
         type.setText(get_type);
         jobId.setText(get_id);
+        rating.setText(average_rating);
 
         Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 
@@ -88,31 +85,4 @@ public class CustomList extends BaseAdapter {
         return vi;
     }
 
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
-
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
-    }
 }
