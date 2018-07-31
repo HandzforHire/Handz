@@ -39,13 +39,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 public class JobDetails extends Activity{
 
     ImageView profile_image,close;
-    TextView profile_name, description, date, time, amount, type,name;
+    TextView profile_name, description, date, time, amount, type,name,text3;
     private static final String URL = Constant.SERVER_URL+"job_detail_view";
     public static String APP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
@@ -61,10 +63,6 @@ public class JobDetails extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_details);
 
-       /* progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
-
         dialog = new Dialog(JobDetails.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
@@ -77,6 +75,7 @@ public class JobDetails extends Activity{
         name = (TextView) findViewById(R.id.job_name_text);
         date = (TextView) findViewById(R.id.date);
         time = (TextView) findViewById(R.id.time);
+        text3=(TextView)findViewById(R.id.text3);
         amount = (TextView) findViewById(R.id.amount);
         type = (TextView) findViewById(R.id.type);
         close = (ImageView) findViewById(R.id.close_btn);
@@ -84,7 +83,6 @@ public class JobDetails extends Activity{
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");
         user_id = i.getStringExtra("userId");
-        System.out.println("ssssssssssselected:job_id:" + job_id);
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +126,6 @@ public class JobDetails extends Activity{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("reeeeeeeeeeeeeeeee:job_description:::" + response);
                         onResponserecieved(response, 2);
                         dialog.dismiss();
                     }
@@ -162,7 +159,6 @@ public class JobDetails extends Activity{
     }
 
     public void onResponserecieved(String jsonobject, int i) {
-        System.out.println("response from interface" + jsonobject);
 
         String status = null;
         String job_data = null;
@@ -172,33 +168,31 @@ public class JobDetails extends Activity{
             status = jResult.getString("status");
             if (status.equals("success")) {
                 job_data = jResult.getString("job_data");
-                System.out.println("jjjjjjjjjjjjjjjob:::job_data:::" + job_data);
                 JSONObject object = new JSONObject(job_data);
                 String get_name = object.getString("job_name");
-                System.out.println("nnnnnnnnnnn:name::"+get_name);
                 String get_description = object.getString("description");
-                System.out.println("nnnnnnnnnnn:description::" + get_description);
                 String get_date = object.getString("job_date");
-                System.out.println("nnnnnnnnnnn:date::" + get_date);
                 String get_start_time = object.getString("start_time");
-                System.out.println("nnnnnnnnnnn:start_time::" + get_start_time);
                 String get_end_time = object.getString("end_time");
-                System.out.println("nnnnnnnnnnn:end_time::" + get_end_time);
                 String get_amount = object.getString("job_payment_amount");
-                System.out.println("nnnnnnnnnnn:amount::" + get_amount);
                 String get_type = object.getString("job_payment_type");
-                System.out.println("nnnnnnnnnnn:type::" + get_type);
                 String get_profile_name = object.getString("profile_name");
-                System.out.println("nnnnnnnnnnn:get_profile_name::" + get_profile_name);
                 String image = object.getString("profile_image");
-                System.out.println("ressss::image:" + image);
+
                 employerId = object.getString("employer_id");
-                System.out.println("ressss::employerId:" + employerId);
                 profile_name.setText(get_profile_name);
                 description.setText(get_description);
 
+                DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+                DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+                try {
+                    java.util.Date dates = srcDf.parse(get_date);
+                    date.setText(""+destDf.format(dates));
+                }catch (Exception e){
 
-                date.setText(get_date);
+                }
+
                 time.setText(get_start_time);
                 type.setText(get_type);
                 amount.setText(get_amount);

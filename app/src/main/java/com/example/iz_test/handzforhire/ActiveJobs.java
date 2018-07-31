@@ -162,7 +162,6 @@ public class ActiveJobs extends Activity{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("resssssssssssssssss:activejobs::" + response);
                         onResponserecieved1(response, 2);
                         dialog.dismiss();
                     }
@@ -225,8 +224,6 @@ public class ActiveJobs extends Activity{
     }
 
     public void onResponserecieved1(String jsonobject, int i) {
-        System.out.println("response from interface"+jsonobject);
-
         String status = null;
         String jobList = null;
 
@@ -234,7 +231,6 @@ public class ActiveJobs extends Activity{
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             jobList = jResult.getString("job_lists");
-            System.out.println("jjjjjjjjjjjjjjjob:::list:::" + jobList);
             if(status.equals("success"))
             {
                 JSONArray array = new JSONArray(jobList);
