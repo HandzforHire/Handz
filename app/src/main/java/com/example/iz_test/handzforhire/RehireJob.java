@@ -85,7 +85,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
     Activity activity;
     MyOptionsPickerView threePicker;
     public static String date_format;
-    TextView category_name;
+    TextView category_name,username_text;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
@@ -125,6 +125,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
         estimate_layout = (RelativeLayout) findViewById(R.id.linear3);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         symbol = (TextView) findViewById(R.id.symbol);
+        username_text = (TextView) findViewById(R.id.username_text);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -334,7 +335,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
 
                     @Override
                     public void onGroupExpand(int groupPosition) {
-                       // Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getApplicationContext(), listDataHeader.get(groupPosition) + " Expanded", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -765,16 +766,22 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 System.out.println("nnnnnnnnnnn:job_expire_date_time::" + job_expire_date_time);
                 job_id = object.getString("job_id");
                 System.out.println("nnnnnnnnnnn:job_id::" + job_id);
-/*
-                post_address = object.getString("post_address");
-                System.out.println("nnnnnnnnnnn:post_address::" + post_address);
-                current_location = object.getString("currentlocation");
-                System.out.println("nnnnnnnnnnn:current_location::" + current_location);
-                latitude = object.getString("lat");
-                System.out.println("nnnnnnnnnnn:latitude::" + latitude);
-                longitude = object.getString("lon");
-                System.out.println("nnnnnnnnnnn:longitude::" + longitude);
-*/
+
+                String username = object.getString("username");
+                System.out.println("nnnnnnnnnnn:username::" + username);
+                String profilename = object.getString("profile_name");
+                System.out.println("nnnnnnnnnnn:profile_name::" + profilename);
+                String firstname = object.getString("firstname");
+                System.out.println("nnnnnnnnnnn:firstname::" + firstname);
+
+                if(username.equals(""))
+                {
+                    username_text.setText(profilename);
+                }
+                if(profilename.equals("")&&username.equals(""))
+                {
+                    username_text.setText(firstname);
+                }
 
                 name = get_name;
                 categoryId = job_category;
@@ -810,7 +817,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
                 Date dt;
                 try {
                     dt = sdf.parse(time);
-                    String new_time_format = sdfs.format(dt).toUpperCase();
+                    String new_time_format = sdfs.format(dt).toUpperCase().replace(".","");
                     System.out.println("ddddddd:new_time_format: " + new_time_format);
                     start_time_text.setText(new_time_format);
                 } catch (ParseException e) {
@@ -897,7 +904,7 @@ public class RehireJob extends Activity implements View.OnClickListener{
             // TODO Auto-generated method stub
 
 
-            //TextView textview = (TextView) getActivity().findViewById(R.id.textView1);
+
 
             Calendar calander2 = Calendar.getInstance();
 

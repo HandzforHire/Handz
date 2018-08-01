@@ -825,7 +825,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
                 Date dt;
                 try {
                     dt = sdf.parse(time);
-                    String new_time_format = sdfs.format(dt).toUpperCase();
+                    String new_time_format = sdfs.format(dt).toUpperCase().replace(".","");
                     System.out.println("ddddddd:new_time_format: " + new_time_format);
                     start_time_text.setText(new_time_format);
                 } catch (ParseException e) {

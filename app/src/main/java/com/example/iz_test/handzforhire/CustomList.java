@@ -22,6 +22,8 @@ import com.glide.RoundedCornersTransformation;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -78,6 +80,19 @@ public class CustomList extends BaseAdapter {
         type.setText(get_type);
         jobId.setText(get_id);
         rating.setText(average_rating);
+
+
+        DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+        DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+        try {
+            java.util.Date dates = srcDf.parse(get_date);
+            date.setText("" + destDf.format(dates));
+
+        } catch (Exception e)
+        {
+            System.out.println("error " + e.getMessage());
+        }
 
         Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 

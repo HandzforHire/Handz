@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -62,11 +64,23 @@ public class EditPostedAdapter extends BaseAdapter {
         String get_type = items.get("type");
         String get_id = items.get("jobId");
 
+
+        DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+        DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+        try {
+            java.util.Date dates = srcDf.parse(get_date);
+            date.setText("" + destDf.format(dates));
+
+        } catch (Exception e)
+        {
+            System.out.println("error " + e.getMessage());
+        }
+
         job_name.setText(get_name);
         job_name.setTypeface(font);
         when.setTypeface(font);
         pay.setTypeface(font);
-        date.setText(get_date);
         date.setTypeface(font1);
         amount.setText(get_amount);
         amount.setTypeface(font1);

@@ -106,9 +106,9 @@
                         android:layout_width="120sp"
                         android:layout_height="120sp"
                         android:background="@drawable/image_border"
-                        android:layout_marginTop="29dp"
-                        android:layout_below="@+id/layout"
+                        android:layout_marginTop="30dp"
                         android:visibility="invisible"
+                        android:layout_below="@+id/layout"
                         android:layout_centerHorizontal="true" />
 
                     <LinearLayout
@@ -194,7 +194,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/handz"/>
-                
+
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

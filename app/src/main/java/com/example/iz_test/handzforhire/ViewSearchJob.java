@@ -492,6 +492,7 @@ public class ViewSearchJob extends Activity{
                             HashMap<String, String> map=job_list.get(position);
                             Intent i = new Intent(ViewSearchJob.this,JobDescription.class);
                             i.putExtra("userId",user_id);
+                            i.putExtra("average_rating",map.get("average_rating"));
                             i.putExtra("jobId",map.get("jobId"));
                             startActivity(i);
                         }

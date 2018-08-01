@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +38,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +59,7 @@ public class JobDescription extends Activity {
     RelativeLayout rating_lay;
     Dialog dialog;
     Swipe swipe;
+    LinearLayout flexible_layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,18 +78,19 @@ public class JobDescription extends Activity {
         date = (TextView) findViewById(R.id.date);
         time = (TextView) findViewById(R.id.time);
         amount = (TextView) findViewById(R.id.amount);
-        type = (TextView) findViewById(R.id.type);
+        type = (TextView) findViewById(R.id.duration);
         apply = (TextView) findViewById(R.id.apply_btn);
         close = (ImageView) findViewById(R.id.close_btn);
-        rat_val=(TextView)findViewById(R.id.text3);
+        rat_val=(TextView)findViewById(R.id.rating_value);
+
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
+        flexible_layout = (LinearLayout)findViewById(R.id.flexible_lay);
 
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");
         user_id = i.getStringExtra("userId");
         rat_val.setText(i.getStringExtra("average_rating"));
-        System.out.println("ssssssssssselected:job_id:" + job_id);
-        System.out.println("ssssssssssselected:user_id:" + user_id);
+
         getJobDetails();
 
         apply.setOnClickListener(new View.OnClickListener() {
@@ -200,36 +206,69 @@ public class JobDescription extends Activity {
             status = jResult.getString("status");
             if (status.equals("success")) {
                 job_data = jResult.getString("job_data");
-                System.out.println("jjjjjjjjjjjjjjjob:::job_data:::" + job_data);
                 JSONObject object = new JSONObject(job_data);
                 get_name = object.getString("job_name");
-                System.out.println("nnnnnnnnnnn:name::"+get_name);
                 String get_description = object.getString("description");
-                System.out.println("nnnnnnnnnnn:description::" + get_description);
                 get_date = object.getString("job_date");
-                System.out.println("nnnnnnnnnnn:date::" + get_date);
                 get_start_time = object.getString("start_time");
-                System.out.println("nnnnnnnnnnn:start_time::" + get_start_time);
                 get_end_time = object.getString("end_time");
-                System.out.println("nnnnnnnnnnn:end_time::" + get_end_time);
                 get_amount = object.getString("job_payment_amount");
-                System.out.println("nnnnnnnnnnn:amount::" + get_amount);
                 get_type = object.getString("job_payment_type");
-                System.out.println("nnnnnnnnnnn:type::" + get_type);
                 get_profile_name = object.getString("profile_name");
-                System.out.println("nnnnnnnnnnn:get_profile_name::" + get_profile_name);
                 image = object.getString("profile_image");
-                System.out.println("ressss::image:" + image);
                 employerId = object.getString("employer_id");
                 usertype = object.getString("usertype");
-                System.out.println("ressss::employerId:" + employerId);
+                String flexible_status = object.getString("job_date_time_flexible");
+                if(flexible_status.equals("yes"))
+                {
+                    flexible_layout.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    flexible_layout.setVisibility(View.GONE);
+                }
+
                 profile_name.setText(get_profile_name);
                 description.setText(get_description);
-                date.setText(get_date);
-                time.setText(get_start_time);
+
                 type.setText(get_type);
                 amount.setText(get_amount);
                 name.setText(get_name);
+
+
+                DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+                DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+                try {
+                    java.util.Date dates = srcDf.parse(get_date);
+                    date.setText("" + destDf.format(dates));
+
+                } catch (Exception e)
+                {
+                    System.out.println("error " + e.getMessage());
+                }
+
+                String mStringDate = get_start_time;
+                String oldFormat= "HH:mm:ss";
+                String newFormat= "hh:mm aaa";
+
+                String formatedDate = "";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(oldFormat);
+                Date myDate = null;
+                try {
+                    myDate = dateFormat.parse(mStringDate);
+                } catch (java.text.ParseException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat(newFormat);
+                formatedDate = timeFormat.format(myDate).toUpperCase().replace(".","");
+                System.out.println("hhhhhhhhhhhhh:newFormat:::"+formatedDate);
+
+                time.setText(formatedDate);
+
+
+
                 if(image.equals(""))
                 {
                 }

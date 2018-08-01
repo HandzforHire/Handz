@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,6 +94,7 @@ public class ApplyJob extends Activity{
         profile_image = (ImageView) findViewById(R.id.profile_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
 
+
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");
         user_id = i.getStringExtra("userId");
@@ -106,13 +109,27 @@ public class ApplyJob extends Activity{
         image = i.getStringExtra("image");
         usertype=i.getStringExtra("usertype");
         name.setText(profile_name);
-        dat.setText(date);
         amt.setText(amount);
         pay.setText(type);
         text.setText(profile_name);
         job.setText(job_name);
 
-            Glide.with(ApplyJob.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
+
+
+        DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+        DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+        try {
+            java.util.Date dates = srcDf.parse(date);
+            dat.setText("" + destDf.format(dates));
+
+        } catch (Exception e)
+        {
+            System.out.println("error " + e.getMessage());
+        }
+
+
+        Glide.with(ApplyJob.this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
 
         getAverageRatigng();
 

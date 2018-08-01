@@ -254,8 +254,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_gray"
-                        android:text="APPLY"
-                        android:padding="20sp"
+                        android:text="apply"
+                        android:paddingLeft="20sp"
+                        android:paddingRight="20sp"
+                        android:textAllCaps="true"
+                        android:paddingTop="5sp"
+                        android:paddingBottom="5sp"
                         android:textStyle="bold"
                         android:textColor="#DCDCDC"
                         android:textSize="25sp"/>
@@ -272,16 +276,16 @@
             android:layout_height="170dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="310dp"
-            android:paddingTop="10sp"
-            android:gravity="top"
-            android:maxLines="200"
-            android:textColorHint="#000000"
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp"
+            android:layout_marginTop="310dp"
             android:background="@drawable/border"
+            android:gravity="top"
             android:hint="Place comments here(optional).."
-            android:paddingLeft="15sp" />
+            android:maxLines="200"
+            android:paddingLeft="15sp"
+            android:paddingTop="10sp"
+            android:textColorHint="#000000" />
     </FrameLayout>
 
 </LinearLayout>
