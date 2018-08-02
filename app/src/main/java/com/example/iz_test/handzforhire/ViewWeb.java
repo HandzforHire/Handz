@@ -9,8 +9,6 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
-import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
-import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 public class ViewWeb extends Activity{
 
