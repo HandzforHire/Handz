@@ -55,7 +55,6 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
     TextView o_email,text;
 
     String address,city,state,zipcode;
-    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,18 +98,7 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
             }
         });
 
-        /*email.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                email.setHint("");
-            }
-        });
-        retype_email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                retype_email.setHint("");
-            }
-        });*/
+
 
         h_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -345,31 +333,6 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
             }
         });
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(ChangeCurrentEmailAddress.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(ChangeCurrentEmailAddress.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
     }
 
     public void webservice() {
@@ -538,11 +501,5 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
 
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 
 }

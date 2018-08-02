@@ -60,7 +60,7 @@ public class LendActiveJobs extends Activity{
     String usertype = "employee";
     String jobDate,startTime,endTime,amount,type,job_name,image;
     Dialog dialog;
-    Swipe swipe;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,34 +132,6 @@ public class LendActiveJobs extends Activity{
             }
         });
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(LendActiveJobs.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(LendActiveJobs.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
     }
 
     public void activeJobs() {
@@ -266,22 +238,14 @@ public class LendActiveJobs extends Activity{
                 for(int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
                     job_name = object.getString("job_name");
-                    System.out.println("ressss:job_name::" + job_name);
                     image = object.getString("profile_image");
-                    System.out.println("ressss:profile_image:::"+image);
                     final String profile_name = object.getString("profile_name");
-                    System.out.println("ressss:profile_name:::"+profile_name);
                     final String user_name = object.getString("username");
-                    System.out.println("ressss:user_name:::"+user_name);
                     final String job_id = object.getString("job_id");
-                    System.out.println("ressss:job_id:::"+job_id);
                     final String employerId = object.getString("employer_id");
-                    System.out.println("ressss:employerId:::"+employerId);
                     final String employeeId = object.getString("employee_id");
-                    System.out.println("ressss:employeeId:::"+employeeId);
                     final String channelid=object.getString("channel");
-                    System.out.println("resss:channel_id::"+channelid);
-
+                    final String profilename = object.getString("profile_name");
                     jobDate = object.getString("job_date");
                     startTime = object.getString("start_time");
                     endTime = object.getString("end_time");
@@ -295,6 +259,8 @@ public class LendActiveJobs extends Activity{
                     map.put("userId",user_id);
                     map.put("jobDate",jobDate);
                     map.put("start_time",startTime);
+                    map.put("end_time",endTime);
+                    map.put("profile",profilename);
                     map.put("end_time",endTime);
                     map.put("payment_amount",amount);
                     map.put("payment_type",type);
@@ -340,9 +306,4 @@ public class LendActiveJobs extends Activity{
         }
     }
 
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

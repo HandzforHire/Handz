@@ -66,7 +66,7 @@ public class LendJobHistory extends Activity{
     int timeout = 60000;
     Dialog dialog;
     String rating_value,rating_id,category1,category2,category3,category4,category5;
-    Swipe swipe;
+
     LendHistoryAdapter arrayAdapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -161,32 +161,6 @@ public class LendJobHistory extends Activity{
             }
         });
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(LendJobHistory.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(LendJobHistory.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
     }
 
     public void activeJobs() {
@@ -378,9 +352,5 @@ public class LendJobHistory extends Activity{
             e.printStackTrace();
         }
     }
-    public boolean dispatchTouchEvent(MotionEvent event){
 
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

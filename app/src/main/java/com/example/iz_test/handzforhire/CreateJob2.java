@@ -48,7 +48,7 @@ public class CreateJob2 extends AppCompatActivity {
     static String get_lon="0.0";
     String usertype = "employer";
     String edit_job = "no";
-    Swipe swipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,33 +91,6 @@ public class CreateJob2 extends AppCompatActivity {
 
         text.setText(name);
 
-
-       /* swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(CreateJob2.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(CreateJob2.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
-*/
         pros.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -271,54 +244,6 @@ public class CreateJob2 extends AppCompatActivity {
                 }
             }
         });
-      /*  add.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (cit.getText().toString().equals("") && stat.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });
-        cit.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && stat.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });
-        stat.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && cit.getText().toString().equals("") && zip.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });
-        zip.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    if (add.getText().toString().equals("") && cit.getText().toString().equals("") && stat.getText().toString().equals("")) {
-                        linear.setVisibility(View.VISIBLE);
-                    }
-                }
-                return false;
-            }
-        });*/
 
     }
 
@@ -477,12 +402,4 @@ public class CreateJob2 extends AppCompatActivity {
         }
 
     }
-
-
-    /*@Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }*/
 }

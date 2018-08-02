@@ -70,7 +70,6 @@ public class ViewSearchJob extends Activity{
      int timeout = 60000;
     ImageView new_search,map_view;
     Dialog dialog;
-    Swipe swipe;
     SessionManager session;
     HashMap<String, String> location;
     Map<String, String> params = new HashMap<String, String>();
@@ -220,30 +219,6 @@ public class ViewSearchJob extends Activity{
         });
 
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(ViewSearchJob.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(ViewSearchJob.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
     }
 
     private void joblist() {

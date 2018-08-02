@@ -77,7 +77,7 @@ public class PaymentMethod extends Activity{
      String value = "HandzForHire@~";
      String usertype="employer";
      String verified;
-    Swipe swipe;
+
     private static PayPalConfiguration config = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
             // or live (ENVIRONMENT_PRODUCTION)
@@ -118,32 +118,6 @@ public class PaymentMethod extends Activity{
         account.setTypeface(tf);
         text1.setTypeface(tf);
         text.setTypeface(tf);
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(PaymentMethod.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(PaymentMethod.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -382,9 +356,4 @@ public class PaymentMethod extends Activity{
         }
     }
 
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

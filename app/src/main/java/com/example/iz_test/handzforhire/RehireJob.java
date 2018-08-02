@@ -91,7 +91,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
     String header,sub_category,job_category_color,job_expire,expected_hours,post_address;
-    Swipe swipe;
     Dialog dialog;
 
     @Override
@@ -144,32 +143,6 @@ public class RehireJob extends Activity implements View.OnClickListener{
         activity=this;
 
         getJobDetails();
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(RehireJob.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(RehireJob.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
 
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -966,10 +939,5 @@ public class RehireJob extends Activity implements View.OnClickListener{
         }
     };
 
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 
 }

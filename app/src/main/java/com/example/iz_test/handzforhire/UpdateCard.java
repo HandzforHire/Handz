@@ -67,7 +67,6 @@ public class UpdateCard extends Activity{
     RelativeLayout layout;
     String cardtype,getDefaultCard;
     String update_name,update_card_number,update_month,update_year,update_cvv,update_address,update_city,update_state,update_zipcode;
-    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,30 +169,6 @@ public class UpdateCard extends Activity{
         });
 
 
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(UpdateCard.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(UpdateCard.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
     }
 
     public void updateCard() {
@@ -389,12 +364,5 @@ public class UpdateCard extends Activity{
         }
 
     }
-
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
-
 
 }

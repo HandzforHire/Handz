@@ -78,7 +78,7 @@ public class JobHistory extends Activity {
     String rating_value,rating_id,category1,category2,category3,category4,category5;
     Adapter adapter;
     Dialog dialog;
-    Swipe swipe;
+
         @Override
         protected void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -194,32 +194,7 @@ public class JobHistory extends Activity {
                 }
             });
 
-            swipe = new Swipe();
-            swipe.setListener(new SimpleSwipeListener() {
 
-                @Override
-                public boolean onSwipedLeft(MotionEvent event) {
-                    Intent i = new Intent(JobHistory.this,ProfilePage.class);
-                    i.putExtra("userId", Profilevalues.user_id);
-                    i.putExtra("address", Profilevalues.address);
-                    i.putExtra("city", Profilevalues.city);
-                    i.putExtra("state", Profilevalues.state);
-                    i.putExtra("zipcode", Profilevalues.zipcode);
-                    startActivity(i);
-                    finish();
-
-                    return super.onSwipedLeft(event);
-                }
-
-
-                @Override
-                public boolean onSwipedRight(MotionEvent event) {
-                    Intent j = new Intent(JobHistory.this, SwitchingSide.class);
-                    startActivity(j);
-                    finish();
-                    return super.onSwipedRight(event);
-                }
-            });
         }
 
         public void activeJobs() {
@@ -373,10 +348,6 @@ public class JobHistory extends Activity {
             }
         }
 
-    public boolean dispatchTouchEvent(MotionEvent event){
 
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 
 }

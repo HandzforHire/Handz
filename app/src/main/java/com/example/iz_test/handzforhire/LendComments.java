@@ -75,7 +75,6 @@ public class LendComments extends Activity
     ImageView profile;
     RelativeLayout rating_lay;
     TextView pn_lend;
-    Swipe swipe;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -139,31 +138,7 @@ public class LendComments extends Activity
             }
         });
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
 
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(LendComments.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(LendComments.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
     }
 
     private void post() {
@@ -239,12 +214,6 @@ public class LendComments extends Activity
 
         } catch (Exception e) {
         }
-    }
-
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
     }
 
 }

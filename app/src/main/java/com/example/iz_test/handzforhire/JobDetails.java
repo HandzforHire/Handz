@@ -57,7 +57,7 @@ public class JobDetails extends Activity{
     String job_id,user_id,employerId;
     ProgressDialog progress_dialog;
     Dialog dialog;
-    Swipe swipe;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,32 +88,6 @@ public class JobDetails extends Activity{
             @Override
             public void onClick(View v) {
                 onBackPressed();
-            }
-        });
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(JobDetails.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(JobDetails.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
             }
         });
         getJobDetails();
@@ -210,13 +184,6 @@ public class JobDetails extends Activity{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
     }
 
 }

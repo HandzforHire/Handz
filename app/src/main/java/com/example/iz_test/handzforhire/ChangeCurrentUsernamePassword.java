@@ -57,7 +57,7 @@ public class ChangeCurrentUsernamePassword extends Activity{
     TextView username,text,text1;
 
     String address,city,state,zipcode;
-    Swipe swipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -276,30 +276,6 @@ public class ChangeCurrentUsernamePassword extends Activity{
             }
         });
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(ChangeCurrentUsernamePassword.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(ChangeCurrentUsernamePassword.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
 
     }
 
@@ -489,12 +465,6 @@ public class ChangeCurrentUsernamePassword extends Activity{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
     }
 
 }

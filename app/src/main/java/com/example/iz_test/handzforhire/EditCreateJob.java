@@ -102,7 +102,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
     HashMap<String, List<String>> listDataChild;
     String header,sub_category,job_category_color,job_expire,expected_hours,post_address,current_location;
     Dialog dialog;
-    Swipe swipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,32 +112,6 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(EditCreateJob.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(EditCreateJob.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
 
         layout = (LinearLayout)findViewById(R.id.relay);
         category_name = (TextView)findViewById(R.id.cat_name);
@@ -972,10 +946,4 @@ public class EditCreateJob extends Activity implements View.OnClickListener {
         }
     };
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

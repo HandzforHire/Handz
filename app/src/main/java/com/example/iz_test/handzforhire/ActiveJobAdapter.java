@@ -151,6 +151,8 @@ public class ActiveJobAdapter extends BaseAdapter {
                         username=items.get("user");
                     else
                         username= items.get("profile");;
+
+                    System.out.println("username "+username);
                    String  userId=items.get("userId");
 
 
@@ -178,7 +180,6 @@ public class ActiveJobAdapter extends BaseAdapter {
             if(get_image.equals(""))
             {
                 image1.setVisibility(View.VISIBLE);
-                System.out.println("iiiiiiiiiiiiiiiiiiid:get_image22::" + get_image);
             }
             else {
                 Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);

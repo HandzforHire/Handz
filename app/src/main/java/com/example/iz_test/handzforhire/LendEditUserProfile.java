@@ -110,7 +110,7 @@ public class LendEditUserProfile extends Activity  {
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
-    Swipe swipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -230,32 +230,6 @@ public class LendEditUserProfile extends Activity  {
                 i.putExtra("image",profile_image);
                 i.putExtra("name", profilename);
                 startActivity(i);
-            }
-        });
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(LendEditUserProfile.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(LendEditUserProfile.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
             }
         });
     }
@@ -678,10 +652,5 @@ public class LendEditUserProfile extends Activity  {
     }
 
 
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 
 }

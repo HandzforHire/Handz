@@ -70,7 +70,6 @@ public class NeedComments extends Activity{
     ImageView profile;
     RelativeLayout rating_lay;
     TextView pn_needcmd;
-    Swipe swipe;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,35 +100,6 @@ public class NeedComments extends Activity{
 
         t3.setText(rating);
         System.out.println("rrrrrrrrrrrr" + rating+"..."+image);
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(NeedComments.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(NeedComments.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
-
-
         if(image.equals(""))
         {
         }
@@ -264,9 +234,4 @@ public class NeedComments extends Activity{
     }
 
 
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

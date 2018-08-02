@@ -58,7 +58,7 @@ public class JobDescription extends Activity {
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
-    Swipe swipe;
+
     LinearLayout flexible_layout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,30 +121,6 @@ public class JobDescription extends Activity {
                 i.putExtra("image",image);
                 i.putExtra("name", get_profile_name);
                 startActivity(i);
-            }
-        });
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(JobDescription.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(JobDescription.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
             }
         });
 
@@ -287,14 +263,6 @@ public class JobDescription extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-    }
-
-
-
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
     }
 
 }

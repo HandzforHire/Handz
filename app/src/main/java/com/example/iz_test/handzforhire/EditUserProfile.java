@@ -101,7 +101,7 @@ public class EditUserProfile extends Activity {
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
-    Swipe swipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -257,32 +257,6 @@ public class EditUserProfile extends Activity {
             public void onClick(View view) {
                 Intent i = new Intent(EditUserProfile.this, ViewWeb.class);
                 startActivity(i);
-            }
-        });
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(EditUserProfile.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(EditUserProfile.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
             }
         });
     }
@@ -700,12 +674,6 @@ public class EditUserProfile extends Activity {
 
         // Return the bordered circular bitmap
         return dstBitmap;
-    }
-
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
     }
 
 }

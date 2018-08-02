@@ -18,7 +18,7 @@ import com.github.pwittchen.swipe.library.rx2.Swipe;
 
 public class MapActivity extends AppCompatActivity {
     Fragment fragment = null;
-    Swipe swipe;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,33 +31,6 @@ public class MapActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.container_body, fragment).addToBackStack("map");
             fragmentTransaction.commit();
         }
-
-
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(MapActivity.this,LendProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(MapActivity.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
 
     }
 }

@@ -93,7 +93,6 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
     public static Fragment fragments;
     View rootView;
     int undisclosedjob=0;
-    Swipe swipe;
     Dialog dialog;
 
     public static String job_id;

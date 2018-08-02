@@ -112,7 +112,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
     MyOptionsPickerView threePicker;
     public static String date_format;
     TextView select_category;
-    Swipe swipe;
+
     Integer[] imageId = {
             R.drawable.box_17,
             R.drawable.box_10,
@@ -189,31 +189,7 @@ public class CreateJob extends Activity implements View.OnClickListener {
         zipcode = i.getStringExtra("zipcode");
         System.out.println("iiiiiiiiiiiiiiiiiiiii:" + id);
 
-       swipe = new Swipe();
-       /*  swipe.setListener(new SimpleSwipeListener() {
 
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(CreateJob.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(CreateJob.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });*/
 
         String pattern1 = "hh:mm a";
         String timeFormat = new SimpleDateFormat(pattern1).format(new Date());
@@ -1397,13 +1373,5 @@ public class CreateJob extends Activity implements View.OnClickListener {
 
         }
     }
-
-
- /*   @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }*/
 
 }

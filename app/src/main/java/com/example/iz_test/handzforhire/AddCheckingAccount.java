@@ -61,7 +61,6 @@ public class AddCheckingAccount extends Activity {
     String default_acc;
     String status = "1";
     TextView text1,add_account;
-    Swipe swipe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,30 +122,6 @@ public class AddCheckingAccount extends Activity {
             }
         });
 
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(AddCheckingAccount.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(AddCheckingAccount.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
 
         add_account.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -478,9 +453,4 @@ public class AddCheckingAccount extends Activity {
     }
 
 
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

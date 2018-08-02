@@ -57,7 +57,7 @@ public class ChangeCurrentAddress extends Activity {
     ImageView h_icon;
     TextView o_address,o_city,o_state,o_zip,text;
     String address;
-    Swipe swipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,36 +112,7 @@ public class ChangeCurrentAddress extends Activity {
             }
         });
 
-        /*address1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                address1.setHint("");
-            }
-        });
-        address2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                address2.setHint("");
-            }
-        });
-        city1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                city1.setHint("");
-            }
-        });
-        state1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                state1.setHint("");
-            }
-        });
-        zipcode1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                zipcode1.setHint("");
-            }
-        });*/
+
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,32 +136,6 @@ public class ChangeCurrentAddress extends Activity {
             }
         });
 
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(ChangeCurrentAddress.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(ChangeCurrentAddress.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
     }
 
     public void Update()
@@ -473,12 +418,6 @@ public class ChangeCurrentAddress extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
     }
 
 

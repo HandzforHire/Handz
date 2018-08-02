@@ -24,8 +24,6 @@ public class RehireMultiply extends Activity {
     String job_id,job_expire,job_category_color,sub_category,duration,employeeId;
     String value,id,name,usertype,category,description,date,start_time,expected_hours,end_time,amount,type,address,city,current_location;
     String state,zipcode,post_address,latitude,longitude,estimated_amount,flexible_status;
-    Swipe swipe;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,31 +63,6 @@ public class RehireMultiply extends Activity {
 
         pay_amount.addTextChangedListener(tw);
         hours.addTextChangedListener(tw1);
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(RehireMultiply.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(RehireMultiply.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,9 +216,4 @@ public class RehireMultiply extends Activity {
         }
     };
 
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

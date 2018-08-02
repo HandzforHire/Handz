@@ -95,7 +95,6 @@ public class RehireSubtract extends Activity {
     String latitude = "";
     String longitude = "";
     String current_location = "";
-    Swipe swipe;
     Dialog dialog;
 
     @Override
@@ -191,32 +190,6 @@ public class RehireSubtract extends Activity {
                 fee = "$ " +paypal_merchant.getText().toString();
                 System.out.println("sssssssssssss:subtract:pay:expe:fee:"+payout+".."+expense+".."+fee);
                 registerUser();
-            }
-        });
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(RehireSubtract.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(RehireSubtract.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
             }
         });
 
@@ -528,12 +501,4 @@ public class RehireSubtract extends Activity {
             pocket_expense.setText(pocket_value);
         }
     };
-
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
-
-
 }

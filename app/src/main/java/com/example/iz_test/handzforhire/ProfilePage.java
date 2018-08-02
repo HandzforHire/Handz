@@ -62,7 +62,7 @@ import java.util.Map;
 
 import okio.Timeout;
 
-public class ProfilePage extends Activity  {
+public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
     TextView profile_name,rating,rating_value;
     TextView txt_postedjobcnt,txt_activejobscnt,job_historycnt;
@@ -90,8 +90,7 @@ public class ProfilePage extends Activity  {
     String description="https://www.handzforhire.com";
     String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
             "along with that website url and logo";
-    Swipe swipe;
-
+    private SimpleGestureFilter detector;
     float x1,x2;
     float y1, y2;
     @Override
@@ -106,7 +105,7 @@ public class ProfilePage extends Activity  {
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        swipe = new Swipe();
+        detector = new SimpleGestureFilter(this,this);
 
         Button edit_profile = (Button) findViewById(R.id.edit_user_profile);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
@@ -302,31 +301,6 @@ public class ProfilePage extends Activity  {
             }
         });
 
-/*        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-
-                Intent i = new Intent(ProfilePage.this, ProfilePage.class);
-                i.putExtra("userId", id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(ProfilePage.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });*/
     }
     public void getAverageRatigng() {
         dialog.show();
@@ -734,50 +708,6 @@ public class ProfilePage extends Activity  {
 
     }
 
-   /* @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
-*/
-
-/*
-    @Override
-    public void onSwipe(int direction) {
-        String str = "";
-
-        switch (direction) {
-
-            case SimpleGestureFilter.SWIPE_RIGHT:
-
-                Intent i = new Intent(ProfilePage.this, ProfilePage.class);
-                i.putExtra("userId", id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
-                break;
-
-            case SimpleGestureFilter.SWIPE_LEFT:
-
-                Intent j = new Intent(ProfilePage.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                break;
-        }
-
-    }
-
-    @Override
-    public void onDoubleTap() {
-
-    }
-*/
-
-
     private void share()
     {
 
@@ -820,51 +750,48 @@ public class ProfilePage extends Activity  {
     }
 
 
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
-    public boolean onTouchEvent(MotionEvent touchevent)
-    {
-        switch (touchevent.getAction())
-        {
-            // when user first touches the screen we get x and y coordinate
-            case MotionEvent.ACTION_DOWN:
-            {
-                x1 = touchevent.getX();
-                y1 = touchevent.getY();
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(ProfilePage.this, SwitchingSide.class);
+                startActivity(j);
+                finish();
                 break;
-            }
-            case MotionEvent.ACTION_UP:
-            {
-                x2 = touchevent.getX();
-                y2 = touchevent.getY();
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i = new Intent(ProfilePage.this, ProfilePage.class);
+                i.putExtra("userId", id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
 
-                if (x1 < x2)
-                {
-                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_LONG).show();
-                }
-
-                // if right to left sweep event on screen
-                if (x1 > x2)
-                {
-                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_LONG).show();
-                }
-
-                // if UP to Down sweep event on screen
-                if (y1 < y2)
-                {
-                    Toast.makeText(this, "UP to Down Swap Performed", Toast.LENGTH_LONG).show();
-                }
-                if (y1 > y2)
-                {
-                    Toast.makeText(this, "Down to UP Swap Performed", Toast.LENGTH_LONG).show();
-                }
                 break;
-            }
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
         }
-        return false;
+      //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
     }
 
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
 
-
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 
 }

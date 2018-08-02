@@ -41,7 +41,6 @@ public class EditRating extends Activity{
     ImageView profile_image,default_image;
     RelativeLayout rating_lay;
 
-    Swipe swipe;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

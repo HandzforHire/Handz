@@ -68,7 +68,7 @@ public class PayEmployee1 extends Activity{
     TextView name,date,total;
     String get_tip,get_amount,get_method,get_date,get_total,tip_value,payment_method_value,payment_amount_value,transaction_date_value;
     Integer total_value;
-    Swipe swipe;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,34 +98,6 @@ public class PayEmployee1 extends Activity{
         payment_method_value = i.getStringExtra("paymentMethod");
         payment_amount_value = i.getStringExtra("payment_amount");
         transaction_date_value = i.getStringExtra("transaction_date");
-
-        System.out.println("hhhhhhhhhhh:payemployee::"+job_id+"..."+employee_id+".."+employer_id+".."+job_name);
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(PayEmployee1.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(PayEmployee1.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
     }
 
     public void getJobDetails() {
@@ -267,9 +239,5 @@ public class PayEmployee1 extends Activity{
         }
     }
 
-    public boolean dispatchTouchEvent(MotionEvent event){
 
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
 }

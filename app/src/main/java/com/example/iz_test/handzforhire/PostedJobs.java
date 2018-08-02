@@ -78,7 +78,7 @@ public class PostedJobs extends Activity {
     RelativeLayout rating_lay;
     Button active_btn,history_btn;
     Dialog dialog;
-    Swipe swipe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,16 +121,6 @@ public class PostedJobs extends Activity {
             }
         });
 
-        /*rating_lay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(PostedJobs.this,ReviewRating.class);
-                i.putExtra("userId", id);
-                i.putExtra("image",profile_image);
-                i.putExtra("name", profilename);
-                startActivity(i);
-            }
-        });*/
 
         active_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,34 +147,6 @@ public class PostedJobs extends Activity {
                 startActivity(i);
             }
         });
-
-        swipe = new Swipe();
-        swipe.setListener(new SimpleSwipeListener() {
-
-            @Override
-            public boolean onSwipedLeft(MotionEvent event) {
-                Intent i = new Intent(PostedJobs.this,ProfilePage.class);
-                i.putExtra("userId", Profilevalues.user_id);
-                i.putExtra("address", Profilevalues.address);
-                i.putExtra("city", Profilevalues.city);
-                i.putExtra("state", Profilevalues.state);
-                i.putExtra("zipcode", Profilevalues.zipcode);
-                startActivity(i);
-                finish();
-
-                return super.onSwipedLeft(event);
-            }
-
-
-            @Override
-            public boolean onSwipedRight(MotionEvent event) {
-                Intent j = new Intent(PostedJobs.this, SwitchingSide.class);
-                startActivity(j);
-                finish();
-                return super.onSwipedRight(event);
-            }
-        });
-
     }
 
     public void listPostedJobs() {
@@ -661,11 +623,5 @@ public class PostedJobs extends Activity {
         }
 
     }
-    public boolean dispatchTouchEvent(MotionEvent event){
-
-        swipe.dispatchTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
-
 
 }
