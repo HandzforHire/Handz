@@ -18,11 +18,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -165,44 +170,25 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
-                        try {
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("error"+jsonObject);
-                            /*String status = jsonObject.getString("msg");
-                            if(status.equals("No Cards Found!"))
-                            {
-                                progress_dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
 
-                                final Dialog dialog = new Dialog(ManagePaymentOptions.this);
-                                dialog.setContentView(R.layout.custom_dialog);
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                            } catch (UnsupportedEncodingException error1) {
 
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText("No cards found");
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                        progress_dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
-                            else
-                            {
-
-                            }*/
-                        } catch ( JSONException e ) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1){
-
                         }
                     }
                 }) {

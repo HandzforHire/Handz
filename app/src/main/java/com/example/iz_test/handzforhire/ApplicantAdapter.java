@@ -10,11 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -196,15 +201,26 @@ public class ApplicantAdapter extends BaseAdapter {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            System.out.println("error" + jsonObject);
-                        } catch (JSONException e) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1) {
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(activity,"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                            } catch (UnsupportedEncodingException error1) {
 
+                            }
                         }
+
                     }
                 }) {
             @Override

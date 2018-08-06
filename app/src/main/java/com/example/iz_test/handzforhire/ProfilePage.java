@@ -562,27 +562,25 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 }else{
                     job_historycnt.setVisibility(View.INVISIBLE);
                 }
-                if(!profile_image.equals("")&&!profilename.equals("null"))
+                if(!profile_image.equals("")&&!profilename.equals(""))
                 {
                     profile_name.setText(profilename);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
-
                 }
-                else if(!profile_image.equals("")&&profilename.equals("null"))
+                else if(!profile_image.equals("")&&profilename.equals(""))
                 {
-
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
                 }
-                else if(!profilename.equals("null")&&profile_image.equals(""))
+                else if(!profilename.equals("")&&profile_image.equals(""))
                 {
                     profile_name.setText(profilename);
                 }
-                else if(profilename.equals("null")&&profile_image.equals(""))
+                else if(profilename.equals("")&&profile_image.equals(""))
                 {
-
                 }
-                else
+                if(profilename.equals(""))
                 {
+                    profile_name.setText(user_name);
                 }
             }
 

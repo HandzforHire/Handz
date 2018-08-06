@@ -36,11 +36,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -143,6 +148,8 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
         getProfileimage();
 
         activity = LendEditUserProfile.this;
+        FileUpload.activity = LendEditUserProfile.this;
+
         profile_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -278,18 +285,11 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
             if (status.equals("success")) {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
-                System.out.println("ggggggggget:profile_image:" + profile_image);
-                System.out.println("ggggggggget:profilename:" + profilename);
                 employee_rating = jResult.getString("employee_rating");
-                System.out.println("resssssss:employee_rating:" + employee_rating);
                 posted_notification = jResult.getString("notificationCountPosted");
-                System.out.println("resssssss:employer_rating:" + posted_notification);
                 pending_notification = jResult.getString("notificationCountPending");
-                System.out.println("resssssss:employer_rating:" + pending_notification);
                 active_notification = jResult.getString("notificationCountActive");
-                System.out.println("resssssss:employer_rating:" + active_notification);
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
-                System.out.println("resssssss:employer_rating:" + jobhistory_notification);
                 rating_value.setText(employee_rating);
                 if (!profile_image.equals("") && !profilename.equals("null")) {
                     profile_name.setText(profilename);
@@ -378,12 +378,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 Uri selectedImageUri = data.getData();
                 CropImage.activity(selectedImageUri)
                         .start(this);
-                /*String selectedImagePath = uriToFilename(selectedImageUri);
-                System.out.println("filename:gallery " + selectedImagePath);
-                new LendFileUpload(selectedImagePath);
-                System.out.println("path:camera:" + selectedImagePath);
-                filename = LendFileUpload.firstRemoteFile;
-                System.out.println("filename:gallery::" + filename);*/
+
             } else if (requestCode == REQUEST_CAMERA) {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 photo = addBorderToBitmap(photo, 10, Color.BLACK);
@@ -394,14 +389,6 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                 Uri tempUri = getImageUri(getApplicationContext(), photo);
 
-                // CALL THIS METHOD TO GET THE ACTUAL PATH
-                /*File finalFile = new File(getRealPathFromURI(tempUri));
-                System.out.println("ffffffffffffff:" + finalFile);
-                String capturedImagePath = String.valueOf(finalFile);
-                new LendFileUpload(capturedImagePath);
-                System.out.println("path:capturedImagePath:" + capturedImagePath);
-                filename = LendFileUpload.firstRemoteFile;
-                System.out.println("filename:camera::" + filename);*/
                 CropImage.activity(tempUri)
                         .start(this);
 
@@ -574,14 +561,24 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            System.out.println("error" + jsonObject);
-                        } catch (JSONException e) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1) {
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                            } catch (UnsupportedEncodingException error1) {
 
+                            }
                         }
                     }
                 }) {

@@ -1,6 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,9 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
@@ -76,7 +82,7 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
      String value = "HandzForHire@~";
      String usertype="employer";
      String verified;
-
+    Dialog dialog;
     private static PayPalConfiguration config = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
             // or live (ENVIRONMENT_PRODUCTION)
@@ -111,6 +117,11 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
         zipcode = i.getStringExtra("zipcode");
 
         detector = new SimpleGestureFilter(this,this);
+        dialog = new Dialog(PaymentMethod.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
@@ -239,27 +250,11 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
                 ph=obj.getString("phone_number");
                 ema=obj.getString("email");
 
-                System.out.println("Full Name "+obj.getString("name"));
-                System.out.println("Name "+obj.getString("given_name"));
-                System.out.println("User ID "+obj.getString("user_id"));
-                System.out.println("Address "+obj.getString("address"));
-                System.out.println("Phone NO "+obj.getString("phone_number"));
-                System.out.println("Email "+obj.getString("email"));
+
 
                 JSONObject address = new JSONObject(obj.getString("address"));
-                System.out.println("Postal code "+address.getString("postal_code"));
-                System.out.println("Lcality "+address.getString("locality"));
-                System.out.println("Region "+address.getString("region"));
-                System.out.println("Country "+address.getString("country"));
-                System.out.println("Street Address "+address.getString("street_address"));
 
 
-
-
-               /* txt_cntry.setText("Country : "+address.getString("country"));
-                txt_region.setText("Region : "+address.getString("region"));
-                txt_local.setText("Lcality : "+address.getString("locality"));
-                txt_postalcode.setText("Postal code : "+address.getString("postal_code"));*/
 
 
             }catch (Exception e)
@@ -282,27 +277,39 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
 
     private void addpay()
     {
-
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, PAYPALUSER_INFO,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("ppppp:Pay::" +response);
                         onResponserecieved(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
 
-                        } catch (JSONException e) {
+                            } catch (JSONException e) {
 
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }) {

@@ -24,12 +24,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -74,10 +79,6 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_posted_jobs);
-
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
 
         dialog = new Dialog(EditPostedJobs.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -210,61 +211,69 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                     public void onErrorResponse(VolleyError error) {
 
                         dialog.dismiss();
-                        try {
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("eeeeeeeerror"+jsonObject);
-                            String status = jsonObject.getString("msg");
-                            if(status.equals("No Jobs Found"))
-                            {
-                                // custom dialog
-                                final Dialog dialog = new Dialog(EditPostedJobs.this);
-                                dialog.setContentView(R.layout.custom_dialog);
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("eeeeeeeerror" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                if (status.equals("No Jobs Found")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(EditPostedJobs.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
 
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText("No Jobs Found");
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText("No Jobs Found");
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
 
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                } else {
+
+                                    final Dialog dialog = new Dialog(EditPostedJobs.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText("Login Failed.Please try again");
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
                             }
-                            else {
-
-                                final Dialog dialog = new Dialog(EditPostedJobs.this);
-                                dialog.setContentView(R.layout.custom_dialog);
-
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText("Login Failed.Please try again");
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
-                        } catch ( JSONException e ) {
-                            //Handle a malformed json response
-                            System.out.println("volley error ::"+e.getMessage());
-                        } catch (UnsupportedEncodingException errors){
-                            System.out.println("volley error ::"+errors.getMessage());
                         }
                     }
                 }) {
@@ -292,7 +301,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             jobList = jResult.getString("job_lists");
-            System.out.println("jjjjjjjjjjjjjjjob:::list:::" + jobList);
+
             if(status.equals("success")) {
                 JSONArray array = new JSONArray(jobList);
                 for (int n = 0; n < array.length(); n++) {
@@ -302,11 +311,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                     date = object.getString("job_date");
                     type = object.getString("job_payment_type");
                     amount = object.getString("job_payment_amount");
-                    System.out.println("ressss:jobId::" + jobId);
-                    System.out.println("ressss:name::" + name);
-                    System.out.println("ressss:date::" + date);
-                    System.out.println("ressss:type::" + type);
-                    System.out.println("ressss::amount:" + amount);
+
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("jobId", jobId);
@@ -367,33 +372,6 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
     }
 
 
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
-
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
-    }
 
     @Override
     public void onSwipe(int direction) {

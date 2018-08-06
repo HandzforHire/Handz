@@ -116,29 +116,7 @@ public class PaymentDetails extends Activity implements SimpleGestureFilter.Simp
 
             @Override
             public void afterTextChanged(Editable s) {
-                /*amount.removeTextChangedListener(this);
 
-                try {
-                    String originalString = s.toString();
-
-                    Long longval;
-                    if (originalString.contains(".")) {
-                        originalString = originalString.replaceAll(".", "");
-                    }
-                    longval = Long.parseLong(originalString);
-
-                    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
-                    formatter.applyPattern("##,##");
-                    String formattedString = formatter.format(longval);
-
-                    //setting text after format to EditText
-                    amount.setText(formattedString);
-                    amount.setSelection(amount.getText().length());
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
-
-                amount.addTextChangedListener(this);*/
             }
         };
     }

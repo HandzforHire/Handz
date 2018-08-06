@@ -115,27 +115,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		if(groupPosition % 8 == 7) {
 			convertView.setBackgroundColor(Color.parseColor("#6BAEFB"));
 		}
-		/*TextView lblListHeader1 = (TextView) convertView.findViewById(R.id.lblListHeader1);
-		lblListHeader1.setTypeface(null, Typeface.BOLD);
-		lblListHeader1.setText("COACHING");
-		TextView lblListHeader2 = (TextView) convertView.findViewById(R.id.lblListHeader2);
-		lblListHeader2.setTypeface(null, Typeface.BOLD);
-		lblListHeader2.setText("HOLIDAYS");
-		TextView lblListHeader3 = (TextView) convertView.findViewById(R.id.lblListHeader3);
-		lblListHeader3.setTypeface(null, Typeface.BOLD);
-		lblListHeader3.setText("INSIDE THE HOME");
-		TextView lblListHeader4 = (TextView) convertView.findViewById(R.id.lblListHeader4);
-		lblListHeader4.setTypeface(null, Typeface.BOLD);
-		lblListHeader4.setText("OUTSIDE THE HOME");
-		TextView lblListHeader5 = (TextView) convertView.findViewById(R.id.lblListHeader5);
-		lblListHeader5.setTypeface(null, Typeface.BOLD);
-		lblListHeader5.setText("PERSONAL SERVICES");
-		TextView lblListHeader6 = (TextView) convertView.findViewById(R.id.lblListHeader6);
-		lblListHeader6.setTypeface(null, Typeface.BOLD);
-		lblListHeader6.setText("PET CARE");
-		TextView lblListHeader7 = (TextView) convertView.findViewById(R.id.lblListHeader7);
-		lblListHeader7.setTypeface(null, Typeface.BOLD);
-		lblListHeader7.setText("TUTORING");*/
 
 		return convertView;
 	}

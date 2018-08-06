@@ -204,11 +204,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         en_time = new SimpleDateFormat(pattern2).format(new Date());
         System.out.println("777777777:time::::" + st_time+",,,,"+ en_time);
         activity=this;
-        /*job_amount.setPaintFlags(date_text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        start_time_text.setPaintFlags(date_text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        end_time_text.setPaintFlags(date_text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        date_text.setPaintFlags(date_text.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-*/
+
         listCategory();
 
         layout.setOnClickListener(new View.OnClickListener() {
@@ -241,15 +237,6 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*list.setVisibility(View.VISIBLE);
-                list.performClick();
-
-                if(list.getSelectedItem() == null) { // user selected nothing...
-                    list.performClick();
-                }
-                img_arrow.setVisibility(View.GONE);
-                textview.setVisibility(View.GONE);*/
                 popupWindowDogs.showAsDropDown(v, -5, 0);
 
             }
@@ -609,29 +596,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
             DialogFragment dialogfragment = new datepickerClass();
 
             dialogfragment.show(getFragmentManager(), "DatePickerDialog");
-           /* // Get Current Date
-            final Calendar c = Calendar.getInstance();
-            mYear = c.get(Calendar.YEAR);
-            mMonth = c.get(Calendar.MONTH);
-            mDay = c.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                    new DatePickerDialog.OnDateSetListener() {
-
-                        @Override
-                        public void onDateSet(DatePicker view, int year,
-                                              int monthOfYear, int dayOfMonth) {
-                            int mm = monthOfYear + 1;
-                            String month = (mm < 10) ? "0" + mm : "" + mm;
-                            String date = year + "-" + month + "-" + dayOfMonth;
-                            *//*String pattern = "MMMM dd,yyyy";
-                            String dateInString = new SimpleDateFormat(pattern).format(new Date());*//*
-                            System.out.println("dddddddddd:date:::"+date);
-                            //date_text.setText(dateInString);
-                        }
-                    }, mYear, mMonth, mDay);
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            datePickerDialog.show();*/
         }
         if (v == time_layout) {
 
@@ -691,73 +656,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         }
-       /* if (v == estimate_layout) {
 
-            // Get Current Time
-            final Calendar c = Calendar.getInstance();
-            mHour = c.get(Calendar.HOUR_OF_DAY);
-            mMinute = c.get(Calendar.MINUTE);
-
-            // Launch Time Picker Dialog
-            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                    new TimePickerDialog.OnTimeSetListener() {
-
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay,
-                                              int minute) {
-                            int second = 00;
-                            int hour = hourOfDay;
-                            int minutes = minute;
-                            String sec = (second < 10) ? "0" + second : "" + second;
-                            String min = (minutes < 10) ? "0" + minutes : "" + minutes;
-                            String hour_day = (hour < 10) ? "0" + hour : "" + hour;
-                            //en_time = hour_day + ":" + min + ":" + sec;
-                            en_time = hour_day;
-                            System.out.println("77777777:end_time::::::"+en_time);
-
-                            String timeSet = "";
-                            if (hour > 12) {
-                                hour -= 12;
-                                timeSet = "PM";
-                            } else if (hour == 0) {
-                                hour += 12;
-                                timeSet = "AM";
-                            }
-                            else if (hour == 12){
-                                timeSet = "PM";
-                            }else{
-                                timeSet = "AM";
-                            }
-
-                            String min1 = "";
-                            if (minutes < 10)
-                            {
-                                min1 = "0" + minutes ;
-                            }
-                            else {
-                                min1 = String.valueOf(minutes);
-                            }
-                            String hour_day1 = "";
-                            if(hour < 10)
-                            {
-                                hour_day1 = "0" + hour ;
-                            }
-                            else
-                            {
-                                hour_day1 = String.valueOf(hour);
-                            }
-                            if(min1.equals("00"))
-                            {
-                                end_time_text.setText(hour_day1 + " Hours");
-                            }
-                            else
-                            {
-                                end_time_text.setText(hour_day1 + " Hours" + " " + min1 + " Minutes");
-                            }
-                        }
-                    }, mHour, mMinute, false);
-            timePickerDialog.show();
-        }*/
     }
 
     public void validate()
@@ -1035,15 +934,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
-                       /* try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            System.out.println("error" + jsonObject);
-                        } catch (JSONException e) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1) {
 
-                        }*/
                     }
                 }) {
             @Override
@@ -1088,43 +979,6 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                     job_title.add(map);
                     System.out.println("menuitems:::" + job_title);
                 }
-
-                // list.setAdapter(adapter);
-/*
-                PopupWindow popupWindow = new PopupWindow(this);
-
-                // the drop down list is a list view
-                ListView listcate = new ListView(this);
-                listcate.setAdapter(adapter);*/
-
-              /*  list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        category = parent.getItemAtPosition(position).toString();
-                        if(category.equals("Select Job Category"))
-                        {
-
-                        }
-                     else {
-                            System.out.println("ssssssssssselected:item:" + category);
-                            String value = "1";
-                            cat = Integer.parseInt(category) + Integer.parseInt(value);
-                            categoryId = String.valueOf(cat);
-                            System.out.println("ssssssssssselected:job_cat_name:response:" + categoryId);
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        category = "0";
-                        System.out.println("on nothing selected");
-                        list.setVisibility(View.GONE);
-                        img_arrow.setVisibility(View.VISIBLE);
-                        textview.setVisibility(View.VISIBLE);
-
-                    }
-                });*/
-
 
 
             }
@@ -1222,135 +1076,6 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
             }
         }
     };
-
-   /* public PopupWindow popupWindowDogs() {
-
-        // initialize a pop up window type
-        PopupWindow popupWindow = new PopupWindow(this);
-
-        // the drop down list is a list view
-
-
-        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = layoutInflater.inflate(R.layout.popupbackground,null);
-
-        ListView listViewDogs =(ListView) layout.findViewById(R.id.list_category);;
-        // set our adapter and pass our pop up window contents
-        adapter = new CustomJobListAdapter(CreateJob.this, job_title,imageId);
-        listViewDogs.setAdapter(adapter);
-
-        // set the item click listener
-        listViewDogs.setOnItemClickListener(new DogsDropdownOnItemClickListener());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // some other visual settings
-        popupWindow.setFocusable(true);
-        popupWindow.setWidth(600);
-        popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-       // popupWindow.setBackgroundDrawable(R.layout.popupbackground);
-
-        // set the list view as pop up window content
-        popupWindow.setContentView(layout);
-
-        return popupWindow;
-    }
-*/
-
-   /* public static void SetCategory(int pos){
-
-        HashMap<String,String> map = job_title.get(pos);
-        String title =map.get("job_category");
-
-        textview.setText(title);
-        categoryId=String.valueOf(pos);
-        switch (pos){
-            case 0:
-               img_paint.setImageResource(R.drawable.box_17);
-                break;
-            case 1:
-                img_paint.setImageResource(R.drawable.box_10);
-                break;
-            case 2:
-                img_paint.setImageResource(R.drawable.box_8);
-                break;
-            case 3:
-                img_paint.setImageResource(R.drawable.box_15);
-                break;
-            case 4:
-                img_paint.setImageResource(R.drawable.box_18);
-                break;
-            case 5:
-                img_paint.setImageResource(R.drawable.box_9);
-                break;
-            case 6:
-                img_paint.setImageResource(R.drawable.box_11);
-                break;
-            case 7:
-                img_paint.setImageResource(R.drawable.box_20);
-                break;
-            case 8:
-                img_paint.setImageResource(R.drawable.box_3);
-                break;
-            case 9:
-                img_paint.setImageResource(R.drawable.box_5);
-                break;
-            case 10:
-                img_paint.setImageResource(R.drawable.box_6);
-                break;
-            case 11:
-                img_paint.setImageResource(R.drawable.box_2);
-                break;
-            case 12:
-                img_paint.setImageResource(R.drawable.box_19);
-                break;
-            case 13:
-                img_paint.setImageResource(R.drawable.box_21);
-                break;
-            case 14:
-                img_paint.setImageResource(R.drawable.box_1);
-                break;
-            case 15:
-                img_paint.setImageResource(R.drawable.box_12);
-                break;
-            case 16:
-                img_paint.setImageResource(R.drawable.box_7);
-                break;
-            case 17:
-                img_paint.setImageResource(R.drawable.box_14);
-                break;
-            case 18:
-                img_paint.setImageResource(R.drawable.box_16);
-                break;
-            case 19:
-                img_paint.setImageResource(R.drawable.box_4);
-                break;
-            case 20:
-                img_paint.setImageResource(R.drawable.box_6);
-                break;
-
-
-         default:
-             break;
-        }
-
-        img_paint.setVisibility(View.VISIBLE);
-    }*/
 
     public static class DatePickerDialogTheme4 extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 

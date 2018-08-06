@@ -38,9 +38,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -697,14 +701,25 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
-                        try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            System.out.println("error" + jsonObject);
-                        } catch (JSONException e) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1) {
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
 
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                            } catch (UnsupportedEncodingException error1) {
+
+                            }
                         }
                     }
                 }) {
@@ -732,38 +747,38 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
             status = jResult.getString("status");
             if (status.equals("success")) {
                 job_data = jResult.getString("job_data");
-                System.out.println("jjjjjjjjjjjjjjjob:::job_data:::" + job_data);
+
                 JSONObject object = new JSONObject(job_data);
                 String get_name = object.getString("job_name");
-                System.out.println("nnnnnnnnnnn:name::"+get_name);
+
                 job_category = object.getString("job_category");
-                System.out.println("nnnnnnnnnnn:category::" + job_category);
+
                 String get_description = object.getString("description");
-                System.out.println("nnnnnnnnnnn:description::" + get_description);
+
                 String get_date = object.getString("job_date");
-                System.out.println("nnnnnnnnnnn:date::" + get_date);
+
                 String get_start_time = object.getString("start_time");
-                System.out.println("nnnnnnnnnnn:start_time::" + get_start_time);
+
                 String get_amount = object.getString("job_payment_amount");
-                System.out.println("nnnnnnnnnnn:amount::" + get_amount);
+
                 String get_type = object.getString("job_payment_type");
-                System.out.println("nnnnnnnnnnn:type::" + get_type);
+
                 String flexible = object.getString("job_date_time_flexible");
-                System.out.println("nnnnnnnnnnn:flexible::" + flexible);
+
                 String sub_cat = object.getString("sub_category");
-                System.out.println("nnnnnnnnnnn:sub_category::" + sub_cat);
+
                 String cat_color = object.getString("job_category_color");
-                System.out.println("nnnnnnnnnnn:cat_color::" + cat_color);
+
                 String job_estimated_payment = object.getString("job_estimated_payment");
-                System.out.println("nnnnnnnnnnn:job_estimated_payment::" + job_estimated_payment);
+
                 String job_expire_date_time = object.getString("job_expire_date_time");
-                System.out.println("nnnnnnnnnnn:job_expire_date_time::" + job_expire_date_time);
+
                 job_id = object.getString("job_id");
-                System.out.println("nnnnnnnnnnn:job_id::" + job_id);
+
                 post_address = object.getString("post_address");
-                System.out.println("nnnnnnnnnnn:post_address::" + post_address);
+
                 current_location = object.getString("currentlocation");
-                System.out.println("nnnnnnnnnnn:current_location::" + current_location);
+
 
                 name = get_name;
                 categoryId = job_category;
@@ -785,7 +800,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                 try {
                     Date startEntryDate = formatter.parse(date);
                     String new_date_format = dateFormatter.format(startEntryDate);
-                    System.out.println("dddddddd:date:::"+new_date_format);
+
                     date_text.setText(new_date_format);
 
                 } catch (ParseException e) {
@@ -800,7 +815,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                 try {
                     dt = sdf.parse(time);
                     String new_time_format = sdfs.format(dt).toUpperCase().replace(".","");
-                    System.out.println("ddddddd:new_time_format: " + new_time_format);
+
                     start_time_text.setText(new_time_format);
                 } catch (ParseException e) {
                     // TODO Auto-generated catch block
@@ -898,7 +913,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
             int mm = monthOfYear + 1;
             String month = (mm < 10) ? "0" + mm : "" + mm;
             date_format = year + "-" + month + "-" + dayOfMonth;
-            System.out.println("dddddddddd:date_format:::"+date_format);
+
 
             DateFormat dateformat_US = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
             String StringDateformat_US = dateformat_US.format(SelectedDate);

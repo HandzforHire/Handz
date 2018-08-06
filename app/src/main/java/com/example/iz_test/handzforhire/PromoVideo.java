@@ -35,29 +35,6 @@ public class PromoVideo extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.promo_video);
 
-       /* ImageView logo = (ImageView) findViewById(R.id.logo);
-        String path = "android.resource://" + getPackageName() + "/" + R.raw.video;
-
-        logo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(PromoVideo.this,MainActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
-
-        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.list);
-      //  recyclerView.setHasFixedSize(true);
-        //to use RecycleView, you need a layout manager. default is LinearLayoutManager
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerAdapter adapter=new RecyclerAdapter(PromoVideo.this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setNestedScrollingEnabled(false);*/
-
-
         YouTubePlayerView youTubePlayerView = (YouTubePlayerView)findViewById(R.id.youtube_player_view1);
         youTubePlayerView.initialize(
                 new YouTubePlayerInitListener() {

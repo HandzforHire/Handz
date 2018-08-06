@@ -5,11 +5,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -94,13 +100,22 @@ public class RestClientPost {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            String s="{\"status\":\"error\",\"request_type\":\"job_lists\",\"msg\":\"No Jobs Found\",\"error_code\":\"8\"}";
-                            System.out.println("volley error "+error.getMessage());
-                            try {
-                            JSONObject jsonResponse = new JSONObject(s);
-                            replist.onResponseReceived(jsonResponse,requestType);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                                Toast.makeText(context,"Not Connected",Toast.LENGTH_LONG).show();
+                            }else if (error instanceof AuthFailureError) {
+                                Toast.makeText(context,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                            }else if (error instanceof ServerError) {
+                                Toast.makeText(context,"Server responded with a error response",Toast.LENGTH_LONG).show();
+                            }else if (error instanceof NetworkError) {
+                                Toast.makeText(context,"Network error while performing the request",Toast.LENGTH_LONG).show();
+                            }else {
+                                try {
+                                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                                    JSONObject jsonResponse = new JSONObject(responseBody);
+                                    replist.onResponseReceived(jsonResponse, requestType);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -159,13 +174,22 @@ public class RestClientPost {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            String s="{\"status\":\"error\",\"request_type\":\"job_lists\",\"msg\":\"No Jobs Found\",\"error_code\":\"8\"}";
-                            System.out.println("volley error "+error.getMessage());
-                            try {
-                                JSONObject jsonResponse = new JSONObject(s);
-                                replist.onResponseReceived(jsonResponse,requestType);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                                Toast.makeText(context,"Not Connected",Toast.LENGTH_LONG).show();
+                            }else if (error instanceof AuthFailureError) {
+                                Toast.makeText(context,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                            }else if (error instanceof ServerError) {
+                                Toast.makeText(context,"Server responded with a error response",Toast.LENGTH_LONG).show();
+                            }else if (error instanceof NetworkError) {
+                                Toast.makeText(context,"Network error while performing the request",Toast.LENGTH_LONG).show();
+                            }else {
+                                try {
+                                    String responseBody = new String(error.networkResponse.data, "utf-8");
+                                    JSONObject jsonResponse = new JSONObject(responseBody);
+                                    replist.onResponseReceived(jsonResponse, requestType);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }

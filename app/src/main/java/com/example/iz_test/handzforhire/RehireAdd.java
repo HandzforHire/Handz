@@ -18,10 +18,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -145,19 +151,19 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
         String handz_fee = "1.00";
         String add = String.valueOf(Float.valueOf(estimated_amount)+Float.valueOf(handz_fee));
         //String add = estimated_amount + handz_fee;
-        System.out.println("sssssssssssss:add:add:"+add+"..."+hour_expected);
+
         String mul = "0.029";
         String multiply = String.valueOf(Float.valueOf(add)*Float.valueOf(mul));
-        System.out.println("sssssssssssss:add:multiply:"+multiply);
+
         String value = "0.30";
         String total = String.valueOf(Float.valueOf(multiply)+Float.valueOf(value));
-        System.out.println("sssssssssssss:add:total:"+total);
+
         String total_value = String.format("%.2f", Float.valueOf(total));
         //double newKB = Math.round(Double.valueOf(total)*100.0)/100.0;
-        System.out.println("sssssssssssss:add:total_value:"+total_value);
+
         paypal_merchant.setText(total_value);
         String pocket_value = String.valueOf(Float.valueOf(hour_expected)+Float.valueOf(handz_fee)+Float.valueOf(total_value));
-        System.out.println("sssssssssssss:add:pocket_value:"+pocket_value);
+
         pocket_expense.setText(pocket_value);
 
         hourly_value.addTextChangedListener(tw);
@@ -184,7 +190,6 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
                 payout = job_payout.getText().toString();
                 expense = "$ " + pocket_expense.getText().toString();
                 fee = "$ " + paypal_merchant.getText().toString();
-                System.out.println("sssssssssssss:add:pay:expe:fee:"+payout+".."+expense+".."+fee);
                 registerUser();
             }
         });
@@ -206,24 +211,27 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError volleyError) {
+                    public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
                         try {
-                            String responseBody = new String(volleyError.networkResponse.data, "utf-8");
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
                             JSONObject jsonObject = new JSONObject(responseBody);
                             System.out.println("error" + jsonObject);
                         } catch (JSONException e) {
 
                         } catch (UnsupportedEncodingException error1) {
-
                         }
-                        if(volleyError.networkResponse != null && volleyError.networkResponse.data != null){
-                            VolleyError error = new VolleyError(new String(volleyError.networkResponse.data));
-                            volleyError = error;
-                            System.out.println("error" + volleyError);
-                        }else{
-
                         }
+
                     }
                 }){
             @Override
@@ -270,11 +278,6 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
 
         };
 
-      /*  System.out.println("vvvvvvv1:"+".."+value+".."+id+".."+name+".."+usertype+".."+job_expire);
-        System.out.println("vvvvvvv2:"+".."+category+".."+description+".."+date+".."+start_time+"..");
-        System.out.println("vvvvvvv3:"+".."+end_time+".."+amount+".."+type+".."+job_address+"..");
-        System.out.println("vvvvvvv4:"+".."+job_city+".."+job_state+".."+job_zipcode+".."+post_address+"..");
-        System.out.println("vvvvvvv5:"+".."+latitude+".."+longitude+".."+estimated_amount+".."+flexible_status+"..");*/
         System.out.println("66666666-APP_KEY- "+key);
         System.out.println("66666666-USER_ID- "+id);
         System.out.println("66666666-JOB_NAME- "+name);

@@ -44,6 +44,7 @@ public class NeedHelp extends Activity implements SimpleGestureFilter.SimpleGest
     EditText editText;
     Button submit;
     private SimpleGestureFilter detector;
+    Dialog dialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,12 @@ public class NeedHelp extends Activity implements SimpleGestureFilter.SimpleGest
                 onBackPressed();
             }
         });
+
+        dialog = new Dialog(NeedHelp.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,17 +114,21 @@ public class NeedHelp extends Activity implements SimpleGestureFilter.SimpleGest
     }
 
     private void needhelp() {
+
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("ggggggggget:needhelp:" + response);
                         onResponserecieved(response, 2);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
                         //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
                     }
                 }) {

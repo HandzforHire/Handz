@@ -29,11 +29,16 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -675,14 +680,24 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
-                        try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
-                            System.out.println("error" + jsonObject);
-                        } catch (JSONException e) {
-                            //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1) {
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                            } catch (UnsupportedEncodingException error1) {
 
+                            }
                         }
                     }
                 }) {
@@ -713,38 +728,37 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                 System.out.println("jjjjjjjjjjjjjjjob:::job_data:::" + job_data);
                 JSONObject object = new JSONObject(job_data);
                 String get_name = object.getString("job_name");
-                System.out.println("nnnnnnnnnnn:name::"+get_name);
+
                 job_category = object.getString("job_category");
-                System.out.println("nnnnnnnnnnn:category::" + job_category);
+
                 String get_description = object.getString("description");
-                System.out.println("nnnnnnnnnnn:description::" + get_description);
+
                 String get_date = object.getString("job_date");
-                System.out.println("nnnnnnnnnnn:date::" + get_date);
+
                 String get_start_time = object.getString("start_time");
-                System.out.println("nnnnnnnnnnn:start_time::" + get_start_time);
+
                 String get_amount = object.getString("job_payment_amount");
-                System.out.println("nnnnnnnnnnn:amount::" + get_amount);
+
                 String get_type = object.getString("job_payment_type");
-                System.out.println("nnnnnnnnnnn:type::" + get_type);
+
                 String flexible = object.getString("job_date_time_flexible");
-                System.out.println("nnnnnnnnnnn:flexible::" + flexible);
+
                 String sub_cat = object.getString("sub_category");
-                System.out.println("nnnnnnnnnnn:sub_category::" + sub_cat);
+
                 String cat_color = object.getString("job_category_color");
-                System.out.println("nnnnnnnnnnn:cat_color::" + cat_color);
+
                 String job_estimated_payment = object.getString("job_estimated_payment");
-                System.out.println("nnnnnnnnnnn:job_estimated_payment::" + job_estimated_payment);
+
                 String job_expire_date_time = object.getString("job_expire_date_time");
-                System.out.println("nnnnnnnnnnn:job_expire_date_time::" + job_expire_date_time);
+
                 job_id = object.getString("job_id");
-                System.out.println("nnnnnnnnnnn:job_id::" + job_id);
 
                 String username = object.getString("username");
-                System.out.println("nnnnnnnnnnn:username::" + username);
+
                 String profilename = object.getString("profile_name");
-                System.out.println("nnnnnnnnnnn:profile_name::" + profilename);
+
                 String firstname = object.getString("firstname");
-                System.out.println("nnnnnnnnnnn:firstname::" + firstname);
+
 
                 if(username.equals(""))
                 {

@@ -11,11 +11,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -242,29 +247,8 @@ public class LendPaymentMethod extends Activity implements SimpleGestureFilter.S
                 lph=obj.getString("phone_number");
                 lema=obj.getString("email");
 
-                System.out.println("Full Name "+obj.getString("name"));
-                System.out.println("Name "+obj.getString("given_name"));
-                System.out.println("User ID "+obj.getString("user_id"));
-                System.out.println("Address "+obj.getString("address"));
-                System.out.println("Phone NO "+obj.getString("phone_number"));
-                System.out.println("Email "+obj.getString("email"));
-
-
 
                 JSONObject address = new JSONObject(obj.getString("address"));
-                System.out.println("Postal code "+address.getString("postal_code"));
-                System.out.println("Lcality "+address.getString("locality"));
-                System.out.println("Region "+address.getString("region"));
-                System.out.println("Country "+address.getString("country"));
-                System.out.println("Street Address "+address.getString("street_address"));
-
-
-
-
-               /* txt_cntry.setText("Country : "+address.getString("country"));
-                txt_region.setText("Region : "+address.getString("region"));
-                txt_local.setText("Lcality : "+address.getString("locality"));
-                txt_postalcode.setText("Postal code : "+address.getString("postal_code"));*/
 
 
             }catch (Exception e)
@@ -300,14 +284,24 @@ public class LendPaymentMethod extends Activity implements SimpleGestureFilter.S
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-                        try {
-                            String responseBody = new String(error.networkResponse.data, "utf-8");
-                            JSONObject jsonObject = new JSONObject(responseBody);
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
 
-                        } catch (JSONException e) {
+                            } catch (JSONException e) {
 
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }) {
@@ -357,14 +351,7 @@ public class LendPaymentMethod extends Activity implements SimpleGestureFilter.S
             @Override
             public void onClick(View v) {
                 onBackPressed();
-               /* Intent i = new Intent(PaymentMethod.this, EditUserProfile.class);
-                i.putExtra("userId",user_id);
-                i.putExtra("address",address);
-                i.putExtra("city",city);
-                i.putExtra("state",state);
-                i.putExtra("zipcode",zipcode);
-                startActivity(i);
-                finish();*/
+
             }
         });
 

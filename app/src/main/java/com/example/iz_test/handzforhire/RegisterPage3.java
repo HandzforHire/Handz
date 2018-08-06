@@ -22,11 +22,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -70,7 +76,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
     int timeout = 60000;
     String deviceId;
     SessionManager session;
-
+    Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +111,11 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         check1.setTypeface(tf);
         check2.setTypeface(tf);
         check3.setTypeface(tf);
+
+        dialog = new Dialog(RegisterPage3.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         check4.setTypeface(tf);
 
         String fontPath1 = "fonts/calibriItalic.ttf";
@@ -123,23 +134,23 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
 
         Intent i = getIntent();
         first = i.getStringExtra("firstname");
-        System.out.println("ffffffff:" + first);
+
         last = i.getStringExtra("lastname");
-        System.out.println("ffffffff:" + last);
+
         add1 = i.getStringExtra("address1");
-        System.out.println("ffffffff:" + add1);
+
         add2 = i.getStringExtra("address2");
-        System.out.println("ffffffff:" + add2);
+
         city = i.getStringExtra("city");
-        System.out.println("ffffffff:" + city);
+
         state = i.getStringExtra("state");
-        System.out.println("ffffffff:" + state);
+
         zip = i.getStringExtra("zip");
-        System.out.println("ffffffff:" + zip);
+
         email = i.getStringExtra("email");
-        System.out.println("ffffffff:" + email);
+
         re_email = i.getStringExtra("retype_email");
-        System.out.println("ffffffff:" + re_email);
+
 
         address = add1 + add2;
         System.out.println("ffffffff:add:" + address);
@@ -171,24 +182,6 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
             }
         });
 
-        /*u_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                u_name.setHint("");
-            }
-        });
-        pass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                pass.setHint("");
-            }
-        });
-        re_pass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                re_pass.setHint("");
-            }
-        });*/
 
         feature.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,6 +360,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
 
     private void registerUser()
     {
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
                 new Response.Listener<String>() {
                     @Override
@@ -375,78 +369,35 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
 
                         System.out.println("eeeee:"+response);
                         onResponserecieved(response,1);
+                        dialog.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        try {
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("volley error::: "+jsonObject);
-                            //String status = jsonObject.getString("msg");
-                           /* if(!status.equals(""))
-                            {
-                                // custom dialog
-                                final Dialog dialog = new Dialog(RegisterPage3.this);
-                                dialog.setContentView(R.layout.custom_dialog);
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("volley error::: " + jsonObject);
 
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText(status);
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
                             }
-                            else {
-
-                                final Dialog dialog = new Dialog(RegisterPage3.this);
-                                dialog.setContentView(R.layout.custom_dialog);
-
-                                // set the custom dialog components - text, image and button
-                                TextView text = (TextView) dialog.findViewById(R.id.text);
-                                text.setText("Registration Failed");
-                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                                // if button is clicked, close the custom dialog
-                                dialogButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                                Window window = dialog.getWindow();
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }*/
-                        } catch ( JSONException e ) {
-                            //Handle a malformed json response
-                            System.out.println("volley error ::"+e.getMessage());
-                        } catch (UnsupportedEncodingException errors){
-                            System.out.println("volley error ::"+errors.getMessage());
                         }
-                        /*try {
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("eeeeeeeeeeeeror:"+jsonObject);
 
-                        } catch ( JSONException e ) {
-                            //Handle a malformed json response
-                        } catch (
-                                UnsupportedEncodingException error1){
-                        }
-*/
                     }
                 }){
             @Override
@@ -503,26 +454,13 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
                     get_state = object.getString("state");
                     get_zipcode = object.getString("zipcode");
                     user_type = object.getString("usertype");
-                    System.out.println("ressss:object::"+object);
-                    System.out.println("ressss:iiiiid::"+user_id);
-                    System.out.println("ressss::user_name:"+user_name);
-                    System.out.println("ressss:email::"+get_email);
-                    System.out.println("ressss:address::"+get_address);
-                    System.out.println("ressss:city::"+get_city);
-                    System.out.println("ressss:state::"+get_state);
-                    System.out.println("ressss:zipcode::"+get_zipcode);
+
                 }
 
                 session.NeedLogin(get_email,get_password,user_name,usertype,user_id,get_address,get_city,get_state,get_zipcode,user_type);
 
                 Intent i = new Intent(RegisterPage3.this,RegisterPage4.class);
-               /* i.putExtra("userId",user_id);
-                i.putExtra("username",user_name);
-                i.putExtra("email",get_email);
-                i.putExtra("address",get_address);
-                i.putExtra("state",get_city);
-                i.putExtra("city",get_state);
-                i.putExtra("zipcode",get_zipcode);*/
+
                 startActivity(i);
                 finish();
             }

@@ -20,10 +20,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -437,13 +443,22 @@ public class CreditDebit extends Activity implements SimpleGestureFilter.SimpleG
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
                         try {
-                            String responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-                            System.out.println("error"+jsonObject);
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            System.out.println("error" + jsonObject);
                             String status = jsonObject.getString("msg");
-                            if(status.equals("Card number already exists."))
-                            {
+                            if (status.equals("Card number already exists.")) {
                                 // custom dialog
                                 final Dialog dialog = new Dialog(CreditDebit.this);
                                 dialog.setContentView(R.layout.custom_dialog);
@@ -465,9 +480,7 @@ public class CreditDebit extends Activity implements SimpleGestureFilter.SimpleG
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 return;
-                            }
-                            else
-                            {
+                            } else {
                                 // custom dialog
                                 final Dialog dialog = new Dialog(CreditDebit.this);
                                 dialog.setContentView(R.layout.custom_dialog);
@@ -491,11 +504,12 @@ public class CreditDebit extends Activity implements SimpleGestureFilter.SimpleG
                                 return;
                             }
 
-                        } catch ( JSONException e ) {
+                        } catch (JSONException e) {
                             //Handle a malformed json response
-                        } catch (UnsupportedEncodingException error1){
+                        } catch (UnsupportedEncodingException error1) {
 
                         }
+                    }
                     }
                 }) {
             @Override

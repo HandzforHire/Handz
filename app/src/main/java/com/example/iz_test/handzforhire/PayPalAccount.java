@@ -71,18 +71,7 @@ public class PayPalAccount extends Activity implements SimpleGestureFilter.Simpl
 
         detector = new SimpleGestureFilter(this,this);
 
-       /* email.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                email.setHint("");
-            }
-        });
-        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                password.setHint("");
-            }
-        });*/
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
