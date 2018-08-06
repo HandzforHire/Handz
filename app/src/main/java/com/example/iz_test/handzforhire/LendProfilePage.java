@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LendProfilePage extends Activity{
+public class LendProfilePage extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     Button job_list,edit,find_map,need_help;
     String id,address,city,state,zipcode,profile_image,profilename,email,username;
@@ -69,7 +69,7 @@ public class LendProfilePage extends Activity{
     TextView txt_postedjobcnt,txt_activejobscnt,job_historycnt;
     String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
             "along with that website url and logo";
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +126,7 @@ public class LendProfilePage extends Activity{
         Profilevalues.state=state;
         Profilevalues.zipcode=zipcode;
 
+        detector = new SimpleGestureFilter(this,this);
 
         share_lend=(ImageView)findViewById(R.id.sha_lend);
         share_lend.setOnClickListener(new View.OnClickListener() {
@@ -526,5 +527,49 @@ public class LendProfilePage extends Activity{
         share.putExtra(Intent.EXTRA_TEXT,tittle);
         startActivity(Intent.createChooser(share, "Share link!"));
 
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i = new Intent(getApplicationContext(), LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

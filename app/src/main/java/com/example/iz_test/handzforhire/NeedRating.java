@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class NeedRating extends Activity{
+public class NeedRating extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     Button nxt;
     private RatingBar rb1,rb2,rb3,rb4,rb5;
@@ -36,8 +36,9 @@ public class NeedRating extends Activity{
     float average;
     String job_id,employer_id,employee_id,user_id,image,profilename;
     String category1,category2,category3,category4,category5;
-   ImageView profile;
+    ImageView profile;
     RelativeLayout rating_lay;
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +63,8 @@ public class NeedRating extends Activity{
         image = i.getStringExtra("image");
         profilename = i.getStringExtra("profilename");
         pname.setText(profilename);
-        System.out.println("jjjjjjjjjjjj:rating:jobid::"+job_id+".."+employer_id+".."+employee_id+profilename);
-        System.out.println("jjjjjjjjjjjj:rating:image::"+image);
+
+        detector = new SimpleGestureFilter(this,this);
 
         if(image.equals(""))
         {
@@ -170,32 +171,53 @@ public class NeedRating extends Activity{
         });
     }
 
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
+        switch (direction) {
 
-        // Return the bordered circular bitmap
-        return dstBitmap;
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

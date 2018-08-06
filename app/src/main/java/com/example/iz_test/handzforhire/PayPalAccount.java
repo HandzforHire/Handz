@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-public class PayPalAccount extends Activity{
+public class PayPalAccount extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     EditText email,password;
     Button save;
@@ -26,7 +26,7 @@ public class PayPalAccount extends Activity{
     String user_id;
     String address,city,state,zipcode;
     RelativeLayout layout;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +69,8 @@ public class PayPalAccount extends Activity{
             }
         });
 
+        detector = new SimpleGestureFilter(this,this);
+
        /* email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,5 +93,52 @@ public class PayPalAccount extends Activity{
         });
 
     }
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

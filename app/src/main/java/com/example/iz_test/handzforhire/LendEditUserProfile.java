@@ -64,7 +64,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LendEditUserProfile extends Activity  {
+public class LendEditUserProfile extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
     ImageView image, photo_bg;
     Button home, email, update, paypal_login, terms_condition, logo;
@@ -109,7 +109,7 @@ public class LendEditUserProfile extends Activity  {
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,9 +120,7 @@ public class LendEditUserProfile extends Activity  {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-       /* progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
+        detector = new SimpleGestureFilter(this,this);
 
         dialog = new Dialog(LendEditUserProfile.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -621,6 +619,49 @@ public class LendEditUserProfile extends Activity  {
 
     }
 
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i = new Intent(getApplicationContext(), LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 
     protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
         // Initialize a new Bitmap to make it bordered bitmap
@@ -649,7 +690,5 @@ public class LendEditUserProfile extends Activity  {
         // Return the bordered circular bitmap
         return dstBitmap;
     }
-
-
 
 }

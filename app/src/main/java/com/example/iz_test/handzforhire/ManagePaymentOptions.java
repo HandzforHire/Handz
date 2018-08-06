@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ManagePaymentOptions extends Activity {
+public class ManagePaymentOptions extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
     ImageView logo;
     String user_id;
@@ -49,19 +49,15 @@ public class ManagePaymentOptions extends Activity {
     ArrayList<HashMap<String, String>> menuItems = new ArrayList<HashMap<String, String>>();
     ArrayList<HashMap<String, String>> accountItems = new ArrayList<HashMap<String, String>>();
     ArrayList<HashMap<String, String>> paypalArray = new ArrayList<HashMap<String, String>>();
-    ProgressDialog progress_dialog;
+
     Button add;
     TextView text,t1,t2;
     Dialog dialog;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_payment);
-
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
 
         dialog = new Dialog(ManagePaymentOptions.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -83,6 +79,8 @@ public class ManagePaymentOptions extends Activity {
         add.setTypeface(tf);
         t1.setTypeface(tf);
         t2.setTypeface(tf);
+
+        detector = new SimpleGestureFilter(this,this);
 
         listView.setOnTouchListener(new View.OnTouchListener() {
             // Setting on Touch Listener for handling the touch inside ScrollView
@@ -438,6 +436,55 @@ public class ManagePaymentOptions extends Activity {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

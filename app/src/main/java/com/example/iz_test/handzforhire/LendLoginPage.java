@@ -2,7 +2,7 @@ package com.example.iz_test.handzforhire;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.app.ProgressDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,7 +57,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
     private static final String TAG = "";
     String value = "HandzForHire@~";
     String user_id, user_name, user_email, user_password, user_address, user_city, user_state, user_zipcode,user_type;
-    TextView new_employee;
+    TextView new_employee,forgot_password;
 
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     String type;
@@ -81,6 +81,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
         password = (EditText) findViewById(R.id.login_pass);
         login = (Button) findViewById(R.id.login);
         logo = (ImageView) findViewById(R.id.logo);
+        forgot_password = (TextView) findViewById(R.id.forgot_password);
 
         dialog = new Dialog(LendLoginPage.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -115,6 +116,15 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                 finish();
             }
         });
+
+        forgot_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LendLoginPage.this,ForgotPassword.class);
+                startActivity(i);
+            }
+        });
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override

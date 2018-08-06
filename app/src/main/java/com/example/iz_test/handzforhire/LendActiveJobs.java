@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LendActiveJobs extends Activity{
+public class LendActiveJobs extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     private static final String URL = Constant.SERVER_URL+"active_job_lists";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
@@ -58,16 +58,11 @@ public class LendActiveJobs extends Activity{
     String usertype = "employee";
     String jobDate,startTime,endTime,amount,type,job_name,image;
     Dialog dialog;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lend_active_jobs);
-
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
-*/
 
         dialog = new Dialog(LendActiveJobs.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -79,6 +74,8 @@ public class LendActiveJobs extends Activity{
         job_history = (Button)findViewById(R.id.btn2);
         logo = (ImageView)findViewById(R.id.logo);
         list = (ListView) findViewById(R.id.listview);
+
+        detector = new SimpleGestureFilter(this,this);
 
         Intent i = getIntent();
         user_id = i.getStringExtra("userId");
@@ -302,6 +299,50 @@ public class LendActiveJobs extends Activity{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i = new Intent(getApplicationContext(), LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

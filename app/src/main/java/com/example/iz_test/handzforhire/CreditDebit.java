@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreditDebit extends Activity {
+public class CreditDebit extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
     EditText card_name,card_no,mm,yy,cv,adress,cy,stat,zip;
     ImageView h_logo;
@@ -68,7 +68,7 @@ public class CreditDebit extends Activity {
     static ArrayList<String> listOfPattern=new ArrayList<String>();
     String address,city,state,zipcode,cardtype;
     TextView text,add_card;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +143,7 @@ public class CreditDebit extends Activity {
             }
         });
 
+        detector = new SimpleGestureFilter(this,this);
     }
 
     public void validate()
@@ -573,5 +574,52 @@ public class CreditDebit extends Activity {
         }
 
     }
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

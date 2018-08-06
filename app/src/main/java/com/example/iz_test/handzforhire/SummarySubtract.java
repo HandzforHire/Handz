@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
 
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -35,7 +36,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SummarySubtract extends Activity{
+public class SummarySubtract extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     private static final String URL = Constant.SERVER_URL+"create_job";
     private static final String EDIT_URL = Constant.SERVER_URL+"edit_job";
@@ -91,7 +92,7 @@ public class SummarySubtract extends Activity{
     String job_category_color;
     String expense,fee,payout,edit_job,duration;
     String delist = "yes";
-
+    private SimpleGestureFilter detector;
     Dialog dialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,10 +139,7 @@ public class SummarySubtract extends Activity{
         duration = i.getStringExtra("duration");
         job_id = i.getStringExtra("job_id");
 
-        System.out.println("sssssssssssss:subtract::"+id+"..."+name+"..."+category+".."+description+".."+current_location);
-        System.out.println("sssssssssssss:subtract::"+date+"..."+start_time+"..."+expected_hours+".."+amount+".."+type);
-        System.out.println("sssssssssssss:subtract::"+post_address+"..."+latitude+"..."+longitude+",,"+job_id);
-        System.out.println("sssssssssssss:subtract::"+estimated_amount+"..."+flexible_status+".."+job_expire);
+        detector = new SimpleGestureFilter(this,this);
 
         if(edit_job.equals("yes"))
         {
@@ -663,7 +661,51 @@ public class SummarySubtract extends Activity{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+
+                Intent  i = new Intent(getApplicationContext(), ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

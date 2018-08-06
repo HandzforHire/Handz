@@ -14,13 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class RehireMultiply extends Activity {
+public class RehireMultiply extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
     EditText pay_amount,hours;
     TextView add,subtract,total;
     String job_id,job_expire,job_category_color,sub_category,duration,employeeId;
     String value,id,name,usertype,category,description,date,start_time,expected_hours,end_time,amount,type,address,city,current_location;
     String state,zipcode,post_address,latitude,longitude,estimated_amount,flexible_status;
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +53,7 @@ public class RehireMultiply extends Activity {
         duration = i.getStringExtra("duration");
         employeeId = i.getStringExtra("employeeId");
 
-        System.out.println("sssssssssssss:amount::"+amount+"..."+estimated_amount+"..."+expected_hours+"..."+job_expire+"e,"+employeeId);
+        detector = new SimpleGestureFilter(this,this);
 
         pay_amount.setText(amount);
         hours.setText(expected_hours);
@@ -212,5 +213,52 @@ public class RehireMultiply extends Activity {
             total.setText(estimated);
         }
     };
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

@@ -5,7 +5,7 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 
-public class SimpleGestureFilter extends SimpleOnGestureListener{
+public class SimpleGestureFilter extends SimpleOnGestureListener {
 
     public final static int SWIPE_UP    = 1;
     public final static int SWIPE_DOWN  = 2;
@@ -118,14 +118,14 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
 
             result = true;
         }
-        else if(velocityY > this.swipe_Min_Velocity && yDistance > this.swipe_Min_Distance){
+       /* else if(velocityY > this.swipe_Min_Velocity && yDistance > this.swipe_Min_Distance){
             if(e1.getY() > e2.getY()) // bottom to up
                 this.listener.onSwipe(SWIPE_UP);
             else
                 this.listener.onSwipe(SWIPE_DOWN);
 
-            result = true;
-        }
+            result = false;
+        }*/
 
         return result;
     }
@@ -162,5 +162,20 @@ public class SimpleGestureFilter extends SimpleOnGestureListener{
         void onSwipe(int direction);
         void onDoubleTap();
     }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        try {
+            if (Math.abs(distanceX) > Math.abs(distanceY)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            // nothing
+        }
+        return false;
+    }
+
 
 }

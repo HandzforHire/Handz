@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class PaymentMethod extends Activity{
+public class PaymentMethod extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     Button credit,account;
     LinearLayout paypal;
@@ -62,7 +62,7 @@ public class PaymentMethod extends Activity{
     String user_id;
     String address,city,state,zipcode;
     TextView text,text1;
-
+    private SimpleGestureFilter detector;
     private static final String PAYPALUSER_INFO = Constant.SERVER_URL +"paypal_user_info_add";
     //public static String SERVER_URL = "http://162.144.41.156/~izaapinn/handzforhire/service/paypal_user_info_add";
     public static final String XAPP_KEY = "X-APP-KEY";
@@ -109,7 +109,8 @@ public class PaymentMethod extends Activity{
         city = i.getStringExtra("city");
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
-        System.out.println("uuuuuuuuuuuuser:id::" + user_id);
+
+        detector = new SimpleGestureFilter(this,this);
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
@@ -353,6 +354,55 @@ public class PaymentMethod extends Activity{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

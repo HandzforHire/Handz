@@ -35,7 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddCheckingAccount extends Activity {
+public class AddCheckingAccount extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     EditText account_name,bank_number,checking_account_number,reenter_check_account_number,driver_license_number,stat;
     ImageView h_logo;
@@ -59,10 +59,13 @@ public class AddCheckingAccount extends Activity {
     String default_acc;
     String status = "1";
     TextView text1,add_account;
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.check_account);
+
+        detector = new SimpleGestureFilter(this,this);
 
         account_name = (EditText) findViewById(R.id.ac_name);
         bank_number = (EditText) findViewById(R.id.brn);
@@ -450,5 +453,47 @@ public class AddCheckingAccount extends Activity {
         }
     }
 
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i = new Intent(getApplicationContext(), ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

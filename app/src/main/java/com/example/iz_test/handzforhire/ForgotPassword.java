@@ -3,7 +3,6 @@ package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -182,7 +181,7 @@ public class ForgotPassword extends Activity{
 
                 // set the custom dialog components - text, image and button
                 TextView text = (TextView) dialog.findViewById(R.id.text);
-                text.setText("Email has been sent to your mail");
+                text.setText("Reset password link has been sent to your email address");
                 Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                 // if button is clicked, close the custom dialog
                 dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -201,13 +200,12 @@ public class ForgotPassword extends Activity{
             }
             else
             {
-
                 final Dialog dialog = new Dialog(ForgotPassword.this);
                 dialog.setContentView(R.layout.custom_dialog);
 
                 // set the custom dialog components - text, image and button
                 TextView text = (TextView) dialog.findViewById(R.id.text);
-                text.setText("Email does not send. Please try again");
+                text.setText("User not found. Try a different username");
                 Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                 // if button is clicked, close the custom dialog
                 dialogButton.setOnClickListener(new View.OnClickListener() {

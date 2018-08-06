@@ -43,7 +43,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PayEmployee1 extends Activity{
+public class PayEmployee1 extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     ImageView logo,image;
     Button submit_payment;
@@ -67,27 +67,11 @@ public class PayEmployee1 extends Activity{
     TextView name,date,total;
     String get_tip,get_amount,get_method,get_date,get_total,tip_value,payment_method_value,payment_amount_value,transaction_date_value;
     Integer total_value;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_employee1);
-
-       /* progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
-
-        logo = (ImageView)findViewById(R.id.logo);
-        image = (ImageView)findViewById(R.id.imageView);
-        payment_amount = (EditText) findViewById(R.id.pay_amount);
-        tip = (EditText) findViewById(R.id.tip);
-        payment_method = (EditText) findViewById(R.id.pay_method);
-        submit_payment = (Button) findViewById(R.id.submit);
-        name = (TextView) findViewById(R.id.text);
-        date = (TextView) findViewById(R.id.txt2);
-        total = (TextView) findViewById(R.id.total);
-*/
-
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");
         employer_id = i.getStringExtra("employerId");
@@ -97,6 +81,8 @@ public class PayEmployee1 extends Activity{
         payment_method_value = i.getStringExtra("paymentMethod");
         payment_amount_value = i.getStringExtra("payment_amount");
         transaction_date_value = i.getStringExtra("transaction_date");
+
+        detector = new SimpleGestureFilter(this,this);
     }
 
     public void getJobDetails() {
@@ -237,6 +223,53 @@ public class PayEmployee1 extends Activity{
             e.printStackTrace();
         }
     }
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 
 }

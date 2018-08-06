@@ -44,7 +44,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PendingJobs extends Activity {
+public class PendingJobs extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     ListView list;
     private static final String SEARCH_URL = Constant.SERVER_URL+"job_lists";
@@ -64,21 +64,19 @@ public class PendingJobs extends Activity {
     Button active_jobs,job_history;
     Dialog dialog;
     int visible_pos,visible_lay;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pending_jobs);
 
-           /* progress_dialog = new ProgressDialog(this);
-            progress_dialog.setMessage("Loading.Please wait....");
-            progress_dialog.show();*/
 
         dialog = new Dialog(PendingJobs.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
+        detector = new SimpleGestureFilter(this,this);
 
         list = (ListView) findViewById(R.id.listview);
         logo = (ImageView) findViewById(R.id.logo);
@@ -94,9 +92,6 @@ public class PendingJobs extends Activity {
         cat_type = i.getStringExtra("type");
         cat_id = i.getStringExtra("categoryId");
         job_cat_name = i.getStringExtra("category");
-        System.out.println("11iiiiiiiiiiiiiiiiiiiii:user_id;;;" + user_id);
-        System.out.println("11iiiiiiiiiiiiiiiiiiiii:cat_id::" + cat_id);
-        System.out.println("11iiiiiiiiiiiiiiiiiiiii:cat_type::" + cat_type);
 
         searchJobList();
 
@@ -574,7 +569,54 @@ public class PendingJobs extends Activity {
             requestQueue.add(stringRequest);
 
         }
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
 
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

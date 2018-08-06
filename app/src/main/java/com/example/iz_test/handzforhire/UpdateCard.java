@@ -33,7 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UpdateCard extends Activity{
+public class UpdateCard extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     String card_id,employer_id;
     private static final String URL = Constant.SERVER_URL+"view_credit_card";
@@ -65,15 +65,12 @@ public class UpdateCard extends Activity{
     RelativeLayout layout;
     String cardtype,getDefaultCard;
     String update_name,update_card_number,update_month,update_year,update_cvv,update_address,update_city,update_state,update_zipcode;
+    private SimpleGestureFilter detector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_credit);
-
-       /* dialog = new ProgressDialog(this);
-        dialog.setMessage("Loading.Please wait.....");
-        dialog.show();*/
-
         dialog = new Dialog(UpdateCard.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
@@ -99,6 +96,7 @@ public class UpdateCard extends Activity{
         employer_id = i.getStringExtra("userId");
         System.out.println("employer_id::" + employer_id);
 
+        detector = new SimpleGestureFilter(this,this);
         webService();
 
         update.setOnClickListener(new View.OnClickListener() {
@@ -361,6 +359,55 @@ public class UpdateCard extends Activity{
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

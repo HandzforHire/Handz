@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class LendPaymentMethod extends Activity
+public class LendPaymentMethod extends Activity implements SimpleGestureFilter.SimpleGestureListener
 {
     private static final String PAYPAL_LEND = Constant.SERVER_URL +"paypal_user_info_add";
     public static final int PAYPAL_REQUEST_CODE = 123;
@@ -68,6 +68,7 @@ public class LendPaymentMethod extends Activity
     String usertype="employee";
     String value = "HandzForHire@~";
     String address, city, state, zipcode;
+    private SimpleGestureFilter detector;
 
     private static PayPalConfiguration config = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
@@ -97,7 +98,8 @@ public class LendPaymentMethod extends Activity
         city = i.getStringExtra("city");
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
-        System.out.println("uuuuuuuuuuuuser:id::" + user_id);
+
+        detector = new SimpleGestureFilter(this,this);
 
         credit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -366,6 +368,50 @@ public class LendPaymentMethod extends Activity
             }
         });
 
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i = new Intent(getApplicationContext(), LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

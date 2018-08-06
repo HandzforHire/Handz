@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class LendJobHistory extends Activity{
+public class LendJobHistory extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     private static final String URL = Constant.SERVER_URL+"job_history_listing";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
@@ -66,14 +66,11 @@ public class LendJobHistory extends Activity{
     String rating_value,rating_id,category1,category2,category3,category4,category5;
 
     LendHistoryAdapter arrayAdapter;
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lend_job_history);
-
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
 
         dialog = new Dialog(LendJobHistory.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -93,6 +90,8 @@ public class LendJobHistory extends Activity{
         city = i.getStringExtra("city");
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
+
+        detector = new SimpleGestureFilter(this,this);
 
         activeJobs();
 
@@ -349,6 +348,50 @@ public class LendJobHistory extends Activity{
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i = new Intent(getApplicationContext(), LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
 }

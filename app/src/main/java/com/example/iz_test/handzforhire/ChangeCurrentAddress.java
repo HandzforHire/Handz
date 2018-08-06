@@ -34,7 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChangeCurrentAddress extends Activity {
+public class ChangeCurrentAddress extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     EditText address1,address2,city1,state1,zipcode1;
     String add1,add2,cit,stat,zip;
@@ -55,7 +55,7 @@ public class ChangeCurrentAddress extends Activity {
     ImageView h_icon;
     TextView o_address,o_city,o_state,o_zip,text;
     String address;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +68,8 @@ public class ChangeCurrentAddress extends Activity {
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
         System.out.println("hhhhhhhhhhhhh:" + uid);
+
+        detector = new SimpleGestureFilter(this,this);
 
         update = (Button) findViewById(R.id.update);
         address1 = (EditText) findViewById(R.id.addr1);
@@ -417,6 +419,53 @@ public class ChangeCurrentAddress extends Activity {
             e.printStackTrace();
         }
     }
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 
 }

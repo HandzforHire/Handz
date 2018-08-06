@@ -33,14 +33,14 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SummaryMultiply extends Activity {
+public class SummaryMultiply extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
     EditText pay_amount,hours;
     TextView add,subtract,total;
     String job_id,job_expire,job_category_color,sub_category,edit_job,duration;
     String value,id,name,usertype,category,description,date,start_time,expected_hours,end_time,amount,type,address,city,current_location;
     String state,zipcode,post_address,latitude,longitude,estimated_amount,flexible_status;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +76,7 @@ public class SummaryMultiply extends Activity {
         job_id = i.getStringExtra("job_id");
         duration = i.getStringExtra("duration");
 
-        System.out.println("sssssssssssss:amount::"+amount+"..."+estimated_amount+"..."+expected_hours+"..."+job_expire);
+        detector = new SimpleGestureFilter(this,this);
 
         pay_amount.setText(amount);
         hours.setText(expected_hours);
@@ -84,30 +84,6 @@ public class SummaryMultiply extends Activity {
 
         pay_amount.addTextChangedListener(tw);
         hours.addTextChangedListener(tw1);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,5 +244,50 @@ public class SummaryMultiply extends Activity {
             total.setText(estimated);
         }
     };
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+
+                Intent  i = new Intent(getApplicationContext(), ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 
 }

@@ -35,8 +35,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
-import com.github.pwittchen.swipe.library.rx2.Swipe;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -51,8 +50,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /*Hi for testing*/
 public class ChatNeed extends Activity {
@@ -81,8 +78,6 @@ public class ChatNeed extends Activity {
     ChatAdapter adapter;
     String photourl="";
     Dialog dialog;
-
-    Disposable disposable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

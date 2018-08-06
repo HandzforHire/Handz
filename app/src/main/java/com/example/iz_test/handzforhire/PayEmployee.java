@@ -40,7 +40,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PayEmployee extends Activity{
+public class PayEmployee extends Activity  implements SimpleGestureFilter.SimpleGestureListener{
 
     ImageView logo,image;
     Button next_button;
@@ -51,15 +51,12 @@ public class PayEmployee extends Activity{
     String get_tip,get_amount,get_method,get_date,get_total;
     Integer total_value;
     Dialog dialog;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_employee);
 
-        /*progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();*/
         dialog = new Dialog(PayEmployee.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
@@ -81,7 +78,8 @@ public class PayEmployee extends Activity{
         employer_id = i.getStringExtra("employerId");
         employee_id = i.getStringExtra("employeeId");
         job_name = i.getStringExtra("jobname");
-        System.out.println("hhhhhhhhhhh:payemployee::"+job_id+"..."+employee_id+".."+employer_id+".."+job_name);
+
+        detector = new SimpleGestureFilter(this,this);
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("MM-dd-yyyy");
@@ -121,5 +119,55 @@ public class PayEmployee extends Activity{
             }
         });
     }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
+
 
 }

@@ -46,7 +46,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MakePayment extends Activity{
+public class MakePayment extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     String job_id,user_id,job_name;
     private static final String URL = Constant.SERVER_URL+"applied_job_detailed_view";
@@ -63,7 +63,7 @@ public class MakePayment extends Activity{
     ProgressDialog progress_dialog;
     TextView name,job_cancel;
     Button pay_employee;
-
+    private SimpleGestureFilter detector;
     String employee,profile_image,profile_name,user_name,employerId,employeeId;
     Dialog dialog;
     @Override
@@ -96,7 +96,7 @@ public class MakePayment extends Activity{
         employeeId=i.getStringExtra("employee");
 
 
-        //getJobDetails();
+        detector = new SimpleGestureFilter(this,this);
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,35 +267,6 @@ public class MakePayment extends Activity{
 */
     }
 
-
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor) {
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth * 2, // Width
-                srcBitmap.getHeight() + borderWidth * 2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
-
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect, paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
-    }
-
     public  void showalert()
     {
         final Dialog dialog = new Dialog(MakePayment.this);
@@ -326,4 +297,53 @@ public class MakePayment extends Activity{
 
     }
 
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

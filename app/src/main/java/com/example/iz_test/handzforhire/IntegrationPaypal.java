@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.github.pwittchen.swipe.library.rx2.SimpleSwipeListener;
-import com.github.pwittchen.swipe.library.rx2.Swipe;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -24,14 +22,14 @@ import org.json.JSONException;
 import java.math.BigDecimal;
 
 //Implementing click listener to our class
-public class IntegrationPaypal extends Activity implements View.OnClickListener {
+public class IntegrationPaypal extends Activity implements View.OnClickListener, SimpleGestureFilter.SimpleGestureListener {
 
 
     private Button buttonPay;
     private EditText editTextAmount;
     private String paymentAmount;
     public static final int PAYPAL_REQUEST_CODE = 123;
-
+    private SimpleGestureFilter detector;
     private static PayPalConfiguration config = new PayPalConfiguration()
 
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
@@ -52,7 +50,7 @@ public class IntegrationPaypal extends Activity implements View.OnClickListener 
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
 
         startService(intent);
-
+        detector = new SimpleGestureFilter(this,this);
     }
 
     @Override
@@ -117,5 +115,52 @@ public class IntegrationPaypal extends Activity implements View.OnClickListener 
         getPayment();
     }
 
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
 
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }

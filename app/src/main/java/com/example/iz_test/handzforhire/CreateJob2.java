@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.List;
 
-public class CreateJob2 extends AppCompatActivity {
+public class CreateJob2 extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener {
 
     String id,address,city,state,zipcode,name,category,date,start_time,expected_hours,amount,type,description;
     TextView text,pros,cons;
@@ -46,7 +46,7 @@ public class CreateJob2 extends AppCompatActivity {
     static String get_lon="0.0";
     String usertype = "employer";
     String edit_job = "no";
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +86,8 @@ public class CreateJob2 extends AppCompatActivity {
         linear = (LinearLayout)findViewById(R.id.lay);
         layout = (LinearLayout)findViewById(R.id.layout);
         logo = (ImageView)findViewById(R.id.logo);
+
+        detector = new SimpleGestureFilter(this,this);
 
         text.setText(name);
 
@@ -399,5 +401,49 @@ public class CreateJob2 extends AppCompatActivity {
             return null;
         }
 
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i = new Intent(getApplicationContext(), ProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SearchJob extends Activity {
+public class SearchJob extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     private static final String URL = Constant.SERVER_URL+"job_category_lists";
 
@@ -77,38 +77,13 @@ public class SearchJob extends Activity {
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
-
+    private SimpleGestureFilter detector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_job);
 
-      /*  progress_dialog = new ProgressDialog(this);
-        progress_dialog.setMessage("Loading.Please wait....");
-        progress_dialog.show();
-*/
-        //permission();
-
-       /* // Get the location manager
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(provider);
-        System.out.println("kkkkkkkkkk:location::"+location);
-        double latit = location.getLatitude();
-        double longi = location.getLongitude();
-        System.out.println("kkkkkkkkkkk:latitude:::"+latit);
-        System.out.println("kkkkkkkkkkk:longitude:::"+longi);
-
-        // Initialize the location fields
-        if (location != null) {
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
-        }
-*/
         layout = (LinearLayout)findViewById(R.id.relay);
         category_name = (TextView)findViewById(R.id.cat_name);
         logo = (ImageView) findViewById(R.id.logo);
@@ -143,19 +118,7 @@ public class SearchJob extends Activity {
             }
         });
 
-
-        /*list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                job_cat_name = parent.getItemAtPosition(position).toString();
-                System.out.println("ssssssssssselected:job_cat_name:" + job_cat_name);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Toast.makeText(SearchJob.this, "nothing Selected", Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        detector = new SimpleGestureFilter(this,this);
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -555,5 +518,51 @@ public class SearchJob extends Activity {
         listDataChild.put(listDataHeader.get(5), personal);
         listDataChild.put(listDataHeader.get(6), pet);
         listDataChild.put(listDataHeader.get(7), tutor);
+    }
+
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+
+                Intent  i = new Intent(getApplicationContext(), LendProfilePage.class);
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 }

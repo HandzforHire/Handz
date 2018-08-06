@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class RehireSubtract extends Activity {
+public class RehireSubtract extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
     private static final String URL = Constant.SERVER_URL+"create_job";
     public static String USER_ID = "user_id";
@@ -94,7 +94,7 @@ public class RehireSubtract extends Activity {
     String longitude = "";
     String current_location = "";
     Dialog dialog;
-
+    private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,10 +133,7 @@ public class RehireSubtract extends Activity {
         job_id = i.getStringExtra("job_id");
         employeeId = i.getStringExtra("employeeId");
 
-        System.out.println("sssssssssssss:subtract::"+id+"..."+name+"..."+category+".."+description+".."+current_location);
-        System.out.println("sssssssssssss:subtract::"+date+"..."+start_time+"..."+expected_hours+".."+amount+".."+type);
-        System.out.println("sssssssssssss:subtract::"+post_address+"..."+latitude+"..."+longitude+",,"+job_id);
-        System.out.println("sssssssssssss:subtract::"+estimated_amount+"..."+flexible_status+".."+job_expire+",,"+employeeId);
+        detector = new SimpleGestureFilter(this,this);
 
         hourly_value.setText(amount);
         expected_value.setText(expected_hours);
@@ -499,4 +496,53 @@ public class RehireSubtract extends Activity {
             pocket_expense.setText(pocket_value);
         }
     };
+
+    @Override
+    public void onSwipe(int direction) {
+        String str = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+                Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+                startActivity(j);
+                finish();
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+                Intent i;
+                if(Profilevalues.usertype.equals("1")) {
+                    i = new Intent(getApplicationContext(), ProfilePage.class);
+                }else{
+                    i = new Intent(getApplicationContext(), LendProfilePage.class);
+                }
+                i.putExtra("userId", Profilevalues.user_id);
+                i.putExtra("address", Profilevalues.address);
+                i.putExtra("city", Profilevalues.city);
+                i.putExtra("state", Profilevalues.state);
+                i.putExtra("zipcode", Profilevalues.zipcode);
+                startActivity(i);
+                finish();
+
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+                break;
+            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+                break;
+
+        }
+        //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event){
+
+        this.detector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
 }
