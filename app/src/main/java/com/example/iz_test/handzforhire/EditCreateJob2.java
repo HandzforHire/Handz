@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -121,6 +122,8 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
         linear = (LinearLayout) findViewById(R.id.lay);
         layout = (LinearLayout) findViewById(R.id.layout);
         logo = (ImageView) findViewById(R.id.logo);
+
+        stat.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 
         if(current_location.equals("yes"))
         {
@@ -237,24 +240,25 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
         check1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    if(check1.isChecked())
-                    {
-                        add.setText("");
-                        cit.setText("");
-                        stat.setText("");
-                        zip.setText("");
-                        locationTrack = new LocationTrack(EditCreateJob2.this);
-                        if (locationTrack.canGetLocation()) {
-                            lon = locationTrack.getLongitude();
-                            lat = locationTrack.getLatitude();
-                            latitude = String.valueOf(lat);
-                            longitude = String.valueOf(lon);
-
-                            Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
-                        } else {
-                            locationTrack.showSettingsAlert();
-                        }
+                if(check1.isChecked())
+                {
+                    add.setText("");
+                    cit.setText("");
+                    stat.setText("");
+                    zip.setText("");
+                    locationTrack = new LocationTrack(EditCreateJob2.this);
+                    if (locationTrack.canGetLocation()) {
+                        lon = locationTrack.getLongitude();
+                        lat = locationTrack.getLatitude();
+                        latitude = String.valueOf(lat);
+                        longitude = String.valueOf(lon);
+                        System.out.println("kkkkkkkkkkkkkk:latitude::check::"+latitude);
+                        System.out.println("kkkkkkkkkkkkkk:longitude:check::"+longitude);
+                        Toast.makeText(getApplicationContext(), "Longitude:" + Double.toString(lon) + "\nLatitude:" + Double.toString(lat), Toast.LENGTH_SHORT).show();
+                    } else {
+                        locationTrack.showSettingsAlert();
                     }
+                }
             }
         });
 
@@ -312,12 +316,14 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
         else {
             post_address = "no";
             String address = j_address + j_city + j_state + j_zipcode;
-
+            System.out.println("ssssssssss:add::"+ address);
             getGeoCoordsFromAddress(this,address);
-
+            System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lat);
+            System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lon);
             latitude = get_lat;
             longitude = get_lon;
-
+            System.out.println("kkkkkkkkkkkkkk:latitude:"+latitude);
+            System.out.println("kkkkkkkkkkkkkk:longitude:"+longitude);
         }
         if(check1.isChecked())
         {
@@ -445,15 +451,15 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
-                            try {
-                                String responseBody = new String(error.networkResponse.data, "utf-8");
-                                JSONObject jsonObject = new JSONObject(responseBody);
-                                System.out.println("error" + jsonObject);
-                            } catch (JSONException e) {
-                                //Handle a malformed json response
-                            } catch (UnsupportedEncodingException error1) {
-
-                            }
+                        try {
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            System.out.println("error" + jsonObject);
+                            Toast.makeText(getApplicationContext(),jsonObject.getString("msg"),Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            //Handle a malformed json response
+                        } catch (UnsupportedEncodingException error1) {
+                        }
                         }
                     }
                 }) {
@@ -481,12 +487,16 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
             status = jResult.getString("status");
             if (status.equals("success")) {
                 job_data = jResult.getString("job_data");
+                System.out.println("jjjjjjjjjjjjjjjob:::job_data:::" + job_data);
                 JSONObject object = new JSONObject(job_data);
                 String get_address = object.getString("address");
+                System.out.println("nnnnnnnnnnn:get_address::"+get_address);
                 String get_city = object.getString("city");
+                System.out.println("nnnnnnnnnnn:get_city::" + get_city);
                 String get_state = object.getString("state");
+                System.out.println("nnnnnnnnnnn:get_state::" + get_state);
                 String get_zipcode = object.getString("zipcode");
-
+                System.out.println("nnnnnnnnnnn:get_zipcode::" + get_zipcode);
             } else {
             }
         } catch (JSONException e) {

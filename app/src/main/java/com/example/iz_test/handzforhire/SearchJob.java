@@ -58,7 +58,7 @@ public class SearchJob extends Activity implements SimpleGestureFilter.SimpleGes
     String id,address,zipcode,state,city,name,job_category_name,job_id,categoryId,item,job_cat_name;
     static ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
     Spinner list;
-    ImageView logo,img_arrow;
+    ImageView logo;
     TextView category_name;
     Button search;
     EditText zip,radius;
@@ -71,7 +71,7 @@ public class SearchJob extends Activity implements SimpleGestureFilter.SimpleGes
     public static PopupWindow popupWindowDogs;
     CustomJobListAdapter adapter;
     public static TextView textview;
-    public static ImageView img_paint;
+    public static ImageView  main_category_image;
     static String category="0",category_id="0";
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
@@ -91,9 +91,10 @@ public class SearchJob extends Activity implements SimpleGestureFilter.SimpleGes
         zip = (EditText) findViewById(R.id.zip);
         radius = (EditText) findViewById(R.id.radius);
         checkBox = (CheckBox) findViewById(R.id.checkBox1);
-        img_arrow=(ImageView)findViewById(R.id.img_arrow);
+
         textview = (TextView) findViewById(R.id.textview);
-        img_paint=(ImageView)findViewById(R.id.img_paint);
+        main_category_image =(ImageView)findViewById(R.id.main_category);
+
         Intent i = getIntent();
         id = i.getStringExtra("userId");
         address = i.getStringExtra("address");
@@ -258,7 +259,55 @@ public class SearchJob extends Activity implements SimpleGestureFilter.SimpleGes
                         header =  listDataHeader.get(groupPosition);
                         sub_category =  listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
                         System.out.println("ccccccccc:"+header+",,"+sub_category+",,"+pos+"id:"+categoryId);
-                        category_name.setText(header+" - "+sub_category);
+                       // category_name.setText(header+" - "+sub_category);
+                        if(header.equals("CARE GIVING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.care_giving);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("COACHING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.coaching);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("HOLIDAYS"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.holidays);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("INSIDE THE HOME"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.inside_home);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("OUTSIDE THE HOME"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.outside_home);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("PERSONAL SERVICES"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.personal_services);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("PETCARE"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.petcare);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("TUTORING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.tutoring);
+                            category_name.setText(sub_category);
+                        }
                         dialog.dismiss();
                         return false;
                     }

@@ -160,7 +160,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         handz_condition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(RegisterPage3.this, ViewWeb.class);
+                Intent i = new Intent(RegisterPage3.this, TermsAndConditions.class);
                 startActivity(i);
             }
         });

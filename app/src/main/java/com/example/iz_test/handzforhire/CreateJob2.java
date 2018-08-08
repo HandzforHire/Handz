@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -88,6 +89,7 @@ public class CreateJob2 extends AppCompatActivity implements SimpleGestureFilter
         logo = (ImageView)findViewById(R.id.logo);
 
         detector = new SimpleGestureFilter(this,this);
+        stat.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 
         text.setText(name);
 

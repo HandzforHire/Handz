@@ -6,7 +6,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.ProgressDialog;
+
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -20,13 +20,13 @@ import android.text.Selection;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 
-import android.view.LayoutInflater;
+
 
 
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
+
 
 
 import android.view.inputmethod.InputMethodManager;
@@ -39,7 +39,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -100,7 +100,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     Integer cat;
     CheckBox checkBox;
-
+    ImageView main_category_image;
     EditText payamount;
     Activity activity;
 
@@ -110,30 +110,6 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
     MyOptionsPickerView threePicker;
     public static String date_format;
     TextView select_category;
-
-    Integer[] imageId = {
-            R.drawable.box_17,
-            R.drawable.box_10,
-            R.drawable.box_8,
-            R.drawable.box_15,
-            R.drawable.box_18,
-            R.drawable.box_9,
-            R.drawable.box_11,
-            R.drawable.box_20,
-            R.drawable.box_3,
-            R.drawable.box_5,
-            R.drawable.box_13,
-            R.drawable.box_2,
-            R.drawable.box_19,
-            R.drawable.box_21,
-            R.drawable.box_1,
-            R.drawable.box_12,
-            R.drawable.box_7,
-            R.drawable.box_14,
-            R.drawable.box_16,
-            R.drawable.box_4,
-            R.drawable.box_6,
-    };
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
@@ -164,8 +140,8 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         job_name = (EditText) findViewById(R.id.descrip);
         job_description = (EditText) findViewById(R.id.detail);
         date_text = (TextView) findViewById(R.id.date_text);
-        textview = (TextView) findViewById(R.id.textview);
-        img_paint=(ImageView)findViewById(R.id.img_paint);
+
+
         start_time_text = (TextView) findViewById(R.id.start_time_text);
         end_time_text = (TextView) findViewById(R.id.end_time_text);
         job_amount = (TextView) findViewById(R.id.amount);
@@ -173,8 +149,8 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         pay_text = (TextView) findViewById(R.id.payment_details);
         logo = (ImageView) findViewById(R.id.logo);
         arrow = (ImageView) findViewById(R.id.arrow);
-        img_arrow=(ImageView)findViewById(R.id.img_arrow);
-        list = (Spinner)findViewById(R.id.listview);
+        main_category_image =(ImageView)findViewById(R.id.main_category);
+
         pay_lay = (RelativeLayout) findViewById(R.id.linear4);
         payment_layout = (RelativeLayout) findViewById(R.id.relay1);
         date_layout = (RelativeLayout) findViewById(R.id.linear1);
@@ -191,14 +167,9 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         zipcode = i.getStringExtra("zipcode");
         System.out.println("iiiiiiiiiiiiiiiiiiiii:" + id);
 
-
-
         String pattern1 = "hh:mm a";
         String timeFormat = new SimpleDateFormat(pattern1).format(new Date());
 
-        //String currentTime = DateFormat.getTimeInstance().format(new Date());
-        //start_time_text.setText(timeFormat);
-        //end_time_text.setText(timeFormat);
         String pattern2 = "hh:mm:ss";
         st_time = new SimpleDateFormat(pattern2).format(new Date());
         en_time = new SimpleDateFormat(pattern2).format(new Date());
@@ -233,23 +204,6 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         time_layout.setOnClickListener(this);
         estimate_layout.setOnClickListener(this);
 
-        //popupWindowDogs = popupWindowDogs();
-        textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindowDogs.showAsDropDown(v, -5, 0);
-
-            }
-        });
-
-        img_arrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                popupWindowDogs.showAsDropDown(v, -5, 0);
-
-            }
-        });
 
         end_time_text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -434,7 +388,54 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                         header =  listDataHeader.get(groupPosition);
                         sub_category =  listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
                         System.out.println("ccccccccc:"+header+",,"+sub_category+",,"+pos+"id:"+categoryId);
-                        select_category.setText(header+" - "+sub_category);
+                        if(header.equals("CARE GIVING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.care_giving);
+                            select_category.setText(sub_category);
+                        }
+                        if(header.equals("COACHING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.coaching);
+                            select_category.setText(sub_category);
+                        }
+                        if(header.equals("HOLIDAYS"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.holidays);
+                            select_category.setText(sub_category);
+                        }
+                        if(header.equals("INSIDE THE HOME"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.inside_home);
+                            select_category.setText(sub_category);
+                        }
+                        if(header.equals("OUTSIDE THE HOME"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.outside_home);
+                            select_category.setText(sub_category);
+                        }
+                        if(header.equals("PERSONAL SERVICES"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.personal_services);
+                            select_category.setText(sub_category);
+                        }
+                        if(header.equals("PETCARE"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.petcare);
+                            select_category.setText(sub_category);
+                        }
+                        if(header.equals("TUTORING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.tutoring);
+                            select_category.setText(sub_category);
+                        }
                         dialog.dismiss();
                         return false;
                     }
@@ -596,7 +597,29 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
             DialogFragment dialogfragment = new datepickerClass();
 
             dialogfragment.show(getFragmentManager(), "DatePickerDialog");
+           /* // Get Current Date
+            final Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
 
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+                            int mm = monthOfYear + 1;
+                            String month = (mm < 10) ? "0" + mm : "" + mm;
+                            String date = year + "-" + month + "-" + dayOfMonth;
+                            *//*String pattern = "MMMM dd,yyyy";
+                            String dateInString = new SimpleDateFormat(pattern).format(new Date());*//*
+                            System.out.println("dddddddddd:date:::"+date);
+                            //date_text.setText(dateInString);
+                        }
+                    }, mYear, mMonth, mDay);
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            datePickerDialog.show();*/
         }
         if (v == time_layout) {
 
@@ -934,7 +957,15 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
+                       /* try {
+                            String responseBody = new String(error.networkResponse.data, "utf-8");
+                            JSONObject jsonObject = new JSONObject(responseBody);
+                            System.out.println("error" + jsonObject);
+                        } catch (JSONException e) {
+                            //Handle a malformed json response
+                        } catch (UnsupportedEncodingException error1) {
 
+                        }*/
                     }
                 }) {
             @Override

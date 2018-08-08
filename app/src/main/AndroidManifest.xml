@@ -133,7 +133,7 @@
 
         <activity android:name=".MakePayment"/>
 
-        <activity android:name=".ViewWeb"/>
+        <activity android:name=".TermsAndConditions"/>
 
         <activity android:name=".FindJobMap"/>
 

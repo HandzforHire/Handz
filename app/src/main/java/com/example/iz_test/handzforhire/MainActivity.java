@@ -123,7 +123,6 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this,PromoVideo.class);
                 startActivity(i);
-                finish();
             }
         });
 

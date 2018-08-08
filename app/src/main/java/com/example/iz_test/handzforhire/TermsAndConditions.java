@@ -10,7 +10,7 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 
 
-public class ViewWeb extends Activity{
+public class TermsAndConditions extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

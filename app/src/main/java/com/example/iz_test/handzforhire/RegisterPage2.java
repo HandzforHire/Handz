@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -73,6 +74,10 @@ public class RegisterPage2 extends Activity{
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
         next.setTypeface(tf);
+
+
+        state.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+
 
         String fontPath1 = "fonts/calibri.ttf";
         Typeface tf1 = Typeface.createFromAsset(getAssets(), fontPath1);

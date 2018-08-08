@@ -96,6 +96,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
     String header,sub_category,job_category_color,job_expire,expected_hours,post_address;
     Dialog dialog;
     private SimpleGestureFilter detector;
+    ImageView main_category_image;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +129,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         symbol = (TextView) findViewById(R.id.symbol);
         username_text = (TextView) findViewById(R.id.username_text);
+        main_category_image =(ImageView)findViewById(R.id.main_category);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -339,7 +341,58 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                         header =  listDataHeader.get(groupPosition);
                         sub_category =  listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
                         System.out.println("ccccccccc:"+header+",,"+sub_category+",,"+pos+"id:"+categoryId);
-                        category_name.setText(header+" - "+sub_category);
+                       // category_name.setText(header+" - "+sub_category);
+
+                        if(header.equals("CARE GIVING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.care_giving);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("COACHING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.coaching);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("HOLIDAYS"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.holidays);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("INSIDE THE HOME"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.inside_home);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("OUTSIDE THE HOME"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.outside_home);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("PERSONAL SERVICES"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.personal_services);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("PETCARE"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.petcare);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("TUTORING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.tutoring);
+                            category_name.setText(sub_category);
+                        }
+
+
                         dialog.dismiss();
                         return false;
                     }
@@ -827,37 +880,53 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
 
                 if(job_category.equals("1"))
                 {
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.care_giving);
                     header = "CARE GIVING";
                 }
                 if(job_category.equals("2"))
                 {
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.coaching);
                     header = "COACHING";
                 }
                 if(job_category.equals("3"))
                 {
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.holidays);
                     header = "HOLIDAYS";
                 }
                 if(job_category.equals("4"))
                 {
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.inside_home);
                     header = "INSIDE THE HOME";
                 }
                 if(job_category.equals("5"))
                 {
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.outside_home);
                     header = "OUTSIDE THE HOME";
                 }
                 if(job_category.equals("6"))
                 {
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.personal_services);
                     header = "PERSONAL SERVICES";
                 }
                 if(job_category.equals("7"))
                 {
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.petcare);
                     header = "PETCARE";
                 }
                 if(job_category.equals("8"))
                 {
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.tutoring);
                     header = "TUTORING";
                 }
-                category_name.setText(header+" - "+sub_cat);
+                category_name.setText(sub_cat);
 
                 dialog.dismiss();
 

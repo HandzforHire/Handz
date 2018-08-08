@@ -135,7 +135,7 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
             handz_condition.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(LendRegisterPage3.this, ViewWeb.class);
+                    Intent i = new Intent(LendRegisterPage3.this, TermsAndConditions.class);
                     startActivity(i);
                 }
             });

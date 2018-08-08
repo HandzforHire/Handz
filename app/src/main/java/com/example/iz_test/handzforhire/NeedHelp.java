@@ -160,14 +160,27 @@ public class NeedHelp extends Activity implements SimpleGestureFilter.SimpleGest
 
             if(status.equals("success"))
             {
-              Intent i = new Intent(NeedHelp.this,ProfilePage.class);
-                i.putExtra("userId", id);
-                i.putExtra("address", address);
-                i.putExtra("city", city);
-                i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
-                finish();
+                final Dialog dialog = new Dialog(NeedHelp.this);
+                dialog.setContentView(R.layout.gray_custom);
+
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("Message submitted to support team.");
+                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        onBackPressed();
+                    }
+                });
+
+                dialog.show();
+                Window window = dialog.getWindow();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                return;
             }
 
         } catch (JSONException e) {

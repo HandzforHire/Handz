@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -67,6 +68,8 @@ public class LendRegisterPage2 extends Activity{
             retype_email = (EditText)findViewById(R.id.retype_email);
             layout = (RelativeLayout) findViewById(R.id.layout);
             logo = (ImageView) findViewById(R.id.logo);
+
+            state.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override

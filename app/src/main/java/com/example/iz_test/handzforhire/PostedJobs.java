@@ -67,6 +67,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
 
     private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
     private static final String URL = Constant.SERVER_URL+"job_lists";
+    private static final String GET_COUNT_URL = Constant.SERVER_URL+"view_count";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
     ImageView image,profile,logo;
     public static String KEY_USERID = "user_id";
@@ -111,6 +112,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
 
        // getProfileimage();
         listPostedJobs();
+        getcount();
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,6 +255,83 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
         requestQueue.add(stringRequest);
     }
 
+    public void getcount() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_COUNT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("resposne "+response);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("volley error::: " + jsonObject);
+                                String status = jsonObject.getString("msg");
+
+
+                                    final Dialog dialog = new Dialog(PostedJobs.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USERID, id);
+                params.put(TYPE,"notificationCountPosted");
+                return params;
+            }
+        };
+
+        System.out.println("values::"+value+".."+id+".."+type);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
+    }
     public void onResponserecieved1(String jsonobject, int i) {
         System.out.println("response from interface"+jsonobject);
 

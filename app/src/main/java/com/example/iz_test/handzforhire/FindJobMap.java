@@ -247,7 +247,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             ImageView img_close=(ImageView)view.findViewById(R.id.img_close);
 
             txt_jobcat.setText(job_name);
-            txt_amount.setText("PAY $"+job_payment_amount);
+            txt_amount.setText("PAY: $"+job_payment_amount);
             txt_dur.setText("EXPECTED DURATION: "+duration);
             txt_obj.setText(object.toString());
 
@@ -283,10 +283,14 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                     try {
                         JSONObject obj = new JSONObject(txt_obj.getText().toString());
                         job_id=obj.getString("id");
-
-                        RestClientPost rest = new RestClientPost(getActivity(), 2);
-                        rest.execute1(RestClientPost.RequestMethod.POST, getActivity(), FindJobMap.this);
-
+                        String average_rating=obj.getString("average_rating");
+                        /*RestClientPost rest = new RestClientPost(getActivity(), 2);
+                        rest.execute1(RestClientPost.RequestMethod.POST, getActivity(), FindJobMap.this);*/
+                        Intent i = new Intent(getActivity(),JobDescription.class);
+                        i.putExtra("userId",user_id);
+                        i.putExtra("jobId",job_id);
+                        i.putExtra("average_rating",average_rating);
+                        startActivity(i);
                     }catch (Exception e){
                         System.out.println("Exception e"+e.getMessage());;
                     }
@@ -445,10 +449,8 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                     if(object.getString("profile_name").isEmpty()){
 
                     }
-                    Intent i = new Intent(getActivity(),ApplyJob.class);
-                    i.putExtra("userId",user_id);
-                    i.putExtra("jobId",job_id);
-                    i.putExtra("employerId",object.getString("employer_id"));
+
+              /*      i.putExtra("employerId",object.getString("employer_id"));
                     i.putExtra("job_name",object.getString("job_name"));
                     i.putExtra("date",object.getString("job_date"));
                     i.putExtra("start_time",object.getString("start_time"));
@@ -457,8 +459,8 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                     i.putExtra("amount",object.getString("job_payment_amount"));
                     i.putExtra("type",object.getString("job_payment_type"));
                     i.putExtra("image",object.getString("profile_image"));
-                    i.putExtra("usertype",object.getString("usertype"));
-                    startActivity(i);
+                    i.putExtra("usertype",object.getString("usertype"));*/
+
                 } else {
                 }
 

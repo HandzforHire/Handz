@@ -144,12 +144,12 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
         jobId = i.getStringExtra("jobId");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:jobId::::" + jobId);
+
 
         String pattern2 = "hh:mm:ss";
         st_time = new SimpleDateFormat(pattern2).format(new Date());
         en_time = new SimpleDateFormat(pattern2).format(new Date());
-        System.out.println("777777777:time::::" + st_time+",,,,"+ en_time);
+
         activity=this;
 
         detector = new SimpleGestureFilter(this,this);

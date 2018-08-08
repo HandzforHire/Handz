@@ -35,6 +35,15 @@ public class PromoVideo extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.promo_video);
 
+        ImageView logo = (ImageView) findViewById(R.id.logo);
+
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         YouTubePlayerView youTubePlayerView = (YouTubePlayerView)findViewById(R.id.youtube_player_view1);
         youTubePlayerView.initialize(
                 new YouTubePlayerInitListener() {

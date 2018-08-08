@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -56,7 +55,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,8 +63,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -256,7 +252,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
         terms_condition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(EditUserProfile.this, ViewWeb.class);
+                Intent i = new Intent(EditUserProfile.this, TermsAndConditions.class);
                 startActivity(i);
             }
         });

@@ -213,6 +213,14 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
             }
         });
 
+        terms_condition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LendEditUserProfile.this, TermsAndConditions.class);
+                startActivity(i);
+            }
+        });
+
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

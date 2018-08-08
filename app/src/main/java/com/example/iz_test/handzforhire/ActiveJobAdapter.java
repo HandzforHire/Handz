@@ -1,6 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,35 +11,66 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ActiveJobAdapter extends BaseAdapter {
-
+        private static final String GET_COUNT_URL = Constant.SERVER_URL+"view_count";
+        public static String KEY_USERID = "user_id";
+        public static String XAPP_KEY = "X-APP-KEY";
+        public static String TYPE = "type";
+        String value = "HandzForHire@~";
         private Activity activity;
         private ArrayList<HashMap<String, String>> data;
         private static LayoutInflater inflater = null;
+
+        Dialog dialog;
         public ActiveJobAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
             activity = a;
             data = d;
+            dialog = new Dialog(activity);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.progressbar);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -112,13 +144,18 @@ public class ActiveJobAdapter extends BaseAdapter {
             make_payment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent i = new Intent(activity,MakePayment.class);
                     int pos= (int) v.getTag();
                     HashMap<String, String> items =data.get(pos);
+
+                    String  userId=items.get("userId");
+                    getpaymentcount(userId);
+
                     String username="";
                     String  jobId =  items.get("jobId");;
 
-                    String  userId=items.get("userId");
+
                     String name=items.get("name");
                     String image=items.get("image");
                     String user=items.get("user");
@@ -143,7 +180,11 @@ public class ActiveJobAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     int pos= (int) view.getTag();
+
+
                     HashMap<String, String> items =data.get(pos);
+                    String  userId=items.get("userId");
+                    getmsgcount(userId);
                     String username="";
                     String  jobId =  items.get("jobId");;
                     String channel_id=items.get("channel");
@@ -152,8 +193,7 @@ public class ActiveJobAdapter extends BaseAdapter {
                     else
                         username= items.get("profile");;
 
-                    System.out.println("username "+username);
-                   String  userId=items.get("userId");
+                     System.out.println("username "+username);
 
 
                     Intent i = new Intent(activity,ChatNeed.class);
@@ -187,5 +227,158 @@ public class ActiveJobAdapter extends BaseAdapter {
             }
      return  vi;
         }
+
+
+    public void getmsgcount(final String id) {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_COUNT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("resposne "+response);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(activity,"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("volley error::: " + jsonObject);
+                                String status = jsonObject.getString("msg");
+
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(activity);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USERID, id);
+                params.put(TYPE,"notificationCountMessage");
+                return params;
+            }
+        };
+
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }
+
+    public void getpaymentcount(final String id) {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_COUNT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("resposne "+response);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(activity,"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("volley error::: " + jsonObject);
+                                String status = jsonObject.getString("msg");
+
+                                // custom dialog
+                                final Dialog dialog = new Dialog(activity);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText(status);
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USERID, id);
+                params.put(TYPE,"notificationCountMakePayment");
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }
 
 }
