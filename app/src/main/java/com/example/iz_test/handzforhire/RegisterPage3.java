@@ -1,6 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,10 +9,13 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -36,12 +40,35 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.paypal.android.sdk.payments.PayPalAuthorization;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
+import com.paypal.android.sdk.payments.PayPalOAuthScopes;
+import com.paypal.android.sdk.payments.PayPalProfileSharingActivity;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class RegisterPage3 extends AppCompatActivity implements ResponseListener1{
@@ -77,6 +104,13 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
     String deviceId;
     SessionManager session;
     Dialog dialog;
+    static String[] hreflink;
+
+    //Paypal intent request code to track onActivityResult method
+    public static final int PAYPAL_REQUEST_CODE = 123;
+
+   static Context mcontext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +120,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         StrictMode.setThreadPolicy(policy);
 
         session = new SessionManager(getApplicationContext());
+        mcontext = getApplicationContext();
 
         next = (Button) findViewById(R.id.next1);
         check1 = (CheckBox) findViewById(R.id.checkBox1);
@@ -95,7 +130,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         layout = (RelativeLayout) findViewById(R.id.layout);
         handz_condition = (TextView) findViewById(R.id.handz_condition);
         feature = (TextView) findViewById(R.id.features);
-        ImageView logo = (ImageView)findViewById(R.id.logo);
+        ImageView logo = (ImageView) findViewById(R.id.logo);
         check3 = (CheckBox) findViewById(R.id.checkBox3);
         check4 = (CheckBox) findViewById(R.id.checkBox4);
 
@@ -104,7 +139,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
 
 
         deviceId = LoginActivity.deviceId;
-        System.out.println("8888888:device:register:::"+deviceId);
+        System.out.println("8888888:device:register:::" + deviceId);
 
         String fontPath = "fonts/calibri.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
@@ -168,7 +203,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(RegisterPage3.this,RegisterPage2.class);
+                Intent i = new Intent(RegisterPage3.this, RegisterPage2.class);
                 startActivity(i);
                 finish();
             }
@@ -207,7 +242,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
             }
         });
 
-        next.setOnClickListener(new View.OnClickListener() {
+       /* next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -355,7 +390,17 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
             }
+        });*/
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAccessToken();
+            }
         });
+        // ATTENTION: This was auto-generated to handle app links.
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
     }
 
     private void registerUser()
@@ -472,5 +517,237 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
             e.printStackTrace();
         }
     }
+
+
+    private String getAccessToken() {
+
+        HttpClient httpclient = new DefaultHttpClient();
+        //HttpPost httppost = new HttpPost("https://api.paypal.com/v1/oauth2/token");
+        HttpPost httppost = new HttpPost("https://api.sandbox.paypal.com/v1/oauth2/token");
+
+        try {
+            String text=PayPalConfig.PAYPAL_CLIENT_ID+":"+PayPalConfig.PAYPAL_SECRET_KEY;
+            // String text=PayPalConfig.PAYPAL_LIVE_CLIENT_ID":"+PayPalConfig.PAYPAL_LIVE_SECRET_KEY;
+            byte[] data = text.getBytes("UTF-8");
+            String base64 = Base64.encodeToString(data, Base64.NO_WRAP);
+            httppost.addHeader("Accept","application/json");
+            httppost.addHeader("Accept-Language", "en_US");
+            httppost.addHeader("content-type", "application/x-www-form-urlencoded");
+            httppost.addHeader("Authorization", "Basic " + base64);
+
+           StringEntity se=new StringEntity("grant_type=client_credentials&client_id="+PayPalConfig.PAYPAL_CLIENT_ID+"&client_secret="+PayPalConfig.PAYPAL_SECRET_KEY);
+
+            httppost.setEntity(se);
+
+// Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+            String responseContent = EntityUtils.toString(response.getEntity());
+            System.out.println("response content "+responseContent);
+            Log.d("Response", responseContent );
+            try {
+                JSONObject obj = new JSONObject(responseContent);
+                System.out.println(obj.getString("access_token"));
+                partnerReferralPrefillAPI(obj.getString("access_token"));
+            }catch (Exception e)
+            {
+                System.out.println("e "+e.getMessage());
+            }
+
+
+        } catch (ClientProtocolException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        } catch (IOException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        }
+        return null;
+    }
+
+    private String partnerReferralPrefillAPI(String  accesstoken) {
+
+        HttpClient httpclient = new DefaultHttpClient();
+        //HttpPost httppost = new HttpPost("https://api.paypal.com/v1/oauth2/token");
+        HttpPost httppost = new HttpPost("https://api.sandbox.paypal.com/v1/customer/partner-referrals/");
+
+        try {
+            httppost.addHeader("content-type", "application/json");
+            httppost.addHeader("Authorization", "Bearer " + accesstoken);
+
+            StringEntity se=  new StringEntity(readFromFile(mcontext));
+
+           // StringEntity se=new StringEntity();
+            httppost.setEntity(se);
+
+           // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+            String responseContent = EntityUtils.toString(response.getEntity());
+            System.out.println("Response partner-referrals "+responseContent);
+
+            try {
+                JSONObject obj = new JSONObject(responseContent);
+                JSONArray array= obj.getJSONArray("links");
+                  hreflink=new String[array.length()];
+                for(int i=0;i<array.length();i++){
+                    JSONObject obj1=array.getJSONObject(i);
+                    hreflink[i]=obj1.getString("href");
+                }
+               Intent myIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse(hreflink[1]));
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(myIntent,1);
+               /* Intent result = new Intent("com.example.RESULT_ACTION", Uri.parse(hreflink[1]));
+                setResult(Activity.RESULT_OK, result);
+                finish();*/
+                /*finish();*/
+                //partnerReferralPrefillData(hreflink[0],accesstoken);
+            }catch (Exception e)
+            {
+                System.out.println("e "+e.getMessage());
+            }
+
+        } catch (ClientProtocolException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        } catch (IOException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        }
+        return null;
+    }
+
+
+    private  String partnerReferralPrefillData(String  hreflink,String accesstoken) {
+
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpGet httpget = new HttpGet(hreflink);
+
+        try {
+            httpget.addHeader("Authorization", "Bearer " + accesstoken);
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httpget);
+            String responseContent = EntityUtils.toString(response.getEntity());
+            System.out.println("Response partner-referrals Data"+responseContent);
+            try {
+                JSONObject obj = new JSONObject(responseContent);
+                JSONObject obj1=obj.getJSONObject("referral_data");
+                JSONObject obj2=obj1.getJSONObject("customer_data");
+                JSONArray array=obj2.getJSONArray("partner_specific_identifiers");
+                for(int i=0;i<array.length();i++){
+                    JSONObject obj3=array.getJSONObject(i);
+                    String trackiungvalue=obj3.getString("value");
+                    System.out.println("tracking Value "+trackiungvalue);
+                    getMerchantIdOfSeller(trackiungvalue,accesstoken);
+                }
+
+
+            }catch (Exception e)
+            {
+                System.out.println("e "+e.getMessage());
+            }
+
+
+        } catch (ClientProtocolException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        } catch (IOException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        }
+        return null;
+    }
+
+    private String getMerchantIdOfSeller(String  trackvalue,String accesstoken) {
+
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpGet httpget = new HttpGet("https://api.sandbox.paypal.com/v1/customer/partners/2NPBRNULVL7GS/merchant-integrations?tracking_id="+trackvalue);
+
+        try {
+            httpget.addHeader("Authorization", "Bearer " + accesstoken);
+            httpget.addHeader("content-type", "application/json");
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httpget);
+            String responseContent = EntityUtils.toString(response.getEntity());
+            System.out.println("Response MerchantIdOfSeller"+responseContent);
+            try {
+                JSONObject obj = new JSONObject(responseContent);
+                String merchant_id=obj.getString("merchant_id");
+                System.out.println("merchant id "+merchant_id);
+                getMerchantStatus(merchant_id,accesstoken);
+            }catch (Exception e)
+            {
+                System.out.println("e "+e.getMessage());
+            }
+
+
+        } catch (ClientProtocolException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        } catch (IOException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        }
+        return null;
+    }
+
+    private String getMerchantStatus(String  merchant_id,String accesstoken) {
+
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpGet httpget = new HttpGet("https://api.sandbox.paypal.com/v1/customer/partners/2NPBRNULVL7GS/merchant-integrations/"+merchant_id);
+
+        try {
+            httpget.addHeader("Authorization", "Bearer " + accesstoken);
+            httpget.addHeader("content-type", "application/json");
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httpget);
+            String responseContent = EntityUtils.toString(response.getEntity());
+            System.out.println("Response getMerchantStatus"+responseContent);
+
+
+
+        } catch (ClientProtocolException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        } catch (IOException e) {
+            System.out.println("Exception "+e.getMessage());
+// TODO Auto-generated catch block
+        }
+        return null;
+    }
+
+    private  String readFromFile(Context context) {
+
+        String ret = "";
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(
+                    new InputStreamReader(context.getAssets().open("PartnerReferralPrefilled.json")));
+            String receiveString = "";
+            StringBuilder stringBuilder = new StringBuilder();
+            // do reading, usually loop until end of file reading
+            String mLine;
+            while ((mLine = reader.readLine()) != null) {
+                //process line
+                stringBuilder.append(mLine);
+            }
+
+            ret = stringBuilder.toString();
+            System.out.println("file "+ret);
+        } catch (IOException e) {
+            //log the exception
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    //log the exception
+                }
+            }
+        }
+
+        return ret;
+    }
+
 }
 

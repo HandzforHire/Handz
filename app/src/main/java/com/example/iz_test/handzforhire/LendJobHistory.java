@@ -99,6 +99,13 @@ public class LendJobHistory extends Activity implements SimpleGestureFilter.Simp
         detector = new SimpleGestureFilter(this,this);
 
         activeJobs();
+        ed_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ed_search.setHint("");
+            }
+        });
+
 
         ed_search.addTextChangedListener(new TextWatcher() {
 

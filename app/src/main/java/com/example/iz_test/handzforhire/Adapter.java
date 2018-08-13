@@ -192,7 +192,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                 else
                     username=item.getProfilename();
 
-                Intent intent = new Intent(mContext, NeedRating.class);
+                Intent intent = new Intent(mContext, LeaveRating.class);
                 intent.putExtra("jobId", item.getJobId());
                 intent.putExtra("employer_id",item.getEmployerId());
                 intent.putExtra("employee_id",item.getEmployeeId());

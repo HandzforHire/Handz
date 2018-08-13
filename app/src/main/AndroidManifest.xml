@@ -5,12 +5,12 @@
     android:versionName="1.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-permission android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
@@ -29,6 +29,10 @@
         android:largeHeap="true"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
+
         <activity
             android:name="com.example.iz_test.handzforhire.SplashScreen"
             android:label="@string/app_name">
@@ -39,7 +43,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAINACTIVITY" />
@@ -48,209 +53,275 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".EditUserProfile"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".EditUserProfile"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".ChangeCurrentAddress"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".ChangeCurrentAddress"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".ChangeCurrentEmailAddress"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".ChangeCurrentEmailAddress"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".ChangeCurrentUsernamePassword"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".ChangeCurrentUsernamePassword"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".ConfirmationActivity"/>
+        <activity android:name=".ConfirmationActivity" />
 
-        <activity android:name=".ApplyJob"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".ApplyJob"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".JobDetails"/>
+        <activity android:name=".JobDetails" />
 
-        <activity android:name=".LendComments"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".LendComments"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".LendNeedHelp"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".LendNeedHelp"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".LendRating"/>
+        <activity android:name=".LendRating" />
 
-        <activity android:name=".IntegrationPaypal"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity android:name=".LeaveComments" />
 
-        <activity android:name=".LoginActivity"
+        <activity android:name=".LeaveRating" />
+
+        <activity android:name=".EditComments" />
+
+        <activity
+            android:name=".IntegrationPaypal"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".SearchJob"
+        <activity
+            android:name=".SearchJob"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
-        <activity android:name=".MapActivity"
+        <activity
+            android:name=".MapActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
         <activity android:name=".SwitchingSide" />
 
-        <activity android:name=".PayEmployee"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".PayEmployee"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".PayEmployee1"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".PayEmployee1"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".ActiveJobs"/>
+        <activity android:name=".ActiveJobs" />
 
-        <activity android:name=".LendActiveJobs"/>
+        <activity android:name=".LendActiveJobs" />
 
-        <activity android:name=".LendJobHistory"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".LendJobHistory"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".JobHistory"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".JobHistory"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".PaymentDetails"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".PaymentDetails"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".PendingJobs"/>
+        <activity android:name=".PendingJobs" />
 
-        <activity android:name=".ViewApplicant"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".ViewApplicant"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".UpdateCard"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".UpdateCard"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".RegisterPage1"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".RegisterPage1"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".RegisterPage2"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".RegisterPage2"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".RegisterPage3"
+        <activity
+            android:name=".RegisterPage3"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter
+                android:label="@string/app_name"
+                android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
 
-        <activity android:name=".RegisterPage4"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-        <activity android:name=".MakePayment"/>
+                <data
+                    android:host="izaapinnovations.com"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".RegisterPage4" />
 
-        <activity android:name=".TermsAndConditions"/>
+        <activity android:name=".MakePayment" />
 
-        <activity android:name=".FindJobMap"/>
+        <activity android:name=".TermsAndConditions" />
 
-        <activity android:name=".EditCreateJob"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity android:name=".FindJobMap" />
 
-        <activity android:name=".EditCreateJob2"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".EditCreateJob"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".ProfilePage"/>
+        <activity
+            android:name=".EditCreateJob2"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".CreateJob"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity android:name=".ProfilePage" />
 
-        <activity android:name=".NeedHelp"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".CreateJob"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".PromoVideo"/>
+        <activity
+            android:name=".NeedHelp"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".ReviewRating"/>
+        <activity android:name=".PromoVideo" />
 
-        <activity android:name=".LendReviewRating"/>
+        <activity android:name=".ReviewRating" />
 
-        <activity android:name=".LendEditUserProfile"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity android:name=".LendReviewRating" />
 
-        <activity android:name=".CreateJob2"
+        <activity
+            android:name=".LendEditUserProfile"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".CreateJob2"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity android:name=".ManagePaymentOptions" />
 
-        <activity android:name=".NeedRating"/>
+        <activity android:name=".NeedRating" />
 
-        <activity android:name=".ChatNeed"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".ChatNeed"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".NeedComments"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".NeedComments"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".EditPostedJobs"/>
+        <activity android:name=".EditPostedJobs" />
 
-        <activity android:name=".PostedJobs"/>
+        <activity android:name=".PostedJobs" />
 
-        <activity android:name=".ForgotPassword"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name=".ForgotPassword"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".JobDescription"/>
+        <activity android:name=".JobDescription" />
 
-        <activity android:name=".PaymentMethod"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".PaymentMethod"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".LendLoginPage"
+        <activity
+            android:name=".LendLoginPage"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
 
-        <activity android:name=".LendProfilePage"/>
+        <activity android:name=".LendProfilePage" />
 
-        <activity android:name=".LendRegisterPage2"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".LendRegisterPage2"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".LendRegisterPage3"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".LendRegisterPage3"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".LendRegisterPage4"/>
+        <activity android:name=".LendRegisterPage4" />
 
-        <activity android:name=".ViewSearchJob"/>
+        <activity android:name=".ViewSearchJob" />
 
-        <activity android:name=".AddCheckingAccount"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".AddCheckingAccount"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".LendPaymentMethod"/>
+        <activity android:name=".LendPaymentMethod" />
 
-        <activity android:name=".UpdateAccount"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".UpdateAccount"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".LendPaypalAccount"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".LendPaypalAccount"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".LendCreditDebit"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".LendCreditDebit"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".LendCheckingAccount"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".LendCheckingAccount"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".PayPalAccount"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".PayPalAccount"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".CreditDebit"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".CreditDebit"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".EditRating"/>
+        <activity android:name=".EditRating" />
 
 
-        <activity android:name=".SummaryAdd"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".SummaryAdd"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".SummaryMultiply"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".SummaryMultiply"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".SummarySubtract"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".SummarySubtract"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".RehireJob"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".RehireJob"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".RehireAdd"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".RehireAdd"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".RehireSubtract"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".RehireSubtract"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
-        <activity android:name=".RehireMultiply"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".RehireMultiply"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <!--<activity android:name=".Progressbar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>-->

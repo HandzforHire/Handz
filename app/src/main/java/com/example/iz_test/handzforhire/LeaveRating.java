@@ -2,12 +2,6 @@ package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-
-import android.graphics.Canvas;
-
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
@@ -20,27 +14,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
-
-
-
-
-public class EditRating extends Activity implements SimpleGestureFilter.SimpleGestureListener{
+public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     Button nxt;
     private RatingBar rb1,rb2,rb3,rb4,rb5;
     TextView ra,pname;
-
+    float average;
     String job_id,employer_id,employee_id,user_id,image,profilename;
     String category1,category2,category3,category4,category5;
-    String cat1,cat2,cat3,cat4,cat5,rating_id;
-    ImageView profile_image;
+    ImageView profile;
     RelativeLayout rating_lay;
     private SimpleGestureFilter detector;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +41,7 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
         rb5 = (RatingBar) findViewById(R.id.ratingBar5);
         ra = (TextView) findViewById(R.id.text3);
         pname=(TextView)findViewById(R.id.text1);
-
-        profile_image = (ImageView) findViewById(R.id.profile_image);
+        profile = (ImageView) findViewById(R.id.profile_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
 
         Intent i = getIntent();
@@ -65,26 +51,13 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
         employee_id = i.getStringExtra("employee_id");
         image = i.getStringExtra("image");
         profilename = i.getStringExtra("profilename");
-        cat1 = i.getStringExtra("cat1");
-        cat2 = i.getStringExtra("cat2");
-        cat3 = i.getStringExtra("cat3");
-        cat4 = i.getStringExtra("cat4");
-        cat5 = i.getStringExtra("cat5");
-        rating_id = i.getStringExtra("ratingId");
         pname.setText(profilename);
 
         detector = new SimpleGestureFilter(this,this);
 
-        rb1.setNumStars(5);
-        rb1.setMax(5);
-        rb1.setStepSize(0.1f);
-        rb1.setRating(Float.parseFloat(cat1));
-        rb2.setRating(Float.parseFloat(cat2));
-        rb3.setRating(Float.parseFloat(cat3));
-        rb4.setRating(Float.parseFloat(cat4));
-        rb5.setRating(Float.parseFloat(cat5));
+        System.out.println("rrrrrrrrrrrr:rating::"+"..."+image);
 
-        Glide.with(this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile_image);
+        Glide.with(this).load(image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 
         nxt.setOnClickListener(new View.OnClickListener()
         {
@@ -101,7 +74,6 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
                 System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
                 System.out.println("rrrrrrrrrrrr:category5::" + category5);
-                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -115,7 +87,7 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
                 TextView ra = (TextView) findViewById(R.id.text3);
                 String rating = ra.getText().toString();
 
-                Intent i = new Intent(EditRating.this, EditComments.class);
+                Intent i = new Intent(LeaveRating.this, LeaveComments.class);
                 i.putExtra("rating", rating);
                 i.putExtra("userId", user_id);
                 i.putExtra("jobId", job_id);
@@ -128,7 +100,6 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
                 i.putExtra("category5",category5);
                 i.putExtra("employeeId", employee_id);
                 i.putExtra("name", profilename);
-                i.putExtra("ratingId", rating_id);
                 startActivity(i);
 
             }
@@ -137,7 +108,7 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
         rating_lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(EditRating.this,ReviewRating.class);
+                Intent i = new Intent(LeaveRating.this,ReviewRating.class);
                 i.putExtra("userId", user_id);
                 i.putExtra("image",image);
                 i.putExtra("name", profilename);
@@ -182,10 +153,7 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
 
             }
         });
-
     }
-
-
 
     @Override
     public void onSwipe(int direction) {
@@ -235,4 +203,5 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
         this.detector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
+
 }

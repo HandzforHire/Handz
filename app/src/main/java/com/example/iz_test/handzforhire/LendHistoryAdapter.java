@@ -143,7 +143,7 @@ public class LendHistoryAdapter extends BaseAdapter{
 
                 HashMap<String, String> items = new HashMap<String, String>();
                 items = data.get((Integer) v.getTag());
-                Intent intent = new Intent(activity, LendRating.class);
+                Intent intent = new Intent(activity, LeaveRating.class);
                 intent.putExtra("jobId",items.get("jobId"));
                 intent.putExtra("employer_id", items.get("employer"));
                 intent.putExtra("employee_id",items.get("employee"));

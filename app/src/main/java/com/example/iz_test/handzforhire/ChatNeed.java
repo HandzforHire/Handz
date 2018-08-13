@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
 /*Hi for testing*/
 public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
@@ -69,7 +68,11 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
     //To upload images
     FirebaseStorage storage;
     public static StorageReference storageReference;
-    public static String storepath="gs://handz-8ac86.appspot.com";
+    //Live
+   // public static String storepath="gs://handz-8ac86.appspot.com";
+    //dev
+    public static String storepath="gs://handzdev-9e758.appspot.com";
+
     ListView messagesContainer;
     ArrayList<ChatItems> messagelist;
 
@@ -118,7 +121,8 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
 
 
         Firebase.setAndroidContext(this);
-        reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
+       // reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
+       reference1 = new Firebase("https://handzdev-9e758.firebaseio.com/channels");
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReferenceFromUrl(storepath);

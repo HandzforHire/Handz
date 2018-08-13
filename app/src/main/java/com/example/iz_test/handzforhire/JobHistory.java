@@ -111,6 +111,15 @@ public class JobHistory extends Activity implements SimpleGestureFilter.SimpleGe
             activeJobs();
             adapter = new Adapter(this, arraylist);
 
+
+
+            editsearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editsearch.setHint("");
+                }
+            });
+
             editsearch.addTextChangedListener(new TextWatcher() {
                 private List<WorldPopulation> worldpopulationlist =  new ArrayList<WorldPopulation>();
                 @Override
