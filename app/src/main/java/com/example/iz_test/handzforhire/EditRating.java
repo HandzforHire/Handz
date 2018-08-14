@@ -92,16 +92,11 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
             public void onClick(View view)
             {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
-                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
+
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -149,16 +144,10 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
             public void onRatingChanged(RatingBar ratingBar, float rating1,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
-                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -175,16 +164,10 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
             public void onRatingChanged(RatingBar ratingBar, float rating2,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
-                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -201,16 +184,10 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
             public void onRatingChanged(RatingBar ratingBar, float rating3,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
-                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -227,16 +204,10 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
             public void onRatingChanged(RatingBar ratingBar, float rating4,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
-                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -255,16 +226,10 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
             public void onRatingChanged(RatingBar ratingBar, float rating5,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
-                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();

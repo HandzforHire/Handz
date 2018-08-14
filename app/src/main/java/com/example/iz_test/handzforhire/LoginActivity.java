@@ -416,6 +416,14 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
                     user_city = object.getString("city");
                     user_state = object.getString("state");
                     user_zipcode = object.getString("zipcode");
+
+                    Profilevalues.user_id=user_id;
+                    Profilevalues.email=user_email;
+                    Profilevalues.address=user_address;
+                    Profilevalues.city=user_city;
+                    Profilevalues.state=user_state;
+                    Profilevalues.zipcode=user_zipcode;
+                    Profilevalues.username=user_name;
                 }
                 if(user_type.equals("employee"))
                 {

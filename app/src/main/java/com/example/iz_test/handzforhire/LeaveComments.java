@@ -197,14 +197,11 @@ public class LeaveComments extends Activity implements SimpleGestureFilter.Simpl
                 map.put(EMPLOYEEID,employee_id);
                 map.put(RATING_ID,rating_id);
                 map.put(USER_TYPE,type);
+                System.out.println("URL  "+URL);
+                System.out.println("parameter "+map);
                 return map;
             }
         };
-
-        System.out.println("vvvvvvv1:"+"X_APP_KEY--"+value+"JOB_ID--"+job_id+"USER_ID--"+employer_id+"RATING--"+rating+"COMMENTS--"+comments);
-        System.out.println("vvvvvvv2:"+"TYPE--"+type+"LOGIN_USER_ID--"+employee_id+"CATEGORY_1--"+category1+"CATEGORY_2--"+category2+"CATEGORY_1--"+category3);
-        System.out.println("vvvvvvv3:"+"CATEGORY_4--"+category4+"CATEGORY_5--"+category5+"EMPLOYER_ID--"+employer_id+"EMPLOYEE_ID--"+employee_id+"RATING_ID--"+rating_id);
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
 
@@ -230,34 +227,6 @@ public class LeaveComments extends Activity implements SimpleGestureFilter.Simpl
 
         } catch (Exception e) {
         }
-    }
-
-    protected Bitmap addBorderToBitmap(Bitmap srcBitmap, int borderWidth, int borderColor){
-        // Initialize a new Bitmap to make it bordered bitmap
-        Bitmap dstBitmap = Bitmap.createBitmap(
-                srcBitmap.getWidth() + borderWidth*2, // Width
-                srcBitmap.getHeight() + borderWidth*2, // Height
-                Bitmap.Config.ARGB_8888 // Config
-        );
-        Canvas canvas = new Canvas(dstBitmap);
-
-        Paint paint = new Paint();
-        paint.setColor(borderColor);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(borderWidth);
-        paint.setAntiAlias(true);
-        Rect rect = new Rect(
-                borderWidth / 2,
-                borderWidth / 2,
-                canvas.getWidth() - borderWidth / 2,
-                canvas.getHeight() - borderWidth / 2
-        );
-        canvas.drawRect(rect,paint);
-        canvas.drawBitmap(srcBitmap, borderWidth, borderWidth, null);
-        srcBitmap.recycle();
-
-        // Return the bordered circular bitmap
-        return dstBitmap;
     }
 
     @Override

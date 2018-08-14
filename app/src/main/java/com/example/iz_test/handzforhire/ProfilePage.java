@@ -137,13 +137,6 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         zipcode = user.get(SessionManager.KEY_ZIPCODE);
         type = user.get(SessionManager.TYPE);
 
-        Profilevalues.user_id=id;
-        Profilevalues.email=email;
-        Profilevalues.address=address;
-        Profilevalues.city=city;
-        Profilevalues.state=state;
-        Profilevalues.zipcode=zipcode;
-
 
         share_need=(ImageView)findViewById(R.id.sha_need);
         share_need.setOnClickListener(new View.OnClickListener() {

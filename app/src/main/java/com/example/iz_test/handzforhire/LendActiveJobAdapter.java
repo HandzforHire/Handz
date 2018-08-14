@@ -1,6 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,35 +11,75 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.firebase.client.Firebase;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class LendActiveJobAdapter extends BaseAdapter{
 
     private Activity activity;
     private ArrayList<HashMap<String, String>> data;
     private static LayoutInflater inflater = null;
+    private static final String GET_REQUESTPAYMENT = Constant.SERVER_URL+"request_payment_notification";
+    public static String APP_KEY = "X-APP-KEY";
+    public static String JOB_ID = "job_id";
+    public static String EMPLOYER_ID = "employer_id";
+    public static String EMPLOYEE_ID = "employee_id";
+    public static String USER_TYPE = "user_type";
+    String value = "HandzForHire@~";
+    Dialog dialog;
+    //Frebase details
+    public static String storepath="gs://handzdev-9e758.appspot.com";
+    String current_user_id = "OGO6K8nyqKVJ8WQoE02WT5qFc1S2";
+    Firebase reference1;
+    String child_id,jobid,sender_id,get_user;
+
     public LendActiveJobAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
         data = d;
+        dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
+        Firebase.setAndroidContext(activity);
+        // reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
+        reference1 = new Firebase("https://handzdev-9e758.firebaseio.com/channels");
+
+        sender_id = current_user_id + Profilevalues.user_id;
+        get_user=Profilevalues.username;
+
     }
 
     public int getCount() {
@@ -125,11 +166,8 @@ public class LendActiveJobAdapter extends BaseAdapter{
                 HashMap<String, String> items =data.get(pos);
                 String username="";
 
-                Intent i = new Intent(activity,MakePayment.class);
-                i.putExtra("job_id", items.get("jobId"));
-                i.putExtra("userId",items.get("userId"));
-                i.putExtra("job_name",items.get("name"));
-                v.getContext().startActivity(i);
+                System.out.println("clicked item "+items);
+                requestpayment(items.get("jobId"),items.get("employee"),items.get("employer"));
             }
         });
 
@@ -182,6 +220,77 @@ public class LendActiveJobAdapter extends BaseAdapter{
         }
 
         return vi;
+    }
+
+
+    public void requestpayment(final String jobid,final String employee_id,final String employer_id) {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_REQUESTPAYMENT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            String status=object.getString("status");
+                            String channel=object.getString("channel_id");
+                            String job_id=object.getString("job_id");
+                            child_id = channel + job_id;
+                            if(status.equals("success")){
+                                final Dialog dialog = new Dialog(activity);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText("Request Payment Sent Successfully");
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+
+                                        Map<String, String> map = new HashMap<String, String>();
+                                        map.put("senderId", sender_id);
+                                        map.put("senderName", get_user);
+                                        map.put("text", "FROM HANDZ: Just a reminder that payment has not been completed on this job! Have a great day!");
+                                        reference1.child(child_id).child("messages").push().setValue(map);
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            }
+                        }catch (Exception e){
+                            System.out.println("exception "+e.getMessage());
+                        }
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        dialog.dismiss();
+                        //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put(APP_KEY, value);
+                map.put(JOB_ID, jobid);
+                map.put(EMPLOYER_ID, employer_id);
+                map.put(EMPLOYEE_ID, employee_id);
+                map.put(USER_TYPE, "employee");
+                System.out.println(" Map "+map);
+                return map;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
     }
 
 }

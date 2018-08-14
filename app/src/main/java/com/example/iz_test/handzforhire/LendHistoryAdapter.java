@@ -149,6 +149,8 @@ public class LendHistoryAdapter extends BaseAdapter{
                 intent.putExtra("employee_id",items.get("employee"));
                 intent.putExtra("user_id",items.get("user_id"));
                 intent.putExtra("profilename",items.get("profile"));
+                intent.putExtra("ratingId",items.get("ratingId"));
+                System.out.println("ITem "+items);
                 v.getContext().startActivity(intent);
             }
         });

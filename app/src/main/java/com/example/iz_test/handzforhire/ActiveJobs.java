@@ -156,9 +156,9 @@ public class ActiveJobs extends Activity implements SimpleGestureFilter.SimpleGe
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
                         }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response "+error.getMessage(),Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
-                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request "+error.getMessage(),Toast.LENGTH_LONG).show();
                         }else {
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");

@@ -116,7 +116,7 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
         get_user = i.getStringExtra("username");
         user_id = i.getStringExtra("userId");
         Tv.setText(get_user);
-        sender_id = current_user_id + user_id;
+        sender_id = current_user_id + user_id;  sender_id = current_user_id + user_id;
         child_id = channel_id + job_id;
 
 

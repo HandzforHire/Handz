@@ -24,7 +24,7 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
     TextView ra,pname;
     float average;
     String job_id,employer_id,employee_id,user_id,image,profilename;
-    String category1,category2,category3,category4,category5;
+    String category1,category2,category3,category4,category5,rating_id;
     ImageView profile;
     RelativeLayout rating_lay;
     private SimpleGestureFilter detector;
@@ -51,6 +51,7 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
         employee_id = i.getStringExtra("employee_id");
         image = i.getStringExtra("image");
         profilename = i.getStringExtra("profilename");
+
         pname.setText(profilename);
 
         detector = new SimpleGestureFilter(this,this);
@@ -65,15 +66,10 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
             public void onClick(View view)
             {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -83,7 +79,7 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
                 float average = total / 5;
                 average = Math.round(average);
                 ra.setText(String.valueOf(average));
-                System.out.println("rrrrrrrrrrrr" + average);
+
 
                 String rating = ra.getText().toString();
 
@@ -139,7 +135,6 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
                 float average = total / 5;
                 average = Math.round(average);
                 ra.setText(String.valueOf(average));
-                System.out.println("rrrrrrrrrrrr" + average);
 
             }
         });
@@ -147,15 +142,10 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
             public void onRatingChanged(RatingBar ratingBar, float rating2,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -165,7 +155,6 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
                 float average = total / 5;
                 average = Math.round(average);
                 ra.setText(String.valueOf(average));
-                System.out.println("rrrrrrrrrrrr" + average);
 
             }
         });
@@ -174,15 +163,10 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
                                         boolean fromUser) {
 
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -192,22 +176,17 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
                 float average = total / 5;
                 average = Math.round(average);
                 ra.setText(String.valueOf(average));
-                System.out.println("rrrrrrrrrrrr" + average);
             }
         });
         rb4.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating4,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
+
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -217,7 +196,6 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
                 float average = total / 5;
                 average = Math.round(average);
                 ra.setText(String.valueOf(average));
-                System.out.println("rrrrrrrrrrrr" + average);
 
             }
         });
@@ -227,15 +205,10 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
             public void onRatingChanged(RatingBar ratingBar, float rating5,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();
@@ -245,7 +218,6 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
                 float average = total / 5;
                 average = Math.round(average);
                 ra.setText(String.valueOf(average));
-                System.out.println("rrrrrrrrrrrr" + average);
 
             }
         });

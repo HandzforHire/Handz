@@ -199,6 +199,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                 intent.putExtra("user_id",item.getUserid());
                 intent.putExtra("image",item.getImage());
                 intent.putExtra("profilename",username);
+                intent.putExtra("ratingId",item.getRatingId());
                 v.getContext().startActivity(intent);
             }
         });

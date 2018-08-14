@@ -297,6 +297,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                     Profilevalues.city=user_city;
                     Profilevalues.state=user_state;
                     Profilevalues.zipcode=user_zipcode;
+                    Profilevalues.username=user_name;
                 }
                 if (user_type.equals("employer")) {
 

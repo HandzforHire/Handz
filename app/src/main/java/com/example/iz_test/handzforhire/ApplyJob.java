@@ -265,12 +265,6 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
                 params.put(EMPLOYEE_ID, user_id);
                 params.put(EMPLOYER_ID, employer_id);
                 params.put(COMMENTS, comments);
-
-                System.out.println("jobiEMPLOYEE_IDd "+job_id);
-                System.out.println("USER_TYPE "+usertype);
-                System.out.println("EMPLOYEE_ID "+user_id);
-                System.out.println("EMPLOYER_ID "+employer_id);
-                System.out.println("COMMENTS "+comments);
                 return params;
             }
         };

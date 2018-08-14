@@ -12,4 +12,5 @@ public class Profilevalues {
     public static String zipcode;
     public static String email;
     public static String usertype="1";
+    public static String username="";
 }
