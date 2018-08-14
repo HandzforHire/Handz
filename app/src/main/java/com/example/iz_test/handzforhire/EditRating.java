@@ -2,12 +2,12 @@ package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 
-import android.graphics.Canvas;
 
-import android.graphics.Paint;
-import android.graphics.Rect;
+
+
+
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
@@ -112,7 +112,7 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
                 average = Math.round(average);
                 ra.setText(String.valueOf(average));
                 System.out.println("rrrrrrrrrrrr" + average);
-                TextView ra = (TextView) findViewById(R.id.text3);
+
                 String rating = ra.getText().toString();
 
                 Intent i = new Intent(EditRating.this, EditComments.class);
@@ -148,29 +148,105 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
         rb1.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating1,
                                         boolean fromUser) {
-
-
+                category1 = String.valueOf(rb1.getRating());
+                System.out.println("rrrrrrrrrrrr:category1::" + category1);
+                category2 = String.valueOf(rb2.getRating());
+                System.out.println("rrrrrrrrrrrr::category2::" + category2);
+                category3 = String.valueOf(rb3.getRating());
+                System.out.println("rrrrrrrrrrrr:category3::" + category3);
+                category4 = String.valueOf(rb4.getRating());
+                System.out.println("rrrrrrrrrrrr::category4::" + category4);
+                category5 = String.valueOf(rb5.getRating());
+                System.out.println("rrrrrrrrrrrr:category5::" + category5);
+                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
+                float total = 0;
+                total += rb1.getRating();
+                total += rb2.getRating();
+                total += rb3.getRating();
+                total += rb4.getRating();
+                total += rb5.getRating();
+                float average = total / 5;
+                average = Math.round(average);
+                ra.setText(String.valueOf(average));
+                System.out.println("rrrrrrrrrrrr" + average);
             }
         });
         rb2.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating2,
                                         boolean fromUser) {
-
-
+                category1 = String.valueOf(rb1.getRating());
+                System.out.println("rrrrrrrrrrrr:category1::" + category1);
+                category2 = String.valueOf(rb2.getRating());
+                System.out.println("rrrrrrrrrrrr::category2::" + category2);
+                category3 = String.valueOf(rb3.getRating());
+                System.out.println("rrrrrrrrrrrr:category3::" + category3);
+                category4 = String.valueOf(rb4.getRating());
+                System.out.println("rrrrrrrrrrrr::category4::" + category4);
+                category5 = String.valueOf(rb5.getRating());
+                System.out.println("rrrrrrrrrrrr:category5::" + category5);
+                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
+                float total = 0;
+                total += rb1.getRating();
+                total += rb2.getRating();
+                total += rb3.getRating();
+                total += rb4.getRating();
+                total += rb5.getRating();
+                float average = total / 5;
+                average = Math.round(average);
+                ra.setText(String.valueOf(average));
+                System.out.println("rrrrrrrrrrrr" + average);
             }
         });
         rb3.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating3,
                                         boolean fromUser) {
-
-
+                category1 = String.valueOf(rb1.getRating());
+                System.out.println("rrrrrrrrrrrr:category1::" + category1);
+                category2 = String.valueOf(rb2.getRating());
+                System.out.println("rrrrrrrrrrrr::category2::" + category2);
+                category3 = String.valueOf(rb3.getRating());
+                System.out.println("rrrrrrrrrrrr:category3::" + category3);
+                category4 = String.valueOf(rb4.getRating());
+                System.out.println("rrrrrrrrrrrr::category4::" + category4);
+                category5 = String.valueOf(rb5.getRating());
+                System.out.println("rrrrrrrrrrrr:category5::" + category5);
+                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
+                float total = 0;
+                total += rb1.getRating();
+                total += rb2.getRating();
+                total += rb3.getRating();
+                total += rb4.getRating();
+                total += rb5.getRating();
+                float average = total / 5;
+                average = Math.round(average);
+                ra.setText(String.valueOf(average));
+                System.out.println("rrrrrrrrrrrr" + average);
             }
         });
         rb4.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating4,
                                         boolean fromUser) {
-
-
+                category1 = String.valueOf(rb1.getRating());
+                System.out.println("rrrrrrrrrrrr:category1::" + category1);
+                category2 = String.valueOf(rb2.getRating());
+                System.out.println("rrrrrrrrrrrr::category2::" + category2);
+                category3 = String.valueOf(rb3.getRating());
+                System.out.println("rrrrrrrrrrrr:category3::" + category3);
+                category4 = String.valueOf(rb4.getRating());
+                System.out.println("rrrrrrrrrrrr::category4::" + category4);
+                category5 = String.valueOf(rb5.getRating());
+                System.out.println("rrrrrrrrrrrr:category5::" + category5);
+                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
+                float total = 0;
+                total += rb1.getRating();
+                total += rb2.getRating();
+                total += rb3.getRating();
+                total += rb4.getRating();
+                total += rb5.getRating();
+                float average = total / 5;
+                average = Math.round(average);
+                ra.setText(String.valueOf(average));
+                System.out.println("rrrrrrrrrrrr" + average);
             }
         });
         rb5.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener()
@@ -178,8 +254,27 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
         {
             public void onRatingChanged(RatingBar ratingBar, float rating5,
                                         boolean fromUser) {
-
-
+                category1 = String.valueOf(rb1.getRating());
+                System.out.println("rrrrrrrrrrrr:category1::" + category1);
+                category2 = String.valueOf(rb2.getRating());
+                System.out.println("rrrrrrrrrrrr::category2::" + category2);
+                category3 = String.valueOf(rb3.getRating());
+                System.out.println("rrrrrrrrrrrr:category3::" + category3);
+                category4 = String.valueOf(rb4.getRating());
+                System.out.println("rrrrrrrrrrrr::category4::" + category4);
+                category5 = String.valueOf(rb5.getRating());
+                System.out.println("rrrrrrrrrrrr:category5::" + category5);
+                System.out.println("rrrrrrrrrrrr:rating_id::" + rating_id);
+                float total = 0;
+                total += rb1.getRating();
+                total += rb2.getRating();
+                total += rb3.getRating();
+                total += rb4.getRating();
+                total += rb5.getRating();
+                float average = total / 5;
+                average = Math.round(average);
+                ra.setText(String.valueOf(average));
+                System.out.println("rrrrrrrrrrrr" + average);
             }
         });
 
