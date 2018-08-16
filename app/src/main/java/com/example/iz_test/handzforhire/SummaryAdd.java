@@ -20,12 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+
+
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
@@ -161,23 +164,25 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
         String expected = expected_value.getText().toString();
         hour_expected = String.valueOf(Float.valueOf(hour)*Float.valueOf(expected));
         job_payout.setText(hour_expected);
+
+        String s1 = "100";
+        String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(hour_expected));
+        System.out.println("sssssssssssss:summary:multi:"+multi);
+        String s2 = "130";
+        String add1 = String.valueOf(Float.valueOf(multi)+Float.valueOf(s2));
+        System.out.println("sssssssssssss:summary:add1:"+add1);
+        String s3 = "97.1";
+        String div = String.valueOf(Float.valueOf(add1)/Float.valueOf(s3));
+        System.out.println("sssssssssssss:summary:div:"+div);
+        String pocket_value = String.format("%.2f", Float.valueOf(div));
+        System.out.println("sssssssssssss:summary:total1:"+pocket_value);
         String handz_fee = "1.00";
-        String add = String.valueOf(Float.valueOf(estimated_amount)+Float.valueOf(handz_fee));
-        //String add = estimated_amount + handz_fee;
-        System.out.println("sssssssssssss:add:add:"+add+"..."+hour_expected);
-        String mul = "0.029";
-        String multiply = String.valueOf(Float.valueOf(add)*Float.valueOf(mul));
-        System.out.println("sssssssssssss:add:multiply:"+multiply);
-        String value = "0.30";
-        String total = String.valueOf(Float.valueOf(multiply)+Float.valueOf(value));
-        System.out.println("sssssssssssss:add:total:"+total);
-        String total_value = String.format("%.2f", Float.valueOf(total));
-        //double newKB = Math.round(Double.valueOf(total)*100.0)/100.0;
-        System.out.println("sssssssssssss:add:total_value:"+total_value);
+        String pay_fee = String.valueOf(Float.valueOf(pocket_value)-Float.valueOf(hour_expected)-Float.valueOf(handz_fee));
+        String total_value = String.format("%.2f", Float.valueOf(pay_fee));
+        System.out.println("sssssssssssss:summary:pay_fee:"+pay_fee+"total2:::"+total_value);
         paypal_merchant.setText(total_value);
-        String pocket_value = String.valueOf(Float.valueOf(hour_expected)+Float.valueOf(handz_fee)+Float.valueOf(total_value));
-        System.out.println("sssssssssssss:add:pocket_value:"+pocket_value);
         pocket_expense.setText(pocket_value);
+
 
         hourly_value.addTextChangedListener(tw);
         expected_value.addTextChangedListener(tw1);
@@ -224,7 +229,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
 
     private void registerUser()
     {
-      dialog.show();
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
                 new Response.Listener<String>() {
                     @Override
@@ -303,46 +308,6 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
 
         };
 
-      /*  System.out.println("vvvvvvv1:"+".."+value+".."+id+".."+name+".."+usertype+".."+job_expire);
-        System.out.println("vvvvvvv2:"+".."+category+".."+description+".."+date+".."+start_time+"..");
-        System.out.println("vvvvvvv3:"+".."+end_time+".."+amount+".."+type+".."+job_address+"..");
-        System.out.println("vvvvvvv4:"+".."+job_city+".."+job_state+".."+job_zipcode+".."+post_address+"..");
-        System.out.println("vvvvvvv5:"+".."+latitude+".."+longitude+".."+estimated_amount+".."+flexible_status+"..");*/
-        System.out.println("66666666-APP_KEY- "+key);
-        System.out.println("66666666-USER_ID- "+id);
-        System.out.println("66666666-JOB_NAME- "+name);
-        System.out.println("66666666-USER_TYPE- "+usertype);
-        System.out.println("66666666-JOB_CATEGORY- "+category);
-        System.out.println("66666666-JOB_DESCRIPTION- "+description);
-        System.out.println("66666666-JOB_DATE- "+date);
-        System.out.println("66666666-JOB_START_DATE- "+start_time);
-        System.out.println("66666666-JOB_END_DATE- "+start_time);
-        System.out.println("66666666-START_TIME- "+start_time);
-        System.out.println("66666666-END_TIME- "+start_time);
-        System.out.println("66666666-JOB_PAYMENT_AMOUNT- "+amount);
-        System.out.println("66666666-POCKET_EXPENSE- "+expense);
-        System.out.println("66666666-JOB_PAYMENT_TYPE- "+duration);
-        System.out.println("66666666-ADDRESS- "+address);
-        System.out.println("66666666-CITY- "+city);
-        System.out.println("66666666-CURRENT_LOCATION- "+current_location);
-        System.out.println("66666666-STATE- "+state);
-        System.out.println("66666666-ZIPCODE- "+zipcode);
-        System.out.println("66666666-POST_ADDRESS- "+post_address);
-        System.out.println("66666666-LATITUDE- "+latitude);
-        System.out.println("66666666-LONGITUDE- "+longitude);
-        System.out.println("66666666-JOB_ADDRESS- "+address);
-        System.out.println("66666666-JOB_CITY- "+city);
-        System.out.println("66666666-JOB_STATE- "+state);
-        System.out.println("66666666-JOB_ZIPCODE- "+zipcode);
-        System.out.println("66666666-ESTIMATED_PAYMENT- "+estimated_amount);
-        System.out.println("66666666-FLEXIBLE- "+flexible_status);
-        System.out.println("66666666-PAYPAL_FEE- "+fee);
-        System.out.println("66666666-JOB_PAYOUT- "+payout);
-        System.out.println("66666666-FEE_DETAILS- "+fee_details);
-        System.out.println("66666666-JOB_EXPIRE- "+job_expire);
-        System.out.println("66666666-SUB_CATEGORY- "+sub_category);
-        System.out.println("66666666-CATEGORY_COLOR- "+job_category_color);
-        System.out.println("66666666-DELIST- "+delist);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
@@ -445,27 +410,25 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
             System.out.println("sssssssssssss:job_estimated:multiply:"+job_estimated);
             job_payout.setText(job_estimated);
 
-           /* String hour = hourly_value.getText().toString();
-            String expected = expected_value.getText().toString();
-            String hour_expected = String.valueOf(Float.valueOf(hour)*Float.valueOf(expected));
-            job_payout.setText(hour_expected);*/
+            String s1 = "100";
+            String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(job_estimated));
+            System.out.println("sssssssssssss:summary:multi:"+multi);
+            String s2 = "130";
+            String add1 = String.valueOf(Float.valueOf(multi)+Float.valueOf(s2));
+            System.out.println("sssssssssssss:summary:add1:"+add1);
+            String s3 = "97.1";
+            String div = String.valueOf(Float.valueOf(add1)/Float.valueOf(s3));
+            System.out.println("sssssssssssss:summary:div:"+div);
+            String pocket_value = String.format("%.2f", Float.valueOf(div));
+            System.out.println("sssssssssssss:summary:total1:"+pocket_value);
             String handz_fee = "1.00";
-            String add = String.valueOf(Float.valueOf(job_estimated)+Float.valueOf(handz_fee));
-            //String add = estimated_amount + handz_fee;
-            System.out.println("sssssssssssss:add:add:"+add+"..."+hour_expected);
-            String mul = "0.029";
-            String multiply = String.valueOf(Float.valueOf(add)*Float.valueOf(mul));
-            System.out.println("sssssssssssss:add:multiply:"+multiply);
-            String value = "0.30";
-            String total = String.valueOf(Float.valueOf(multiply)+Float.valueOf(value));
-            System.out.println("sssssssssssss:add:total:"+total);
-            String total_value = String.format("%.2f", Float.valueOf(total));
-            //double newKB = Math.round(Double.valueOf(total)*100.0)/100.0;
-            System.out.println("sssssssssssss:add:total_value:"+total_value);
+            String pay_fee = String.valueOf(Float.valueOf(pocket_value)-Float.valueOf(job_estimated)-Float.valueOf(handz_fee));
+            String total_value = String.format("%.2f", Float.valueOf(pay_fee));
+            System.out.println("sssssssssssss:summary:pay_fee:"+pay_fee+"total2:::"+total_value);
             paypal_merchant.setText(total_value);
-            String pocket_value = String.valueOf(Float.valueOf(job_estimated)+Float.valueOf(handz_fee)+Float.valueOf(total_value));
-            System.out.println("sssssssssssss:add:pocket_value:"+pocket_value);
             pocket_expense.setText(pocket_value);
+
+
         }
     };
 
@@ -509,27 +472,24 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
             System.out.println("sssssssssssss:estimated:multiply:"+estimated);
             job_payout.setText(estimated);
 
-            /*String hour = hourly_value.getText().toString();
-            String expected = expected_value.getText().toString();
-            String hour_expected = String.valueOf(Float.valueOf(hour)*Float.valueOf(expected));
-            job_payout.setText(hour_expected);*/
+            String s1 = "100";
+            String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(estimated));
+            System.out.println("sssssssssssss:summary:multi:"+multi);
+            String s2 = "130";
+            String add1 = String.valueOf(Float.valueOf(multi)+Float.valueOf(s2));
+            System.out.println("sssssssssssss:summary:add1:"+add1);
+            String s3 = "97.1";
+            String div = String.valueOf(Float.valueOf(add1)/Float.valueOf(s3));
+            System.out.println("sssssssssssss:summary:div:"+div);
+            String pocket_value = String.format("%.2f", Float.valueOf(div));
+            System.out.println("sssssssssssss:summary:total1:"+pocket_value);
             String handz_fee = "1.00";
-            String add = String.valueOf(Float.valueOf(estimated)+Float.valueOf(handz_fee));
-            //String add = estimated_amount + handz_fee;
-            System.out.println("sssssssssssss:add:add:"+add+"..."+hour_expected);
-            String mul = "0.029";
-            String multiply = String.valueOf(Float.valueOf(add)*Float.valueOf(mul));
-            System.out.println("sssssssssssss:add:multiply:"+multiply);
-            String value = "0.30";
-            String total = String.valueOf(Float.valueOf(multiply)+Float.valueOf(value));
-            System.out.println("sssssssssssss:add:total:"+total);
-            String total_value = String.format("%.2f", Float.valueOf(total));
-            //double newKB = Math.round(Double.valueOf(total)*100.0)/100.0;
-            System.out.println("sssssssssssss:add:total_value:"+total_value);
+            String pay_fee = String.valueOf(Float.valueOf(pocket_value)-Float.valueOf(estimated)-Float.valueOf(handz_fee));
+            String total_value = String.format("%.2f", Float.valueOf(pay_fee));
+            System.out.println("sssssssssssss:summary:pay_fee:"+pay_fee+"total2:::"+total_value);
             paypal_merchant.setText(total_value);
-            String pocket_value = String.valueOf(Float.valueOf(estimated)+Float.valueOf(handz_fee)+Float.valueOf(total_value));
-            System.out.println("sssssssssssss:add:pocket_value:"+pocket_value);
             pocket_expense.setText(pocket_value);
+
         }
     };
 
@@ -561,12 +521,11 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
-                                System.out.println("eeeeeeeeeeeeror:" + jsonObject);
-
+                                System.out.println("error" + jsonObject);
                             } catch (JSONException e) {
-                                //Handle a malformed json response
-                            } catch (
-                                    UnsupportedEncodingException error1) {
+
+                            } catch (UnsupportedEncodingException error1) {
+
                             }
                         }
                     }
