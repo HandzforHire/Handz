@@ -127,6 +127,38 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/add_link"
+                android:text="ADD YOUR Linkedln PROFILE"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:background="@null"
+                android:layout_marginTop="10sp"
+                android:textColor="#9A9999"
+                android:textAllCaps="false"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Coming Soon"
+                android:gravity="right"
+                android:layout_marginRight="50sp"
+                android:textStyle="bold"
+                android:background="@null"
+                android:layout_marginTop="5sp"
+                android:textColor="#9A9999"
+                android:textAllCaps="false"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5sp"
+                android:background="#9A9999"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/change_home_address"
                 android:text="CHANGE HOME ADDRESS"
                 android:gravity="center"
@@ -255,7 +287,6 @@
             <TextView
                 android:layout_width="100sp"
                 android:layout_height="30sp"
-                android:layout_marginTop="30sp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/handz"/>
 

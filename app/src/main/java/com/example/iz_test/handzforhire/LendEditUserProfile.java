@@ -10,7 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -50,11 +50,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import com.theartofdev.edmodo.cropper.CropImage;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 
 import org.json.JSONException;
@@ -64,8 +65,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
+
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,7 +119,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_user_profile);
+        setContentView(R.layout.lend_edit_user_profile);
 
         marshMallowPermission = new MarshMallowPermission(this);
 
@@ -280,9 +281,9 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
     public void onResponserecieved2(String jsonobject, int requesttype) {
         String status = null;
 
-         profile_image = null;
+        profile_image = null;
 
-         profilename = null;
+        profilename = null;
 
         try {
 

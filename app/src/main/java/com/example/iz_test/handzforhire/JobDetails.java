@@ -4,12 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
@@ -32,17 +26,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -51,12 +41,15 @@ import java.util.Map;
 public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
     ImageView profile_image,close;
-    TextView profile_name, description, date, time, amount, type,name,text3;
+    TextView profile_name, description, date, time, amount, type,name,rating_value;
     private static final String URL = Constant.SERVER_URL+"job_detail_view";
+    private static final String GET_AVERAGE_RATING = Constant.SERVER_URL+"get_average_rating";
     public static String APP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
     public static String EMPLOYER_ID = "employer_id";
     public static String EMPLOYEE_ID = "employee_id";
+    public static String KEY_USERID = "user_id";
+    public static String TYPE = "type";
     String value = "HandzForHire@~";
     String job_id,user_id,employerId;
     ProgressDialog progress_dialog;
@@ -79,7 +72,7 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
         name = (TextView) findViewById(R.id.job_name_text);
         date = (TextView) findViewById(R.id.date);
         time = (TextView) findViewById(R.id.time);
-        text3=(TextView)findViewById(R.id.text3);
+        rating_value=(TextView)findViewById(R.id.text3);
         amount = (TextView) findViewById(R.id.amount);
         type = (TextView) findViewById(R.id.type);
         close = (ImageView) findViewById(R.id.close_btn);
@@ -97,7 +90,45 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
             }
         });
         getJobDetails();
+        getAverageRating();
+    }
 
+    public void getAverageRating() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_AVERAGE_RATING,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("average rat:" + response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            rating_value.setText(object.getString("average_rating"));
+                        }catch (Exception e){
+                            System.out.println("exception "+e.getMessage());
+                        }
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        dialog.dismiss();
+                        //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put(APP_KEY, value);
+                map.put(KEY_USERID, user_id);
+                map.put(TYPE, "employer");
+                return map;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
     public void getJobDetails() {
@@ -107,6 +138,7 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
                     @Override
                     public void onResponse(String response) {
                         onResponserecieved(response, 2);
+                        System.out.println("ssssssss:jobdetails::"+response);
                         dialog.dismiss();
                     }
                 },
@@ -183,7 +215,7 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
 
                 }
 
-                time.setText(get_start_time);
+                //time.setText(get_start_time);
                 type.setText(get_type);
                 amount.setText(get_amount);
                 name.setText(get_name);

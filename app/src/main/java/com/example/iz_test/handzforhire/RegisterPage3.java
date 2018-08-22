@@ -242,7 +242,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
             }
         });
 
-        next.setOnClickListener(new View.OnClickListener() {
+       /* next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -390,17 +390,19 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
             }
-        });
-      /*  next.setOnClickListener(new View.OnClickListener() {
+        });*/
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getAccessToken();
             }
         });
         // ATTENTION: This was auto-generated to handle app links.
+
+        // ATTENTION: This was auto-generated to handle app links.
         Intent appLinkIntent = getIntent();
         String appLinkAction = appLinkIntent.getAction();
-        Uri appLinkData = appLinkIntent.getData();*/
+        Uri appLinkData = appLinkIntent.getData();
     }
 
     private void registerUser()
@@ -597,11 +599,13 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
                                 Uri.parse(hreflink[1]));
                 myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(myIntent,1);
+
+                System.out.println("url "+hreflink[1]);
                /* Intent result = new Intent("com.example.RESULT_ACTION", Uri.parse(hreflink[1]));
                 setResult(Activity.RESULT_OK, result);
                 finish();*/
                 /*finish();*/
-                //partnerReferralPrefillData(hreflink[0],accesstoken);
+                partnerReferralPrefillData(hreflink[0],accesstoken);
             }catch (Exception e)
             {
                 System.out.println("e "+e.getMessage());

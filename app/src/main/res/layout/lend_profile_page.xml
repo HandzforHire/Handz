@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#3B3B3B"
-    tools:context="com.example.baskar.handzforhire.MainActivity">
+    tools:context="com.example.iz_test.handzforhire.MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="15sp"
+            android:layout_marginTop="10sp"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -204,13 +204,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="right"
                         android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/pending_job"
                         android:layout_width="80sp"
                         android:layout_height="80sp"
-                        android:layout_marginLeft="40sp"
                         android:background="@drawable/posted_jobs"
                         android:orientation="vertical">
 
@@ -242,8 +242,6 @@
                             android:text="pending jobs"
                             android:textAllCaps="true"
                             android:textStyle="bold"
-                            android:layout_marginLeft="20sp"
-                            android:layout_gravity="center"
                             android:layout_marginTop="5sp"
                             android:layout_centerVertical="true"
                             android:textSize="12sp"
@@ -271,7 +269,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginRight="40sp"
                         android:layout_weight="1">
 
                         <LinearLayout
@@ -311,7 +308,6 @@
                             android:text="active jobs"
                             android:textAllCaps="true"
                             android:textStyle="bold"
-                            android:layout_gravity="center"
                             android:layout_marginTop="5sp"
                             android:layout_centerVertical="true"
                             android:textSize="12sp"
@@ -327,13 +323,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="120sp"
                 android:orientation="horizontal"
-                android:layout_marginTop="5sp"
                 android:gravity="center"
                 android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20sp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -383,7 +379,7 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30sp">
+                    android:layout_marginLeft="20sp">
 
 
                     <Button
@@ -395,13 +391,12 @@
                         android:textAllCaps="true"
                         android:background="@drawable/edit_user"
                         android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="9dp" />
+                        android:layout_centerHorizontal="true"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="edit user \n profile"
+                        android:text="edit user profile"
                         android:layout_centerInParent="true"
                         android:textAllCaps="true"
                         android:textStyle="bold"
@@ -418,33 +413,73 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tex1"
-                    android:layout_width="120sp"
-                    android:layout_height="40sp"
-                    android:layout_marginTop="40sp"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="60sp"
                     android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    android:background="@drawable/handz"/>
+                    android:layout_marginTop="30sp"
+                    android:layout_marginLeft="20sp">
+
+                <ImageView
+                    android:id="@+id/tutorial"
+                    android:layout_width="50sp"
+                    android:layout_height="30sp"
+                    android:gravity="center"
+                    android:src="@drawable/tutorial_image"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="tutorial"
+                        android:textStyle="bold"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"
+                        android:textColor="#ffffff"
+                        android:layout_below="@+id/tutorial"/>
+
+                    </RelativeLayout>
 
                 <Button
                     android:id="@+id/need_help"
                     android:layout_width="50sp"
                     android:layout_height="50sp"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="10sp"
-                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"
                     android:background="@drawable/bulb"/>
-                <ImageView
-                    android:id="@+id/sha_lend"
-                    android:layout_width="50sp"
-                    android:layout_height="50sp"
-                    android:layout_marginTop="30sp"
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="60sp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="20sp"
-                    android:src="@drawable/share"/>
+                    android:layout_marginTop="30sp"
+                    android:layout_marginRight="20sp">
+
+                    <ImageView
+                        android:id="@+id/sha_lend"
+                        android:layout_width="50sp"
+                        android:layout_height="30sp"
+                        android:src="@drawable/share"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="share"
+                        android:textStyle="bold"
+                        android:textAllCaps="true"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="12sp"
+                        android:textColor="#ffffff"
+                        android:layout_below="@+id/sha_lend"/>
+
+                </RelativeLayout>
 
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tex1"
+                android:layout_width="100sp"
+                android:layout_height="30sp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/handz"/>
 
              </LinearLayout>
         </RelativeLayout>

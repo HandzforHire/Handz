@@ -188,15 +188,12 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                  return params;
             }
         };
-        System.out.println("vvvvvvv"+ value+"."+id+"."+ usertype);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 
     public void onResponserecieved(String jsonobject, int i) {
-        System.out.println("response from interface"+jsonobject);
-
         String status = null;
         String rating_list = null;
 
@@ -204,12 +201,12 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             rating_list = jResult.getString("rating_lists");
-            System.out.println("jjjjjjjjjjjjjjjob:::rating_list:::" + rating_list);
             if(status.equals("success"))
             {
                 JSONArray array = new JSONArray(rating_list);
                 for(int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
+                    System.out.println("object review rat"+object);
                     final String employee = object.getString("employee");
                     System.out.println("ressss:employee::" + employee);
                     rating = object.getString("average_rating");
@@ -221,11 +218,11 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                     comment = object.getString("comments");
                     System.out.println("ressss:comment:::"+comment);
                     JSONObject object1 = new JSONObject(employee);
+                    System.out.println("object 1"+object1);
                     for(int a = 0; a < object1.length(); a++) {
                         image = object1.getString("profile_image");
                         System.out.println("ressss:profile_image:::"+image);
                         average_rating = object1.getString("average_rating");
-                        System.out.println("ressss:average_rating:::"+average_rating);
                     }
 
                     HashMap<String, String> map = new HashMap<String, String>();

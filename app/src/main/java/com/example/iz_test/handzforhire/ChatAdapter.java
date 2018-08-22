@@ -100,6 +100,8 @@ public class ChatAdapter extends BaseAdapter {
 
         boolean myMsg = chatMessage.isMe() ;//Just a dummy check
         setAlignment(holder, myMsg);
+        if(chatMessage.getMessage().equals("FROM HANDZ: Just a reminder that payment has not been completed on this job! Have a great day!"))
+            holder.txtMessage.setBackgroundResource(R.drawable.gray_bg_c_9);
         holder.txtMessage.setText(chatMessage.getMessage());
         if(chatMessage.has_Attachemnt) {
             DownloadImage(chatMessage.getPhotoURL(),holder.img_view);

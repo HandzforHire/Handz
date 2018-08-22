@@ -294,8 +294,7 @@ public class JobHistory extends Activity implements SimpleGestureFilter.SimpleGe
                         final String description=object.getString("description");
                         final String msg_notification =object.getString("employer_notificationCountMsgJobhistory");
                         final String star_notification =object.getString("employer_notificationCountStarRating");
-
-
+                        System.out.println("object "+object);
                         String rating=object.getString("rating");
 
                         if(rating.equals("null"))
