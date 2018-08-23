@@ -265,6 +265,9 @@ public class Adapter extends BaseAdapter implements Filterable {
                 i.putExtra("channel",channel_id);
                 i.putExtra("username",username);
                 i.putExtra("userId",userId);
+                i.putExtra("message_type","job_history");
+                i.putExtra("user_type","employer");
+                i.putExtra("receiverid",item.getEmployeeId());
                 view.getContext().startActivity(i);
 
 

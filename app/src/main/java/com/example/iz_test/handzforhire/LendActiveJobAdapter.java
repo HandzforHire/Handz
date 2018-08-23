@@ -205,6 +205,9 @@ public class LendActiveJobAdapter extends BaseAdapter{
                 i.putExtra("jobId",jobId);
                 i.putExtra("channel",channel_id);
                 i.putExtra("username",username);
+                i.putExtra("message_type","active_job");
+                i.putExtra("user_type","employee");
+                i.putExtra("receiverid",items.get("employer"));
                 view.getContext().startActivity(i);
 
             }

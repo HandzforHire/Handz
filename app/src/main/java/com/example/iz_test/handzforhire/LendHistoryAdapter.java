@@ -196,6 +196,9 @@ public class LendHistoryAdapter extends BaseAdapter{
                 i.putExtra("channel",items.get("channel"));
                 i.putExtra("username",username);
                 i.putExtra("userId", items.get("user_id"));
+                i.putExtra("message_type","job_history");
+                i.putExtra("user_type","employee");
+                i.putExtra("receiverid",items.get("employer"));
                 view.getContext().startActivity(i);
             }
         });

@@ -12,6 +12,7 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +32,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -43,7 +57,11 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,13 +71,16 @@ import java.util.UUID;
 /*Hi for testing*/
 public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
+
+    private static final String SENDMSG_URL = Constant.SERVER_URL+"send_message";
+
     LinearLayout layout,lin_layoutmsg;
     RelativeLayout layout2;
     ImageView sendButton,close_btn;
     EditText messageArea;
     ScrollView scrollView;
     Firebase reference1, reference2;
-    String get_user,job_id,channel_id,user_id,user_type,child_id,key;
+    String get_user,job_id,channel_id,user_id,user_type,child_id,key,receiverid,messagetype,usertype;
     public static String sender_id;
     TextView Tv,txt_sendmsg;
     SessionManager session;
@@ -81,6 +102,17 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
     ChatAdapter adapter;
     String photourl="";
     Dialog dialog;
+
+    public static String APP_KEY = "X-APP-KEY";
+    public static String SENDER_ID = "sender_id";
+    public static String MSG_TYPE = "message_type";
+    public static String RECEIVER_ID = "receiver_id";
+    public static String USER_TYPE = "user_type";
+    public static String MSG = "message";
+    public static String JOB_ID = "job_id";
+
+    String value = "HandzForHire@~";
+    int timeout = 60000;
     private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +147,9 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
         channel_id = i.getStringExtra("channel");
         get_user = i.getStringExtra("username");
         user_id = i.getStringExtra("userId");
+        messagetype= i.getStringExtra("message_type");
+        usertype= i.getStringExtra("user_type");
+        receiverid=i.getStringExtra("receiverid");
         Tv.setText(get_user);
         sender_id = current_user_id + user_id;
         child_id = channel_id + job_id;
@@ -258,6 +293,7 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
         adapter.add(message);
         adapter.notifyDataSetChanged();
         scroll();
+        sendmsg(message.getMessage());
     }
 
     private void scroll() {
@@ -369,6 +405,88 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
         this.detector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
+
+    public void sendmsg( final String msg)
+    {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, SENDMSG_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        dialog.dismiss();
+                        System.out.println("response "+response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                if (status.equals("You are not allowed to apply for the job")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(ChatNeed.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText("You are not allowed to apply for the job");
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            } catch (JSONException e) {
+
+                            } catch (UnsupportedEncodingException error1) {
+
+                            }
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(APP_KEY, value);
+                params.put(JOB_ID, job_id);
+                params.put(USER_TYPE, usertype);
+                params.put(SENDER_ID,user_id);
+                params.put(RECEIVER_ID, receiverid);
+                params.put(MSG_TYPE, messagetype);
+                params.put(MSG, msg);
+                System.out.println("params "+params);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
+    }
+
+
+
 
 
 }

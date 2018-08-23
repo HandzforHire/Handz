@@ -188,19 +188,20 @@ public class ActiveJobAdapter extends BaseAdapter {
                     String username="";
                     String  jobId =  items.get("jobId");;
                     String channel_id=items.get("channel");
+
                     if(items.get("profile").isEmpty())
                         username=items.get("user");
                     else
                         username= items.get("profile");;
-
-                     System.out.println("username "+username);
-
 
                     Intent i = new Intent(activity,ChatNeed.class);
                     i.putExtra("jobId",jobId);
                     i.putExtra("channel",channel_id);
                     i.putExtra("username",username);
                     i.putExtra("userId",userId);
+                    i.putExtra("message_type","active_job");
+                    i.putExtra("user_type","employer");
+                    i.putExtra("receiverid",items.get("employee"));
                     view.getContext().startActivity(i);
                 }
             });

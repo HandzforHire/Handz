@@ -189,6 +189,8 @@ public class JobHistoryAdapter extends BaseAdapter {
                     i.putExtra("channel",items.get("channel"));
                     i.putExtra("username",username);
                     i.putExtra("userId", items.get("user_id"));
+                    i.putExtra("message_type","job_history");
+                    i.putExtra("user_type","employer");
                     view.getContext().startActivity(i);
 
                 }
