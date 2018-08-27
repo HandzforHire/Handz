@@ -55,7 +55,9 @@ public class FileUpload{
     static final String FTP_USER = "server@izaapinnovations.com";
 
     /*********  FTP PASSWORD ***********/
-    static final String FTP_PASS  ="Y9+CW:K_o[";
+   // static final String FTP_PASS  ="Y9+CW:K_o[";
+
+    static final String FTP_PASS  ="UpR0nPDsy%Ab";
 
     public FileUpload(String file,String userid){
 

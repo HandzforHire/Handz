@@ -65,6 +65,7 @@
                         android:layout_height="wrap_content"
                         android:numStars="5"
                         android:layout_below="@+id/t1"
+                        style="@style/CustomRatingBar"
                         android:scaleX="0.9"
                         android:scaleY="0.9"
                         android:layout_centerHorizontal="true" />

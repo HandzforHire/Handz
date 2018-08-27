@@ -424,7 +424,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
                 // CALL THIS METHOD TO GET THE ACTUAL PATH
                 File finalFile = new File(getRealPathFromURI(tempUri));
-                System.out.println("ffffffffffffff:"+ finalFile);
+
                 String capturedImagePath = String.valueOf(finalFile);
                 CropImage.activity(tempUri)
                         .start(this);
@@ -435,9 +435,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                     Uri resultUri = result.getUri();
                     image.setImageURI(resultUri);
                     String selectedImagePath = uriToFilename(resultUri);
-                    System.out.println("filename:gallery "+selectedImagePath);
                     new FileUpload(selectedImagePath,id);
-                    System.out.println("path:camera:" + selectedImagePath);
                     filename = FileUpload.firstRemoteFile;
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     Exception error = result.getError();

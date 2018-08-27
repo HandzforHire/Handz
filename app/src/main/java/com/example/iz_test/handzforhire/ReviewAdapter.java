@@ -80,15 +80,15 @@ public class ReviewAdapter extends BaseAdapter {
         rating.setTypeface(font1);
         comments.setText(comment);
         comments.setTypeface(font1);
-
-        if(get_image.equals(""))
+        rating_bar.setRating(Float.parseFloat(get_average));
+     /*   if(get_image.equals(""))
         {
             image1.setVisibility(View.VISIBLE);
         }
-        else {
+        else {*/
             Glide.with(activity).load(get_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image1);
 
-        }
+    //    }
 
         return vi;
     }

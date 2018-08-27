@@ -5,13 +5,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -37,17 +34,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -67,7 +60,7 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
     public static String TYPE = "type";
     String value = "HandzForHire@~";
     String job_id,user_id,employer_id,job_name,profile_name,image,date,start_time,end_time,amount,type,comments;
-    TextView name,dat,amt,pay,text,job,rat_val;
+    TextView name,dat,amt,pay,text,job,rat_val,type_text;
     ProgressDialog progress_dialog;
     ImageView profile_image;
     EditText com;
@@ -92,14 +85,13 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
         name = (TextView) findViewById(R.id.text1);
         dat = (TextView) findViewById(R.id.tv2);
         amt = (TextView) findViewById(R.id.tv4);
-        pay = (TextView) findViewById(R.id.tv5);
         text = (TextView) findViewById(R.id.tv7);
         job = (TextView) findViewById(R.id.tv1);
         rat_val=(TextView)findViewById(R.id.text3);
+        type_text = (TextView)findViewById(R.id.type);
         com = (EditText) findViewById(R.id.edit);
         profile_image = (ImageView) findViewById(R.id.profile_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
-
 
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");
@@ -116,11 +108,9 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
         usertype=i.getStringExtra("usertype");
         name.setText(profile_name);
         amt.setText(amount);
-        pay.setText(type);
+        type_text.setText(type);
         text.setText(profile_name);
         job.setText(job_name);
-
-
 
         DateFormat dateInstance = SimpleDateFormat.getDateInstance();
         DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
@@ -144,6 +134,13 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
             public void onClick(View v) {
                 comments = com.getText().toString().trim();
                 applyJob();
+            }
+        });
+
+        com.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                com.setHint("");
             }
         });
 

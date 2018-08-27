@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,19 +22,22 @@ import com.glide.RoundedCornersTransformation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
-public class LendHistoryAdapter extends BaseAdapter{
+public class LendHistoryAdapter extends BaseAdapter implements Filterable {
 
     private Activity activity;
     private ArrayList<HashMap<String, String>> data;
-    private ArrayList<HashMap<String, String>> tempdata=new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> tempdata;
     private static LayoutInflater inflater = null;
     String jobId;
+   HistoryFilter filter;
     public LendHistoryAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
         data = d;
-        tempdata=d;
+        tempdata=new ArrayList<HashMap<String, String>>();
+        tempdata.addAll(d);
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -90,7 +95,7 @@ public class LendHistoryAdapter extends BaseAdapter{
         final String msg_notification=items.get("message_count");
         final String star_notification=items.get("star_count");
         final String transaction_date=items.get("transaction_date");
-        System.out.println("lllllllllllll:msg:star:"+msg_notification+",,,"+star_notification+",,"+transaction_date);
+      //  System.out.println("lllllllllllll:msg:star:"+msg_notification+",,,"+star_notification+",,"+transaction_date);
 
         job_name.setText(get_name);
         job_name.setTypeface(font);
@@ -230,24 +235,75 @@ public class LendHistoryAdapter extends BaseAdapter{
         return vi;
     }
 
-    // Filter Class
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        data.clear();
-        if (charText.length() == 0) {
-            data.addAll(tempdata);
-        }
-        else
+    @Override
+    public Filter getFilter() {
+        if(filter==null)
         {
-            for (HashMap<String,String> map : tempdata)
-            {
-                if (map.get("job_name").toLowerCase(Locale.getDefault()).contains(charText)||map.get("transaction_date").toLowerCase(Locale.getDefault()).contains(charText)||map.get("profile_name").toLowerCase(Locale.getDefault()).contains(charText)||map.get("job_category").toLowerCase(Locale.getDefault()).contains(charText)||map.get("username").toLowerCase(Locale.getDefault()).contains(charText)||map.get("description").toLowerCase(Locale.getDefault()).contains(charText))
-                {
-                    data.add(map);
+            filter=new LendHistoryAdapter.HistoryFilter();
+        }
+
+        return filter;
+    }
+
+
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
+
+
+    private class HistoryFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence charText) {
+            FilterResults results = new FilterResults();
+            System.out.println("temp data "+tempdata);
+// We implement here the filter logic
+            if (charText == null || charText.length() == 0) {
+// No filter implemented we return all the list
+                results.values = tempdata;
+                results.count = tempdata.size();
+            }
+            else {
+// We perform filtering operation
+                List nPlanetList = new ArrayList();
+                System.out.println("size "+tempdata.size());
+                for (int i=0;i<tempdata.size();i++) {
+                    HashMap<String,String> map =tempdata.get(i);
+                    if (map.get("name").toLowerCase(Locale.getDefault()).contains(charText)||map.get("transaction_date").toLowerCase(Locale.getDefault()).contains(charText)||map.get("profile").toLowerCase(Locale.getDefault()).contains(charText)||map.get("job_category").toLowerCase(Locale.getDefault()).contains(charText)||map.get("user").toLowerCase(Locale.getDefault()).contains(charText)||map.get("description").toLowerCase(Locale.getDefault()).contains(charText))
+                        nPlanetList.add(map);
+
                 }
+
+                results.values = nPlanetList;
+                results.count = nPlanetList.size();
+
+            }
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint,
+                                      FilterResults results) {
+
+// Now we have to inform the adapter about the new list filtered
+            System.out.println("Data Set "+results.count);
+            System.out.println("Data Set "+results);
+            if (results.count == 0)
+                notifyDataSetInvalidated();
+            else {
+                data.clear();
+                data.addAll((List)results.values);
+                notifyDataSetChanged();
+                //worldpopulationlist = (List) results.values;
+                for(int i=0;i<data.size();i++)
+                {
+                    HashMap<String,String> map=data.get(i);
+                    System.out.println("map "+map);
+                }
+
             }
         }
-        notifyDataSetChanged();
     }
 
 }

@@ -206,23 +206,19 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                 JSONArray array = new JSONArray(rating_list);
                 for(int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
-                    System.out.println("object review rat"+object);
                     final String employee = object.getString("employee");
-                    System.out.println("ressss:employee::" + employee);
                     rating = object.getString("average_rating");
-                    System.out.println("ressss:rating::" + rating);
-                    date = object.getString("job_date");
-                    System.out.println("ressss:date:::"+date);
                     date = object.getString("job_date");
                     System.out.println("ressss:date:::"+date);
                     comment = object.getString("comments");
                     System.out.println("ressss:comment:::"+comment);
-                    JSONObject object1 = new JSONObject(employee);
-                    System.out.println("object 1"+object1);
-                    for(int a = 0; a < object1.length(); a++) {
-                        image = object1.getString("profile_image");
+                    JSONArray emparray = new JSONArray(employee);
+                    System.out.println("object 1"+emparray);
+                    for(int a = 0; a < emparray.length(); a++) {
+                        JSONObject obj=emparray.getJSONObject(a);
+                        image = obj.getString("profile_image");
                         System.out.println("ressss:profile_image:::"+image);
-                        average_rating = object1.getString("average_rating");
+                        average_rating = obj.getString("rating");
                     }
 
                     HashMap<String, String> map = new HashMap<String, String>();
@@ -267,6 +263,7 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            System.out.println("Review Rating "+e.getMessage());
         }
     }
 

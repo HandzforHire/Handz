@@ -48,7 +48,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Rehire"
-                                android:textSize="20sp"
+                                android:textSize="16sp"
                                 android:textAllCaps="true"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentLeft="true"
@@ -61,7 +61,7 @@
                                 android:id="@+id/username_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="20sp"
+                                android:textSize="16sp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="20sp"
@@ -100,7 +100,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Select Job Category"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:visibility="visible"
                                 android:layout_marginLeft="15sp"
                                 android:textStyle="italic"
@@ -134,7 +134,7 @@
                                 android:id="@+id/text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_marginTop="10sp"
                                 android:textColor="#000000"
@@ -164,7 +164,7 @@
                                 android:id="@+id/text1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:layout_marginTop="10sp"
                                 android:textColor="#000000"
@@ -206,7 +206,7 @@
                                 android:textColor="#DCDCDC"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentLeft="true"
-                                android:textSize="18sp" />
+                                android:textSize="16sp" />
 
                             <ImageView
                                 android:layout_width="20sp"
@@ -246,7 +246,7 @@
                                 android:layout_marginLeft="15sp"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentLeft="true"
-                                android:textSize="18sp" />
+                                android:textSize="16sp" />
 
                             <ImageView
                                 android:layout_width="20sp"
@@ -312,7 +312,7 @@
                                 android:layout_marginLeft="15sp"
                                 android:layout_centerVertical="true"
                                 android:textColor="#DCDCDC"
-                                android:textSize="18sp" />
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/hour"
@@ -323,7 +323,7 @@
                                 android:layout_toRightOf="@+id/end_time_text"
                                 android:layout_centerVertical="true"
                                 android:textColor="#DCDCDC"
-                                android:textSize="18sp" />
+                                android:textSize="16sp" />
 
                             <ImageView
                                 android:layout_width="20sp"
@@ -362,8 +362,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Work Date/Time Is Flexible For This Job"
-                                android:textSize="15sp"
-                                android:paddingLeft="10sp"
+                                android:textSize="14sp"
+                                android:paddingLeft="5sp"
                                 android:textStyle="italic"
                                 android:button="@drawable/custom_checkbox"
                                 android:gravity="center_vertical"
@@ -402,7 +402,7 @@
                                 android:layout_marginLeft="15sp"
                                 android:layout_alignParentLeft="true"
                                 android:textColor="#DCDCDC"
-                                android:textSize="18sp" />
+                                android:textSize="16sp" />
 
                             <ImageView
                                 android:id="@+id/arrow"
