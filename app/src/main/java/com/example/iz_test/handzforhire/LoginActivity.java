@@ -2,9 +2,7 @@ package com.example.iz_test.handzforhire;
 
 
 import android.Manifest;
-
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,13 +19,11 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,8 +45,6 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-
-
 
 import static android.Manifest.permission.READ_PHONE_STATE;
 
@@ -134,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
 
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LoginActivity.this, RegisterPage3.class);
+                Intent i = new Intent(LoginActivity.this, RegisterPage2.class);
                 startActivity(i);
                 finish();
             }
@@ -315,7 +309,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
 
     public void login() {
 
-       dialog.show();
+        dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override

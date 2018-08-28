@@ -87,11 +87,19 @@ public class CreateJob2 extends AppCompatActivity implements SimpleGestureFilter
         linear = (LinearLayout)findViewById(R.id.lay);
         layout = (LinearLayout)findViewById(R.id.layout);
         logo = (ImageView)findViewById(R.id.logo);
+        ImageView back = (ImageView)findViewById(R.id.back);
 
         detector = new SimpleGestureFilter(this,this);
         stat.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 
         text.setText(name);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         pros.setOnClickListener(new View.OnClickListener() {
             @Override

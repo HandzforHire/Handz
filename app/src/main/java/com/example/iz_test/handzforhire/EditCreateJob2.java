@@ -122,6 +122,15 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
         linear = (LinearLayout) findViewById(R.id.lay);
         layout = (LinearLayout) findViewById(R.id.layout);
         logo = (ImageView) findViewById(R.id.logo);
+        ImageView back = (ImageView)findViewById(R.id.back);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
 
         stat.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
 

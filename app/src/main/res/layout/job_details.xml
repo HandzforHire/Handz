@@ -149,7 +149,10 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/relay"
                             android:gravity="center"
+                            android:textAllCaps="true"
                             android:paddingTop="10sp"
+                            android:textStyle="bold"
+                            android:paddingBottom="10sp"
                             android:textColor="#000000"
                             android:textSize="20sp" />
 
@@ -160,14 +163,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#3B3B3B"
-                        android:layout_marginTop="20sp"
+                        android:layout_marginLeft="10sp"
+                        android:layout_marginRight="10sp"
                         android:layout_below="@+id/r1">
 
                         <TextView
                             android:id="@+id/description_text"
                             android:layout_width="match_parent"
-                            android:layout_height="220sp"
-                            android:padding="220sp"
+                            android:layout_height="150sp"
+                            android:gravity="center"
                             android:scrollbars="vertical"
                             android:textColor="#DCDCDC"
                             android:textSize="18sp" />
@@ -269,7 +273,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="15sp"
+                            android:layout_marginLeft="3sp"
                             android:text="$"
                             android:textColor="#000000"
                             android:textStyle="bold"
