@@ -26,7 +26,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="100sp"
+                    android:layout_marginTop="140sp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="top|center"
                     android:background="#BFE8C64B"
@@ -37,7 +37,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Your newly created job :"
-                        android:layout_marginTop="65sp"
+                        android:layout_marginTop="50sp"
                         android:layout_marginLeft="10sp"
                         android:textSize="20sp"
                         android:textColor="#000000"/>
@@ -178,19 +178,19 @@
                         android:layout_marginTop="15sp"
                         android:layout_below="@+id/lay"
                         android:gravity="center"
-                        android:background="#BAB7AB">
+                        android:background="#3B3B3B">
 
                         <CheckBox
                             android:id="@+id/checkBox2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="15sp"
+                            android:layout_marginLeft="10sp"
                             android:layout_marginRight="10sp"
                             android:button="@drawable/custom_checkbox"
                             android:paddingLeft="5sp"
-                            android:text=" I would like to post my work site\n address for the particular job."
-                            android:textColor="#000000"
-                            android:textSize="18sp" />
+                            android:text=" I would like to post my &quot;work site&quot;\n address for the particular job."
+                            android:textColor="#BAB7AB"
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/features"
@@ -198,10 +198,10 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/checkBox2"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="5sp"
+                            android:layout_marginTop="10sp"
                             android:text="NOT SURE?"
-                            android:textColor="#000000"
-                            android:textSize="18sp"
+                            android:textColor="#BAB7AB"
+                            android:textSize="16sp"
                             android:gravity="center"/>
 
                         <LinearLayout
@@ -240,6 +240,16 @@
                     </LinearLayout>
 
                 </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="50sp"
+                    android:layout_height="50sp"
+                    android:layout_marginLeft="30sp"
+                    android:src="@drawable/back_img"
+                    android:layout_alignTop="@+id/logo"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="26dp" />
 
                 <ImageView
                     android:id="@+id/logo"

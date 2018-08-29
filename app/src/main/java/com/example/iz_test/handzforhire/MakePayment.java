@@ -4,24 +4,15 @@ package com.example.iz_test.handzforhire;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -32,7 +23,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
@@ -40,9 +30,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +81,7 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
         user_name = i.getStringExtra("username");
         employerId=i.getStringExtra("employer");
         employeeId=i.getStringExtra("employee");
-
+       System.out.println("pppppppp:profilename:::"+profile_name+"---username::::"+user_name);
 
         detector = new SimpleGestureFilter(this,this);
 
@@ -132,14 +119,12 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
         else {
             Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
         }
-        if(profile_name==null)
+        if(profile_name.equals(""))
         {
             name.setText(user_name);
-
         }
         else {
             name.setText(profile_name);
-
         }
 
     }

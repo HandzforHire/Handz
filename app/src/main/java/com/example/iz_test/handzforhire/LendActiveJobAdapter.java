@@ -4,12 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
@@ -37,9 +32,8 @@ import com.glide.RoundedCornersTransformation;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -100,15 +94,12 @@ public class LendActiveJobAdapter extends BaseAdapter{
             vi = inflater.inflate(R.layout.lend_active_list, null);
 
         TextView job_name = (TextView) vi.findViewById(R.id.job_name_text);
-        TextView tv1 = (TextView) vi.findViewById(R.id.text3);
-        TextView tv2 = (TextView) vi.findViewById(R.id.text4);
-        TextView tv3 = (TextView) vi.findViewById(R.id.text5);
-        TextView tv4 = (TextView) vi.findViewById(R.id.text7);
-        TextView tv5 = (TextView) vi.findViewById(R.id.text8);
+        TextView date = (TextView) vi.findViewById(R.id.when);
+        TextView expected_duration = (TextView) vi.findViewById(R.id.duration);
+        TextView amount = (TextView) vi.findViewById(R.id.pay_amount);
         ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
         TextView payment = (TextView) vi.findViewById(R.id.payment);
         LinearLayout message = (LinearLayout) vi.findViewById(R.id.lay1);
-        TextView jobId = (TextView) vi.findViewById(R.id.text4);
         Button job_details = (Button) vi.findViewById(R.id.btn);
         final TextView job_id = (TextView) vi.findViewById(R.id.job_id);
         final TextView employer_id = (TextView) vi.findViewById(R.id.employer_id);
@@ -134,24 +125,29 @@ public class LendActiveJobAdapter extends BaseAdapter{
         final String end_time = items.get("end_time");
         final String payment_amount = items.get("payment_amount");
         final String payment_type = items.get("payment_type");
-        final String get_jobid = items.get("jobId");
         final String get_employer = items.get("employer");
         final String get_employee = items.get("employee");
         final String channel_id=items.get("channel");
 
+        System.out.println("ppppppppp:payment_type,,,,"+payment_type+",,,"+get_job_id);
+
         job_name.setText(get_name);
         job_name.setTypeface(font);
-        jobId.setText(get_job_id);
-        tv1.setText(jobDate);
-        tv2.setText(start_time);
-        tv3.setText(end_time);
-        tv4.setText(payment_amount);
-        tv5.setText(payment_type);
-        job_id.setText(get_jobid);
+        job_id.setText(get_job_id);
+        expected_duration.setText(payment_type);
+        amount.setText(payment_amount);
         employer_id.setText(get_employer);
         employee_id.setText(get_employee);
         image_text.setText(get_image);
 
+        DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");
+        try {
+            java.util.Date dates = srcDf.parse(jobDate);
+            date.setText(""+destDf.format(dates));
+        }catch (Exception e){
+
+        }
 
         payment.setTag(position);
         job_details.setTag(position);
@@ -160,12 +156,9 @@ public class LendActiveJobAdapter extends BaseAdapter{
         payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 int pos= (int) v.getTag();
                 HashMap<String, String> items =data.get(pos);
                 String username="";
-
                 System.out.println("clicked item "+items);
                 requestpayment(items.get("jobId"),items.get("employee"),items.get("employer"));
             }

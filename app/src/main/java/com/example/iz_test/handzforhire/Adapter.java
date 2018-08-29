@@ -2,15 +2,9 @@
 package com.example.iz_test.handzforhire;
 
 
-import android.graphics.Color;
-import android.widget.BaseAdapter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +14,17 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Adapter extends BaseAdapter implements Filterable {
 
@@ -64,7 +62,7 @@ public class Adapter extends BaseAdapter implements Filterable {
     public class ViewHolder {
         TextView leave_rating_btn;
         Button job_details;
-        LinearLayout chat;
+        RelativeLayout chat;
         TextView job_name;
         TextView job_id;
         TextView employer_id;
@@ -106,7 +104,7 @@ public class Adapter extends BaseAdapter implements Filterable {
             holder.image = (ImageView)view.findViewById(R.id.img1);
             holder.leave_rating_btn = (TextView) view.findViewById(R.id.leave_rating);
             holder.job_details = (Button) view.findViewById(R.id.btn);
-            holder.chat = (LinearLayout) view.findViewById(R.id.lay1);
+            holder.chat = (RelativeLayout) view.findViewById(R.id.lay1);
             holder.leave_layout = (LinearLayout) view.findViewById(R.id.leave_lay);
             holder.edit_layout = (LinearLayout) view.findViewById(R.id.edit_lay);
             holder.rehire_layout = (LinearLayout) view.findViewById(R.id.rehire_lay);

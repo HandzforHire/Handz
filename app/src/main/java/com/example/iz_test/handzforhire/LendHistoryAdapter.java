@@ -13,6 +13,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -68,7 +69,7 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
         final TextView job_id = (TextView) vi.findViewById(R.id.job_id);
         final TextView employer_id = (TextView) vi.findViewById(R.id.employer_id);
         final TextView employee_id = (TextView) vi.findViewById(R.id.employee_id);
-        LinearLayout chat = (LinearLayout) vi.findViewById(R.id.lay1);
+        RelativeLayout chat = (RelativeLayout) vi.findViewById(R.id.lay1);
         TextView message_count = (TextView) vi.findViewById(R.id.msg_count);
         TextView rating_count = (TextView) vi.findViewById(R.id.rating_count);
 
@@ -239,7 +240,7 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
     public Filter getFilter() {
         if(filter==null)
         {
-            filter=new LendHistoryAdapter.HistoryFilter();
+            filter=new HistoryFilter();
         }
 
         return filter;
