@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LendProfilePage extends Activity implements SimpleGestureFilter.SimpleGestureListener{
+public class LendProfilePage extends Activity implements SimpleGestureFilter.SimpleGestureListener,ResponseListener{
 
     Button job_list,edit,find_map,need_help;
     String id,address,city,state,zipcode,profile_image,profilename,email,username;
@@ -60,7 +60,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
     public static String TYPE = "type";
     String value = "HandzForHire@~";
     ProgressDialog progress_dialog;
-    ImageView profile,handz,menu,share_lend;
+    ImageView profile,handz,menu,share_lend,tutorial;
     TextView profile_name,rating_value;
     RelativeLayout rating_lay;
     SessionManager session;
@@ -70,6 +70,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
     String tittle="Whether you need a hand or would like to lend a hand, Handz for Hire is built to connect you and your neighbors looking to get jobs done. Visit HandzForHire.com or download the app in the App Store or Google Play.\"\n" +
             "along with that website url and logo";
     private SimpleGestureFilter detector;
+    RequestMethods req;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +97,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
         user = (TextView) findViewById(R.id.text1);
         rating_value = (TextView) findViewById(R.id.text3);
         profile = (ImageView)findViewById(R.id.profile_image);
+        tutorial=(ImageView)findViewById(R.id.tutorial);
         profile_name = (TextView) findViewById(R.id.text1);
         find_map = (Button) findViewById(R.id.find_job);
         pending = (LinearLayout) findViewById(R.id.pending_job);
@@ -201,6 +203,12 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
         active_job.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    req = new RequestMethods(LendProfilePage.this, 1, id, "notificationCountActive");
+                    req.execute(RequestMethods.RequestMethod.POST, LendProfilePage.this);
+                }catch (Exception e){
+                    System.out.println("Exception e"+e.getMessage());
+                }
                 Intent i =  new Intent(LendProfilePage.this,LendActiveJobs.class);
                 i.putExtra("userId",id);
                 i.putExtra("address",address);
@@ -214,6 +222,12 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
         job_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    req = new RequestMethods(LendProfilePage.this, 1, id, "notificationCountJobHistory");
+                    req.execute(RequestMethods.RequestMethod.POST, LendProfilePage.this);
+                }catch (Exception e){
+                    System.out.println("Exception e"+e.getMessage());
+                }
                 Intent i =  new Intent(LendProfilePage.this,LendJobHistory.class);
                 i.putExtra("userId",id);
                 i.putExtra("address",address);
@@ -253,6 +267,12 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
         pending.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    req = new RequestMethods(LendProfilePage.this, 1, id, "notificationCountPending");
+                    req.execute(RequestMethods.RequestMethod.POST, LendProfilePage.this);
+                }catch (Exception e){
+                    System.out.println("Exception e"+e.getMessage());
+                }
                 Intent i = new Intent(LendProfilePage.this, PendingJobs.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
@@ -262,6 +282,17 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
                 startActivity(i);
             }
         });
+
+        tutorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent in=new Intent(LendProfilePage.this,PlayTutorialVideo.class);
+                in.putExtra("uri","http://162.144.41.156/~izaapinn/handzforhire/Lend.mp4");
+                startActivity(in);
+            }
+        });
+
     }
 
     public void getUsername() {
@@ -571,5 +602,10 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
 
         this.detector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public void onResponseReceived(JSONObject responseObj, int requestType) {
+        System.out.println("json "+responseObj);
     }
 }

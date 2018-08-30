@@ -189,12 +189,12 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
 
         for (int j = 0; j <= 100; j++)
         {
-            numbers.add(j);
+            numbers.add(j+1);
             System.out.println(numbers.get(j));
         }
 
         final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
-        threeItemsOptions2.add("0.00");
+
         threeItemsOptions2.add("0.25");
         threeItemsOptions2.add("0.50");
         threeItemsOptions2.add("0.75");

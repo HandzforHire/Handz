@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -188,7 +189,24 @@ public class UpdateCard extends Activity implements SimpleGestureFilter.SimpleGe
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
                         if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
-                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                            final Dialog dialog = new Dialog(UpdateCard.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
                         }else if (error instanceof ServerError) {

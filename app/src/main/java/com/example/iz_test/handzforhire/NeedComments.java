@@ -1,6 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,12 +9,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -151,7 +155,24 @@ public class NeedComments extends Activity implements SimpleGestureFilter.Simple
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
-                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                            final Dialog dialog = new Dialog(NeedComments.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
                         }else if (error instanceof ServerError) {

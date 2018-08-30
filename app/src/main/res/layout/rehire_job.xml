@@ -146,6 +146,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:textSize="16sp"
+                                android:inputType="textCapCharacters"
                                 android:layout_marginBottom="5sp"
                                 android:background="@android:color/transparent"
                                 android:textColor="#000000"
@@ -491,7 +492,7 @@
                 <Button
                     android:id="@+id/next"
                     android:layout_width="50sp"
-                    android:layout_height="40sp"
+                    android:layout_height="50sp"
                     android:textAllCaps="true"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"

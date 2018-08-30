@@ -9,33 +9,36 @@
     <LinearLayout
         android:id="@+id/layout_hold"
         android:layout_width="match_parent"
-        android:layout_height="115sp"
-        android:layout_weight="0.01"
-        android:background="#3c3c3c"
+        android:layout_height="wrap_content"
+        android:background="#d2cfc7"
         android:gravity="center"
         android:clickable="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10sp"
-            android:text="your application is under review!"
+            android:text="your application is under review! the"
+            android:textAppearance="?android:textAppearanceLarge"
             android:textAllCaps="true"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp" />
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10sp"
-            android:layout_marginTop="8sp"
+
+            android:textAppearance="?android:textAppearanceLarge"
             android:layout_toRightOf="@+id/widget_title_icon"
-            android:text="the employer has not decided yet."
+            android:text=" employer has not decided yet."
+            android:textStyle="bold"
             android:textAllCaps="true"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="16sp" />
 
         <TextView
@@ -45,10 +48,11 @@
             android:layout_gravity="center"
             android:layout_marginLeft="5sp"
             android:layout_marginTop="12sp"
-            android:text="click this box to minimize this message"
+            android:text="click the circle to minimize this message"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textAllCaps="true"
-            android:textColor="#FFFFFF"
-           android:textSize="14sp" />
+            android:textColor="#000000"
+           android:textSize="12sp" />
 
 
     </LinearLayout>

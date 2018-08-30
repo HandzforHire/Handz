@@ -1,7 +1,15 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -186,7 +194,24 @@ public class LendFileUpload {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
-                            Toast.makeText(LendEditUserProfile.activity,"Not Connected",Toast.LENGTH_LONG).show();
+                            final Dialog dialog = new Dialog(LendEditUserProfile.activity);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(LendEditUserProfile.activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
                         }else if (error instanceof ServerError) {

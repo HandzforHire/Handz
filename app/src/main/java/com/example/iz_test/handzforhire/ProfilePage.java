@@ -1,9 +1,11 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -61,7 +63,7 @@ import java.util.Map;
 
 import okio.Timeout;
 
-public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleGestureListener {
+public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleGestureListener,ResponseListener {
 
     TextView profile_name,rating,rating_value;
     TextView txt_postedjobcnt,txt_activejobscnt,job_historycnt;
@@ -76,7 +78,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     String value = "HandzForHire@~";
     Button create,edit,need_help;
     String address,city,state,zipcode,profile_image,profilename,type;
-    ImageView profile,logo,menu,share_need;
+    ImageView profile,logo,menu,share_need,tutorial;
     ProgressDialog progress_dialog;
     ProgressBar progress;
     RelativeLayout rating_lay;
@@ -92,6 +94,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
     private SimpleGestureFilter detector;
     float x1,x2;
     float y1, y2;
+    RequestMethods req;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +121,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         history = (LinearLayout) findViewById(R.id.job_history);
         logo = (ImageView)findViewById(R.id.logo);
         profile = (ImageView)findViewById(R.id.profile_image);
+        tutorial=(ImageView)findViewById(R.id.tutorial);
         menu = (ImageView)findViewById(R.id.menu);
         rating = (TextView) findViewById(R.id.text2);
         txt_postedjobcnt = (TextView) findViewById(R.id.txt_postedjobcnt);
@@ -146,7 +150,16 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
 
                 share();
 
+            }
+        });
 
+        tutorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent in=new Intent(ProfilePage.this,PlayTutorialVideo.class);
+                in.putExtra("uri","http://162.144.41.156/~izaapinn/handzforhire/Hand.mp4");
+                startActivity(in);
             }
         });
 
@@ -218,6 +231,12 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         posted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    req = new RequestMethods(ProfilePage.this, 1, id, "notificationCountPosted");
+                    req.execute(RequestMethods.RequestMethod.POST, ProfilePage.this);
+                }catch (Exception e){
+                    System.out.println("Exception e"+e.getMessage());
+                }
                 Intent i = new Intent(ProfilePage.this,PostedJobs.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
@@ -245,6 +264,12 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    req = new RequestMethods(ProfilePage.this, 1, id, "notificationCountJobHistory");
+                    req.execute(RequestMethods.RequestMethod.POST, ProfilePage.this);
+                }catch (Exception e){
+                    System.out.println("Exception e"+e.getMessage());
+                }
                 Intent i = new Intent(ProfilePage.this,JobHistory.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
@@ -283,6 +308,12 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         active.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    req = new RequestMethods(ProfilePage.this, 1, id, "notificationCountActive");
+                    req.execute(RequestMethods.RequestMethod.POST, ProfilePage.this);
+                }catch (Exception e){
+                    System.out.println("Exception e"+e.getMessage());
+                }
                 Intent i = new Intent(ProfilePage.this,ActiveJobs.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
@@ -432,7 +463,24 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                         dialog.dismiss();
 
                         if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
-                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                            final Dialog dialog = new Dialog(ProfilePage.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
                         }else if (error instanceof ServerError) {
@@ -640,7 +688,24 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
                         if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
-                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                            final Dialog dialog = new Dialog(ProfilePage.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
                         }else if (error instanceof ServerError) {
@@ -784,4 +849,8 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         return super.dispatchTouchEvent(event);
     }
 
+    @Override
+    public void onResponseReceived(JSONObject responseObj, int requestType) {
+        System.out.println("json "+responseObj);
+    }
 }

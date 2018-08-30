@@ -2,12 +2,16 @@
 package com.example.iz_test.handzforhire;
 
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Filter;
@@ -16,20 +20,43 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class Adapter extends BaseAdapter implements Filterable {
-
+    private static final String GET_COUNT_URL = Constant.SERVER_URL+"view_count";
+    public static String KEY_USERID = "user_id";
+    public static String XAPP_KEY = "X-APP-KEY";
+    public static String TYPE = "type";
+    String value = "HandzForHire@~";
     // Declare Variables
     Context mContext;
+    Activity activity;
     LayoutInflater inflater;
     private List<WorldPopulation> worldpopulationlist = null;
     private ArrayList<WorldPopulation> arraylist;
@@ -38,15 +65,20 @@ public class Adapter extends BaseAdapter implements Filterable {
     String userId,employeeId;;
     String profile_name,channel_id,username,rating_value,msg_notification,star_notification;
 
-
+    Dialog dialog;
     HistoryFilter filter;
 
-    public Adapter(Context context, List<WorldPopulation> worldpopulationlist)  {
+    public Adapter(Activity context, List<WorldPopulation> worldpopulationlist)  {
         mContext = context;
+        activity=context;
         this.worldpopulationlist = worldpopulationlist;
         inflater = LayoutInflater.from(mContext);
         this.arraylist = new ArrayList<WorldPopulation>();
         this.arraylist.addAll(worldpopulationlist);
+        dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     @Override
@@ -189,6 +221,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                     username=item.getUsername();
                 else
                     username=item.getProfilename();
+                getratingcount(item.getUserid());
 
                 Intent intent = new Intent(mContext, LeaveRating.class);
                 intent.putExtra("jobId", item.getJobId());
@@ -257,6 +290,8 @@ public class Adapter extends BaseAdapter implements Filterable {
                 else
                     username=item.getProfilename();
                 userId=item.getUserid();
+
+                getmsgcountjobhis(item.getUserid());
 
                 Intent i = new Intent(mContext,ChatNeed.class);
                 i.putExtra("jobId",jobId);
@@ -393,4 +428,191 @@ public class Adapter extends BaseAdapter implements Filterable {
         }
     }
 
+    public void getmsgcountjobhis(final String id) {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_COUNT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("resposne "+response);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            final Dialog dialog = new Dialog(activity);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("volley error::: " + jsonObject);
+                                String status = jsonObject.getString("msg");
+
+                                // custom dialog
+                                final Dialog dialog = new Dialog(activity);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText(status);
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USERID, id);
+                params.put(TYPE,"notificationCountMsgJobhistory");
+                System.out.println("Params "+params);
+                return params;
+            }
+        };
+
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }
+
+    public void getratingcount(final String id) {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_COUNT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("resposne "+response);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            final Dialog dialog = new Dialog(activity);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof ServerError) {
+                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("volley error::: " + jsonObject);
+                                String status = jsonObject.getString("msg");
+
+                                // custom dialog
+                                final Dialog dialog = new Dialog(activity);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText(status);
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USERID, id);
+                params.put(TYPE,"notificationCountStarRating");
+                System.out.println("Params "+params);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(activity);
+        requestQueue.add(stringRequest);
+    }
 }

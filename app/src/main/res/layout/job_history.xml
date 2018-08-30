@@ -75,8 +75,8 @@
         android:textColor="#000000"
        android:visibility="visible"
         android:gravity="center_vertical"
-        android:paddingLeft="10sp"
-        android:textColorHint="#000000"
+        android:paddingLeft="15sp"
+       android:drawableLeft="@drawable/search_30"
         android:textSize="18sp"
         android:hint="Search by Keyword(s) or Date" />
 

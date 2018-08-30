@@ -325,6 +325,9 @@
             android:name=".RehireMultiply"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
+            android:name=".PlayTutorialVideo"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
 

@@ -112,7 +112,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
 
        // getProfileimage();
         listPostedJobs();
-        getcount();
+       // getcount();
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +171,24 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
                         if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
-                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                            final Dialog dialog = new Dialog(PostedJobs.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
                         }else if (error instanceof ServerError) {
@@ -244,6 +261,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
                 params.put(TYPE,type);
+                System.out.println("Params "+params);
                 return params;
             }
         };
@@ -255,7 +273,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
         requestQueue.add(stringRequest);
     }
 
-    public void getcount() {
+   /* public void getcount() {
         dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_COUNT_URL,
                 new Response.Listener<String>() {
@@ -270,7 +288,24 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
                         if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
-                            Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
+                            final Dialog dialog = new Dialog(PostedJobs.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
                         }else if (error instanceof ServerError) {
@@ -331,7 +366,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
-    }
+    }*/
     public void onResponserecieved1(String jsonobject, int i) {
         System.out.println("response from interface"+jsonobject);
 
@@ -508,6 +543,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
             TextView pay = (TextView) vi.findViewById(R.id.text6);
             TextView date = (TextView) vi.findViewById(R.id.text3);
             TextView amount = (TextView) vi.findViewById(R.id.text7);
+            TextView text = (TextView) vi.findViewById(R.id.text_value);
             TextView type = (TextView) vi.findViewById(R.id.text8);
             final TextView jobId = (TextView) vi.findViewById(R.id.job_id);
             final TextView applicants = (TextView) vi.findViewById(R.id.no_applicants);
@@ -548,12 +584,12 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
             {
                 unchecked.setVisibility(View.VISIBLE);
                 checked.setVisibility(View.INVISIBLE);
-
-
+                text.setText("Want to relist? Check the box to make this job visible to potential employees.");
             }else
             {
                 checked.setVisibility(View.VISIBLE);
                 unchecked.setVisibility(View.INVISIBLE);
+                text.setText("Done hiring? Uncheck the box to remove this job listing from public view.");
             }
 
             unchecked.setOnClickListener(new View.OnClickListener()

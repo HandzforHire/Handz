@@ -3,6 +3,7 @@ package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -14,10 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Locale;
 
 public class PaymentDetails extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
@@ -36,6 +34,17 @@ public class PaymentDetails extends Activity implements SimpleGestureFilter.Simp
         amount = (EditText) findViewById(R.id.amount);
         Button update = (Button) findViewById(R.id.update_btn);
         final TextView text = (TextView) findViewById(R.id.text);
+        TextView text1 = (TextView) findViewById(R.id.text1);
+        TextView text2 = (TextView) findViewById(R.id.text2);
+        TextView text3 = (TextView) findViewById(R.id.text3);
+
+        String fontPath = "fonts/LibreFranklin-SemiBoldItalic.ttf";
+        Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+        text.setTypeface(tf);
+        text1.setTypeface(tf);
+        text2.setTypeface(tf);
+        text3.setTypeface(tf);
+        amount.setTypeface(tf);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");

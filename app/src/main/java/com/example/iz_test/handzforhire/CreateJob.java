@@ -68,10 +68,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class CreateJob extends Activity implements View.OnClickListener,SimpleGestureFilter.SimpleGestureListener{
 
@@ -218,13 +220,12 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
 
         for (int j = 0; j <= 100; j++)
         {
-            numbers.add(j);
+            numbers.add(j+1);
             System.out.println(numbers.get(j));
         }
 
 
         final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
-        threeItemsOptions2.add("0.00");
         threeItemsOptions2.add("0.25");
         threeItemsOptions2.add("0.50");
         threeItemsOptions2.add("0.75");
@@ -624,10 +625,22 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         if (v == time_layout) {
 
             // Get Current Time
-            final Calendar c = Calendar.getInstance();
+            TimeZone tz = TimeZone.getTimeZone("US/Eastern");
+            System.out.println(tz.getDisplayName());
+            System.out.println(tz.getRawOffset());
+            System.out.println(tz.getID());
+
+            //get the date at this timezone.
+            Calendar cal = new GregorianCalendar(tz);
+            final Calendar c =  new GregorianCalendar(tz);
+           // final Calendar c = Calendar.getInstance();
             mHour = c.get(Calendar.HOUR_OF_DAY);
             mMinute = c.get(Calendar.MINUTE);
-
+            if(mMinute >0 && mMinute < 60){
+                mHour=mHour+1;
+                mMinute=0;
+            }
+            System.out.println("Calendar "+c);
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                     new TimePickerDialog.OnTimeSetListener() {
@@ -674,7 +687,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                             {
                                 hour_day1 = String.valueOf(hour);
                             }
-                            start_time_text.setText(hour_day1 + ":" + min1 + " " + timeSet);
+                            start_time_text.setText(hour_day1 + ":" + min1 + " " + c.get(Calendar.AM_PM));
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
