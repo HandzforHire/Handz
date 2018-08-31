@@ -18,7 +18,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10sp"
+            android:layout_marginTop="70sp"
+            android:layout_marginLeft="70sp"
+            android:layout_marginRight="70sp"
+            android:layout_marginBottom="70sp"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -29,7 +32,7 @@
                 <RelativeLayout
                     android:id="@+id/rela1"
                     android:layout_width="match_parent"
-                    android:layout_height="120sp"
+                    android:layout_height="170sp"
                     android:background="#BF178487"
                     android:layout_marginTop="20sp">
 
@@ -45,7 +48,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:layout_marginTop="20sp"
-                        android:textSize="20sp"
+                        android:textSize="26sp"
                         android:textColor="#000000" />
 
                     <ImageView
@@ -61,12 +64,11 @@
 
                     <RelativeLayout
                         android:id="@+id/rating"
-                        android:layout_width="180sp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/relay"
-                        android:gravity="center"
+                       android:layout_marginRight="50sp"
                         android:layout_marginTop="20sp"
-                        android:layout_marginRight="18sp"
                         android:layout_alignParentRight="true">
 
                         <TextView
@@ -77,13 +79,13 @@
                             android:textStyle="italic"
                             android:layout_toLeftOf="@+id/text3"
                             android:layout_marginRight="5sp"
-                            android:textSize="20sp"
+                            android:textSize="30sp"
                             android:layout_centerVertical="true"
                             android:textColor="#000000"/>
 
                         <ImageView
-                            android:layout_width="40sp"
-                            android:layout_height="40sp"
+                            android:layout_width="55sp"
+                            android:layout_height="55sp"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="10sp"
                             android:layout_toLeftOf="@+id/text2"
@@ -95,7 +97,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_alignParentRight="true"
-                            android:textSize="22sp"
+                            android:textSize="26sp"
                             android:textColor="#000000"/>
 
                     </RelativeLayout>
@@ -103,8 +105,8 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="120sp"
-                    android:layout_height="120sp"
+                    android:layout_width="160sp"
+                    android:layout_height="160sp"
                     android:layout_marginLeft="20sp" >
 
                     <ImageView
@@ -121,12 +123,21 @@
                 </RelativeLayout>
 
             </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5sp"
+                android:text="lend a hand"
+                android:textAllCaps="true"
+                android:textSize="38sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="5sp"
                 android:gravity="center"
                 android:weightSum="2">
 
@@ -136,8 +147,8 @@
                     android:layout_marginLeft="10sp">
 
                     <Button
-                        android:layout_width="80sp"
-                        android:layout_height="80sp"
+                        android:layout_width="130sp"
+                        android:layout_height="130sp"
                         android:id="@+id/find_job"
                         android:textSize="22sp"
                         android:textColor="#000000"
@@ -153,7 +164,7 @@
                         android:textStyle="bold"
                         android:layout_marginTop="5sp"
                         android:layout_centerVertical="true"
-                        android:textSize="12sp"
+                        android:textSize="18sp"
                         android:layout_below="@+id/find_job"
                         android:textColor="#ffffff"/>
 
@@ -167,8 +178,8 @@
 
 
                     <Button
-                        android:layout_width="80sp"
-                        android:layout_height="80sp"
+                        android:layout_width="130sp"
+                        android:layout_height="130sp"
                         android:id="@+id/list_view"
                         android:layout_centerHorizontal="true"
                         android:textColor="#000000"
@@ -184,7 +195,7 @@
                         android:textAllCaps="true"
                         android:textStyle="bold"
                         android:layout_marginTop="5sp"
-                        android:textSize="12sp"
+                        android:textSize="18sp"
                         android:layout_below="@+id/list_view"
                         android:textColor="#ffffff"/>
 
@@ -209,8 +220,8 @@
 
                     <LinearLayout
                         android:id="@+id/pending_job"
-                        android:layout_width="80sp"
-                        android:layout_height="80sp"
+                        android:layout_width="130sp"
+                        android:layout_height="130sp"
                         android:background="@drawable/posted_jobs"
                         android:orientation="vertical">
 
@@ -244,7 +255,7 @@
                             android:textStyle="bold"
                             android:layout_marginTop="5sp"
                             android:layout_centerVertical="true"
-                            android:textSize="12sp"
+                            android:textSize="18sp"
                             android:layout_below="@+id/pending_job"
                             android:textColor="#ffffff"/>
 
@@ -258,8 +269,8 @@
 
                         <ImageView
                             android:id="@+id/handz"
-                            android:layout_width="80sp"
-                            android:layout_height="80sp"
+                            android:layout_width="130sp"
+                            android:layout_height="130sp"
                             android:layout_gravity="center"
                             android:background="@drawable/logo"/>
 
@@ -273,8 +284,8 @@
 
                         <LinearLayout
                             android:id="@+id/active_job"
-                            android:layout_width="80sp"
-                            android:layout_height="80sp"
+                            android:layout_width="130sp"
+                            android:layout_height="130sp"
                             android:layout_weight="1"
                             android:layout_marginRight="5sp"
                             android:background="@drawable/active_jobs"
@@ -286,8 +297,8 @@
 
                                 <TextView
                                     android:id="@+id/txt_activejobscnt"
-                                    android:layout_width="30sp"
-                                    android:layout_height="30sp"
+                                    android:layout_width="35sp"
+                                    android:layout_height="35sp"
                                     android:background="@drawable/circle_shape"
                                     android:textColor="#ffffff"
                                     android:visibility="invisible"
@@ -310,7 +321,7 @@
                             android:textStyle="bold"
                             android:layout_marginTop="5sp"
                             android:layout_centerVertical="true"
-                            android:textSize="12sp"
+                            android:textSize="18sp"
                             android:layout_below="@+id/active_job"
                             android:textColor="#ffffff"/>
 
@@ -321,7 +332,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="120sp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:weightSum="2">
@@ -329,13 +340,12 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20sp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/job_history"
-                        android:layout_width="80sp"
-                        android:layout_height="80sp"
+                        android:layout_width="130sp"
+                        android:layout_height="130sp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:background="@drawable/job_history"
@@ -347,8 +357,8 @@
 
                             <TextView
                                 android:id="@+id/job_historycnt"
-                                android:layout_width="30sp"
-                                android:layout_height="30sp"
+                                android:layout_width="35sp"
+                                android:layout_height="35sp"
                                 android:background="@drawable/circle_shape"
                                 android:textColor="#ffffff"
                                 android:visibility="invisible"
@@ -371,7 +381,7 @@
                         android:textStyle="bold"
                         android:layout_gravity="center"
                         android:layout_marginTop="5sp"
-                        android:textSize="12sp"
+                        android:textSize="18sp"
                         android:textColor="#ffffff"/>
 
                 </LinearLayout>
@@ -379,14 +389,14 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20sp">
+                    android:layout_marginLeft="25sp">
 
 
                     <Button
-                        android:layout_width="80sp"
-                        android:layout_height="80sp"
+                        android:layout_width="130sp"
+                        android:layout_height="130sp"
                         android:id="@+id/edit_user_profile"
-                        android:textSize="22sp"
+                        android:textSize="18sp"
                         android:textColor="#000000"
                         android:textAllCaps="true"
                         android:background="@drawable/edit_user"
@@ -400,8 +410,8 @@
                         android:layout_centerInParent="true"
                         android:textAllCaps="true"
                         android:textStyle="bold"
-                        android:layout_marginTop="5sp"
-                        android:textSize="12sp"
+                        android:layout_marginTop="10sp"
+                        android:textSize="18sp"
                         android:layout_below="@+id/edit_user_profile"
                         android:textColor="#ffffff"/>
 
@@ -415,15 +425,15 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="60sp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="30sp"
-                    android:layout_marginLeft="20sp">
+                    android:layout_marginLeft="22sp">
 
                 <ImageView
                     android:id="@+id/tutorial"
-                    android:layout_width="50sp"
-                    android:layout_height="30sp"
+                    android:layout_width="65sp"
+                    android:layout_height="65sp"
                     android:gravity="center"
                     android:src="@drawable/tutorial_image"/>
 
@@ -441,11 +451,11 @@
 
                 <Button
                     android:id="@+id/need_help"
-                    android:layout_width="50sp"
-                    android:layout_height="50sp"
-                    android:background="@drawable/bulb"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_width="65sp"
+                    android:layout_height="65sp"
+                    android:layout_marginTop="20sp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/bulb"/>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -456,8 +466,8 @@
 
                     <ImageView
                         android:id="@+id/sha_lend"
-                        android:layout_width="50sp"
-                        android:layout_height="30sp"
+                        android:layout_width="65sp"
+                        android:layout_height="65sp"
                         android:src="@drawable/share"/>
 
                     <TextView
@@ -475,14 +485,14 @@
 
             </RelativeLayout>
 
+             </LinearLayout>
             <TextView
                 android:id="@+id/tex1"
-                android:layout_width="100sp"
-                android:layout_height="30sp"
-                android:layout_alignParentLeft="true"
+                android:layout_width="150sp"
+                android:layout_height="60sp"
+                android:layout_marginTop="15sp"
+                android:layout_alignParentBottom="true"
                 android:background="@drawable/handz"/>
-
-             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>

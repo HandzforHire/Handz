@@ -227,13 +227,22 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
                     System.out.println("ressss:employee::" + employee);
                     date = object.getString("job_date");
                     System.out.println("ressss:date:::"+date);
-                    JSONObject object1 = new JSONObject(employee);
+                   /* JSONObject object1 = new JSONObject(employee);
                     for(int a = 0; a < object1.length(); a++) {
                         image = object1.getString("profile_image");
                         System.out.println("ressss:profile_image:::"+image);
                         average_rating = object1.getString("average_rating");
                         System.out.println("ressss:average_rating:::"+average_rating);
+                    }*/
+                    JSONArray emparray = new JSONArray(employee);
+                    System.out.println("object 1"+emparray);
+                    for(int a = 0; a < emparray.length(); a++) {
+                        JSONObject obj=emparray.getJSONObject(a);
+                        image = obj.getString("profile_image");
+                        System.out.println("ressss:profile_image:::"+image);
+                        average_rating = obj.getString("rating");
                     }
+
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("image",image);
                     map.put("average",average_rating);
