@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements ResponseListener
 
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LoginActivity.this, RegisterPage3.class);
+                Intent i = new Intent(LoginActivity.this, RegisterPage2.class);
                 startActivity(i);
                 finish();
             }

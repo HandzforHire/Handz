@@ -243,7 +243,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
             }
         });
 
-       /* next.setOnClickListener(new View.OnClickListener() {
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -391,8 +391,8 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 }
             }
-        });*/
-        next.setOnClickListener(new View.OnClickListener() {
+        });
+       /* next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getAccessToken();
@@ -403,7 +403,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         // ATTENTION: This was auto-generated to handle app links.
         Intent appLinkIntent = getIntent();
         String appLinkAction = appLinkIntent.getAction();
-        Uri appLinkData = appLinkIntent.getData();
+        Uri appLinkData = appLinkIntent.getData();*/
     }
 
     private void registerUser()

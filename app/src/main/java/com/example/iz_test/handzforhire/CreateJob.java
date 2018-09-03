@@ -218,7 +218,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         threePicker = new MyOptionsPickerView(CreateJob.this);
         final ArrayList<Integer> numbers = new ArrayList<Integer>(100);
 
-        for (int j = 0; j <= 100; j++)
+        for (int j = 0; j <100; j++)
         {
             numbers.add(j+1);
             System.out.println(numbers.get(j));
@@ -704,46 +704,63 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         end_time = end_time_text.getText().toString();
         amount = job_amount.getText().toString().trim();
         payment_type = amount_text.getText().toString().trim();
-        if(header.equals("CARE GIVING"))
-        {
-            job_category_color = "#FF87FA";
-            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
-        }
-        if(header.equals("COACHING"))
-        {
-            job_category_color = "#BED2EA";
-            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
 
-        }
-        if(header.equals("HOLIDAYS"))
+        if(header==null)
         {
-            job_category_color = "#FF4B13";
-            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
-        }
-        if(header.equals("INSIDE THE HOME"))
-        {
-            job_category_color = "#FFFB86";
-            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
-        }
-        if(header.equals("OUTSIDE THE HOME"))
-        {
-            job_category_color = "#00D034";
-            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
-        }
-        if(header.equals("PERSONAL SERVICES"))
-        {
-            job_category_color = "#FFC834";
-            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
-        }
-        if(header.equals("PETCARE"))
-        {
-            job_category_color = "#AA84FA";
-            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
-        }
-        if(header.equals("TUTORING"))
-        {
-            job_category_color = "#6BAEFB";
-            System.out.println("cccccccccccccc:colorcode:::"+job_category_color);
+            final Dialog dialog = new Dialog(CreateJob.this);
+            dialog.setContentView(R.layout.custom_dialog);
+
+            // set the custom dialog components - text, image and button
+            TextView text = (TextView) dialog.findViewById(R.id.text);
+            text.setText("Must choose any one category");
+            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+            Window window = dialog.getWindow();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            return;
+        }else {
+            if (header.equals("CARE GIVING")) {
+                job_category_color = "#FF87FA";
+                System.out.println("cccccccccccccc:colorcode:::" + job_category_color);
+            }
+            if (header.equals("COACHING")) {
+                job_category_color = "#BED2EA";
+                System.out.println("cccccccccccccc:colorcode:::" + job_category_color);
+
+            }
+            if (header.equals("HOLIDAYS")) {
+                job_category_color = "#FF4B13";
+                System.out.println("cccccccccccccc:colorcode:::" + job_category_color);
+            }
+            if (header.equals("INSIDE THE HOME")) {
+                job_category_color = "#FFFB86";
+                System.out.println("cccccccccccccc:colorcode:::" + job_category_color);
+            }
+            if (header.equals("OUTSIDE THE HOME")) {
+                job_category_color = "#00D034";
+                System.out.println("cccccccccccccc:colorcode:::" + job_category_color);
+            }
+            if (header.equals("PERSONAL SERVICES")) {
+                job_category_color = "#FFC834";
+                System.out.println("cccccccccccccc:colorcode:::" + job_category_color);
+            }
+            if (header.equals("PETCARE")) {
+                job_category_color = "#AA84FA";
+                System.out.println("cccccccccccccc:colorcode:::" + job_category_color);
+            }
+            if (header.equals("TUTORING")) {
+                job_category_color = "#6BAEFB";
+                System.out.println("cccccccccccccc:colorcode:::" + job_category_color);
+            }
         }
         if (TextUtils.isEmpty(name)) {
             // custom dialog

@@ -213,7 +213,7 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
     public void onResponserecieved(String jsonobject, int i) {
         String status = null;
         String rating_list = null;
-
+        System.out.println("Review Rating "+jsonobject);
         try {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
@@ -223,18 +223,16 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                 JSONArray array = new JSONArray(rating_list);
                 for(int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
+                    System.out.println("Review Rating obj "+object);
                     final String employee = object.getString("employee");
                     rating = object.getString("average_rating");
                     date = object.getString("job_date");
-                    System.out.println("ressss:date:::"+date);
                     comment = object.getString("comments");
-                    System.out.println("ressss:comment:::"+comment);
                     JSONArray emparray = new JSONArray(employee);
                     System.out.println("object 1"+emparray);
                     for(int a = 0; a < emparray.length(); a++) {
                         JSONObject obj=emparray.getJSONObject(a);
                         image = obj.getString("profile_image");
-                        System.out.println("ressss:profile_image:::"+image);
                         average_rating = obj.getString("rating");
                     }
 
@@ -244,7 +242,7 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                     map.put("date",date);
                     map.put("comments",comment);
                     job_list.add(map);
-                    System.out.println("job_list:::" + job_list);
+
                     ReviewAdapter arrayAdapter = new ReviewAdapter(this, job_list) {
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent) {

@@ -80,6 +80,9 @@ public class ReviewAdapter extends BaseAdapter {
         rating.setTypeface(font1);
         comments.setText(comment);
         comments.setTypeface(font1);
+
+        System.out.println("Average rating "+get_average);
+        if(get_average!=null && !get_average.equals(""))
         rating_bar.setRating(Float.parseFloat(get_average));
      /*   if(get_image.equals(""))
         {

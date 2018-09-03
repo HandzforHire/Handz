@@ -268,6 +268,8 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
 
         });
 
+
+
     }
 
     @Override

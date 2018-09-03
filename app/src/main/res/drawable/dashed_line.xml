@@ -4,9 +4,7 @@
 
     <stroke
         android:color="#000000"
-        android:dashWidth="20px"
-        android:dashGap="10px"
-        android:width="2dp"/>
+        android:width="3dp"/>
 
     <gradient
         android:startColor="#E8C64B"
