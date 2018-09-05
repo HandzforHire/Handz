@@ -262,8 +262,6 @@ public class ViewSearchJob extends Activity implements SimpleGestureFilter.Simpl
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -287,6 +285,7 @@ public class ViewSearchJob extends Activity implements SimpleGestureFilter.Simpl
                 params.put(XAPP_KEY, value);
                 params.put(USER_ID,user_id);
                 params.put(TYPE,type);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };
@@ -318,15 +317,14 @@ public class ViewSearchJob extends Activity implements SimpleGestureFilter.Simpl
                             JSONObject jsonObject = new JSONObject(responseBody);
                             System.out.println("volley error::: " + jsonObject);
                             String status = jsonObject.getString("msg");
-                            if(status.equals("No Jobs Found"))
-                            {
+
                                 // custom dialog
                                 final Dialog dialogs = new Dialog(ViewSearchJob.this);
                                 dialogs.setContentView(R.layout.custom_dialog);
 
                                 // set the custom dialog components - text, image and button
                                 TextView text = (TextView) dialogs.findViewById(R.id.text);
-                                text.setText("No Active Jobs Found");
+                                text.setText(status);
                                 Button dialogButton = (Button) dialogs.findViewById(R.id.ok);
                                 // if button is clicked, close the custom dialog
                                 dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -340,7 +338,7 @@ public class ViewSearchJob extends Activity implements SimpleGestureFilter.Simpl
                                 Window window = dialog.getWindow();
                                 dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
+
                         } catch (JSONException e) {
                             //Handle a malformed json response
                             System.out.println("volley error ::" + e.getMessage());

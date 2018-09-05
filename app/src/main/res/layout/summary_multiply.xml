@@ -37,6 +37,7 @@
                 android:layout_marginTop="5sp"
                 android:textColor="#BEBEBE"
                 android:paddingLeft="10sp"
+                android:gravity="center"
                 android:paddingRight="10sp"
                 android:paddingBottom="5sp"
                 android:text="summary of payment details"
@@ -134,8 +135,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="*"
-                        android:textSize="22sp"
+                        android:text="x"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         android:textAllCaps="true"
                         android:layout_marginLeft="30sp"
@@ -149,10 +150,11 @@
                         android:text=""
                         android:textSize="22sp"
                         android:background="@drawable/shape"
-                        android:textStyle="bold|italic"                        android:inputType="number"
+                        android:textStyle="bold|italic"
+                        android:inputType="number"
                         android:paddingLeft="10sp"
                         android:textAllCaps="true"
-                        android:layout_marginLeft="20sp"
+                        android:layout_marginLeft="15sp"
                         android:textColor="#000000"
                         android:layout_gravity="center" />
 
@@ -161,7 +163,8 @@
                         android:layout_height="wrap_content"
                         android:text="Expected Hours"
                         android:textSize="22sp"
-                        android:textStyle="bold|italic"                        android:textAllCaps="false"
+                        android:textStyle="bold|italic"
+                        android:textAllCaps="false"
                         android:layout_marginLeft="20sp"
                         android:textColor="#000000"
                         android:layout_gravity="center" />

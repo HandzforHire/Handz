@@ -191,8 +191,6 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -261,6 +259,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
                 params.put(TYPE,type);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);
                 return params;
             }
@@ -388,7 +387,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
                     name = object.getString("job_name");
                     date = object.getString("job_date");
                     type = object.getString("job_payment_type");
-                    amount = object.getString("job_payment_amount");
+                    amount = object.getString("job_estimated_payment");
                     applicants = object.getString("no_of_applicants_applied");
                     job_id = object.getString("job_id");
                     dlist=object.getString("delist");
@@ -464,6 +463,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -701,7 +701,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
 
         private void check()
         {
-            final String url = Constant.SERVER_URL+"remove_job?X-APP-KEY="+value+"&delist="+dlist+"&job_id="+job_id;
+            final String url = Constant.SERVER_URL+"remove_job?X-APP-KEY="+value+"&delist="+dlist+"&job_id="+job_id+"&device=android";
 
             JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                     new Response.Listener<JSONObject>()

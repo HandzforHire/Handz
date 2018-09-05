@@ -57,6 +57,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -69,6 +70,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+
 
 public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListener,GoogleMap.OnMyLocationChangeListener,GoogleMap.OnCameraChangeListener,ResponseListener,OnMapReadyCallback{
 
@@ -311,17 +313,23 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
 
 
     public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+
+        Bitmap bitmap=null;
+        try {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+         bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                 drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
 
+        }catch (Exception e){
+            System.out.println("exception "+e.getMessage());
+        }
         return bitmap;
     }
 
@@ -363,66 +371,26 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                             String lat = object.getString("lat");
                             String lon = object.getString("lon");
                             String job_category = object.getString("job_category");
-                            Bitmap icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_1);
-                            if (job_category.equals("Painting (Interior / Exterior)")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_1);
-                            } else if (job_category.equals("Moving Items")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_2);
-                            } else if (job_category.equals("Heavy Lifting")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_3);
-                            } else if (job_category.equals("Unpacking Boxes")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_4);
-                            } else if (job_category.equals("Landscaping")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_5);
-                            } else if (job_category.equals("Lawnmowing")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_6);
-                            } else if (job_category.equals("Raking Leaves")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_7);
 
-                            } else if (job_category.equals("Babysitting")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_8);
-
-                            } else if (job_category.equals("Digging (trench/hole)")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_9);
-
-                            } else if (job_category.equals("Assembling Furniture/Object")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_10);
-
-                            } else if (job_category.equals("Dog Walking")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_11);
-
-                            } else if (job_category.equals("Pet Care")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_12);
-
-                            } else if (job_category.equals("Workout Partner/Coach")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_13);
-
-                            } else if (job_category.equals("Server(s) for Dinner Party")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_14);
-
-                            } else if (job_category.equals("Bartender for House Party")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_15);
-
-                            } else if (job_category.equals("Shoveling Snow")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_16);
-
-                            } else if (job_category.equals("Apprentice for Skilled Laborer")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_17);
-
-                            } else if (job_category.equals("Cleaning")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_18);
-
-                            } else if (job_category.equals("Organizing")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_19);
-
-                            } else if (job_category.equals("Food Shopping")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_20);
-
-                            } else if (job_category.equals("Other")) {
-                                icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_21);
-
+                            Bitmap icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_101);
+                           //  Bitmap icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_8);
+                             if (job_category.equals("Care Giving")) {
+                                 icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_101);
+                            } else if (job_category.equals("Coaching")) {
+                                 icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_102);
+                            } else if (job_category.equals("Holidays")) {
+                                 icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_103);
+                            } else if (job_category.equals("Inside the Home")) {
+                                 icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_104);
+                            } else if (job_category.equals("Outside the Home")) {
+                                 icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_105);
+                            } else if (job_category.equals("Personal Services")) {
+                                 icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_106);
+                            } else if (job_category.equals("Petcare")) {
+                                 icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_107);
+                            } else if (job_category.equals("Tutoring)")) {
+                                 icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_108);
                             }
-
                             MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon))).icon(BitmapDescriptorFactory.fromBitmap(icon));
                             googleMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) FindJobMap.this);
                             final Marker groupMarker = googleMap.addMarker(marker);
@@ -510,5 +478,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
             gps.showSettingsAlert();
         }
     }
+
+
 
 }

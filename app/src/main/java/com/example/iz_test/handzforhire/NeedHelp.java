@@ -139,6 +139,7 @@ public class NeedHelp extends Activity implements SimpleGestureFilter.SimpleGest
                 map.put(KEY_USERID, id);
                 map.put(KEY_EMAIL, email);
                 map.put(KEY_QUERY, query);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

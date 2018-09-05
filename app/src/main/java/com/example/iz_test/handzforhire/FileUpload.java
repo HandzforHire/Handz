@@ -1,7 +1,15 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -186,8 +194,6 @@ public class FileUpload{
                             Toast.makeText(activity,"Not Connected",Toast.LENGTH_LONG).show();
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -195,6 +201,27 @@ public class FileUpload{
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
                                 System.out.println("error" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                // custom dialog
+                                final Dialog dialog = new Dialog(activity);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText(status);
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             } catch (JSONException e) {
                                 //Handle a malformed json response
                             } catch (UnsupportedEncodingException error1) {
@@ -209,6 +236,7 @@ public class FileUpload{
                 map.put(APP_KEY, value);
                 map.put(KEY_PROFILE_IMAGE, firstRemoteFile);
                 map.put(KEY_USERID, id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

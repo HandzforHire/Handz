@@ -340,8 +340,6 @@ public class LendCheckingAccount extends Activity implements SimpleGestureFilter
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -351,14 +349,14 @@ public class LendCheckingAccount extends Activity implements SimpleGestureFilter
                                 System.out.println("error" + jsonObject);
 
                                 String status = jsonObject.getString("msg");
-                                if (status.equals("Account number already exists.")) {
+                               // if (status.equals("Account number already exists.")) {
                                     // custom dialog
                                     final Dialog dialog = new Dialog(LendCheckingAccount.this);
                                     dialog.setContentView(R.layout.custom_dialog);
 
                                     // set the custom dialog components - text, image and button
                                     TextView text = (TextView) dialog.findViewById(R.id.text);
-                                    text.setText("Account number already exists");
+                                    text.setText(status);
                                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                                     // if button is clicked, close the custom dialog
                                     dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -373,9 +371,9 @@ public class LendCheckingAccount extends Activity implements SimpleGestureFilter
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                     return;
-                                } else {
+                                /*} else {
 
-                                }
+                                }*/
                             } catch (JSONException e) {
                                 //Handle a malformed json response
                             } catch (UnsupportedEncodingException error1) {
@@ -397,7 +395,7 @@ public class LendCheckingAccount extends Activity implements SimpleGestureFilter
                 params.put(STATE, st);
                 params.put(EMPLOYER_ID, user_id);
                 params.put(STATUS, status);
-
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };

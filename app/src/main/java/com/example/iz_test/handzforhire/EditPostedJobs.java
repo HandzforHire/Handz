@@ -155,6 +155,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, user_id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -179,9 +180,16 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
             {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
-                System.out.println("ggggggggget:profilename:" + profilename);
-                profile_name.setText(profilename);
-                System.out.println("ggggggggget:profile_image:" + profile_image);
+                String user_name = jResult.getString("username");
+                System.out.println("ggggggggget:profilename:" + profilename+",,,"+user_name);
+                if(profilename.equals(""))
+                {
+                    profile_name.setText(user_name);
+                }
+                else
+                {
+                    profile_name.setText(profilename);
+                }
                 Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 
             }
@@ -232,8 +240,6 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -242,14 +248,14 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                                 JSONObject jsonObject = new JSONObject(responseBody);
                                 System.out.println("eeeeeeeerror" + jsonObject);
                                 String status = jsonObject.getString("msg");
-                                if (status.equals("No Jobs Found")) {
+                                //if (status.equals("No Jobs Found")) {
                                     // custom dialog
                                     final Dialog dialog = new Dialog(EditPostedJobs.this);
                                     dialog.setContentView(R.layout.custom_dialog);
 
                                     // set the custom dialog components - text, image and button
                                     TextView text = (TextView) dialog.findViewById(R.id.text);
-                                    text.setText("No Jobs Found");
+                                    text.setText(status);
                                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                                     // if button is clicked, close the custom dialog
                                     dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -263,7 +269,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                                     Window window = dialog.getWindow();
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                } else {
+                                /*} else {
 
                                     final Dialog dialog = new Dialog(EditPostedJobs.this);
                                     dialog.setContentView(R.layout.custom_dialog);
@@ -284,7 +290,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                                     Window window = dialog.getWindow();
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                }
+                                }*/
                             } catch (JSONException e) {
                                 //Handle a malformed json response
                                 System.out.println("volley error ::" + e.getMessage());
@@ -300,6 +306,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, user_id);
                 params.put(TYPE, type1);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };
@@ -327,7 +334,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                     name = object.getString("job_name");
                     date = object.getString("job_date");
                     type = object.getString("job_payment_type");
-                    amount = object.getString("job_payment_amount");
+                    amount = object.getString("job_estimated_payment");
 
 
                     HashMap<String, String> map = new HashMap<String, String>();

@@ -118,6 +118,7 @@ public class PayEmployee1 extends Activity implements SimpleGestureFilter.Simple
                 map.put(XAPP_KEY, value);
                 map.put(EMPLOYER_ID, employer_id);
                 map.put(JOB_ID, job_id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -209,6 +210,7 @@ public class PayEmployee1 extends Activity implements SimpleGestureFilter.Simple
                 map.put(PAYMENT_AMOUNT, get_amount);
                 map.put(TOTAL_PAYMENT, get_total);
                 map.put(DATE, get_date);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

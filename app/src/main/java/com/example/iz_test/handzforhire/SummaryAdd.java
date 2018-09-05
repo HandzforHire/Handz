@@ -266,8 +266,6 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -321,6 +319,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(SUB_CATEGORY,sub_category);
                 params.put(CATEGORY_COLOR,job_category_color);
                 params.put(DELIST,delist);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
 
@@ -346,8 +345,17 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
 
             if(status.equals("success"))
             {
+                Intent i = new Intent(SummaryAdd.this,PostedJobs.class);
+                i.putExtra("userId", id);
+                i.putExtra("jobId",job_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
                 // custom dialog
-                final Dialog dialog = new Dialog(SummaryAdd.this);
+      /*          final Dialog dialog = new Dialog(SummaryAdd.this);
                 dialog.setContentView(R.layout.gray_custom);
 
                 // set the custom dialog components - text, image and button
@@ -375,7 +383,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                 Window window = dialog.getWindow();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
+                return;*/
             }
             else
             {
@@ -548,15 +556,35 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
-                                System.out.println("error" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                if (!status.equals("")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(SummaryAdd.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
                             } catch (JSONException e) {
 
                             } catch (UnsupportedEncodingException error1) {
@@ -606,6 +634,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(DELIST,delist);
                 params.put(ESTIMATED_PAYMENT,estimated_amount);
                 params.put(JOB_ID,job_id);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };
@@ -628,8 +657,18 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
             System.out.println("jjjjjjjjjjjob:id::" + job_id);
 
             if (status.equals("success")) {
+
+                Intent i = new Intent(SummaryAdd.this, EditPostedJobs.class);
+                i.putExtra("userId", id);
+                i.putExtra("jobId", job_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
                 // custom dialog
-                final Dialog dialog = new Dialog(SummaryAdd.this);
+     /*           final Dialog dialog = new Dialog(SummaryAdd.this);
                 dialog.setContentView(R.layout.gray_custom);
 
                 // set the custom dialog components - text, image and button
@@ -657,7 +696,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                 Window window = dialog.getWindow();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
+                return;*/
             } else {
 
             }

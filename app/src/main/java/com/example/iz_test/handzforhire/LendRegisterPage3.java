@@ -369,8 +369,6 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }else if (error instanceof AuthFailureError) {
                                 Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                            }else if (error instanceof ServerError) {
-                                Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                             }else if (error instanceof NetworkError) {
                                 Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                             }else {
@@ -427,6 +425,7 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
                     params.put(USERTYPE,usertype);
                     params.put(DEVICETOKEN,deviceId);
                     params.put(MERCHANTID,"123");
+                    params.put(Constant.DEVICE, Constant.ANDROID);
                     return params;
                 }
 

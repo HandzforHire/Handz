@@ -103,8 +103,6 @@ public class RequestMethods {
                                 Toast.makeText(context,"Not Connected",Toast.LENGTH_LONG).show();
                             }else if (error instanceof AuthFailureError) {
                                 Toast.makeText(context,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                            }else if (error instanceof ServerError) {
-                                Toast.makeText(context,"Server responded with a error response",Toast.LENGTH_LONG).show();
                             }else if (error instanceof NetworkError) {
                                 Toast.makeText(context,"Network error while performing the request",Toast.LENGTH_LONG).show();
                             }else {

@@ -145,7 +145,7 @@ public class ApplicantAdapter extends BaseAdapter {
     {
 
 
-        final String url = HIRE_URL+"?X-APP-KEY="+value+"&employer_id="+employer_id+"&job_id="+job_id+"&employee_id="+employee_id+"&job_name="+job_name;
+        final String url = HIRE_URL+"?X-APP-KEY="+value+"&employer_id="+employer_id+"&job_id="+job_id+"&employee_id="+employee_id+"&job_name="+job_name+"&device=android";
 
         // prepare the Request
         JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -228,8 +228,6 @@ public class ApplicantAdapter extends BaseAdapter {
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -254,6 +252,7 @@ public class ApplicantAdapter extends BaseAdapter {
                 params.put(JOB_ID, job_id);
                 params.put(EMPLOYEE_ID, employee_id);
                 params.put(USER_TYPE,usertype);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };

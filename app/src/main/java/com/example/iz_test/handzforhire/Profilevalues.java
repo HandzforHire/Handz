@@ -13,4 +13,5 @@ public class Profilevalues {
     public static String email;
     public static String usertype="1";
     public static String username="";
+    public static String android_id="";
 }

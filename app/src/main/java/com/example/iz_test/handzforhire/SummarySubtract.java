@@ -104,6 +104,7 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
     String delist = "yes";
     private SimpleGestureFilter detector;
     Dialog dialog;
+    TextView create_job,edit;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,8 +112,8 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         ImageView back = (ImageView) findViewById(R.id.back);
-        TextView create_job = (TextView) findViewById(R.id.create_btn);
-        TextView edit = (TextView) findViewById(R.id.edit_btn);
+        create_job = (TextView) findViewById(R.id.create_btn);
+        edit = (TextView) findViewById(R.id.edit_btn);
         pocket_expense = (TextView) findViewById(R.id.ope);
         paypal_merchant = (TextView) findViewById(R.id.pmpf);
         job_payout = (TextView) findViewById(R.id.ajp);
@@ -267,15 +268,35 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
-                                System.out.println("error" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                if (!status.equals("")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(SummarySubtract.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
                             } catch (JSONException e) {
 
                             } catch (UnsupportedEncodingException error1) {
@@ -322,6 +343,7 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
                 params.put(SUB_CATEGORY,sub_category);
                 params.put(CATEGORY_COLOR,job_category_color);
                 params.put(DELIST,delist);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
 
@@ -347,36 +369,15 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
 
             if(status.equals("success"))
             {
-                // custom dialog
-                final Dialog dialog = new Dialog(SummarySubtract.this);
-                dialog.setContentView(R.layout.gray_custom);
-
-                // set the custom dialog components - text, image and button
-                TextView text = (TextView) dialog.findViewById(R.id.text);
-                text.setText("Job Created Successfully");
-                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                // if button is clicked, close the custom dialog
-                dialogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                        Intent i = new Intent(SummarySubtract.this,PostedJobs.class);
-                        i.putExtra("userId", id);
-                        i.putExtra("jobId",job_id);
-                        i.putExtra("address", address);
-                        i.putExtra("city", city);
-                        i.putExtra("state", state);
-                        i.putExtra("zipcode", zipcode);
-                        startActivity(i);
-                        finish();
-                    }
-                });
-
-                dialog.show();
-                Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
+                Intent i = new Intent(SummarySubtract.this,PostedJobs.class);
+                i.putExtra("userId", id);
+                i.putExtra("jobId",job_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
             }
             else
             {
@@ -423,29 +424,42 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
             }
 
             String new_pay_amount = hourly_value.getText().toString();
-            System.out.println("sssssssssssss:subtract:new_pay_amount:"+new_pay_amount);
             String new_hours = expected_value.getText().toString();
             String job_estimated = String.valueOf(Float.valueOf(new_pay_amount)*Float.valueOf(new_hours));
-            System.out.println("sssssssssssss:subtract:job_estimated:multiply:"+job_estimated);
             job_payout.setText(job_estimated);
 
             String s1 = "97.1";
             String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(job_estimated));
-            System.out.println("sssssssssssss:summary:multi:"+multi);
             String s2 = "130";
             String sub = String.valueOf(Float.valueOf(multi)-Float.valueOf(s2));
-            System.out.println("sssssssssssss:summary:sub:"+sub);
             String s3 = "100";
             String div = String.valueOf(Float.valueOf(sub)/Float.valueOf(s3));
-            System.out.println("sssssssssssss:summary:div:"+div);
             String pocket_value = String.format("%.2f", Float.valueOf(div));
-            System.out.println("sssssssssssss:summary:total1:"+pocket_value);
             String handz_fee = "1.00";
             String pay_fee = String.valueOf(Float.valueOf(job_estimated)-Float.valueOf(pocket_value)-Float.valueOf(handz_fee));
             String total_value = String.format("%.2f", Float.valueOf(pay_fee));
-            System.out.println("sssssssssssss:summary:pay_fee:"+pay_fee+"total2:::"+total_value);
+
             paypal_merchant.setText(total_value);
             pocket_expense.setText(pocket_value);
+
+            double doubleFromString = Double.parseDouble(pocket_value);
+            if(doubleFromString<0)
+            {
+                create_job.setVisibility(View.INVISIBLE);
+                edit.setVisibility(View.INVISIBLE);
+            }
+            else {
+                if(edit_job.equals("yes"))
+                {
+                    create_job.setVisibility(View.INVISIBLE);
+                    edit.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    edit.setVisibility(View.INVISIBLE);
+                    create_job.setVisibility(View.VISIBLE);
+                }
+            }
         }
     };
 
@@ -483,30 +497,40 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
                 expected_value.addTextChangedListener(this);
             }
             String new_hours = expected_value.getText().toString();
-            System.out.println("sssssssssssss:subtract:new_hours:"+new_hours);
             String new_amount = hourly_value.getText().toString();
             String estimated = String.valueOf(Float.valueOf(new_hours)*Float.valueOf(new_amount));
-            System.out.println("sssssssssssss:subtract:estimated:multiply:"+estimated);
             job_payout.setText(estimated);
 
             String s1 = "97.1";
             String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(estimated));
-            System.out.println("sssssssssssss:summary:multi:"+multi);
             String s2 = "130";
             String sub = String.valueOf(Float.valueOf(multi)-Float.valueOf(s2));
-            System.out.println("sssssssssssss:summary:sub:"+sub);
             String s3 = "100";
             String div = String.valueOf(Float.valueOf(sub)/Float.valueOf(s3));
-            System.out.println("sssssssssssss:summary:div:"+div);
             String pocket_value = String.format("%.2f", Float.valueOf(div));
-            System.out.println("sssssssssssss:summary:total1:"+pocket_value);
             String handz_fee = "1.00";
             String pay_fee = String.valueOf(Float.valueOf(estimated)-Float.valueOf(pocket_value)-Float.valueOf(handz_fee));
             String total_value = String.format("%.2f", Float.valueOf(pay_fee));
-            System.out.println("sssssssssssss:summary:pay_fee:"+pay_fee+"total2:::"+total_value);
             paypal_merchant.setText(total_value);
             pocket_expense.setText(pocket_value);
-
+            double doubleFromString = Double.parseDouble(pocket_value);
+            if(doubleFromString<0)
+            {
+                create_job.setVisibility(View.INVISIBLE);
+                edit.setVisibility(View.INVISIBLE);
+            }
+            else {
+                if(edit_job.equals("yes"))
+                {
+                    create_job.setVisibility(View.INVISIBLE);
+                    edit.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    edit.setVisibility(View.INVISIBLE);
+                    create_job.setVisibility(View.VISIBLE);
+                }
+            }
         }
     };
 
@@ -530,14 +554,35 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
                             Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
+                                String status = jsonObject.getString("msg");
+                                if (!status.equals("")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(SummarySubtract.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
                                 System.out.println("error" + jsonObject);
                             } catch (JSONException e) {
 
@@ -589,16 +634,10 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
                 params.put(DELIST,delist);
                 params.put(ESTIMATED_PAYMENT,estimated_amount);
                 params.put(JOB_ID,job_id);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };
-
-        System.out.println("vvvvvvv1:"+".."+key+".."+id+".."+name+".."+usertype+".."+job_expire);
-
-        System.out.println("vvvvvvv2:"+".."+category+".."+description+".."+date+".."+start_time+".."+job_category_color);
-        System.out.println("vvvvvvv3:"+".."+job_id+".."+amount+".."+duration+".."+address+".."+fee_details);
-        System.out.println("vvvvvvv4:"+".."+city+".."+state+".."+zipcode+".."+post_address+".."+sub_category);
-        System.out.println("vvvvvvv5:"+".."+latitude+".."+longitude+".."+estimated_amount+".."+flexible_status+".."+payout);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
@@ -615,7 +654,6 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
 
             status = jResult.getString("status");
             job_id = jResult.getString("job_id");
-            System.out.println("jjjjjjjjjjjob:id::" + job_id);
 
             if (status.equals("success")) {
                 // custom dialog

@@ -46,9 +46,10 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:textStyle="bold"
+                    android:layout_marginTop="30sp"
                     android:textSize="18sp"
                     android:gravity="left|right"
-                    android:text="Our mission is to conveniently connect you with local neighbors, who have the interest and skill set to fulfill your job needs!  Your time is valuable... and sometimes you just need a hand!  If you're able to lend a hand, start applying for jobs today at your convenience!\n Please feel free to visit our website, handzforhire.com or view the commercials below for more information."/>
+                    android:text="Our mission is to conveniently connect you with local neighbors, who have the interest and skill set to fulfill your job needs!  Your time is valuable... and sometimes you just need a hand!  If you're able to lend a hand, start applying for jobs today at your convenience! Please feel free to visit our website, handzforhire.com or view the commercials below for more information."/>
 
                 <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
                     android:id="@+id/youtube_player_view1"
@@ -94,7 +95,7 @@
                     android:textColor="#000000"
                     android:textAllCaps="false"
                     android:textSize="16sp"
-                    android:layout_marginTop="10sp"
+                    android:layout_marginTop="30sp"
                     android:gravity="center"
                     android:text="Q: What if I want to rehire the same person?"/>
 
@@ -114,7 +115,7 @@
                     android:textColor="#000000"
                     android:textAllCaps="false"
                     android:textSize="16sp"
-                    android:layout_marginTop="10sp"
+                    android:layout_marginTop="30sp"
                     android:gravity="center"
                     android:text="Q: Why do I have to provide my PayPal information?"/>
 
@@ -134,7 +135,7 @@
                     android:textColor="#000000"
                     android:textAllCaps="false"
                     android:textSize="16sp"
-                    android:layout_marginTop="10sp"
+                    android:layout_marginTop="30sp"
                     android:gravity="center"
                     android:text="Q: Does Handz have access to my PayPal information?"/>
 
@@ -154,7 +155,7 @@
                     android:textColor="#000000"
                     android:textAllCaps="false"
                     android:textSize="16sp"
-                    android:layout_marginTop="10sp"
+                    android:layout_marginTop="30sp"
                     android:gravity="center"
                     android:text="Q: What if I created a job and underestimated the expected duration of the job?"/>
 
@@ -174,7 +175,7 @@
                     android:textColor="#000000"
                     android:textAllCaps="false"
                     android:textSize="16sp"
-                    android:layout_marginTop="10sp"
+                    android:layout_marginTop="30sp"
                     android:gravity="center"
                     android:text="Q: The date has passed for my posted job, and then my job disappeared. What happened?"/>
 
@@ -194,7 +195,7 @@
                     android:textColor="#000000"
                     android:textAllCaps="false"
                     android:textSize="16sp"
-                    android:layout_marginTop="10sp"
+                    android:layout_marginTop="30sp"
                     android:gravity="center"
                     android:text="Q: How do I setup my PayPal account if I'm a first time user?"/>
 

@@ -444,8 +444,6 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -454,14 +452,14 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
                                 JSONObject jsonObject = new JSONObject(responseBody);
                                 System.out.println("error" + jsonObject);
                                 String status = jsonObject.getString("msg");
-                                if (status.equals("You are not allowed to apply for the job")) {
+                            //    if (status.equals("You are not allowed to apply for the job")) {
                                     // custom dialog
                                     final Dialog dialog = new Dialog(ChatNeed.this);
                                     dialog.setContentView(R.layout.custom_dialog);
 
                                     // set the custom dialog components - text, image and button
                                     TextView text = (TextView) dialog.findViewById(R.id.text);
-                                    text.setText("You are not allowed to apply for the job");
+                                    text.setText(status);
                                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                                     // if button is clicked, close the custom dialog
                                     dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -475,7 +473,7 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
                                     Window window = dialog.getWindow();
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                }
+                              //  }
                             } catch (JSONException e) {
 
                             } catch (UnsupportedEncodingException error1) {
@@ -494,6 +492,7 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
                 params.put(RECEIVER_ID, receiverid);
                 params.put(MSG_TYPE, messagetype);
                 params.put(MSG, msg);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("params "+params);
                 return params;
             }

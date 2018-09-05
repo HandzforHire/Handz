@@ -38,7 +38,8 @@ public class PaymentDetails extends Activity implements SimpleGestureFilter.Simp
         TextView text2 = (TextView) findViewById(R.id.text2);
         TextView text3 = (TextView) findViewById(R.id.text3);
 
-        String fontPath = "fonts/LibreFranklin-SemiBoldItalic.ttf";
+        String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
+
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
         text.setTypeface(tf);
         text1.setTypeface(tf);

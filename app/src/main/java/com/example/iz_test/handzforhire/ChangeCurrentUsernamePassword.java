@@ -305,6 +305,7 @@ public class ChangeCurrentUsernamePassword extends Activity implements SimpleGes
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, uid);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -373,8 +374,6 @@ public class ChangeCurrentUsernamePassword extends Activity implements SimpleGes
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -398,6 +397,7 @@ public class ChangeCurrentUsernamePassword extends Activity implements SimpleGes
                 map.put(KEY_USERNAME,user);
                 map.put(KEY_USERID,uid);
                 map.put(KEY_PASSWORD,pass);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

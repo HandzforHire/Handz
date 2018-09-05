@@ -167,8 +167,6 @@ public class ForgotPassword extends Activity{
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -177,7 +175,7 @@ public class ForgotPassword extends Activity{
                                 JSONObject jsonObject = new JSONObject(responseBody);
                                 System.out.println("eeeeeeeeeeeeeeeror:" + jsonObject);
                                 String status = jsonObject.getString("msg");
-                                if (!status.equals("")) {
+                              //  if (!status.equals("")) {
                                     // custom dialog
                                     final Dialog dialog = new Dialog(ForgotPassword.this);
                                     dialog.setContentView(R.layout.custom_dialog);
@@ -198,7 +196,7 @@ public class ForgotPassword extends Activity{
                                     Window window = dialog.getWindow();
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                }
+                             //   }
                             } catch (JSONException e) {
                                 //Handle a malformed json response
                             } catch (UnsupportedEncodingException error1) {
@@ -212,6 +210,7 @@ public class ForgotPassword extends Activity{
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(APP_KEY, value);
                 map.put(EMAIL, email_address);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

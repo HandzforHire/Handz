@@ -138,6 +138,7 @@ public class ViewApplicant extends Activity implements SimpleGestureFilter.Simpl
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, user_id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -207,6 +208,7 @@ public class ViewApplicant extends Activity implements SimpleGestureFilter.Simpl
                 params.put(XAPP_KEY, value);
                 params.put(EMPLOYER_ID, user_id);
                 params.put(JOB_ID, job_id);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };

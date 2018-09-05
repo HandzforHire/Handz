@@ -71,7 +71,7 @@ import java.util.Map;
 public class EditCreateJob extends Activity implements View.OnClickListener,SimpleGestureFilter.SimpleGestureListener {
 
     Spinner list;
-    LinearLayout layout;
+    LinearLayout layout,category_layout;
     String id, address, zipcode, state, city, name,job_category,description,date,start_time,end_time,amount,st_time,en_time, type;
     private static final String URL = Constant.SERVER_URL+"job_category_lists";
     private static final String GET_JOB = Constant.SERVER_URL+"job_detail_view";
@@ -82,18 +82,18 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
     TextView end_time_text;
     TextView job_amount,symbol;
     TextView pay_text;
-    TextView amount_text;
+    TextView amount_text,hour;
     public static TextView textview;
     static String category="0",categoryId="0";
     private int mHour, mMinute;
-    ImageView logo,arrow;
+    ImageView logo,arrow,main_category_image;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
     String job_id,jobId,paytext,pay_amount,flexible_status,job_estimated,hourr;
 
-    RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
+    RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout,duration_layout;
     CheckBox checkBox;
     Activity activity;
     MyOptionsPickerView threePicker;
@@ -117,6 +117,9 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         layout = (LinearLayout)findViewById(R.id.relay);
+        category_layout = (LinearLayout)findViewById(R.id.linear);
+        duration_layout = (RelativeLayout)findViewById(R.id.linear3);
+
         category_name = (TextView)findViewById(R.id.cat_name);
         next = (Button) findViewById(R.id.next);
         job_name = (EditText) findViewById(R.id.descrip);
@@ -137,7 +140,8 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
         estimate_layout = (RelativeLayout) findViewById(R.id.linear3);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         symbol = (TextView) findViewById(R.id.symbol);
-
+        hour = (TextView) findViewById(R.id.hour);
+        main_category_image =(ImageView)findViewById(R.id.main_category);
         Intent i = getIntent();
         id = i.getStringExtra("userId");
         address = i.getStringExtra("address");
@@ -183,7 +187,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
         start_time_text.setOnClickListener(this);
         end_time_text.setOnClickListener(this);
 
-        end_time_text.setOnClickListener(new View.OnClickListener() {
+        duration_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 threePicker.show();
@@ -201,7 +205,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
         }
 
         final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
-
+        threeItemsOptions2.add("");
         threeItemsOptions2.add("0.25");
         threeItemsOptions2.add("0.50");
         threeItemsOptions2.add("0.75");
@@ -219,13 +223,36 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
             public void onOptionsSelect(int options1, int option2, int options3) {
                 String a = String.valueOf(numbers.get(options1));
                 String b = String.valueOf(threeItemsOptions2.get(option2));
-                float numa = Float.parseFloat(a);
-                float numb = Float.parseFloat(b);
-                System.out.println("aaaaaaaaaaa:::"+numa+"..."+numb+"..."+a+"...."+b);
-                float c = numa + numb;
-                System.out.println("aaaaaaaaaaa::cccc:"+c);
-                String option = threeItemsOptions3.get(options3);
-                end_time_text.setText(String.valueOf(c)+" "+option);
+                if(b.equals(""))
+                {
+                    String c = a + b;
+                    System.out.println("aaaaaaaaaaa::cccc:ifcondition:::"+"..."+c+"..."+a+"...."+b);
+                    end_time_text.setText(String.valueOf(c));
+                    String option = threeItemsOptions3.get(options3);
+                    if(c.equals("1"))
+                    {
+                        String s = option.substring(0, option.length() - 1);
+                        System.out.println("aaaaaaaaaaa::sssss:if:::"+"..."+s);
+                        hour.setText(s);
+                    }
+                    else
+                    {
+                        System.out.println("aaaaaaaaaaa::sssss:else:option::"+"..."+option);
+                        hour.setText(option);
+                    }
+
+                }
+                else
+                {
+                    float numa = Float.parseFloat(a);
+                    float numb = Float.parseFloat(b);
+                    System.out.println("aaaaaaaaaaa::elsecondition:"+numa+"..."+numb+"..."+a+"...."+b);
+                    float c = numa + numb;
+                    System.out.println("aaaaaaaaaaa:elsecondition:cccc:"+c);
+                    end_time_text.setText(String.valueOf(c));
+                    String option = threeItemsOptions3.get(options3);
+                    hour.setText(option);
+                }
                 // Toast.makeText(CreateJob.this, "" + numbers.get(options1) + " " + threeItemsOptions2.get(option2) + " " + threeItemsOptions3.get(options3), Toast.LENGTH_SHORT).show();
             }
         });
@@ -287,7 +314,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
             }
         });
 
-        category_name.setOnClickListener(new View.OnClickListener() {
+        category_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -322,9 +349,9 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
 
                     @Override
                     public void onGroupExpand(int groupPosition) {
-                        Toast.makeText(getApplicationContext(),
+                        /*Toast.makeText(getApplicationContext(),
                                 listDataHeader.get(groupPosition) + " Expanded",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();*/
                     }
                 });
 
@@ -333,9 +360,9 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
 
                     @Override
                     public void onGroupCollapse(int groupPosition) {
-                        Toast.makeText(getApplicationContext(),
+                    /*    Toast.makeText(getApplicationContext(),
                                 listDataHeader.get(groupPosition) + " Collapsed",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();*/
 
                     }
                 });
@@ -347,20 +374,68 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                     public boolean onChildClick(ExpandableListView parent, View v,
                                                 int groupPosition, int childPosition, long id) {
                         // TODO Auto-generated method stub
-                        Toast.makeText(
+                     /*   Toast.makeText(
                                 getApplicationContext(),
                                 listDataHeader.get(groupPosition)
                                         + " : "
                                         + listDataChild.get(
                                         listDataHeader.get(groupPosition)).get(
                                         childPosition), Toast.LENGTH_SHORT)
-                                .show();
+                                .show();*/
+
                         int pos = groupPosition+1;
                         categoryId = String.valueOf(pos);
                         header =  listDataHeader.get(groupPosition);
                         sub_category =  listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition);
                         System.out.println("ccccccccc:"+header+",,"+sub_category+",,"+pos+"id:"+categoryId);
-                        category_name.setText(header+" - "+sub_category);
+                        if(header.equals("CARE GIVING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.care_giving);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("COACHING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.coaching);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("HOLIDAYS"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.holidays);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("INSIDE THE HOME"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.inside_home);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("OUTSIDE THE HOME"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.outside_home);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("PERSONAL SERVICES"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.personal_services);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("PETCARE"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.petcare);
+                            category_name.setText(sub_category);
+                        }
+                        if(header.equals("TUTORING"))
+                        {
+                            main_category_image.setVisibility(View.VISIBLE);
+                            main_category_image.setImageResource(R.drawable.tutoring);
+                            category_name.setText(sub_category);
+                        }
                         dialog.dismiss();
                         return false;
                     }
@@ -723,8 +798,6 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -746,6 +819,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(JOB_ID, jobId);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };
@@ -847,8 +921,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                 arrow.setVisibility(View.GONE);
                 payment_layout.setVisibility(View.VISIBLE);
                 job_amount.setText(get_amount);
-                amount_text.setText(get_type);
-
+                amount_text.setText("Hourly Wage");
                 if(flexible.equals("yes"))
                 {
                     checkBox.setChecked(true);
@@ -857,38 +930,52 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                 if(job_category.equals("1"))
                 {
                     header = "CARE GIVING";
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.care_giving);
                 }
                 if(job_category.equals("2"))
                 {
                     header = "COACHING";
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.coaching);
                 }
                 if(job_category.equals("3"))
                 {
                     header = "HOLIDAYS";
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.holidays);
                 }
                 if(job_category.equals("4"))
                 {
                     header = "INSIDE THE HOME";
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.inside_home);
                 }
                 if(job_category.equals("5"))
                 {
                     header = "OUTSIDE THE HOME";
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.outside_home);
                 }
                 if(job_category.equals("6"))
                 {
                     header = "PERSONAL SERVICES";
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.personal_services);
                 }
                 if(job_category.equals("7"))
                 {
                     header = "PETCARE";
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.petcare);
                 }
                 if(job_category.equals("8"))
                 {
                     header = "TUTORING";
+                    main_category_image.setVisibility(View.VISIBLE);
+                    main_category_image.setImageResource(R.drawable.tutoring);
                 }
-                category_name.setText(header+" - "+sub_cat);
-
-
+                category_name.setText(sub_category);
             } else {
             }
         } catch (JSONException e) {

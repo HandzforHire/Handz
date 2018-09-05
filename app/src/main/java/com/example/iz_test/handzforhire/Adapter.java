@@ -463,8 +463,6 @@ public class Adapter extends BaseAdapter implements Filterable {
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -512,6 +510,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
                 params.put(TYPE,"notificationCountMsgJobhistory");
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);
                 return params;
             }
@@ -558,8 +557,6 @@ public class Adapter extends BaseAdapter implements Filterable {
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -607,6 +604,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
                 params.put(TYPE,"notificationCountStarRating");
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);
                 return params;
             }

@@ -125,7 +125,6 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("resssssssssssssssss:job_history::" + response);
                         onResponserecieved(response, 1);
                         dialog.dismiss();
                     }
@@ -155,8 +154,6 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -202,6 +199,8 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
                 params.put(TYPE, usertype);
+                params.put(Constant.DEVICE, Constant.ANDROID);
+
                  return params;
             }
         };

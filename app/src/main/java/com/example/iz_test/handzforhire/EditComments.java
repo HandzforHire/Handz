@@ -155,8 +155,8 @@ public class EditComments extends Activity implements SimpleGestureFilter.Simple
                             JSONObject jsonObject = new JSONObject( responseBody );
                             System.out.println("error:::"+jsonObject);
                             String status = jsonObject.getString("msg");
-                            if(!status.equals(""))
-                            {
+                          //  if(!status.equals(""))
+                           // {
                                 // custom dialog
                                 final Dialog dialog = new Dialog(EditComments.this);
                                 dialog.setContentView(R.layout.custom_dialog);
@@ -177,7 +177,7 @@ public class EditComments extends Activity implements SimpleGestureFilter.Simple
                                 Window window = dialog.getWindow();
                                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            }
+                           // }
 
                         } catch (JSONException e) {
 
@@ -205,6 +205,7 @@ public class EditComments extends Activity implements SimpleGestureFilter.Simple
                 map.put(EMPLOYEEID,employee_id);
                 map.put(RATING_ID,rating_id);
                 map.put(USER_TYPE,type);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("URL  "+URL);
                 System.out.println("Parameter "+map);
                 return map;

@@ -127,6 +127,7 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
                 map.put(APP_KEY, value);
                 map.put(KEY_USERID, user_id);
                 map.put(TYPE, "employer");
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -171,8 +172,6 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -180,6 +179,27 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
                                 System.out.println("error" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                // custom dialog
+                                final Dialog dialog = new Dialog(JobDetails.this);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText(status);
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             } catch (JSONException e) {
 
                             } catch (UnsupportedEncodingException error1) {
@@ -193,6 +213,7 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(APP_KEY, value);
                 params.put(JOB_ID, job_id);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };

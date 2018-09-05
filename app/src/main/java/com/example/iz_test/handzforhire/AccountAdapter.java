@@ -154,8 +154,6 @@ public class AccountAdapter extends BaseAdapter {
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -176,6 +174,7 @@ public class AccountAdapter extends BaseAdapter {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(APP_KEY, value);
                 map.put(KEY_ACCOUNT_ID, delete_account_id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

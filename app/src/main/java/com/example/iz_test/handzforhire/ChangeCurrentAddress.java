@@ -290,8 +290,6 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -319,6 +317,7 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
                 map1.put(STATE,stat);
                 map1.put(ZIPCODE,zip);
                 map1.put(USERID,uid);
+                map1.put(Constant.DEVICE, Constant.ANDROID);
                 return map1;
             }
 
@@ -415,8 +414,6 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -438,6 +435,7 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
                 Map<String,String> map1 = new HashMap<String, String>();
                 map1.put(XAPP_KEY,value);
                 map1.put(USERID,uid);
+                map1.put(Constant.DEVICE, Constant.ANDROID);
                 return map1;
             }
 

@@ -299,15 +299,9 @@ public class CreateJob2 extends AppCompatActivity implements SimpleGestureFilter
         {
             current_location = "no";
             String address = j_address + j_city + j_state + j_zipcode;
-            System.out.println("ssssssssss:add::"+ address);
             getGeoCoordsFromAddress(this,address);
-            System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lat);
-            System.out.println("kkkkkkkkkkkkkk:getlatitude:"+get_lon);
             latitude = get_lat;
             longitude = get_lon;
-            System.out.println("kkkkkkkkkkkkkk:latitude:"+latitude);
-            System.out.println("kkkkkkkkkkkkkk:longitude:"+longitude);
-
         }
         if(!check1.isChecked()&&(j_address.equals("")||j_state.equals("")||j_city.equals("")||j_zipcode.equals("")))
         {

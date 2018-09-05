@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
@@ -13,6 +14,8 @@ import com.app.Config;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.splunk.mint.Mint;
 import com.util.NotificationUtils;
+
+import static java.security.AccessController.getContext;
 
 public class SplashScreen extends Activity {
 
@@ -23,7 +26,8 @@ public class SplashScreen extends Activity {
             // TODO Auto-generated method stub
             super.onCreate(savedInstanceState);
             setContentView(R.layout.splash_screen);
-
+        Profilevalues.android_id = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
         Mint.initAndStartSession(this.getApplication(), "21afe9a2");
 
             Thread timerThread = new Thread(){

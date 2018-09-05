@@ -153,6 +153,7 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
                 map.put(XAPP_KEY, value);
                 map.put(EMPLOYER_ID, user_id);
                 map.put(JOB_ID, job_id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -189,7 +190,7 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
                 map.put(EMPLOYEE_ID, employerId);
                 map.put(USER_TYPE, "employer");
                 map.put(STATUS, "job_canceled");
-
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

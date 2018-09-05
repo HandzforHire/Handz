@@ -49,9 +49,9 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:textStyle="bold"
-                            android:text="Welcome to the Handz \n Family!"
+                            android:text="Welcome to the Handz Family!"
                             android:textColor="#DCDCDC"
-                            android:textSize="22sp" />
+                            android:textSize="20sp" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -66,9 +66,9 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:textStyle="bold"
-                                android:text="Thank you for trying us out!"
+                                android:text="Thank you for trying us out.We're glad to have you here!"
                                 android:textColor="#DCDCDC"
-                                android:textSize="18sp"/>
+                                android:textSize="16sp"/>
 
                             <TextView
                                 android:id="@+id/text3"
@@ -76,21 +76,21 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:textStyle="bold"
-                                android:layout_marginTop="10sp"
-                                android:text="Whether you need a hand or are willing \n to lend a hand, we hope you have a \n great experience using our app!"
+                                android:layout_marginTop="20sp"
+                                android:text="Whether you need a hand or are willing to lend a hand, we hope you have a great experience using our app!"
                                 android:textColor="#DCDCDC"
-                                android:textSize="18sp"/>
+                                android:textSize="16sp"/>
 
                             <TextView
                                 android:id="@+id/text4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:layout_marginTop="10sp"
+                                android:layout_marginTop="20sp"
                                 android:textStyle="bold"
                                 android:text="Sometimes you just need a hand and sometimes you need job flexibility!"
                                 android:textColor="#DCDCDC"
-                                android:textSize="18sp"/>
+                                android:textSize="16sp"/>
 
                         </LinearLayout>
 
@@ -100,7 +100,7 @@
                             android:layout_height="wrap_content"
                             android:text="Click &quot;Create Profile&quot; to get started!"
                             android:textColor="#DCDCDC"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textStyle="bold"
                             android:gravity="center"
                             android:layout_marginTop="20sp" />

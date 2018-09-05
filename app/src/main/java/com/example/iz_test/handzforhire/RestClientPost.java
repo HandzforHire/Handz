@@ -104,8 +104,6 @@ public class RestClientPost {
                                 Toast.makeText(context,"Not Connected",Toast.LENGTH_LONG).show();
                             }else if (error instanceof AuthFailureError) {
                                 Toast.makeText(context,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                            }else if (error instanceof ServerError) {
-                                Toast.makeText(context,"Server responded with a error response",Toast.LENGTH_LONG).show();
                             }else if (error instanceof NetworkError) {
                                 Toast.makeText(context,"Network error while performing the request",Toast.LENGTH_LONG).show();
                             }else {
@@ -130,6 +128,7 @@ public class RestClientPost {
                     params.put("lat", String.valueOf(FindJobMap.lat));
                     params.put("lon", String.valueOf(FindJobMap.lon));
                     params.put("miles","5");
+                    params.put(Constant.DEVICE, Constant.ANDROID);
                     System.out.println("lat "+String.valueOf(FindJobMap.lat));
                     System.out.println("lon "+String.valueOf(FindJobMap.lon));
                     return params;
@@ -178,8 +177,6 @@ public class RestClientPost {
                                 Toast.makeText(context,"Not Connected",Toast.LENGTH_LONG).show();
                             }else if (error instanceof AuthFailureError) {
                                 Toast.makeText(context,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                            }else if (error instanceof ServerError) {
-                                Toast.makeText(context,"Server responded with a error response",Toast.LENGTH_LONG).show();
                             }else if (error instanceof NetworkError) {
                                 Toast.makeText(context,"Network error while performing the request",Toast.LENGTH_LONG).show();
                             }else {
@@ -201,6 +198,7 @@ public class RestClientPost {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put(APP_KEY, "HandzForHire@~");
                     params.put(JOB_ID, FindJobMap.job_id);
+                    params.put(Constant.DEVICE, Constant.ANDROID);
                     return params;
                 }
             };

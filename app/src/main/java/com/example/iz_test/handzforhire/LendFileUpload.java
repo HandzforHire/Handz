@@ -214,14 +214,35 @@ public class LendFileUpload {
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(LendEditUserProfile.activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(LendEditUserProfile.activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(LendEditUserProfile.activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
+
+                                String status = jsonObject.getString("msg");
+                                //  if (status.equals("Card number already exists.")) {
+                                // custom dialog
+                                final Dialog dialog = new Dialog(LendEditUserProfile.activity);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText(status);
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 System.out.println("error" + jsonObject);
                             } catch (JSONException e) {
                                 //Handle a malformed json response
@@ -237,6 +258,7 @@ public class LendFileUpload {
                 map.put(APP_KEY, value);
                 map.put(KEY_PROFILE_IMAGE, firstRemoteFile);
                 map.put(KEY_USERID, id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

@@ -101,7 +101,7 @@ public class SwitchingSide extends Activity implements SimpleGestureFilter.Simpl
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                session.logoutUser();
+               // session.logoutUser();
                 signoutmethod();
             }
         });
@@ -129,6 +129,7 @@ public class SwitchingSide extends Activity implements SimpleGestureFilter.Simpl
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, user_id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -147,6 +148,7 @@ public class SwitchingSide extends Activity implements SimpleGestureFilter.Simpl
             status = jResult.getString("status");
             if(status.equals("success"))
             {
+                session.logoutUser();
                 Intent intent = new Intent(SwitchingSide.this,MainActivity.class);
                 startActivity(intent);
                 finish();

@@ -93,7 +93,8 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
         Typeface tf1 = Typeface.createFromAsset(getAssets(), fontPath1);
         email1.setTypeface(tf1);
         re_email.setTypeface(tf1);
-
+        pass1.setTypeface(tf1);
+        retype_pass.setTypeface(tf1);
         layout = (RelativeLayout) findViewById(R.id.layout);
 
         layout.setOnClickListener(new View.OnClickListener() {
@@ -362,6 +363,7 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, uid);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -429,8 +431,6 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -464,6 +464,7 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
                 map.put(KEY_EMAIL,retype_email);
                 map.put(KEY_PASSWORD,retype_password);
                 map.put(KEY_USERID,uid);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

@@ -319,6 +319,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -374,6 +375,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -540,6 +542,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
                 map.put(TYPE, "employee");
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println(" Map "+map);
                 return map;
             }

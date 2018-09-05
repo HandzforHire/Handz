@@ -62,7 +62,7 @@ import java.util.Map;
 public class RehireJob extends Activity implements View.OnClickListener,SimpleGestureFilter.SimpleGestureListener{
 
     Spinner list;
-    LinearLayout layout;
+    LinearLayout layout,category_layout;
     String id, address, zipcode, state, city, name,job_category,description,date,start_time,end_time,amount,st_time,en_time, type;
     private static final String GET_JOB = Constant.SERVER_URL+"job_detail_view";
     Button next;
@@ -83,7 +83,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
     String value = "HandzForHire@~";
     String job_id,jobId,paytext,pay_amount,flexible_status,job_estimated,hourr,latitude,longitude,employeeId;
     ProgressDialog progress_dialog;
-    RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
+    RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout,duration_layout;
     CheckBox checkBox;
     Activity activity;
     MyOptionsPickerView threePicker;
@@ -108,6 +108,8 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         layout = (LinearLayout)findViewById(R.id.relay);
+        category_layout = (LinearLayout)findViewById(R.id.linear);
+        duration_layout = (RelativeLayout)findViewById(R.id.linear3);
         category_name = (TextView)findViewById(R.id.cat_name);
         next = (Button) findViewById(R.id.next);
         job_name = (EditText) findViewById(R.id.descrip);
@@ -176,12 +178,13 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
         start_time_text.setOnClickListener(this);
         end_time_text.setOnClickListener(this);
 
-        end_time_text.setOnClickListener(new View.OnClickListener() {
+        duration_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 threePicker.show();
             }
         });
+
 
         //Three Options PickerView
         threePicker = new MyOptionsPickerView(RehireJob.this);
@@ -194,7 +197,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
         }
 
         final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
-
+        threeItemsOptions2.add("");
         threeItemsOptions2.add("0.25");
         threeItemsOptions2.add("0.50");
         threeItemsOptions2.add("0.75");
@@ -279,7 +282,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
             }
         });
 
-        category_name.setOnClickListener(new View.OnClickListener() {
+        category_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -737,15 +740,35 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                             Toast.makeText(getApplicationContext(),"Not Connected",Toast.LENGTH_LONG).show();
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
-                                System.out.println("error" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                if (!status.equals("")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(RehireJob.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
                             } catch (JSONException e) {
                                 //Handle a malformed json response
                             } catch (UnsupportedEncodingException error1) {
@@ -759,6 +782,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(JOB_ID, jobId);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };

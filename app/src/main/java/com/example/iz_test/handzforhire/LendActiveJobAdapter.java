@@ -294,6 +294,7 @@ public class LendActiveJobAdapter extends BaseAdapter{
                 map.put(EMPLOYER_ID, employer_id);
                 map.put(EMPLOYEE_ID, employee_id);
                 map.put(USER_TYPE, "employee");
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println(" Map "+map);
                 return map;
             }
@@ -339,8 +340,6 @@ public class LendActiveJobAdapter extends BaseAdapter{
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(activity,"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(activity,"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(activity,"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -388,6 +387,7 @@ public class LendActiveJobAdapter extends BaseAdapter{
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
                 params.put(TYPE,"notificationCountMessage");
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);
                 return params;
             }

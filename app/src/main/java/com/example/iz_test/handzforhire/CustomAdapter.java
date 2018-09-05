@@ -139,6 +139,7 @@ public class CustomAdapter extends BaseAdapter {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put(APP_KEY, value);
                     map.put(KEY_CARDID, delete_card_id);
+                    map.put(Constant.DEVICE, Constant.ANDROID);
                     return map;
                 }
             };

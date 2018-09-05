@@ -204,6 +204,7 @@ public class LendRating extends Activity implements SimpleGestureFilter.SimpleGe
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, user_id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -229,8 +230,6 @@ public class LendRating extends Activity implements SimpleGestureFilter.SimpleGe
             {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
-                System.out.println("ggggggggget:profile_image:" + profile_image);
-                System.out.println("ggggggggget:profilename:" + profilename);
 
                 if(profile_image.equals(""))
                 {

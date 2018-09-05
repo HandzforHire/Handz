@@ -78,7 +78,7 @@ import java.util.TimeZone;
 public class CreateJob extends Activity implements View.OnClickListener,SimpleGestureFilter.SimpleGestureListener{
 
     Spinner list;
-    LinearLayout layout;
+    LinearLayout layout,category_layout;
     String id,address,zipcode,state,city,name,description,date,start_time,end_time,amount,type,st_time,en_time;
     private static final String URL = Constant.SERVER_URL+"job_category_lists";
     Button next;
@@ -105,7 +105,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
     ImageView main_category_image;
     EditText payamount;
     Activity activity;
-
+    RelativeLayout duration_layout;
     CustomJobListAdapter adapter;
     public static PopupWindow popupWindowDogs;
 
@@ -137,6 +137,8 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         detector = new SimpleGestureFilter(this,this);
 
         layout = (LinearLayout)findViewById(R.id.relay);
+        category_layout = (LinearLayout)findViewById(R.id.linear);
+        duration_layout = (RelativeLayout)findViewById(R.id.linear3);
         select_category = (TextView)findViewById(R.id.cat_name);
         next = (Button) findViewById(R.id.next);
         job_name = (EditText) findViewById(R.id.descrip);
@@ -207,7 +209,8 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         estimate_layout.setOnClickListener(this);
 
 
-        end_time_text.setOnClickListener(new View.OnClickListener() {
+
+        duration_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 threePicker.show();
@@ -226,6 +229,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
 
 
         final ArrayList<String> threeItemsOptions2 = new ArrayList<String>();
+        threeItemsOptions2.add("");
         threeItemsOptions2.add("0.25");
         threeItemsOptions2.add("0.50");
         threeItemsOptions2.add("0.75");
@@ -243,14 +247,36 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
             public void onOptionsSelect(int options1, int option2, int options3) {
                 String a = String.valueOf(numbers.get(options1));
                 String b = String.valueOf(threeItemsOptions2.get(option2));
-                float numa = Float.parseFloat(a);
-                float numb = Float.parseFloat(b);
-                System.out.println("aaaaaaaaaaa:::"+numa+"..."+numb+"..."+a+"...."+b);
-                float c = numa + numb;
-                System.out.println("aaaaaaaaaaa::cccc:"+c);
-                end_time_text.setText(String.valueOf(c));
-                String option = threeItemsOptions3.get(options3);
-                hour.setText(option);
+                if(b.equals(""))
+                {
+                    String c = a + b;
+                    System.out.println("aaaaaaaaaaa::cccc:ifcondition:::"+"..."+c+"..."+a+"...."+b);
+                    end_time_text.setText(String.valueOf(c));
+                    String option = threeItemsOptions3.get(options3);
+                    if(c.equals("1"))
+                    {
+                        String s = option.substring(0, option.length() - 1);
+                        System.out.println("aaaaaaaaaaa::sssss:if:::"+"..."+s);
+                        hour.setText(s);
+                    }
+                    else
+                    {
+                        System.out.println("aaaaaaaaaaa::sssss:else:option::"+"..."+option);
+                        hour.setText(option);
+                    }
+
+                }
+                else
+                {
+                    float numa = Float.parseFloat(a);
+                    float numb = Float.parseFloat(b);
+                    System.out.println("aaaaaaaaaaa::elsecondition:"+numa+"..."+numb+"..."+a+"...."+b);
+                    float c = numa + numb;
+                    System.out.println("aaaaaaaaaaa:elsecondition:cccc:"+c);
+                    end_time_text.setText(String.valueOf(c));
+                    String option = threeItemsOptions3.get(options3);
+                    hour.setText(option);
+                }
                 // Toast.makeText(CreateJob.this, "" + numbers.get(options1) + " " + threeItemsOptions2.get(option2) + " " + threeItemsOptions3.get(options3), Toast.LENGTH_SHORT).show();
             }
         });
@@ -315,7 +341,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
 
 
 
-        select_category.setOnClickListener(new View.OnClickListener() {
+        category_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -351,9 +377,9 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
 
                     @Override
                     public void onGroupExpand(int groupPosition) {
-                        Toast.makeText(getApplicationContext(),
+                     /*   Toast.makeText(getApplicationContext(),
                                 listDataHeader.get(groupPosition) + " Expanded",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();*/
                     }
                 });
 
@@ -362,9 +388,9 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
 
                     @Override
                     public void onGroupCollapse(int groupPosition) {
-                        Toast.makeText(getApplicationContext(),
+                        /*Toast.makeText(getApplicationContext(),
                                 listDataHeader.get(groupPosition) + " Collapsed",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();*/
 
                     }
                 });
@@ -376,14 +402,16 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                     public boolean onChildClick(ExpandableListView parent, View v,
                                                 int groupPosition, int childPosition, long id) {
                         // TODO Auto-generated method stub
-                        Toast.makeText(
+                       /* Toast.makeText(
                                 getApplicationContext(),
                                 listDataHeader.get(groupPosition)
                                         + " : "
                                         + listDataChild.get(
                                         listDataHeader.get(groupPosition)).get(
                                         childPosition), Toast.LENGTH_SHORT)
-                                .show();
+                                .show();*/
+
+
                         int pos = groupPosition+1;
                         categoryId = String.valueOf(pos);
                         header =  listDataHeader.get(groupPosition);
@@ -441,7 +469,6 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                         return false;
                     }
                 });
-
                 dialog.show();
                 Window window = dialog.getWindow();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -598,29 +625,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
             DialogFragment dialogfragment = new datepickerClass();
 
             dialogfragment.show(getFragmentManager(), "DatePickerDialog");
-           /* // Get Current Date
-            final Calendar c = Calendar.getInstance();
-            mYear = c.get(Calendar.YEAR);
-            mMonth = c.get(Calendar.MONTH);
-            mDay = c.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                    new DatePickerDialog.OnDateSetListener() {
-
-                        @Override
-                        public void onDateSet(DatePicker view, int year,
-                                              int monthOfYear, int dayOfMonth) {
-                            int mm = monthOfYear + 1;
-                            String month = (mm < 10) ? "0" + mm : "" + mm;
-                            String date = year + "-" + month + "-" + dayOfMonth;
-                            *//*String pattern = "MMMM dd,yyyy";
-                            String dateInString = new SimpleDateFormat(pattern).format(new Date());*//*
-                            System.out.println("dddddddddd:date:::"+date);
-                            //date_text.setText(dateInString);
-                        }
-                    }, mYear, mMonth, mDay);
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            datePickerDialog.show();*/
         }
         if (v == time_layout) {
 
@@ -1003,6 +1008,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };

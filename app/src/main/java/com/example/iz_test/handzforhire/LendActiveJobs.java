@@ -170,8 +170,6 @@ public class LendActiveJobs extends Activity implements SimpleGestureFilter.Simp
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -180,14 +178,14 @@ public class LendActiveJobs extends Activity implements SimpleGestureFilter.Simp
                                 JSONObject jsonObject = new JSONObject(responseBody);
                                 System.out.println("error" + jsonObject);
                                 String status = jsonObject.getString("msg");
-                                if (status.equals("No Jobs Found")) {
+
                                     // custom dialog
                                     final Dialog dialog = new Dialog(LendActiveJobs.this);
                                     dialog.setContentView(R.layout.custom_dialog);
 
                                     // set the custom dialog components - text, image and button
                                     TextView text = (TextView) dialog.findViewById(R.id.text);
-                                    text.setText("No Active Jobs Found");
+                                    text.setText(status);
                                     Button dialogButton = (Button) dialog.findViewById(R.id.ok);
                                     // if button is clicked, close the custom dialog
                                     dialogButton.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +199,7 @@ public class LendActiveJobs extends Activity implements SimpleGestureFilter.Simp
                                     Window window = dialog.getWindow();
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                }
+
 
                             } catch (JSONException e) {
                                 //Handle a malformed json response
@@ -217,6 +215,7 @@ public class LendActiveJobs extends Activity implements SimpleGestureFilter.Simp
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, user_id);
                 params.put(TYPE, usertype);
+                params.put(Constant.DEVICE, Constant.ANDROID);
                 return params;
             }
         };

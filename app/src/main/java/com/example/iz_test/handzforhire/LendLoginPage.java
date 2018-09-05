@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -93,7 +94,10 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-
+        String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
+        Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+        new_employee.setTypeface(tf);
+        forgot_password.setTypeface(tf);
         permission();
 
         layout.setOnClickListener(new View.OnClickListener() {
@@ -229,8 +233,6 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -277,6 +279,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                 map.put(KEY_PASSWORD, pass);
                 map.put(KEY_TYPE, type);
                 map.put(KEY_DEVICETOKEN, deviceId);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };

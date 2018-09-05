@@ -355,6 +355,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
                 map.put(TYPE, "employer");
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println(" Map "+map);
                 return map;
             }
@@ -483,8 +484,6 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -552,6 +551,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
@@ -577,6 +577,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
             {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
+                user_name = jResult.getString("username");
                 employer_rating = jResult.getString("employer_rating");
                 posted_notification = jResult.getString("notificationCountPosted");
                 pending_notification = jResult.getString("notificationCountPending");
@@ -708,8 +709,6 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         }else if (error instanceof AuthFailureError) {
                             Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(),"Server responded with a error response",Toast.LENGTH_LONG).show();
                         }else if (error instanceof NetworkError) {
                             Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
                         }else {
@@ -732,6 +731,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
+                map.put(Constant.DEVICE, Constant.ANDROID);
                 return map;
             }
         };
