@@ -271,10 +271,14 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                 }
             });
 
-            Picasso.with(activity).load(profile_image).networkPolicy(NetworkPolicy.NO_CACHE)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .placeholder(R.drawable.default_profile)
-                    .into(img_profile);
+           try {
+               Picasso.with(activity).load(profile_image).networkPolicy(NetworkPolicy.NO_CACHE)
+                       .memoryPolicy(MemoryPolicy.NO_CACHE)
+                       .placeholder(R.drawable.default_profile)
+                       .into(img_profile);
+           }catch (Exception e){
+               System.out.println("exception "+e.getMessage());
+           }
             alert.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             alert.show();
             lin_job_view.setOnClickListener(new View.OnClickListener() {
@@ -357,7 +361,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                 undisclosedjobs.clear();
                 undisclosedjobsarray = new JSONArray();
                 String status = responseObj.getString("status");
-                System.out.println("response " + responseObj);
+                System.out.println("response on map" + responseObj);
                 if (status.equals("error")) {
                     undisclosedjob = 0;
                     txt_undisclosedjob.setText("0 disclosed Locations");

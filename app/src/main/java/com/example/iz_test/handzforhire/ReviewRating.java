@@ -200,7 +200,8 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                 params.put(KEY_USERID, id);
                 params.put(TYPE, usertype);
                 params.put(Constant.DEVICE, Constant.ANDROID);
-
+                System.out.println("URL "+URL);
+                System.out.println("Params "+params);
                  return params;
             }
         };

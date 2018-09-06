@@ -197,17 +197,19 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
                 params.put(KEY_USERID, id);
                 params.put(TYPE, usertype);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
+                System.out.println("URL "+URL);
                 return params;
             }
         };
-        System.out.println("vvvvvvv"+ value+"."+id+"."+ usertype);
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 
     public void onResponserecieved(String jsonobject, int i) {
-        System.out.println("response from interface"+jsonobject);
+        System.out.println("review rating response"+jsonobject);
 
         String status = null;
         String rating_list = null;
@@ -215,39 +217,29 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
         try {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
-            rating_list = jResult.getString("rating_lists");
-            System.out.println("jjjjjjjjjjjjjjjob:::rating_list:::" + rating_list);
             if(status.equals("success"))
             {
+                rating_list = jResult.getString("rating_lists");
                 JSONArray array = new JSONArray(rating_list);
                 for(int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
-                    final String employee = object.getString("employee");
-                    System.out.println("ressss:employee::" + employee);
+                    final String employer = object.getString("employer");
                     date = object.getString("job_date");
-                    System.out.println("ressss:date:::"+date);
-                   /* JSONObject object1 = new JSONObject(employee);
-                    for(int a = 0; a < object1.length(); a++) {
-                        image = object1.getString("profile_image");
-                        System.out.println("ressss:profile_image:::"+image);
-                        average_rating = object1.getString("average_rating");
-                        System.out.println("ressss:average_rating:::"+average_rating);
-                    }*/
-                    JSONArray emparray = new JSONArray(employee);
-                    System.out.println("object 1"+emparray);
+                    JSONArray emparray = new JSONArray(employer);
+
                     for(int a = 0; a < emparray.length(); a++) {
                         JSONObject obj=emparray.getJSONObject(a);
                         image = obj.getString("profile_image");
-                        System.out.println("ressss:profile_image:::"+image);
                         average_rating = obj.getString("rating");
                     }
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("image",image);
                     map.put("average",average_rating);
+                    map.put("average_rating",object.getString("average_rating"));
                     map.put("date",date);
                     job_list.add(map);
-                    System.out.println("job_list:::" + job_list);
+
                     ReviewAdapter arrayAdapter = new ReviewAdapter(this, job_list) {
                         @Override
                         public View getView(int position, View convertView, ViewGroup parent) {

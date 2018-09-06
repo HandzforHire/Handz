@@ -25,6 +25,8 @@ import com.glide.RoundedCornersTransformation;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -74,12 +76,26 @@ public class ReviewAdapter extends BaseAdapter {
         final String get_date = items.get("date");
         final String comment = items.get("comments");
 
+        System.out.println("Comment "+comment);
+
         rating.setText(get_average);
         rating.setTypeface(font);
-        date.setText(get_date);
+      //  date.setText(get_date);
         rating.setTypeface(font1);
         comments.setText(comment);
         comments.setTypeface(font1);
+
+        DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+        DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat destDf = new SimpleDateFormat("MMMM dd, yyyy");
+        try {
+            java.util.Date dates = srcDf.parse(get_date);
+            date.setText("on " + destDf.format(dates));
+
+        } catch (Exception e)
+        {
+            System.out.println("error " + e.getMessage());
+        }
 
         System.out.println("Average rating "+get_average);
         if(get_average!=null && !get_average.equals(""))

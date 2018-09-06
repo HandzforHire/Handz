@@ -59,7 +59,7 @@ public class CustomList extends BaseAdapter {
         TextView job_name = (TextView) vi.findViewById(R.id.job_name_text);
         TextView date = (TextView) vi.findViewById(R.id.text3);
         TextView amount = (TextView) vi.findViewById(R.id.text7);
-        TextView type = (TextView) vi.findViewById(R.id.text8);
+        TextView type = (TextView) vi.findViewById(R.id.duration);
         TextView jobId = (TextView) vi.findViewById(R.id.job_id);
         TextView rating = (TextView) vi.findViewById(R.id.rating);
         ImageView profile = (ImageView) vi.findViewById(R.id.img2);

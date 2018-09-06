@@ -54,8 +54,7 @@ public class ApplicantAdapter extends BaseAdapter {
     public static String USER_TYPE = "userType";
     String value = "HandzForHire@~";
     String usertype = "employer";
-    String employee_id,job_id,employer_id,job_name;
-
+    String employee_id,job_id,employer_id,job_name,profilename,firstname,average_rating;
 
     public ApplicantAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
@@ -85,7 +84,7 @@ public class ApplicantAdapter extends BaseAdapter {
         TextView jobname = (TextView) vi.findViewById(R.id.jobname);
         TextView hire = (TextView) vi.findViewById(R.id.hire);
         TextView refuse = (TextView) vi.findViewById(R.id.refuse);
-
+        TextView rating = (TextView) vi.findViewById(R.id.rating_value);
 
         hire.setTag(position);
         refuse.setTag(position);
@@ -132,12 +131,25 @@ public class ApplicantAdapter extends BaseAdapter {
         employer_id = items.get("employer_id");
         job_name = items.get("jobname");
 
-        name.setText(get_name);
-        name.setTypeface(font);
+        profilename = items.get("profilename");
+        firstname = items.get("firstname");
+        average_rating = items.get("rating");
+
         comments.setText(get_comments);
         comments.setTypeface(font);
         jobname.setText(job_name);
+        rating.setText(average_rating);
 
+        if(profilename.equals(""))
+        {
+            name.setText(get_name);
+            name.setTypeface(font);
+        }
+        if(profilename.equals("")&&get_name.equals(""))
+        {
+            name.setText(firstname);
+            name.setTypeface(font);
+        }
         return vi;
     }
 

@@ -157,7 +157,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
         rating_lay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(LendProfilePage.this,ReviewRating.class);
+                Intent i = new Intent(LendProfilePage.this,LendReviewRating.class);
                 i.putExtra("userId", id);
                 i.putExtra("image",profile_image);
                 i.putExtra("name", profilename);

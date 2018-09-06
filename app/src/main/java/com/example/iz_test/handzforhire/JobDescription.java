@@ -64,7 +64,7 @@ public class JobDescription extends Activity implements SimpleGestureFilter.Simp
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
-
+    String get_user_name,get_first_name;
     LinearLayout flexible_layout;
 
     private SimpleGestureFilter detector;
@@ -120,6 +120,8 @@ public class JobDescription extends Activity implements SimpleGestureFilter.Simp
                 i.putExtra("type",get_type);
                 i.putExtra("image",image);
                 i.putExtra("usertype",usertype);
+                i.putExtra("username",get_user_name);
+                i.putExtra("firstname",get_first_name);
                 startActivity(i);
             }
         });
@@ -246,13 +248,16 @@ public class JobDescription extends Activity implements SimpleGestureFilter.Simp
                 get_date = object.getString("job_date");
                 get_start_time = object.getString("start_time");
                 get_end_time = object.getString("end_time");
-                get_amount = object.getString("job_payment_amount");
+                get_amount = object.getString("job_estimated_payment");
                 get_type = object.getString("job_payment_type");
                 get_profile_name = object.getString("profile_name");
                 image = object.getString("profile_image");
                 employerId = object.getString("employer_id");
                 usertype = object.getString("usertype");
                 String flexible_status = object.getString("job_date_time_flexible");
+                get_user_name = object.getString("username");
+                get_first_name = object.getString("firstname");
+
                 if(flexible_status.equals("yes"))
                 {
                     flexible_layout.setVisibility(View.VISIBLE);
@@ -261,8 +266,15 @@ public class JobDescription extends Activity implements SimpleGestureFilter.Simp
                 {
                     flexible_layout.setVisibility(View.GONE);
                 }
+                if(get_profile_name.equals(""))
+                {
+                    profile_name.setText(get_user_name);
+                }
+                if(get_profile_name.equals("")&&get_user_name.equals(""))
+                {
+                    profile_name.setText(get_first_name);
+                }
 
-                profile_name.setText(get_profile_name);
                 description.setText(get_description);
 
                 type.setText(get_type);

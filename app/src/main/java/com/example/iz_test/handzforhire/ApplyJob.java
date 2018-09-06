@@ -59,7 +59,7 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
     public static String KEY_USERID = "user_id";
     public static String TYPE = "type";
     String value = "HandzForHire@~";
-    String job_id,user_id,employer_id,job_name,profile_name,image,date,start_time,end_time,amount,type,comments;
+    String job_id,user_id,employer_id,job_name,profile_name,image,date,start_time,end_time,amount,type,comments,username,firstname;
     TextView name,dat,amt,pay,text,job,rat_val,type_text;
     ProgressDialog progress_dialog;
     ImageView profile_image;
@@ -69,6 +69,7 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
     int timeout = 60000;
     Dialog dialog;
     private SimpleGestureFilter detector;
+    ImageView handz_button;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +93,7 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
         com = (EditText) findViewById(R.id.edit);
         profile_image = (ImageView) findViewById(R.id.profile_image);
         rating_lay = (RelativeLayout) findViewById(R.id.rating);
+        handz_button = (ImageView) findViewById(R.id.handz_button);
 
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");
@@ -106,7 +108,17 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
         type = i.getStringExtra("type");
         image = i.getStringExtra("image");
         usertype=i.getStringExtra("usertype");
-        name.setText(profile_name);
+
+        username=i.getStringExtra("username");
+        firstname=i.getStringExtra("firstname");
+        if(profile_name.equals(""))
+        {
+            name.setText(username);
+        }
+        if(profile_name.equals("")&&username.equals(""))
+        {
+            name.setText(firstname);
+        }
         amt.setText(amount);
         type_text.setText(type);
         text.setText(profile_name);
@@ -154,6 +166,16 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
                 startActivity(i);
             }
         });
+
+        handz_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ApplyJob.this,LendProfilePage.class);
+                i.putExtra("userId", user_id);
+                startActivity(i);
+            }
+        });
+
 
     }
     public void getAverageRatigng() {
@@ -301,7 +323,10 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
 
             if(status.equals("success"))
             {
-                // custom dialog
+                Intent i = new Intent(ApplyJob.this,LendProfilePage.class);
+                i.putExtra("userId",user_id);
+                startActivity(i);
+           /*     // custom dialog
                 final Dialog dialog = new Dialog(ApplyJob.this);
                 dialog.setContentView(R.layout.gray_custom);
 
@@ -323,7 +348,7 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
                 dialog.show();
                 Window window = dialog.getWindow();
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);*/
             }
             else
             {
