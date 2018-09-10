@@ -53,6 +53,7 @@ public class Adapter extends BaseAdapter implements Filterable {
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     public static String TYPE = "type";
+    public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
     // Declare Variables
     Context mContext;
@@ -169,6 +170,7 @@ public class Adapter extends BaseAdapter implements Filterable {
         username = worldpopulationlist.get(position).getUsername();
         rating_value=worldpopulationlist.get(position).getRatingValue();
         employeeId = worldpopulationlist.get(position).getEmployeeId();
+
         holder.chat.setTag(position);
         holder.leave_rating_btn.setTag(position);
         holder.job_details.setTag(position);
@@ -221,6 +223,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                     username=item.getUsername();
                 else
                     username=item.getProfilename();
+                jobId = item.getJobId();
                 getratingcount(item.getUserid());
 
                 Intent intent = new Intent(mContext, LeaveRating.class);
@@ -258,6 +261,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                 intent.putExtra("cat4",item.getCategory4());
                 intent.putExtra("cat5",item.getCategory5());
                 intent.putExtra("profilename",profile_name);
+                intent.putExtra("username",username);
                 v.getContext().startActivity(intent);
             }
         });
@@ -268,7 +272,6 @@ public class Adapter extends BaseAdapter implements Filterable {
 
                 int pos= (int) v.getTag();
                 WorldPopulation item=worldpopulationlist.get(pos);
-                System.out.println("jjjjjjjjjjjj:jobhistory:jobid::"+jobId);
                 Intent i = new Intent(mContext,RehireJob.class);
                 i.putExtra("userId",item.getUserid());
                 i.putExtra("jobId", item.getJobId());
@@ -509,6 +512,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
+                params.put(JOB_ID, jobId);
                 params.put(TYPE,"notificationCountMsgJobhistory");
                 params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);
@@ -603,6 +607,7 @@ public class Adapter extends BaseAdapter implements Filterable {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
+                params.put(JOB_ID, jobId);
                 params.put(TYPE,"notificationCountStarRating");
                 params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);

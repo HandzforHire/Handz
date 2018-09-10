@@ -320,12 +320,14 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 {
                     profile_name.setText(profilename);
                     photo_text.setVisibility(View.INVISIBLE);
+                    image.setVisibility(View.VISIBLE);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                 }
                 else if(!profile_image.equals("")&&profilename.equals("null"))
                 {
 
                     photo_text.setVisibility(View.INVISIBLE);
+                    image.setVisibility(View.VISIBLE);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                 }
                 else if(!profilename.equals("null")&&profile_image.equals(""))
@@ -436,6 +438,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 if (resultCode == RESULT_OK) {
                     Uri resultUri = result.getUri();
                     image.setImageURI(resultUri);
+                    image.setVisibility(View.VISIBLE);
                     String selectedImagePath = uriToFilename(resultUri);
                     new FileUpload(selectedImagePath,id);
                     filename = FileUpload.firstRemoteFile;

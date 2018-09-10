@@ -59,7 +59,6 @@ public class LendPaymentMethod extends Activity implements SimpleGestureFilter.S
 {
     private static final String PAYPAL_LEND = Constant.SERVER_URL +"paypal_user_info_add";
     public static final int PAYPAL_REQUEST_CODE = 123;
-    //public static String SERVER_URL = "http://162.144.41.156/~izaapinn/handzforhire/service/paypal_user_info_add";
     public static final String XAPP_KEY = "X-APP-KEY";
     public static final String KEY_USERID = "user_id";
     public static final String KEY_USERTYPE = "usertype";

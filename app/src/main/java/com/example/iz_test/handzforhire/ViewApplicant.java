@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -49,19 +50,20 @@ public class ViewApplicant extends Activity implements SimpleGestureFilter.Simpl
     private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
     private static final String URL = Constant.SERVER_URL+"applied_job_detailed_view";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
-    ImageView  profile,close;
+    ImageView  profile,close,logo;
     public static String EMPLOYER_ID = "employer_id";
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
-    String address, city, state, zipcode, user_id, job_id,name,username,comments,employee,profile_image,profilename;
+    String address, city, state, zipcode,rating, user_id, firstname,job_id,name,username,comments,employee,profile_image,profilename;
     TextView profile_name,job_name;
     ListView list;
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
     private SimpleGestureFilter detector;
+    Button active_btn,history_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,12 +75,13 @@ public class ViewApplicant extends Activity implements SimpleGestureFilter.Simpl
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
-        profile = (ImageView) findViewById(R.id.profile_image);
-        profile_name = (TextView) findViewById(R.id.text1);
+
         job_name = (TextView) findViewById(R.id.name);
         close = (ImageView) findViewById(R.id.close_btn);
         list = (ListView) findViewById(R.id.listview);
-        rating_lay = (RelativeLayout) findViewById(R.id.rating);
+        logo = (ImageView)findViewById(R.id.logo);
+        active_btn = (Button) findViewById(R.id.btn1);
+        history_btn = (Button) findViewById(R.id.btn2);
 
         Intent i = getIntent();
         user_id = i.getStringExtra("userId");
@@ -96,13 +99,44 @@ public class ViewApplicant extends Activity implements SimpleGestureFilter.Simpl
         getProfileimage();
         listPostedJobs();
 
-        rating_lay.setOnClickListener(new View.OnClickListener() {
+
+        logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(ViewApplicant.this,ReviewRating.class);
+                Intent i = new Intent(ViewApplicant.this, ProfilePage.class);
                 i.putExtra("userId", user_id);
-                i.putExtra("image",profile_image);
-                i.putExtra("name", profilename);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
+            }
+        });
+
+
+        active_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ViewApplicant.this,ActiveJobs.class);
+                i.putExtra("userId", user_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+            }
+        });
+
+        history_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ViewApplicant.this,JobHistory.class);
+                i.putExtra("userId", user_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
                 startActivity(i);
             }
         });
@@ -157,12 +191,6 @@ public class ViewApplicant extends Activity implements SimpleGestureFilter.Simpl
             status = jResult.getString("status");
 
             if (status.equals("success")) {
-                profile_image = jResult.getString("profile_image");
-                profilename = jResult.getString("profile_name");
-                System.out.println("ggggggggget:profilename:" + profilename);
-                profile_name.setText(profilename);
-                System.out.println("ggggggggget:profile_image:" + profile_image);
-                Glide.with(ViewApplicant.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(profile);
 
             }
 
@@ -235,6 +263,10 @@ public class ViewApplicant extends Activity implements SimpleGestureFilter.Simpl
                     username = object.getString("username");
                     comments = object.getString("comments");
                     employee = object.getString("employee_id");
+                    firstname = object.getString("firstname");
+                    profilename = object.getString("profile_name");
+                    rating = object.getString("average_rating");
+
                     System.out.println("ressss:username::" + username);
                     System.out.println("ressss:comments::" + comments);
                     System.out.println("ressss:employee_id::" + employee);
@@ -244,9 +276,12 @@ public class ViewApplicant extends Activity implements SimpleGestureFilter.Simpl
                 map.put("username", username);
                 map.put("comments", comments);
                 map.put("employee_id",employee);
+                map.put("rating",rating);
                 map.put("job_id",job_id);
                 map.put("employer_id",user_id);
                 map.put("jobname",name);
+                map.put("profilename",profilename);
+                map.put("firstname",firstname);
                 job_list.add(map);
                 System.out.println("job_list:::" + job_list);
                 ApplicantAdapter arrayAdapter = new ApplicantAdapter(this, job_list) {

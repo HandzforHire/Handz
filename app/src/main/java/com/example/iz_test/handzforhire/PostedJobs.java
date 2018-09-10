@@ -547,7 +547,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
             TextView type = (TextView) vi.findViewById(R.id.text8);
             final TextView jobId = (TextView) vi.findViewById(R.id.job_id);
             final TextView applicants = (TextView) vi.findViewById(R.id.no_applicants);
-            RelativeLayout rel_viewapplicant=(RelativeLayout)vi.findViewById(R.id.rel_viewapplicant);
+            LinearLayout rel_viewapplicant=(LinearLayout)vi.findViewById(R.id.rel_viewapplicant);
 
             ImageView checked=(ImageView)vi.findViewById(R.id.img);
             ImageView unchecked=(ImageView)vi.findViewById(R.id.img1);

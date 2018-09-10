@@ -53,7 +53,7 @@ public class PayEmployee1 extends Activity implements SimpleGestureFilter.Simple
     String job_id,employer_id,employee_id,job_name,profile_image;
     ProgressDialog progress_dialog;
     private static final String URL = Constant.SERVER_URL+"applied_job_detailed_view";
-    private static final String URL1 = "http://162.144.41.156/~izaapinn/handzforhire/service/payment_service";
+    private static final String URL1 = Constant.SERVER_URL+"service/payment_service";
     public static String EMPLOYER_ID = "employer_id";
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";

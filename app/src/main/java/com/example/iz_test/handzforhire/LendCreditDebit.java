@@ -45,7 +45,7 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
 
     EditText card_name, card_no, mm, yy, cv, adress, cy, stat, zip;
     ImageView h_logo;
-    private static final String REGISTER_URL = "http://162.144.41.156/~izaapinn/handzforhire/service/add_credit_card";
+    private static final String REGISTER_URL = Constant.SERVER_URL+"add_credit_card";
     String usertype = "employer";
     String value = "HandzForHire@~";
     String dev = "";

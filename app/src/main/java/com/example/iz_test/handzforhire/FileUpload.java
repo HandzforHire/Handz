@@ -57,20 +57,26 @@ public class FileUpload{
     public static Activity activity;
 
     /*********  work only for Dedicated IP ***********/
-    static final String FTP_HOST= "162.144.41.156";
+    static final String FTP_HOST= "52.89.130.200";
 
     /*********  FTP USERNAME ***********/
-    static final String FTP_USER = "server@izaapinnovations.com";
+    static final String FTP_USER = "handz";
 
     /*********  FTP PASSWORD ***********/
    // static final String FTP_PASS  ="Y9+CW:K_o[";
 
-    static final String FTP_PASS  ="UpR0nPDsy%Ab";
+    static final String FTP_PASS  ="Y*b~{Zd]<uJ6BAzP";
+
+    Dialog dialog;
 
     public FileUpload(String file,String userid){
 
         System.out.println("save profile");
         id=userid;
+        dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         new UploadFile().execute(file);
     }
 
@@ -93,7 +99,7 @@ public class FileUpload{
                 ftpClient.login(FTP_USER, FTP_PASS);
                 ftpClient.enterLocalPassiveMode();
 
-                ftpClient.changeWorkingDirectory("handzforhire/assets/images/uploads/profile");
+                ftpClient.changeWorkingDirectory("/var/www/html/assets/images/uploads/profile/");
 
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
@@ -151,6 +157,7 @@ public class FileUpload{
             if(s = true)
             {
                 imageUpload();
+                dialog.dismiss();
             }
             else
             {
@@ -161,6 +168,7 @@ public class FileUpload{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            dialog.show();
             //	txt_loading.setVisibility(View.VISIBLE);
             //  showProgressDialog();
         }

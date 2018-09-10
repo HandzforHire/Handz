@@ -34,7 +34,7 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
     private RatingBar rb1,rb2,rb3,rb4,rb5;
     TextView ra,pname;
 
-    String job_id,employer_id,employee_id,user_id,image,profilename;
+    String job_id,employer_id,employee_id,user_id,image,profilename,username;
     String category1,category2,category3,category4,category5;
     String cat1,cat2,cat3,cat4,cat5,rating_id;
     ImageView profile_image;
@@ -65,14 +65,25 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
         employee_id = i.getStringExtra("employee_id");
         image = i.getStringExtra("image");
         profilename = i.getStringExtra("profilename");
+        username = i.getStringExtra("username");
         cat1 = i.getStringExtra("cat1");
         cat2 = i.getStringExtra("cat2");
         cat3 = i.getStringExtra("cat3");
         cat4 = i.getStringExtra("cat4");
         cat5 = i.getStringExtra("cat5");
         rating_id = i.getStringExtra("ratingId");
-        pname.setText(profilename);
 
+        System.out.println("on edit rating");
+
+      //  pname.setText(profilename);
+
+        if(profilename.equals(""))
+        {
+            pname.setText(username);
+        }
+        else {
+            pname.setText(profilename);
+        }
         detector = new SimpleGestureFilter(this,this);
 
         rb1.setNumStars(5);
@@ -91,6 +102,8 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
             @Override
             public void onClick(View view)
             {
+
+                System.out.println("on edit rating next btn click");
                 category1 = String.valueOf(rb1.getRating());
                 category2 = String.valueOf(rb2.getRating());
                 category3 = String.valueOf(rb3.getRating());

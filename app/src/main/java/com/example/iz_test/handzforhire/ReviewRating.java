@@ -108,7 +108,7 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
         });
 
         name.setText(profilename);
-        if(profile_image.equals(""))
+        if(profile_image.equals("")&&profile_image.equals(null))
         {
         }
         else {

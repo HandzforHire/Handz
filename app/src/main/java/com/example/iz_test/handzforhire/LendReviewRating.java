@@ -57,7 +57,7 @@ import java.util.Map;
 
 public class LendReviewRating extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
-    String image,id,date,profile_image,profilename,average_rating;
+    String image,id,date,profile_image,profilename,average_rating,comments,avg_rat;
     private static final String URL = Constant.SERVER_URL+"review_rating";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
     public static String KEY_USERID = "user_id";
@@ -66,14 +66,13 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
     public static String TYPE = "type";
     String usertype = "employee";
     int timeout = 60000;
-
+    TextView txt_rating;
     ListView list;
     Button close;
     Dialog dialog;
     private SimpleGestureFilter detector;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.review_rating);
 
         dialog = new Dialog(LendReviewRating.this);
@@ -85,7 +84,9 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
         list = (ListView) findViewById(R.id.listview);
         close = (Button) findViewById(R.id.cancel_btn);
         ImageView image = (ImageView)findViewById(R.id.profile_image);
+        super.onCreate(savedInstanceState);
         TextView name = (TextView) findViewById(R.id.t2);
+        txt_rating=(TextView)findViewById(R.id.text2);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -226,7 +227,7 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
                     final String employer = object.getString("employer");
                     date = object.getString("job_date");
                     JSONArray emparray = new JSONArray(employer);
-
+                    avg_rat=object.getString("average_rating");
                     for(int a = 0; a < emparray.length(); a++) {
                         JSONObject obj=emparray.getJSONObject(a);
                         image = obj.getString("profile_image");
@@ -236,37 +237,41 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("image",image);
                     map.put("average",average_rating);
-                    map.put("average_rating",object.getString("average_rating"));
+                    map.put("comments",object.getString("comments"));
                     map.put("date",date);
                     job_list.add(map);
 
-                    ReviewAdapter arrayAdapter = new ReviewAdapter(this, job_list) {
-                        @Override
-                        public View getView(int position, View convertView, ViewGroup parent) {
-                            // Get the current item from ListView
-                            View view = super.getView(position, convertView, parent);
-                            if (position % 2 == 1) {
-                                // Set a background color for ListView regular row/item
-                                view.setBackgroundColor(Color.parseColor("#BF178487"));
-                            } else {
-                                // Set the background color for alternate row/item
-                                view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
-                            }
-                            return view;
-                        }
-                    };
-
-                    // DataBind ListView with items from ArrayAdapter
-                    list.setAdapter(arrayAdapter);
-
-                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            view.setSelected(true);
-
-                        }
-                    });
                 }
+
+
+                ReviewAdapter arrayAdapter = new ReviewAdapter(this, job_list) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        // Get the current item from ListView
+                        View view = super.getView(position, convertView, parent);
+                        if (position % 2 == 1) {
+                            // Set a background color for ListView regular row/item
+                            view.setBackgroundColor(Color.parseColor("#BF178487"));
+                        } else {
+                            // Set the background color for alternate row/item
+                            view.setBackgroundColor(Color.parseColor("#BFE8C64B"));
+                        }
+                        return view;
+                    }
+                };
+
+                // DataBind ListView with items from ArrayAdapter
+                list.setAdapter(arrayAdapter);
+
+                list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        view.setSelected(true);
+
+                    }
+                });
+
+                txt_rating.setText("Rating: "+avg_rat);
 
             }
             else

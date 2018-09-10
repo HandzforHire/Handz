@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -38,6 +39,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.app.Config;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,6 +82,11 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
         setContentView(R.layout.lend_login_page);
 
         session = new SessionManager(getApplicationContext());
+
+        SharedPreferences shared = getSharedPreferences(Config.SHARED_PREF, MODE_PRIVATE);
+        deviceId = (shared.getString("regId", ""));
+
+        System.out.println("FCm token "+deviceId);
 
         new_employee = (TextView) findViewById(R.id.new_employee);
         layout = (LinearLayout) findViewById(R.id.layout3);
@@ -397,18 +404,18 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
                         REQUEST_PHONE_STATE);
                 return;
             }
-            getDeviceId();
+           // getDeviceId();
         }
-        getDeviceId();
+       // getDeviceId();
     }
 
-    public void getDeviceId()
+   /* public void getDeviceId()
     {
         TelephonyManager telephonyManager;
         telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         deviceId = telephonyManager.getDeviceId();
         System.out.println("8888888888888:device id:"+ deviceId);
-    }
+    }*/
 
     private boolean checkPermission() {
         return (ContextCompat.checkSelfPermission(getApplicationContext(), READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED);
@@ -424,7 +431,7 @@ public class LendLoginPage extends AppCompatActivity implements ResponseListener
             case REQUEST_PHONE_STATE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getApplicationContext(), "Permission Granted, Now you can access", Toast.LENGTH_SHORT).show();
-                    getDeviceId();
+                   // getDeviceId();
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Permission Denied, You cannot access", Toast.LENGTH_SHORT).show();

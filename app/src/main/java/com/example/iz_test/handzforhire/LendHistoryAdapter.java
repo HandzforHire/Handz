@@ -60,6 +60,7 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
     public static String XAPP_KEY = "X-APP-KEY";
     public static String TYPE = "type";
     String value = "HandzForHire@~";
+    public static String JOB_ID = "job_id";
     Dialog dialog;
     public LendHistoryAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
@@ -137,6 +138,8 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
         employee_id.setText(get_employee);
         date.setText(transaction_date);
 
+        System.out.println("on comments "+items);
+
         if(msg_notification.equals("0"))
         {
             message_count.setVisibility(View.INVISIBLE);
@@ -180,6 +183,8 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
 
                 HashMap<String, String> items = new HashMap<String, String>();
                 items = data.get((Integer) v.getTag());
+
+                jobId = items.get("jobId");
                 getratingcount(items.get("user_id"));
 
                 Intent intent = new Intent(activity, LeaveRating.class);
@@ -229,6 +234,8 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
                     username=items.get("user");
                 else
                     username= items.get("profile");
+                jobId = items.get("jobId");
+
                 getmsgcountjobhis(items.get("user_id"));
                 Intent i = new Intent(activity,ChatNeed.class);
                 i.putExtra("jobId",items.get("jobId"));
@@ -423,6 +430,7 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
+                params.put(JOB_ID, jobId);
                 params.put(TYPE,"notificationCountMsgJobhistory");
                 params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);
@@ -517,6 +525,7 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
+                params.put(JOB_ID, jobId);
                 params.put(TYPE,"notificationCountStarRating");
                 params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);

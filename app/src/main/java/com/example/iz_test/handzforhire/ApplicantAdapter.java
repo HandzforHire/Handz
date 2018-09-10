@@ -51,7 +51,7 @@ public class ApplicantAdapter extends BaseAdapter {
     public static String XAPP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
     public static String EMPLOYEE_ID = "employee_id";
-    public static String USER_TYPE = "userType";
+    public static String USER_TYPE = "user_type";
     String value = "HandzForHire@~";
     String usertype = "employer";
     String employee_id,job_id,employer_id,job_name,profilename,firstname,average_rating;
@@ -265,6 +265,7 @@ public class ApplicantAdapter extends BaseAdapter {
                 params.put(EMPLOYEE_ID, employee_id);
                 params.put(USER_TYPE,usertype);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

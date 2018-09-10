@@ -648,16 +648,9 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                             } else {
                                 min1 = String.valueOf(minutes);
                             }
-                            String hour_day1 = "";
-                            if(hour < 10)
-                            {
-                                hour_day1 = "0" + hour ;
-                            }
-                            else
-                            {
-                                hour_day1 = String.valueOf(hour);
-                            }
-                            start_time_text.setText(hour_day1 + ":" + min1 + " " + timeSet);
+
+                            start_time_text.setText(hour + ":" + min1 + " " + timeSet);
+
                             //start_time_text.setText(start_time);
 
                         }

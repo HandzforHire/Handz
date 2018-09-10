@@ -90,9 +90,9 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
     FirebaseStorage storage;
     public static StorageReference storageReference;
     //Live
-   // public static String storepath="gs://handz-8ac86.appspot.com";
+     public static String storepath="gs://handz-8ac86.appspot.com";
     //dev
-    public static String storepath="gs://handzdev-9e758.appspot.com";
+   // public static String storepath="gs://handzdev-9e758.appspot.com";
 
     ListView messagesContainer;
     ArrayList<ChatItems> messagelist;
@@ -156,8 +156,8 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
 
 
         Firebase.setAndroidContext(this);
-       // reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
-       reference1 = new Firebase("https://handzdev-9e758.firebaseio.com/channels");
+       reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
+       //reference1 = new Firebase("https://handzdev-9e758.firebaseio.com/channels");
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReferenceFromUrl(storepath);
@@ -502,9 +502,5 @@ public class ChatNeed extends Activity implements SimpleGestureFilter.SimpleGest
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
-
-
-
-
 
 }

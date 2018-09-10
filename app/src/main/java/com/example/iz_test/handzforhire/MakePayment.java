@@ -30,6 +30,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +48,7 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
     public static String STATUS = "status";
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
+    public static String TRANS_DATE = "transaction_date";
     public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
     ImageView image;
@@ -154,6 +159,7 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
                 map.put(EMPLOYER_ID, user_id);
                 map.put(JOB_ID, job_id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -183,6 +189,19 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+
+                DateFormat dateInstance = SimpleDateFormat.getDateInstance();
+                DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat destDf = new SimpleDateFormat("MMMM dd, yyyy");
+                String date="";
+                Date today = Calendar.getInstance().getTime();
+                try {
+                    date =  destDf.format(today);
+
+                } catch (Exception e)
+                {
+                    System.out.println("error " + e.getMessage());
+                }
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(JOB_ID, job_id);
@@ -190,7 +209,9 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
                 map.put(EMPLOYEE_ID, employerId);
                 map.put(USER_TYPE, "employer");
                 map.put(STATUS, "job_canceled");
+                map.put(TRANS_DATE, destDf.format(today));
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

@@ -68,7 +68,7 @@ public class LendActiveJobAdapter extends BaseAdapter{
     String current_user_id = "OGO6K8nyqKVJ8WQoE02WT5qFc1S2";
     Firebase reference1;
     String child_id,jobid,sender_id,get_user;
-
+    String jobId;
     public LendActiveJobAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
         activity = a;
         data = d;
@@ -196,7 +196,7 @@ public class LendActiveJobAdapter extends BaseAdapter{
                 int pos= (int) view.getTag();
                 HashMap<String, String> items =data.get(pos);
                 String username="";
-                String  jobId =  items.get("jobId");;
+                String  jobIds =  items.get("jobId");;
                 String channel_id=items.get("channel");
 
                 if(items.get("profile").isEmpty())
@@ -206,6 +206,8 @@ public class LendActiveJobAdapter extends BaseAdapter{
 
                 String  userId=items.get("userId");
 
+                jobId = items.get("jobId");
+
                 getmsgcount(userId);
 
                 Intent i = new Intent(activity,ChatNeed.class);
@@ -214,6 +216,7 @@ public class LendActiveJobAdapter extends BaseAdapter{
                 i.putExtra("username",username);
                 i.putExtra("message_type","active_job");
                 i.putExtra("user_type","employee");
+                i.putExtra("userId", items.get("userId"));
                 i.putExtra("receiverid",items.get("employer"));
                 view.getContext().startActivity(i);
 
@@ -386,6 +389,7 @@ public class LendActiveJobAdapter extends BaseAdapter{
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
+                params.put(JOB_ID, jobId);
                 params.put(TYPE,"notificationCountMessage");
                 params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);

@@ -378,21 +378,21 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
 
                             Bitmap icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_101);
                            //  Bitmap icon = getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_8);
-                             if (job_category.equals("Care Giving")) {
+                             if (job_category.equals("1")) {
                                  icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_101);
-                            } else if (job_category.equals("Coaching")) {
+                            } else if (job_category.equals("2")) {
                                  icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_102);
-                            } else if (job_category.equals("Holidays")) {
+                            } else if (job_category.equals("3")) {
                                  icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_103);
-                            } else if (job_category.equals("Inside the Home")) {
+                            } else if (job_category.equals("4")) {
                                  icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_104);
-                            } else if (job_category.equals("Outside the Home")) {
+                            } else if (job_category.equals("5")) {
                                  icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_105);
-                            } else if (job_category.equals("Personal Services")) {
+                            } else if (job_category.equals("6")) {
                                  icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_106);
-                            } else if (job_category.equals("Petcare")) {
+                            } else if (job_category.equals("7")) {
                                  icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_107);
-                            } else if (job_category.equals("Tutoring)")) {
+                            } else if (job_category.equals("8)")) {
                                  icon=getBitmapFromVectorDrawable(getActivity().getApplicationContext(), R.drawable.ic_108);
                             }
                             MarkerOptions marker = new MarkerOptions().position(new LatLng(Double.parseDouble(lat), Double.parseDouble(lon))).icon(BitmapDescriptorFactory.fromBitmap(icon));

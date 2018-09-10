@@ -9,12 +9,6 @@ import com.app.Config;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-
-
-/**
- * Created by Ravi Tamada on 08/08/16.
- * www.androidhive.info
- */
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = MyFirebaseInstanceIDService.class.getSimpleName();
 
@@ -23,11 +17,15 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         super.onTokenRefresh();
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
+        System.out.println("refresh token "+refreshedToken);
+
         // Saving reg id to shared preferences
         storeRegIdInPref(refreshedToken);
 
         // sending reg id to your server
         sendRegistrationToServer(refreshedToken);
+
+
 
         // Notify UI that registration has completed, so the progress indicator can be hidden.
         Intent registrationComplete = new Intent(Config.REGISTRATION_COMPLETE);

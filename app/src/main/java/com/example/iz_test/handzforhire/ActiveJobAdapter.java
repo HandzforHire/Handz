@@ -58,9 +58,11 @@ public class ActiveJobAdapter extends BaseAdapter {
         public static String XAPP_KEY = "X-APP-KEY";
         public static String TYPE = "type";
         String value = "HandzForHire@~";
+        public static String JOB_ID = "job_id";
         private Activity activity;
         private ArrayList<HashMap<String, String>> data;
         private static LayoutInflater inflater = null;
+        String jobId;
 
         Dialog dialog;
         public ActiveJobAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
@@ -184,6 +186,7 @@ public class ActiveJobAdapter extends BaseAdapter {
 
                     HashMap<String, String> items =data.get(pos);
                     String  userId=items.get("userId");
+                    jobId = items.get("jobId");
                     getmsgcount(userId);
                     String username="";
                     String  jobId =  items.get("jobId");;
@@ -311,6 +314,7 @@ public class ActiveJobAdapter extends BaseAdapter {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
+                params.put(JOB_ID, jobId);
                 params.put(TYPE,"notificationCountMessage");
                 params.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("Params "+params);

@@ -233,7 +233,7 @@ public class ActiveJobs extends Activity implements SimpleGestureFilter.SimpleGe
     public void onResponserecieved1(String jsonobject, int i) {
         String status = null;
         String jobList = null;
-
+        System.out.println("Transaction date "+jsonobject);
         try {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");

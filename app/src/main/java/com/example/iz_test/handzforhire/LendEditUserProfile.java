@@ -79,8 +79,8 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
     Bitmap finalbitmap;
     TextView photo_text,rating_value;
     EditText profile_name;
-    private static final String URL = "http://162.144.41.156/~izaapinn/handzforhire/service/update_profile_image";
-    private static final String GET_URL = "http://162.144.41.156/~izaapinn/handzforhire/service/get_profile_image";
+    private static final String URL = Constant.SERVER_URL+"update_profile_image";
+    private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
     public static String KEY_USERID = "user_id";
     public static String KEY_PROFILE_IMAGE = "profile_image";
     public static String KEY_PROFILE_NAME = "profile_name";
@@ -196,22 +196,21 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 i.putExtra("city", city);
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
-                startActivity(i);
             }
         });
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
-               /* Intent i = new Intent(LendEditUserProfile.this, LendProfilePage.class);
+                //onBackPressed();
+               Intent i = new Intent(LendEditUserProfile.this, LendProfilePage.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);
-                finish();*/
+                finish();
             }
         });
 
@@ -305,10 +304,12 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 if (!profile_image.equals("") && !profilename.equals("null")) {
                     profile_name.setText(profilename);
                     photo_text.setVisibility(View.INVISIBLE);
+                    image.setVisibility(View.VISIBLE);
                     Glide.with(LendEditUserProfile.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                 } else if (!profile_image.equals("") && profilename.equals("null")) {
 
                     photo_text.setVisibility(View.INVISIBLE);
+                    image.setVisibility(View.VISIBLE);
                     Glide.with(LendEditUserProfile.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                 } else if (!profilename.equals("null") && profile_image.equals("")) {
                     profile_name.setText(profilename);
@@ -385,7 +386,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SELECT_FILE) {
-                onSelectFromGalleryResult(data);
+                //onSelectFromGalleryResult(data);
                 Uri selectedImageUri = data.getData();
                 CropImage.activity(selectedImageUri)
                         .start(this);
@@ -408,6 +409,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 if (resultCode == RESULT_OK) {
                     Uri resultUri = result.getUri();
                     image.setImageURI(resultUri);
+                    image.setVisibility(View.VISIBLE);
                     String selectedImagePath = uriToFilename(resultUri);
                     System.out.println("filename:gallery "+selectedImagePath);
                     new FileUpload(selectedImagePath,id);

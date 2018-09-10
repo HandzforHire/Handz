@@ -46,7 +46,7 @@ public class LendFileUpload {
     public static String user_id;
     String type;
     public static String firstRemoteFile;
-    private static final String URL = "http://162.144.41.156/~izaapinn/handzforhire/service/update_profile_image";
+    private static final String URL = Constant.SERVER_URL+"update_profile_image";
     public static String KEY_USERID = "user_id";
     public static String KEY_PROFILE_IMAGE = "profile_image";
     public static String KEY_PROFILE_NAME = "profile_name";
@@ -58,21 +58,25 @@ public class LendFileUpload {
     /*********
      * work only for Dedicated IP
      ***********/
-    static final String FTP_HOST = "162.144.41.156";
+    static final String FTP_HOST = "52.89.130.200";
 
     /*********
      * FTP USERNAME
      ***********/
-    static final String FTP_USER = "server@izaapinnovations.com";
+    static final String FTP_USER = "handz";
 
     /*********
      * FTP PASSWORD
      ***********/
-    static final String FTP_PASS = "Y9+CW:K_o[";
-
+    static final String FTP_PASS = "Y*b~{Zd]<uJ6BAzP";
+    Dialog dialog;
     public LendFileUpload(String file) {
 
         System.out.println("save profile");
+        dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progressbar);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         new UploadFile().execute(file);
     }
@@ -99,7 +103,7 @@ public class LendFileUpload {
                 ftpClient.login(FTP_USER, FTP_PASS);
                 ftpClient.enterLocalPassiveMode();
 
-                ftpClient.changeWorkingDirectory("handzforhire/assets/images/uploads/profile");
+                ftpClient.changeWorkingDirectory("/var/www/html/assets/images/uploads/profie/");
 
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
@@ -158,6 +162,7 @@ public class LendFileUpload {
                 imageUpload();
             } else {
             }
+            dialog.dismiss();
             // hideProgressDialog();
         }
 
@@ -166,6 +171,7 @@ public class LendFileUpload {
             super.onPreExecute();
             //	txt_loading.setVisibility(View.VISIBLE);
             //  showProgressDialog();
+            dialog.show();
         }
 
 

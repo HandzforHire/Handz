@@ -236,16 +236,28 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
                 String get_name = object.getString("job_name");
                 String get_description = object.getString("description");
                 String get_date = object.getString("job_date");
-                String get_start_time = object.getString("start_time");
-                String get_end_time = object.getString("end_time");
+                String get_firstname = object.getString("firstname");
+                String get_username = object.getString("username");
                 String get_amount = object.getString("job_payment_amount");
                 String get_type = object.getString("job_payment_type");
                 String get_profile_name = object.getString("profile_name");
                 String image = object.getString("profile_image");
 
                 employerId = object.getString("employer_id");
-                profile_name.setText(get_profile_name);
                 description.setText(get_description);
+
+
+                if(get_profile_name.equals(""))
+                {
+                    profile_name.setText(get_username);
+                }
+                if(get_profile_name.equals("")&&get_username.equals(""))
+                {
+                    profile_name.setText(get_firstname);
+                }
+                else {
+                    profile_name.setText(get_profile_name);
+                }
 
                 DateFormat dateInstance = SimpleDateFormat.getDateInstance();
                 DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");

@@ -98,7 +98,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
     public static String XAPP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     static ArrayList<HashMap<String, String>> job_title = new ArrayList<HashMap<String, String>>();
-    String job_category_name,job_id,payment_type,pay_amount,flexible_status,job_estimated,paytext;
+    String job_category_name,job_id,payment_type,pay_amount,flexible_status,job_estimated,paytext,hourr;
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     Integer cat;
     CheckBox checkBox;
@@ -629,7 +629,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         }
         if (v == time_layout) {
 
-            // Get Current Time
+        /*    // Get Current Time
             TimeZone tz = TimeZone.getTimeZone("US/Eastern");
             System.out.println(tz.getDisplayName());
             System.out.println(tz.getRawOffset());
@@ -645,7 +645,13 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                 mHour=mHour+1;
                 mMinute=0;
             }
-            System.out.println("Calendar "+c);
+                System.out.println("Calendar "+c);*/
+
+            final Calendar c = Calendar.getInstance();
+            mHour = c.get(Calendar.HOUR_OF_DAY);
+            mMinute = c.get(Calendar.MINUTE);
+
+
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                     new TimePickerDialog.OnTimeSetListener() {
@@ -659,8 +665,12 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                             String sec = (second < 10) ? "0" + second : "" + second;
                             String min = (minutes < 10) ? "0" + minutes : "" + minutes;
                             String hour_day = (hour < 10) ? "0" + hour : "" + hour;
-                            st_time = hour_day + ":" + min + ":" + sec;
-                            System.out.println("77777777:start_time::::::"+st_time);
+                            start_time = hour_day + ":" + min + ":" + sec;
+                            System.out.println("77777777:start_time::::::"+start_time);
+
+                            hourr = hour_day;
+                            System.out.println("77777777:hourr::::::"+hourr);
+
 
                             String timeSet = "";
                             if (hour > 12) {
@@ -683,16 +693,9 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                             } else {
                                 min1 = String.valueOf(minutes);
                             }
-                            String hour_day1 = "";
-                            if(hour < 10)
-                            {
-                                hour_day1 = "0" + hour ;
-                            }
-                            else
-                            {
-                                hour_day1 = String.valueOf(hour);
-                            }
-                            start_time_text.setText(hour_day1 + ":" + min1 + " " + c.get(Calendar.AM_PM));
+
+                            start_time_text.setText(hour + ":" + min1 + " " + timeSet);
+
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();

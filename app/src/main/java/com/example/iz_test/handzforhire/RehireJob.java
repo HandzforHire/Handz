@@ -608,16 +608,9 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                             } else {
                                 min1 = String.valueOf(minutes);
                             }
-                            String hour_day1 = "";
-                            if(hour < 10)
-                            {
-                                hour_day1 = "0" + hour ;
-                            }
-                            else
-                            {
-                                hour_day1 = String.valueOf(hour);
-                            }
-                            start_time_text.setText(hour_day1 + ":" + min1 + " " + timeSet);
+
+                            start_time_text.setText(hour + ":" + min1 + " " + timeSet);
+
                             //start_time_text.setText(start_time);
 
                         }
@@ -836,14 +829,17 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
 
                 String firstname = object.getString("firstname");
 
-
-                if(username.equals(""))
+                if(profilename.equals(""))
                 {
-                    username_text.setText(profilename);
+                    username_text.setText(username);
                 }
                 if(profilename.equals("")&&username.equals(""))
                 {
                     username_text.setText(firstname);
+                }
+                else
+                {
+                    username_text.setText(profilename);
                 }
 
                 name = get_name;
@@ -895,8 +891,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                 arrow.setVisibility(View.GONE);
                 payment_layout.setVisibility(View.VISIBLE);
                 job_amount.setText(get_amount);
-                amount_text.setText(get_type);
-
+                amount_text.setText("Hourly Wage");
                 if(flexible.equals("yes"))
                 {
                     checkBox.setChecked(true);

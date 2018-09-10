@@ -105,8 +105,8 @@ public class EditComments extends Activity implements SimpleGestureFilter.Simple
         detector = new SimpleGestureFilter(this,this);
 
         t3.setText(rating);
-        System.out.println("rrrrrrrrrrrr:rating::" + rating+"..."+image);
-        if(image.equals(""))
+       // System.out.println("rrrrrrrrrrrr:rating::" + rating+"..."+image);
+        if(image.equals(null)||image.equals(""))
         {
         }
         else {

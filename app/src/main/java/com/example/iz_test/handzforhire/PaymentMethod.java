@@ -72,7 +72,6 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
     TextView text,text1;
     private SimpleGestureFilter detector;
     private static final String PAYPALUSER_INFO = Constant.SERVER_URL +"paypal_user_info_add";
-    //public static String SERVER_URL = "http://162.144.41.156/~izaapinn/handzforhire/service/paypal_user_info_add";
     public static final String XAPP_KEY = "X-APP-KEY";
     public static final String KEY_USERID = "user_id";
     public static final String KEY_USERTYPE = "usertype";
