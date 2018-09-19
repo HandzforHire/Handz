@@ -4,15 +4,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -44,10 +36,7 @@ import com.glide.RoundedCornersTransformation;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,14 +84,16 @@ public class ActiveJobAdapter extends BaseAdapter {
 
             TextView job_name = (TextView) vi.findViewById(R.id.text1);
             ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
-            TextView make_payment = (TextView) vi.findViewById(R.id.payment);
+            Button make_payment = (Button) vi.findViewById(R.id.payment);
             final TextView profile_name = (TextView) vi.findViewById(R.id.text3);
-            Button job_details = (Button) vi.findViewById(R.id.btn);
-            LinearLayout chat = (LinearLayout) vi.findViewById(R.id.lay1);
+            Button job_details = (Button) vi.findViewById(R.id.job_detail_btn);
+            Button chat = (Button) vi.findViewById(R.id.message_btn);
             final TextView job_id = (TextView) vi.findViewById(R.id.job_id);
             final TextView employer_id = (TextView) vi.findViewById(R.id.employer_id);
             final TextView employee_id = (TextView) vi.findViewById(R.id.employee_id);
             final TextView image_text = (TextView) vi.findViewById(R.id.image1);
+            final TextView message_count = (TextView) vi.findViewById(R.id.message_count);
+            final TextView payment_count = (TextView) vi.findViewById(R.id.pay_count);
 
             String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
             Typeface font = Typeface.createFromAsset(activity.getAssets(), fontPath);
@@ -120,6 +111,9 @@ public class ActiveJobAdapter extends BaseAdapter {
             final String get_employer = items.get("employer");
             final String get_employee = items.get("employee");
             final String channel_id=items.get("channel");
+            final String message_notification_count=items.get("message_count");
+            final String payment_notification_count=items.get("payment_count");
+            System.out.println("success:count:::" + message_notification_count+",,,"+payment_notification_count);
 
             job_name.setText(get_name);
             job_name.setTypeface(font);
@@ -127,6 +121,25 @@ public class ActiveJobAdapter extends BaseAdapter {
             employer_id.setText(get_employer);
             employee_id.setText(get_employee);
             image_text.setText(get_image);
+
+            if(message_notification_count.equals("0"))
+            {
+                message_count.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                message_count.setVisibility(View.VISIBLE);
+                message_count.setText(message_notification_count);
+            }
+            if(payment_notification_count.equals("0"))
+            {
+                payment_count.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                payment_count.setVisibility(View.VISIBLE);
+                payment_count.setText(payment_notification_count);
+            }
 
             if(get_profile.equals(""))
             {
@@ -182,8 +195,6 @@ public class ActiveJobAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     int pos= (int) view.getTag();
-
-
                     HashMap<String, String> items =data.get(pos);
                     String  userId=items.get("userId");
                     jobId = items.get("jobId");
@@ -239,7 +250,7 @@ public class ActiveJobAdapter extends BaseAdapter {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("resposne "+response);
+                        System.out.println("success::::resposne::: "+response);
                         dialog.dismiss();
                     }
                 },
@@ -334,7 +345,7 @@ public class ActiveJobAdapter extends BaseAdapter {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("resposne "+response);
+                        System.out.println("success:::resposne:::"+response);
                         dialog.dismiss();
                     }
                 },

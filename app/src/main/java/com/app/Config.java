@@ -19,4 +19,7 @@ public class Config {
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
 
     public static final String SHARED_PREF = "ah_firebase";
+
+    public static final String LINKEDIN_CLIENTID = "81qt2f2mg525a4";
+    public static final String LINKEDIN_SECRETKEY = "E3VnJD4wY2l5x9U7";
 }

@@ -1,0 +1,45 @@
+[
+    {
+        "outputFile": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-large-v14\\values-large-v14.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 107,
+                    "endOffset": 158
+                },
+                "from": {
+                    "file": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\values-large-v14\\values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 289,
+                        "endColumn": 108,
+                        "endOffset": 393
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 163,
+                    "endColumn": 119,
+                    "endOffset": 278
+                },
+                "from": {
+                    "file": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\values-large-v14\\values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 399,
+                        "endColumn": 120,
+                        "endOffset": 515
+                    }
+                }
+            }
+        ]
+    }
+]

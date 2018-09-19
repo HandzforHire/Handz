@@ -4,14 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3B3B3B">
+    android:background="#4D4D4D">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -21,7 +20,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#BFE8C64B"
+                    android:background="#AB954C"
                     android:gravity="right">
 
                     <RelativeLayout
@@ -31,7 +30,7 @@
                         android:layout_marginTop="10sp"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:background="#178487">
+                        android:background="#007679">
 
                         <TextView
                             android:id="@+id/text1"
@@ -108,7 +107,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#BFE8C64B">
+                    android:background="#AB954C">
 
                     <TextView
                         android:id="@+id/tv1"
@@ -209,7 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="100sp"
                     android:gravity="center_horizontal"
-                    android:background="#BF178487">
+                    android:background="#166266">
 
                     <TextView
                         android:id="@+id/tv6"
@@ -234,7 +233,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="100sp"
-                    android:background="#BFB5B0AF"
+                    android:background="#4D4D4D"
                     android:gravity="bottom">
 
 
@@ -243,7 +242,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="120sp"
-                    android:background="#BFE8C64B">
+                    android:background="#AB954C">
 
                     <RelativeLayout
                         android:id="@+id/lay1"
@@ -251,7 +250,7 @@
                         android:layout_height="70sp"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:background="#178487">
+                        android:background="#166266">
 
                         <ImageView
                             android:id="@+id/handz_button"

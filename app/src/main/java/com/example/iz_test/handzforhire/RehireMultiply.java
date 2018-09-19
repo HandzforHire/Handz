@@ -33,6 +33,7 @@ public class RehireMultiply extends Activity implements SimpleGestureFilter.Simp
         add = (TextView) findViewById(R.id.add);
         subtract = (TextView) findViewById(R.id.subtract);
         ImageView logo = (ImageView) findViewById(R.id.logo);
+        ImageView back = (ImageView) findViewById(R.id.back);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -61,6 +62,13 @@ public class RehireMultiply extends Activity implements SimpleGestureFilter.Simp
 
         pay_amount.addTextChangedListener(tw);
         hours.addTextChangedListener(tw1);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override

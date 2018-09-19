@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.iz_test.handzforhire"
     android:versionCode="1"
     android:versionName="1.0">
@@ -164,18 +165,14 @@
         <activity
             android:name="com.example.iz_test.handzforhire.RegisterPage3"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-
-            <intent-filter>
+            android:launchMode="singleTask">
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:scheme="https"
-                    android:host="izaapinnovations.com"
-                    android:path="/.well-known" />
+                    android:host="handzadmin.com" />
             </intent-filter>
         </activity>
         <activity android:name=".RegisterPage4" />
@@ -331,6 +328,9 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
 
+        <activity
+            android:name=".ArchievedJob"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--<activity android:name=".Progressbar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>-->
 

@@ -77,6 +77,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
     String address,city,state,zipcode,id,jobId,job_id,name,date,amount,applicants,profile_image,profilename,dlist;
     TextView profile_name;
     ListView list;
+    LinearLayout lin_archievedjob;
 
     String type = "posted";
     int timeout = 60000;
@@ -100,6 +101,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
         //rating_lay = (RelativeLayout) findViewById(R.id.rating);
         active_btn = (Button) findViewById(R.id.btn1);
         history_btn = (Button) findViewById(R.id.btn2);
+        lin_archievedjob=(LinearLayout)findViewById(R.id.lin_archievedjob);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -146,6 +148,19 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(PostedJobs.this,JobHistory.class);
+                i.putExtra("userId", id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+            }
+        });
+
+        lin_archievedjob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PostedJobs.this,ArchievedJob.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
@@ -268,7 +283,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
         System.out.println("values::"+value+".."+id+".."+type);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 

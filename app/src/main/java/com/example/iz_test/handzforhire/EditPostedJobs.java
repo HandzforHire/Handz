@@ -163,7 +163,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
         System.out.println("values::"+value+".."+user_id);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+       // stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 

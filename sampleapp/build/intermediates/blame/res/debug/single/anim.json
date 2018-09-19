@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\anim\\abc_slide_in_top.xml",
+        "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\anim\\abc_slide_in_top.xml"
+    },
+    {
+        "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\anim\\abc_slide_out_top.xml",
+        "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\anim\\abc_slide_out_top.xml"
+    },
+    {
+        "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\anim\\abc_slide_out_bottom.xml",
+        "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\anim\\abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\anim\\abc_fade_in.xml",
+        "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\anim\\abc_fade_in.xml"
+    },
+    {
+        "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\anim\\abc_slide_in_bottom.xml",
+        "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\anim\\abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\anim\\abc_fade_out.xml",
+        "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\anim\\abc_fade_out.xml"
+    }
+]

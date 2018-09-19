@@ -27,7 +27,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -108,7 +107,6 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
         type = i.getStringExtra("type");
         image = i.getStringExtra("image");
         usertype=i.getStringExtra("usertype");
-
         username=i.getStringExtra("username");
         firstname=i.getStringExtra("firstname");
         if(profile_name.equals(""))
@@ -118,6 +116,10 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
         if(profile_name.equals("")&&username.equals(""))
         {
             name.setText(firstname);
+        }
+        else
+        {
+            name.setText(profile_name);
         }
         amt.setText(amount);
         type_text.setText(type);
@@ -306,7 +308,7 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+       // stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 

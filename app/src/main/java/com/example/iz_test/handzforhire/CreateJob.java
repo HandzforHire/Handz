@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,24 +13,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
-
 import android.text.Selection;
-
 import android.text.TextUtils;
 import android.text.TextWatcher;
-
-
-
-
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-
-
-
 import android.view.inputmethod.InputMethodManager;
-
-
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -39,13 +27,11 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -56,24 +42,19 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bigkoo.pickerview.MyOptionsPickerView;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
-
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 public class CreateJob extends Activity implements View.OnClickListener,SimpleGestureFilter.SimpleGestureListener{
 
@@ -102,7 +83,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout;
     Integer cat;
     CheckBox checkBox;
-    ImageView main_category_image;
+    ImageView main_category_image,arrow1;
     EditText payamount;
     Activity activity;
     RelativeLayout duration_layout;
@@ -153,6 +134,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         pay_text = (TextView) findViewById(R.id.payment_details);
         logo = (ImageView) findViewById(R.id.logo);
         arrow = (ImageView) findViewById(R.id.arrow);
+        arrow1 = (ImageView) findViewById(R.id.arrow1);
         main_category_image =(ImageView)findViewById(R.id.main_category);
 
         pay_lay = (RelativeLayout) findViewById(R.id.linear4);
@@ -321,7 +303,8 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                         job_amount.setText(pay_amount);
                         amount_text.setText(paytext);
                         pay_text.setVisibility(View.GONE);
-                        arrow.setVisibility(View.GONE);
+                        arrow1.setVisibility(View.GONE);
+                        arrow.setVisibility(View.VISIBLE);
                         dialog.dismiss();
                     }
                 });

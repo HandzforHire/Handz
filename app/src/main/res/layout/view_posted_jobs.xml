@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3B3B3B">
+    android:background="#4D4D4D">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#3B3B3B"
+            android:background="#4D4D4D"
             android:orientation="vertical">
 
             <TextView
@@ -75,7 +75,27 @@
                 android:background="#000000"/>
 
         </LinearLayout>
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lin_archievedjob"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:layout_gravity="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:text="Link to Archived posted jobs"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                android:text="(Click Here To View All Expired Posted Jobs)"/>
+        </LinearLayout>
    <!-- <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"

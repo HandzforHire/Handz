@@ -43,6 +43,14 @@ import com.bumptech.glide.request.RequestOptions;
 
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
+import com.linkedin.platform.APIHelper;
+import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.errors.LIApiError;
+import com.linkedin.platform.errors.LIAuthError;
+import com.linkedin.platform.listeners.ApiListener;
+import com.linkedin.platform.listeners.ApiResponse;
+import com.linkedin.platform.listeners.AuthListener;
+import com.linkedin.platform.utils.Scope;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,10 +64,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReviewRating extends Activity implements SimpleGestureFilter.SimpleGestureListener{
+public class ReviewRating extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
-    String address,city,state,zipcode,id;
-    private static final String URL = Constant.SERVER_URL+"review_rating";
+    String address, city, state, zipcode, id;
+    private static final String URL = Constant.SERVER_URL + "review_rating";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
@@ -68,12 +76,13 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
     String usertype = "employer";
     int timeout = 60000;
     ProgressDialog progress_dialog;
-    String image,average_rating,date,profile_image,profilename,rating,comment;
+    String image, average_rating, date, profile_image, profilename, rating, comment;
     ListView list;
     Button close;
     TextView rate;
     Dialog dialog;
     private SimpleGestureFilter detector;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,19 +93,19 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        detector = new SimpleGestureFilter(this,this);
+        detector = new SimpleGestureFilter(this, this);
 
         list = (ListView) findViewById(R.id.listview);
         close = (Button) findViewById(R.id.cancel_btn);
-        ImageView image = (ImageView)findViewById(R.id.profile_image);
-         TextView name = (TextView) findViewById(R.id.t2);
-         rate = (TextView) findViewById(R.id.text3);
+        ImageView image = (ImageView) findViewById(R.id.profile_image);
+        TextView name = (TextView) findViewById(R.id.t2);
+        rate = (TextView) findViewById(R.id.text3);
 
-      Intent i = getIntent();
+        Intent i = getIntent();
         id = i.getStringExtra("userId");
         profile_image = i.getStringExtra("image");
         profilename = i.getStringExtra("name");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:"+id);
+        System.out.println("iiiiiiiiiiiiiiiiiiiii:" + id);
 
         completerating();
 
@@ -108,15 +117,22 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
         });
 
         name.setText(profilename);
-        if(profile_image.equals("")&&profile_image.equals(null))
-        {
-        }
-        else {
+        if (profile_image.equals("") && profile_image.equals(null)) {
+        } else {
             image.setVisibility(View.INVISIBLE);
-            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this, 0, Glideconstants.sCorner, Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
         }
 
+
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
     }
 
     public void completerating() {
@@ -133,7 +149,7 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dialog.dismiss();
-                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
                             final Dialog dialog = new Dialog(ReviewRating.this);
                             dialog.setContentView(R.layout.custom_dialog);
                             // set the custom dialog components - text, image and button
@@ -152,11 +168,11 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                             Window window = dialog.getWindow();
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        }else if (error instanceof AuthFailureError) {
-                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
-                        }else if (error instanceof NetworkError) {
-                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
-                        }else {
+                        } else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(), "Authentication Failure while performing the request", Toast.LENGTH_LONG).show();
+                        } else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(), "Network error while performing the request", Toast.LENGTH_LONG).show();
+                        } else {
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 JSONObject jsonObject = new JSONObject(responseBody);
@@ -200,47 +216,46 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                 params.put(KEY_USERID, id);
                 params.put(TYPE, usertype);
                 params.put(Constant.DEVICE, Constant.ANDROID);
-                System.out.println("URL "+URL);
-                System.out.println("Params "+params);
-                 return params;
+                System.out.println("URL " + URL);
+                System.out.println("Params " + params);
+                return params;
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 
     public void onResponserecieved(String jsonobject, int i) {
         String status = null;
         String rating_list = null;
-        System.out.println("Review Rating "+jsonobject);
+        System.out.println("Review Rating " + jsonobject);
         try {
             JSONObject jResult = new JSONObject(jsonobject);
             status = jResult.getString("status");
             rating_list = jResult.getString("rating_lists");
-            if(status.equals("success"))
-            {
+            if (status.equals("success")) {
                 JSONArray array = new JSONArray(rating_list);
-                for(int n = 0; n < array.length(); n++) {
+                for (int n = 0; n < array.length(); n++) {
                     JSONObject object = (JSONObject) array.get(n);
-                    System.out.println("Review Rating obj "+object);
+                    System.out.println("Review Rating obj " + object);
                     final String employee = object.getString("employee");
                     rating = object.getString("average_rating");
                     date = object.getString("job_date");
                     comment = object.getString("comments");
                     JSONArray emparray = new JSONArray(employee);
-                    System.out.println("object 1"+emparray);
-                    for(int a = 0; a < emparray.length(); a++) {
-                        JSONObject obj=emparray.getJSONObject(a);
+                    System.out.println("object 1" + emparray);
+                    for (int a = 0; a < emparray.length(); a++) {
+                        JSONObject obj = emparray.getJSONObject(a);
                         image = obj.getString("profile_image");
                         average_rating = obj.getString("rating");
                     }
 
                     HashMap<String, String> map = new HashMap<String, String>();
-                    map.put("image",image);
-                    map.put("average",average_rating);
-                    map.put("date",date);
-                    map.put("comments",comment);
+                    map.put("image", image);
+                    map.put("average", average_rating);
+                    map.put("date", date);
+                    map.put("comments", comment);
                     job_list.add(map);
 
                     ReviewAdapter arrayAdapter = new ReviewAdapter(this, job_list) {
@@ -271,14 +286,12 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                     });
                 }
 
-            }
-            else
-            {
+            } else {
 
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            System.out.println("Review Rating "+e.getMessage());
+            System.out.println("Review Rating " + e.getMessage());
         }
     }
 
@@ -288,16 +301,18 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
 
         switch (direction) {
 
-            case SimpleGestureFilter.SWIPE_RIGHT : str = "Swipe Right";
+            case SimpleGestureFilter.SWIPE_RIGHT:
+                str = "Swipe Right";
                 Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
                 startActivity(j);
                 finish();
                 break;
-            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+            case SimpleGestureFilter.SWIPE_LEFT:
+                str = "Swipe Left";
                 Intent i;
-                if(Profilevalues.usertype.equals("1")) {
+                if (Profilevalues.usertype.equals("1")) {
                     i = new Intent(getApplicationContext(), ProfilePage.class);
-                }else{
+                } else {
                     i = new Intent(getApplicationContext(), LendProfilePage.class);
                 }
                 i.putExtra("userId", Profilevalues.user_id);
@@ -309,9 +324,11 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
                 finish();
 
                 break;
-            case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
+            case SimpleGestureFilter.SWIPE_DOWN:
+                str = "Swipe Down";
                 break;
-            case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
+            case SimpleGestureFilter.SWIPE_UP:
+                str = "Swipe Up";
                 break;
 
         }
@@ -325,10 +342,12 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
 
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
+    public boolean dispatchTouchEvent(MotionEvent event) {
 
         this.detector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
+
+
 
 }

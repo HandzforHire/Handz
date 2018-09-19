@@ -18,7 +18,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +27,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -93,9 +91,8 @@ public class Adapter extends BaseAdapter implements Filterable {
     }
 
     public class ViewHolder {
-        TextView leave_rating_btn;
-        Button job_details;
-        RelativeLayout chat;
+        Button job_details,leave_rating,edit_rating;
+        Button chat;
         TextView job_name;
         TextView job_id;
         TextView employer_id;
@@ -104,7 +101,7 @@ public class Adapter extends BaseAdapter implements Filterable {
         TextView image_text,message,star;
         ImageView image;
         ImageView image1;
-        LinearLayout leave_layout,edit_layout,rehire_layout;
+        LinearLayout rehire_layout;
     }
 
     @Override
@@ -135,14 +132,13 @@ public class Adapter extends BaseAdapter implements Filterable {
             holder.image_text = (TextView) view.findViewById(R.id.image1);
             holder.user_name = (TextView) view.findViewById(R.id.text3);
             holder.image = (ImageView)view.findViewById(R.id.img1);
-            holder.leave_rating_btn = (TextView) view.findViewById(R.id.leave_rating);
-            holder.job_details = (Button) view.findViewById(R.id.btn);
-            holder.chat = (RelativeLayout) view.findViewById(R.id.lay1);
-            holder.leave_layout = (LinearLayout) view.findViewById(R.id.leave_lay);
-            holder.edit_layout = (LinearLayout) view.findViewById(R.id.edit_lay);
+            holder.job_details = (Button) view.findViewById(R.id.job_detail_btn);
+            holder.chat = (Button) view.findViewById(R.id.message_btn);
+            holder.leave_rating = (Button) view.findViewById(R.id.leave_rating_btn);
+            holder.edit_rating = (Button) view.findViewById(R.id.edit_rating_btn);
             holder.rehire_layout = (LinearLayout) view.findViewById(R.id.rehire_lay);
-            holder.message = (TextView) view.findViewById(R.id.msg_notify);
-            holder.star = (TextView) view.findViewById(R.id.star_notify);
+            holder.message = (TextView) view.findViewById(R.id.message_count);
+            holder.star = (TextView) view.findViewById(R.id.rating_count);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -172,9 +168,9 @@ public class Adapter extends BaseAdapter implements Filterable {
         employeeId = worldpopulationlist.get(position).getEmployeeId();
 
         holder.chat.setTag(position);
-        holder.leave_rating_btn.setTag(position);
+        holder.leave_rating.setTag(position);
         holder.job_details.setTag(position);
-        holder.edit_layout.setTag(position);
+        holder.edit_rating.setTag(position);
         holder.rehire_layout.setTag(position);
 
         Glide.with(mContext).load(worldpopulationlist.get(position).getImage()).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(mContext,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(holder.image);
@@ -201,18 +197,18 @@ public class Adapter extends BaseAdapter implements Filterable {
 
         if(rating_value.equals(""))
         {
-            holder.edit_layout.setVisibility(View.GONE);
-            holder.leave_layout.setVisibility(View.VISIBLE);
+            holder.edit_rating.setVisibility(View.GONE);
+            holder.leave_rating.setVisibility(View.VISIBLE);
         }
 
 
         else
         {
-            holder.leave_layout.setVisibility(View.GONE);
-            holder.edit_layout.setVisibility(View.VISIBLE);
+            holder.leave_rating.setVisibility(View.GONE);
+            holder.edit_rating.setVisibility(View.VISIBLE);
         }
 
-        holder.leave_rating_btn.setOnClickListener(new View.OnClickListener() {
+        holder.leave_rating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -239,7 +235,7 @@ public class Adapter extends BaseAdapter implements Filterable {
         });
 
 
-        holder.edit_layout.setOnClickListener(new View.OnClickListener() {
+        holder.edit_rating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int pos= (int) v.getTag();

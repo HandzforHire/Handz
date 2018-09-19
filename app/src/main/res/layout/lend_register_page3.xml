@@ -167,7 +167,7 @@
                         android:textStyle="bold"
                         android:textColor="#DCDCDC"
                         android:layout_marginRight="10sp"
-                        android:text="I acknowledge that,in accordance \nwith Federal Law,I must be 18 years of age or older in order to create a job and hire a person." />
+                        android:text="I acknowledge that, in accordance \nwith Federal Law, I must be 18 years of age or older in order to create a job and hire a person." />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -185,7 +185,7 @@
                         android:textStyle="bold"
                         android:textColor="#DCDCDC"
                         android:layout_marginRight="10sp"
-                        android:text="I agree and certify that I am a person legally within the United States and should I desire to find work using Handz for Hire,I am of legal working age according to Federal and State laws." />
+                        android:text="I agree and certify that I am a person legally within the United States and should I desire to find work using Handz for Hire, I am of legal working age according to Federal and State laws." />
 
                 </RelativeLayout>
 

@@ -5,11 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,7 +27,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -254,6 +249,8 @@ public class LendActiveJobs extends Activity implements SimpleGestureFilter.Simp
                     endTime = object.getString("end_time");
                     amount = object.getString("job_payment_amount");
                     type = object.getString("job_payment_type");
+                    final String message_count=object.getString("notificationCountMessage");
+                    final String payment_count=object.getString("notificationCountMakePayment");
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("name",job_name);
@@ -270,6 +267,8 @@ public class LendActiveJobs extends Activity implements SimpleGestureFilter.Simp
                     map.put("employer",employerId);
                     map.put("employee",employeeId);
                     map.put("channel",channelid);
+                    map.put("message_count",message_count);
+                    map.put("payment_count",payment_count);
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
                     LendActiveJobAdapter arrayAdapter = new LendActiveJobAdapter(this, job_list) {

@@ -134,9 +134,9 @@ public class RestClientPost {
                     return params;
                 }
             };
-            postRequest.setRetryPolicy(new DefaultRetryPolicy(timeout,
+         /*   postRequest.setRetryPolicy(new DefaultRetryPolicy(timeout,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));*/
             queue.add(postRequest);
         }
     }
@@ -202,9 +202,9 @@ public class RestClientPost {
                     return params;
                 }
             };
-            postRequest.setRetryPolicy(new DefaultRetryPolicy(timeout,
+          /*  postRequest.setRetryPolicy(new DefaultRetryPolicy(timeout,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));*/
             queue.add(postRequest);
         }
     }

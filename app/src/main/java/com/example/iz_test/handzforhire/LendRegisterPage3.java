@@ -434,7 +434,7 @@ public class LendRegisterPage3 extends Activity implements ResponseListener1{
             System.out.println("values::"+value+".."+password+".."+email+".."+first+".."+last+".."+address+".."+city+".."+state+".."+zip+".."+usertype+".."+deviceId);
 
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//            stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(stringRequest);
         }
 

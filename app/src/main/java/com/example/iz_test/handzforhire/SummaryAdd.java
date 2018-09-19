@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -21,22 +20,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-
-
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,6 +110,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
         job_payout = (TextView) findViewById(R.id.ajp);
         hourly_value = (EditText) findViewById(R.id.hourly_text);
         expected_value = (EditText) findViewById(R.id.expected_text);
+        ImageView info = (ImageView) findViewById(R.id.info);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -211,6 +205,33 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                 fee = "$ " + paypal_merchant.getText().toString();
                 System.out.println("sssssssssssss:add:pay:expe:fee:"+payout+".."+expense+".."+fee);
                 registerUser();
+            }
+        });
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // custom dialog
+                final Dialog dialog = new Dialog(SummaryAdd.this);
+                dialog.setContentView(R.layout.custom_dialog);
+
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("This fee may minimally increase if a tip is added at the time of payment.");
+                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+                Window window = dialog.getWindow();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                return;
             }
         });
 
@@ -582,7 +603,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
 
                                     dialog.show();
                                     Window window = dialog.getWindow();
-                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 }
                             } catch (JSONException e) {

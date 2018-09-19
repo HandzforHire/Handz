@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,15 +15,22 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.errors.LIAuthError;
 
+
+import java.security.MessageDigest;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
@@ -65,6 +74,8 @@ public class MainActivity extends Activity {
         need_hand.setTypeface(tf);
         lend_hand.setTypeface(tf);
 
+        ComputePackageHash();
+
         text.setText(Html.fromHtml("Handz is currently offered in the Jacksonville,FL \n area. Want Handz in your area? <u>Click here.</u>"));
 
         text.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +107,9 @@ public class MainActivity extends Activity {
                     String b = "else_condition";
                     System.out.println("pppppppp:::::::"+b);
                 }
+           /*     Intent i = new Intent(MainActivity.this, RegisterPage3.class);
+                startActivity(i);
+                finish();*/
             }
         });
 
@@ -133,6 +147,25 @@ public class MainActivity extends Activity {
                 startActivity(i);
             }
         });
+
+
+      /*  LISessionManager.getInstance(getApplicationContext()).init(this, buildScope()//pass the build scope here
+                , new Firebase.AuthListener() {
+                    @Override
+                    public void onAuthSuccess() {
+                        // Authentication was successful. You can now do
+                        // other calls with the SDK.
+                        Toast.makeText(MainActivity.this, "Successfully authenticated with LinkedIn.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAuthError(LIAuthError error) {
+                        // Handle authentication errors
+                        Log.e(TAG, "Auth Error :" + error.toString());
+                        Toast.makeText(MainActivity.this, "Failed to authenticate with LinkedIn. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                }, true);*///if TRUE then it will show dialog if
+        // any device has no LinkedIn app installed to download app else won't show anything
 
     }
 
@@ -201,4 +234,22 @@ public class MainActivity extends Activity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
 
     }
+
+
+
+   public void ComputePackageHash()
+    {
+        try
+        {
+        PackageInfo info=getPackageManager().getPackageInfo("com.example.iz_test.handzforhire",PackageManager.GET_SIGNATURES);
+        for(Signature signature : info.signatures ){
+            MessageDigest md=MessageDigest.getInstance("SHA");
+            md.update(signature.toByteArray());
+            System.out.println("keyHash  "+   Base64.encodeToString(md.digest(),Base64.DEFAULT));
+        }
+    }catch(Exception e)
+    {
+
+    }
+   }
 }

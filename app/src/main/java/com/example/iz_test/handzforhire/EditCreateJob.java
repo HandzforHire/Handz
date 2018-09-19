@@ -86,7 +86,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
     public static TextView textview;
     static String category="0",categoryId="0";
     private int mHour, mMinute;
-    ImageView logo,arrow,main_category_image;
+    ImageView logo,arrow,main_category_image,arrow1;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
@@ -123,6 +123,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
         category_name = (TextView)findViewById(R.id.cat_name);
         next = (Button) findViewById(R.id.next);
         job_name = (EditText) findViewById(R.id.descrip);
+        arrow1 = (ImageView) findViewById(R.id.arrow1);
         job_description = (EditText) findViewById(R.id.detail);
         date_text = (TextView) findViewById(R.id.date_text);
         start_time_text = (TextView) findViewById(R.id.start_time_text);
@@ -298,7 +299,8 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                         job_amount.setText(pay_amount);
                         amount_text.setText(paytext);
                         pay_text.setVisibility(View.GONE);
-                        arrow.setVisibility(View.GONE);
+                        arrow1.setVisibility(View.GONE);
+                        arrow.setVisibility(View.VISIBLE);
                         dialog.dismiss();
                     }
                 });
@@ -307,7 +309,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                 Window window = dialog.getWindow();
                 dialog.getWindow().
 
-                        setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 return;
 
@@ -443,7 +445,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
 
                 dialog.show();
                 Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 return;
 
@@ -911,7 +913,8 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                 job_description.setText(get_description);
                 end_time_text.setText(get_type);
                 pay_text.setVisibility(View.GONE);
-                arrow.setVisibility(View.GONE);
+                arrow.setVisibility(View.VISIBLE);
+                arrow1.setVisibility(View.GONE);
                 payment_layout.setVisibility(View.VISIBLE);
                 job_amount.setText(get_amount);
                 amount_text.setText("Hourly Wage");

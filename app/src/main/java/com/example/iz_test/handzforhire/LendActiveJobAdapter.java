@@ -24,7 +24,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -110,14 +109,15 @@ public class LendActiveJobAdapter extends BaseAdapter{
         TextView expected_duration = (TextView) vi.findViewById(R.id.duration);
         TextView amount = (TextView) vi.findViewById(R.id.pay_amount);
         ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
-        TextView payment = (TextView) vi.findViewById(R.id.payment);
-        LinearLayout message = (LinearLayout) vi.findViewById(R.id.lay1);
-        Button job_details = (Button) vi.findViewById(R.id.btn);
+        Button payment = (Button) vi.findViewById(R.id.payment);
+        Button job_details = (Button) vi.findViewById(R.id.job_detail_btn);
         final TextView job_id = (TextView) vi.findViewById(R.id.job_id);
         final TextView employer_id = (TextView) vi.findViewById(R.id.employer_id);
         final TextView employee_id = (TextView) vi.findViewById(R.id.employee_id);
         final TextView image_text = (TextView) vi.findViewById(R.id.image1);
-        LinearLayout chat = (LinearLayout) vi.findViewById(R.id.lay1);
+        Button chat = (Button) vi.findViewById(R.id.message_btn);
+        final TextView message_count = (TextView) vi.findViewById(R.id.message_count);
+        final TextView payment_count = (TextView) vi.findViewById(R.id.pay_count);
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface font = Typeface.createFromAsset(activity.getAssets(), fontPath);
@@ -140,6 +140,9 @@ public class LendActiveJobAdapter extends BaseAdapter{
         final String get_employer = items.get("employer");
         final String get_employee = items.get("employee");
         final String channel_id=items.get("channel");
+        final String message_notification_count=items.get("message_count");
+        final String payment_notification_count=items.get("payment_count");
+        System.out.println("success:count:::" + message_notification_count+",,,"+payment_notification_count);
 
         System.out.println("ppppppppp:payment_type,,,,"+payment_type+",,,"+get_job_id);
 
@@ -151,6 +154,25 @@ public class LendActiveJobAdapter extends BaseAdapter{
         employer_id.setText(get_employer);
         employee_id.setText(get_employee);
         image_text.setText(get_image);
+
+        if(message_notification_count.equals("0"))
+        {
+            message_count.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            message_count.setVisibility(View.VISIBLE);
+            message_count.setText(message_notification_count);
+        }
+        if(payment_notification_count.equals("0"))
+        {
+            payment_count.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            payment_count.setVisibility(View.VISIBLE);
+            payment_count.setText(payment_notification_count);
+        }
 
         DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat destDf = new SimpleDateFormat("EEEE, MMMM dd, yyyy");

@@ -1,9 +1,7 @@
 package com.example.iz_test.handzforhire;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -11,27 +9,9 @@ import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SummaryMultiply extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
@@ -50,6 +30,7 @@ public class SummaryMultiply extends Activity implements SimpleGestureFilter.Sim
         hours = (EditText) findViewById(R.id.hours);
         total = (TextView) findViewById(R.id.total);
         add = (TextView) findViewById(R.id.add);
+        ImageView back = (ImageView) findViewById(R.id.back);
         subtract = (TextView) findViewById(R.id.subtract);
         ImageView logo = (ImageView) findViewById(R.id.logo);
 
@@ -115,6 +96,13 @@ public class SummaryMultiply extends Activity implements SimpleGestureFilter.Sim
                 i.putExtra("job_id", job_id);
                 i.putExtra("duration", duration);
                 startActivity(i);
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 

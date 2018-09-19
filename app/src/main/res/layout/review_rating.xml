@@ -134,6 +134,102 @@
 
 </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:background="#fff"
+            android:gravity="center"
+            android:visibility="gone"
+            android:id="@+id/lin_linkin">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="HELP SHOW CASE YOUR SKILLS!"
+               android:textAllCaps="true"
+               android:textColor="#000"
+               android:layout_gravity="center"
+               android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+               />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add YOUR linkedin profile"
+                android:textAllCaps="true"
+                android:textColor="#000"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                />
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:background="#fff"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/lin_linkininfo">
+
+      <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+          android:weightSum="2">
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_weight="1"
+              android:id="@+id/txt_profilename"
+              android:textColor="#000"
+              android:layout_gravity="center"
+              android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+              />
+          <ImageView
+              android:id="@+id/imageView2"
+              android:layout_width="80dp"
+              android:layout_height="50dp"
+              android:layout_weight="1"
+              android:layout_gravity="center"
+              android:layout_marginTop="10dp"
+              android:src="@drawable/linkedinlogo"
+              android:textAllCaps="true"
+              android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+              android:textColor="#000" />
+
+      </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           >
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:textAllCaps="true"
+                android:textColor="#000"
+                android:src="@drawable/handzlinkedin"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                />
+            <ImageView
+                android:id="@+id/imageprofile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/default_profile"
+                android:textAllCaps="true"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="#000"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

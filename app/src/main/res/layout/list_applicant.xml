@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="#BFE8C64B"
+    android:background="#C8A854"
     android:alpha="0.85"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -59,10 +59,10 @@
 
             <ImageView
                 android:id="@+id/img3"
-                android:layout_width="40sp"
-                android:layout_height="40sp"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
                 android:layout_marginRight="5sp"
-                android:src="@drawable/starnew" />
+                android:src="@drawable/star_border_icon" />
 
             <TextView
                 android:id="@+id/txt1"
@@ -71,6 +71,7 @@
                 android:layout_toRightOf="@+id/img3"
                 android:text="Rating:"
                 android:gravity="center"
+                android:layout_centerVertical="true"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="italic" />
@@ -82,6 +83,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="5sp"
                 android:gravity="center"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/txt1"
                 android:textColor="#000000"
                 android:textSize="26sp"

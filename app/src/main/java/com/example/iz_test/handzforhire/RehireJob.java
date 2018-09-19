@@ -76,7 +76,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
     public static TextView textview;
     static String category="0",categoryId="0";
     private int mHour, mMinute;
-    ImageView logo,arrow;
+    ImageView logo,arrow,arrow1;
     public static String KEY_USERID = "user_id";
     public static String XAPP_KEY = "X-APP-KEY";
     public static String JOB_ID = "job_id";
@@ -110,6 +110,7 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
         layout = (LinearLayout)findViewById(R.id.relay);
         category_layout = (LinearLayout)findViewById(R.id.linear);
         duration_layout = (RelativeLayout)findViewById(R.id.linear3);
+        arrow1 = (ImageView) findViewById(R.id.arrow1);
         category_name = (TextView)findViewById(R.id.cat_name);
         next = (Button) findViewById(R.id.next);
         job_name = (EditText) findViewById(R.id.descrip);
@@ -266,7 +267,8 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                         job_amount.setText(pay_amount);
                         amount_text.setText(paytext);
                         pay_text.setVisibility(View.GONE);
-                        arrow.setVisibility(View.GONE);
+                        arrow1.setVisibility(View.GONE);
+                        arrow.setVisibility(View.VISIBLE);
                         dialog.dismiss();
                     }
                 });
@@ -888,7 +890,8 @@ public class RehireJob extends Activity implements View.OnClickListener,SimpleGe
                 job_description.setText(get_description);
                 end_time_text.setText(get_type);
                 pay_text.setVisibility(View.GONE);
-                arrow.setVisibility(View.GONE);
+                arrow.setVisibility(View.VISIBLE);
+                arrow1.setVisibility(View.GONE);
                 payment_layout.setVisibility(View.VISIBLE);
                 job_amount.setText(get_amount);
                 amount_text.setText("Hourly Wage");

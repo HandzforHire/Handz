@@ -17,7 +17,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +26,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -94,19 +92,19 @@ public class LendHistoryAdapter extends BaseAdapter implements Filterable {
         TextView job_name = (TextView) vi.findViewById(R.id.name);
         TextView amount = (TextView) vi.findViewById(R.id.amount);
         ImageView image1 = (ImageView) vi.findViewById(R.id.img1);
-        Button job_details = (Button) vi.findViewById(R.id.btn);
+        Button job_details = (Button) vi.findViewById(R.id.job_detail_btn);
         TextView date = (TextView) vi.findViewById(R.id.date);
 
 
         final TextView job_id = (TextView) vi.findViewById(R.id.job_id);
         final TextView employer_id = (TextView) vi.findViewById(R.id.employer_id);
         final TextView employee_id = (TextView) vi.findViewById(R.id.employee_id);
-        RelativeLayout chat = (RelativeLayout) vi.findViewById(R.id.lay1);
-        TextView message_count = (TextView) vi.findViewById(R.id.msg_count);
+        Button chat = (Button) vi.findViewById(R.id.message_btn);
+        TextView message_count = (TextView) vi.findViewById(R.id.message_count);
         TextView rating_count = (TextView) vi.findViewById(R.id.rating_count);
 
-        LinearLayout leave_layout = (LinearLayout) vi.findViewById(R.id.leave_lay);
-        LinearLayout edit_layout = (LinearLayout) vi.findViewById(R.id.edit_lay);
+        Button leave_layout = (Button) vi.findViewById(R.id.leave_rating_btn);
+        Button edit_layout = (Button) vi.findViewById(R.id.edit_rating_btn);
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface font = Typeface.createFromAsset(activity.getAssets(), fontPath);

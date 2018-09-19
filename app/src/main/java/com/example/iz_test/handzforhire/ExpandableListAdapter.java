@@ -92,7 +92,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 		lblListHeader.setText(headerTitle);
 
 		if(groupPosition % 8 == 0) {
-			convertView.setBackgroundColor(Color.parseColor("#FF87FA"));
+			//convertView.setBackgroundColor(Color.parseColor("#FF87FA"));
+			convertView.setBackgroundResource(R.drawable.top_expandable_shape);
 		}
 		if(groupPosition % 8 == 1) {
 			convertView.setBackgroundColor(Color.parseColor("#BED2EA"));
@@ -113,7 +114,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 			convertView.setBackgroundColor(Color.parseColor("#AA84FA"));
 		}
 		if(groupPosition % 8 == 7) {
-			convertView.setBackgroundColor(Color.parseColor("#6BAEFB"));
+			//convertView.setBackgroundColor(Color.parseColor("#6BAEFB"));
+			convertView.setBackgroundResource(R.drawable.bottom_expandable_shape);
 		}
 
 		return convertView;

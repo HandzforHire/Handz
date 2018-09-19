@@ -397,13 +397,12 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
             public void onClick(View view) {
                 getAccessToken();
             }
-        });
+        });*/
         // ATTENTION: This was auto-generated to handle app links.
 
-        // ATTENTION: This was auto-generated to handle app links.
         Intent appLinkIntent = getIntent();
         String appLinkAction = appLinkIntent.getAction();
-        Uri appLinkData = appLinkIntent.getData();*/
+        Uri appLinkData = appLinkIntent.getData();
     }
 
     private void registerUser()
@@ -510,7 +509,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
         System.out.println("values::"+value+".."+password+".."+email+".."+first+".."+last+".."+address+".."+city+".."+state+".."+zip+".."+usertype+".."+deviceId);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 
@@ -640,10 +639,7 @@ public class RegisterPage3 extends AppCompatActivity implements ResponseListener
                 startActivityForResult(myIntent,1);
 
                 System.out.println("url "+hreflink[1]);
-               /* Intent result = new Intent("com.example.RESULT_ACTION", Uri.parse(hreflink[1]));
-                setResult(Activity.RESULT_OK, result);
-                finish();*/
-                /*finish();*/
+
                 partnerReferralPrefillData(hreflink[0],accesstoken);
             }catch (Exception e)
             {

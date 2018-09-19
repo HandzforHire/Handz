@@ -364,7 +364,8 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                 System.out.println("response on map" + responseObj);
                 if (status.equals("error")) {
                     undisclosedjob = 0;
-                    txt_undisclosedjob.setText("0 disclosed Locations");
+                    txt_undisclosedjob.setText("0 Additional Undisclosed Locations\n Within a 5 mile radius of  map center\n(Click Here for ListView With Job Details)");
+
                 } else {
                     googleMap.clear();
                     JSONArray joblist = responseObj.getJSONArray("job_lists");
@@ -405,10 +406,7 @@ public class FindJobMap extends Fragment implements GoogleMap.OnMarkerClickListe
                         }
                     }
                     undisclosedjob = undisclosedjobs.size();
-                    if (undisclosedjobs.size() > 0)
-                        txt_undisclosedjob.setText(undisclosedjobs.size() + " Additional Undisclosed Locations\n Within the Parameters of this map\n(Click Here for ListView the Job Details)");
-                    else
-                        txt_undisclosedjob.setText("0 Undisclosed Locations ");
+                    txt_undisclosedjob.setText(undisclosedjobs.size() + " Additional Undisclosed Locations\n Within a 5 mile radius of  map center\n(Click Here for ListView With Job Details)");
 
                 }
             }else if(requestType==2){
