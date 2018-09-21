@@ -60,26 +60,35 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#000000"/>
+
 
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#C2C2C7">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#000000"/>
 
    <EditText
         android:id="@+id/search"
         android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:background="#ffffff"
+        android:layout_height="45sp"
+        android:background="@drawable/search"
         android:textColor="#000000"
-       android:visibility="visible"
+        android:visibility="visible"
         android:gravity="center_vertical"
         android:paddingLeft="15sp"
-       android:drawableLeft="@drawable/search_30"
+       android:layout_marginRight="5sp"
+       android:layout_marginLeft="5sp"
+       android:layout_marginBottom="5sp"
+       android:layout_marginTop="5sp"
+        android:drawableLeft="@drawable/search_30"
         android:textSize="18sp"
         android:hint="Search by Keyword(s) or Date" />
-
 
     <!--<SearchView
         android:id="@+id/search"
@@ -93,10 +102,14 @@
     </SearchView>&ndash;&gt;
 -->
 
+    </RelativeLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#000000"/>
+
+
+
 
     <ListView
         android:id="@+id/listview"
@@ -104,5 +117,12 @@
         android:layout_height="match_parent">
 
     </ListView>
+
+        <TextView
+            android:layout_width="120sp"
+            android:layout_height="50sp"
+            android:layout_marginTop="-50sp"
+            android:background="@drawable/handz"/>
+
 
 </LinearLayout>

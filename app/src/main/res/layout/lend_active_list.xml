@@ -263,7 +263,7 @@
                     android:layout_gravity="center"
                     android:textAllCaps="true"
                     android:layout_margin="7dp"
-                    android:background="@drawable/make_payment_icon"
+                    android:background="@drawable/request_payment_icon"
                     android:textSize="16sp" />
 
 
