@@ -5,11 +5,14 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -23,9 +26,29 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
+import com.paypal.android.sdk.payments.PayPalAuthorization;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalFuturePaymentActivity;
+import com.paypal.android.sdk.payments.PayPalOAuthScopes;
+import com.paypal.android.sdk.payments.PayPalProfileSharingActivity;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 
 public class PayEmployee extends Activity  implements SimpleGestureFilter.SimpleGestureListener{
 
@@ -40,7 +63,17 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
     Dialog dialog;
     private SimpleGestureFilter detector;
     private String current = "";
-
+    private static PayPalConfiguration config = new PayPalConfiguration()
+            // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
+            // or live (ENVIRONMENT_PRODUCTION)
+           // .environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION)
+            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+           // .clientId(PayPalConfig.PAYPAL_LIVE_CLIENT_ID)
+            .clientId(PayPalConfig.PAYPAL_CLIENT_ID)
+            .merchantName("HandzForHire")
+            .merchantPrivacyPolicyUri(Uri.parse("https://www.homeadvisor.com/rfs/aboutus/privacyPolicy.jsp"))
+            .merchantUserAgreementUri(Uri.parse("https://www.homeadvisor.com/servlet/TermsServlet"));
+    public static final int PAYPAL_REQUEST_CODE = 123;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,11 +110,6 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
         estimated_payment = i.getStringExtra("job_estimated_payment");
         fee_details = i.getStringExtra("fee_details");
         job_payment_amount=i.getStringExtra("job_payment_amount");
-
-        System.out.println("DDDDDDDd:jobname::"+job_name+"--job_payment_amount::"+job_payment_amount+"--name::"+profile_name);
-        System.out.println("DDDDDDDd:user_name::"+user_name+"--job_payout::"+job_payout+"--paypal_fee::"+paypal_fee);
-        System.out.println("DDDDDDDd:estimated_payment::"+estimated_payment+"--fee_details::"+fee_details+"--job_id::"+job_id);
-        System.out.println("DDDDDDDd:employer_id::"+employer_id+"--employee_id::"+employee_id);
 
         detector = new SimpleGestureFilter(this,this);
 
@@ -174,6 +202,10 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
                 i.putExtra("payment_amount",get_tip);
                 i.putExtra("transaction_date",get_date);
                 startActivity(i);*/
+                Intent intent = new Intent(PayEmployee.this, PayPalProfileSharingActivity.class);
+                intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+                intent.putExtra(PayPalProfileSharingActivity.EXTRA_REQUESTED_SCOPES, getOauthScopes());
+                startActivityForResult(intent, PAYPAL_REQUEST_CODE);
             }
         });
 
@@ -372,5 +404,115 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
         return super.dispatchTouchEvent(event);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PAYPAL_REQUEST_CODE) {
 
+            //If the result is OK i.e. user has not canceled the payment
+            if (resultCode == Activity.RESULT_OK) {
+                //Getting the payment confirmation
+                //PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                PayPalAuthorization auth = data
+                        .getParcelableExtra(PayPalFuturePaymentActivity.EXTRA_RESULT_AUTHORIZATION);
+                System.out.println("authorization "+auth.toJSONObject());
+                if (auth != null) {
+                    String authorization_code = auth.getAuthorizationCode();
+                    getAccessToken(authorization_code);
+                }
+
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Log.i("paymentExample", "The user canceled.");
+            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+                Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+            }
+        }
+    }
+
+    private PayPalOAuthScopes getOauthScopes() {
+
+        HashSet<String> scopes = new HashSet<String>(
+                Arrays.asList(PayPalOAuthScopes.PAYPAL_SCOPE_EMAIL, PayPalOAuthScopes.PAYPAL_SCOPE_ADDRESS) );
+        scopes.add(PayPalOAuthScopes.PAYPAL_SCOPE_EMAIL);
+        scopes.add(PayPalOAuthScopes.PAYPAL_SCOPE_ADDRESS);
+        scopes.add(PayPalOAuthScopes.PAYPAL_SCOPE_PHONE);
+        scopes.add(PayPalOAuthScopes.PAYPAL_SCOPE_PROFILE);
+        return new PayPalOAuthScopes(scopes);
+    }
+
+
+    private String getAccessToken(String authorizationCode)
+    {
+
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("https://api.paypal.com/v1/oauth2/token");
+        //HttpPost httppost = new HttpPost("https://api.sandbox.paypal.com/v1/oauth2/token");
+
+        try {
+            String text=PayPalConfig.PAYPAL_CLIENT_ID+":"+PayPalConfig.PAYPAL_SECRET_KEY;
+            //String text=PayPalConfig.PAYPAL_LIVE_CLIENT_ID+":"+PayPalConfig.PAYPAL_LIVE_SECRET_KEY;
+            byte[] data = text.getBytes("UTF-8");
+            String base64 = Base64.encodeToString(data, Base64.NO_WRAP);
+
+            httppost.addHeader("content-type", "application/x-www-form-urlencoded");
+            httppost.addHeader("Authorization", "Basic " + base64);
+            StringEntity se=new StringEntity("grant_type=authorization_code&response_type=token&redirect_uri=urn:ietf:wg:oauth:2.0:oob&code="+authorizationCode);
+            httppost.setEntity(se);
+            HttpResponse response = httpclient.execute(httppost);
+            String responseContent = EntityUtils.toString(response.getEntity());
+            System.out.println("authorizatio code "+authorizationCode);
+            System.out.println("authorizatio code "+authorizationCode);
+            Log.d("Response", responseContent );
+            try {
+                JSONObject obj = new JSONObject(responseContent);
+                System.out.println(obj.getString("access_token"));
+                OrderAPI(obj.getString("access_token"));
+            }catch (Exception e)
+            {
+                System.out.println("e "+e.getMessage());
+            }
+            System.out.println("Response "+responseContent);
+
+        } catch (ClientProtocolException e) {
+            System.out.println("Exception "+e.getMessage());
+
+        } catch (IOException e) {
+            System.out.println("Exception "+e.getMessage());
+
+        }
+        return null;
+    }
+
+    public void OrderAPI(String accesstoken) {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("https://api.sandbox.paypal.com/v1/checkout/orders/");
+        try {
+
+            Date c = Calendar.getInstance().getTime();
+            System.out.println("Current time => " + c);
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            String formattedDate = df.format(c);
+
+            System.out.println("Date "+formattedDate);
+
+            httppost.addHeader("Accept", "application/json");
+            httppost.addHeader("Accept-Language", "en_US");
+            httppost.addHeader("content-type", "application/json");
+            httppost.addHeader("Authorization", "Bearer " + accesstoken);
+            httppost.addHeader("PayPal-Partner-Attribution-Id", "HandzForHire_SP_PPM");
+            httppost.addHeader("PayPal-Request-Id", "Bearer " + accesstoken);
+            httppost.addHeader("Paypal-Client-Metadata-Id", "AZKGEIXjRP25L9gE8PZLI17F5BujtqTehLicuLknK1RUTmqErqBvIuJ84edzXOn5dOfNn67sTaUL3mgV");
+            HttpResponse response = httpclient.execute(httppost);
+            String responseContent = EntityUtils.toString(response.getEntity());
+            System.out.println("Response "+responseContent);
+
+        } catch (ClientProtocolException e) {
+            System.out.println("Exception "+e.getMessage());
+
+        } catch (IOException e) {
+            System.out.println("Exception "+e.getMessage());
+
+        }
+    }
 }

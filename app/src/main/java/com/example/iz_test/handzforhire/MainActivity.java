@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
         need_hand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            /*    final Boolean loginstatus = session.getLoginStatus();
+                final Boolean loginstatus = session.getLoginStatus();
                 Profilevalues.usertype="1";
                 if(loginstatus == true)
                 {
@@ -104,10 +104,10 @@ public class MainActivity extends Activity {
                     finish();
                     String b = "else_condition";
                     System.out.println("pppppppp:::::::"+b);
-                }*/
-               Intent i = new Intent(MainActivity.this, RegisterPage3.class);
+                }
+               /*Intent i = new Intent(MainActivity.this, RegisterPage3.class);
                 startActivity(i);
-                finish();
+                finish();*/
             }
         });
 
