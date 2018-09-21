@@ -221,7 +221,7 @@ public class ActiveJobs extends Activity implements SimpleGestureFilter.SimpleGe
         System.out.println("values::"+value+".."+user_id+".."+usertype);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-       // stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
     }
 
@@ -248,6 +248,11 @@ public class ActiveJobs extends Activity implements SimpleGestureFilter.SimpleGe
                     final String channelid=object.getString("channel");
                     final String message_count=object.getString("notificationCountMessage");
                     final String payment_count=object.getString("notificationCountMakePayment");
+                    final String job_payout=object.getString("job_payout");
+                    final String paypal_fee=object.getString("paypalfee");
+                    final String estimated_payment=object.getString("job_estimated_payment");
+                    final String fee_details=object.getString("fee_details");
+                    final String job_payment_amount=object.getString("job_payment_amount");
 
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("name",job_name);
@@ -261,6 +266,11 @@ public class ActiveJobs extends Activity implements SimpleGestureFilter.SimpleGe
                     map.put("channel",channelid);
                     map.put("message_count",message_count);
                     map.put("payment_count",payment_count);
+                    map.put("job_payout",job_payout);
+                    map.put("paypalfee",paypal_fee);
+                    map.put("job_estimated_payment",estimated_payment);
+                    map.put("fee_details",fee_details);
+                    map.put("job_payment_amount",job_payment_amount);
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
                     ActiveJobAdapter arrayAdapter = new ActiveJobAdapter(this, job_list) {

@@ -331,6 +331,9 @@
         <activity
             android:name=".ArchievedJob"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".LinkedInActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--<activity android:name=".Progressbar"
             android:windowSoftInputMode="stateHidden|adjustPan"/>-->
 

@@ -56,19 +56,17 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
     TextView name,job_cancel;
     Button pay_employee;
     private SimpleGestureFilter detector;
-    String employee,profile_image,profile_name,user_name,employerId,employeeId;
+    String employee,job_payment_amount,profile_image,profile_name,user_name,employerId,employeeId,job_payout,paypal_fee,fee_details,estimated_payment;
     Dialog dialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.make_payment);
 
-
         dialog = new Dialog(MakePayment.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
 
         ImageView logo = (ImageView) findViewById(R.id.logo);
         image = (ImageView) findViewById(R.id.imageView);
@@ -86,6 +84,11 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
         user_name = i.getStringExtra("username");
         employerId=i.getStringExtra("employer");
         employeeId=i.getStringExtra("employee");
+        job_payout=i.getStringExtra("job_payout");
+        paypal_fee=i.getStringExtra("paypalfee");
+        estimated_payment=i.getStringExtra("job_estimated_payment");
+        job_payment_amount=i.getStringExtra("job_payment_amount");
+        fee_details=i.getStringExtra("fee_details");
        System.out.println("pppppppp:profilename:::"+profile_name+"---username::::"+user_name);
 
         detector = new SimpleGestureFilter(this,this);
@@ -108,6 +111,13 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
                 i.putExtra("employeeId",employee);
                 i.putExtra("jobname",job_name);
                 i.putExtra("image",profile_image);
+                i.putExtra("profilename",profile_name);
+                i.putExtra("username",user_name);
+                i.putExtra("job_payout",job_payout);
+                i.putExtra("paypalfee",paypal_fee);
+                i.putExtra("job_estimated_payment",estimated_payment);
+                i.putExtra("job_payment_amount",job_payment_amount);
+                i.putExtra("fee_details",fee_details);
                 startActivity(i);
             }
         });

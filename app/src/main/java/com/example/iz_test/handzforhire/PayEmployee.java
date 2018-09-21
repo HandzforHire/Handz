@@ -4,54 +4,43 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.glide.Glideconstants;
+import com.glide.RoundedCornersTransformation;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class PayEmployee extends Activity  implements SimpleGestureFilter.SimpleGestureListener{
 
-    ImageView logo,image;
-    Button next_button;
-    EditText payment_amount,tip,payment_method;
-    String job_id,employer_id,employee_id,job_name,profile_image;
+    ImageView logo,image,info1,info2;
+    Button payment_button;
+    EditText tip;
+    String job_id,employer_id,employee_id,job_name,profile_image,paypal_value,estimated_value;
     ProgressDialog progress_dialog;
-    TextView name,date,total;
-    String get_tip,get_amount,get_method,get_date,get_total;
+    TextView name,date,total,payout,service_fee,processing_fee;
+    String profile_name,user_name,job_payout,paypal_fee,estimated_payment,fee_details,job_payment_amount;
     Integer total_value;
     Dialog dialog;
     private SimpleGestureFilter detector;
+    private String current = "";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,15 +51,17 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-
         logo = (ImageView)findViewById(R.id.logo);
         image = (ImageView)findViewById(R.id.imageView);
-        payment_amount = (EditText) findViewById(R.id.pay_amount);
+        info1 = (ImageView)findViewById(R.id.info1);
+        info2 = (ImageView)findViewById(R.id.info2);
+        payout = (TextView) findViewById(R.id.job_payout);
+        service_fee = (TextView) findViewById(R.id.service_fee);
+        processing_fee = (TextView) findViewById(R.id.processing_fee);
         tip = (EditText) findViewById(R.id.tip);
-        payment_method = (EditText) findViewById(R.id.pay_method);
-        next_button = (Button) findViewById(R.id.next1);
-        name = (TextView) findViewById(R.id.text);
-        date = (TextView) findViewById(R.id.txt2);
+        payment_button = (Button) findViewById(R.id.payment_btn);
+        name = (TextView) findViewById(R.id.name);
+        date = (TextView) findViewById(R.id.transaction_date);
         total = (TextView) findViewById(R.id.total);
 
         Intent i = getIntent();
@@ -78,14 +69,81 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
         employer_id = i.getStringExtra("employerId");
         employee_id = i.getStringExtra("employeeId");
         job_name = i.getStringExtra("jobname");
+        profile_image = i.getStringExtra("image");
+        profile_name = i.getStringExtra("profilename");
+        user_name = i.getStringExtra("username");
+        job_payout = i.getStringExtra("job_payout");
+        paypal_fee = i.getStringExtra("paypalfee");
+        estimated_payment = i.getStringExtra("job_estimated_payment");
+        fee_details = i.getStringExtra("fee_details");
+        job_payment_amount=i.getStringExtra("job_payment_amount");
+
+        System.out.println("DDDDDDDd:jobname::"+job_name+"--job_payment_amount::"+job_payment_amount+"--name::"+profile_name);
+        System.out.println("DDDDDDDd:user_name::"+user_name+"--job_payout::"+job_payout+"--paypal_fee::"+paypal_fee);
+        System.out.println("DDDDDDDd:estimated_payment::"+estimated_payment+"--fee_details::"+fee_details+"--job_id::"+job_id);
+        System.out.println("DDDDDDDd:employer_id::"+employer_id+"--employee_id::"+employee_id);
 
         detector = new SimpleGestureFilter(this,this);
 
+        tip.addTextChangedListener(tw);
+
+        String new_payout_value = job_payout;
+        new_payout_value = new_payout_value.substring(1);
+        System.out.println("DDDDDDDd:new_payout_value::"+new_payout_value);
+
+        if(fee_details.equals("add"))
+        {
+            payout.setText(new_payout_value);
+            String get_service_fee = service_fee.getText().toString().trim();
+            String get_tip = tip.getText().toString().trim();
+            System.out.println("DDDDDDDd:get_service_fee:::"+get_service_fee);
+            paypal_value= paypal_fee;
+            paypal_value = paypal_value.substring(1);
+            processing_fee.setText(paypal_value);
+            String get_total = String.valueOf(Float.valueOf(new_payout_value)+Float.valueOf(get_service_fee)+Float.valueOf(get_tip)+ Float.valueOf(paypal_value));
+            System.out.println("DDDDDDDd:get_total:::"+get_total);
+            String tot= String.format("%.2f", Float.valueOf(get_total));
+            System.out.println("DDDDDDDd:tot:::"+tot);
+            total.setText(tot);
+        }
+        else
+        {
+            estimated_value = estimated_payment;
+            estimated_value = estimated_value.substring(1);
+            payout.setText(estimated_value);
+            System.out.println("DDDDDDDd:estimated_value:::"+estimated_value);
+            String get_service_fee = service_fee.getText().toString().trim();
+            String get_tip = tip.getText().toString().trim();
+            System.out.println("DDDDDDDd:get_service_fee:::"+get_service_fee);
+            paypal_value= paypal_fee;
+            paypal_value = paypal_value.substring(1);
+            processing_fee.setText(paypal_value);
+            String get_total = String.valueOf(Float.valueOf(estimated_value)+Float.valueOf(get_service_fee)+Float.valueOf(get_tip)+ Float.valueOf(paypal_value));
+            System.out.println("DDDDDDDd:get_total:::"+get_total);
+            String tot= String.format("%.2f", Float.valueOf(get_total));
+            System.out.println("DDDDDDDd:tot:::"+tot);
+            total.setText(tot);
+        }
+
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("MM-dd-yyyy");
+        SimpleDateFormat mdformat = new SimpleDateFormat("MMMM dd, yyyy");
         String strDate = mdformat.format(calendar.getTime());
         System.out.println("DDDDDDDd:date::"+strDate);
         date.setText(strDate);
+
+        if(profile_image==null) {
+
+        }
+        else {
+            Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
+        }
+        if(profile_name.equals(""))
+        {
+            name.setText(user_name);
+        }
+        else {
+            name.setText(profile_name);
+        }
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,17 +154,17 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
             }
         });
 
-        next_button.setOnClickListener(new View.OnClickListener() {
+        payment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                get_tip = tip.getText().toString().trim();
-                get_amount = payment_amount.getText().toString().trim();
-                get_method = payment_method.getText().toString().trim();
+               /* get_tip = tip.getText().toString().trim();
+                get_payout = payment_amount.getText().toString().trim();
+                get_servicefee = payment_method.getText().toString().trim();
                 get_date = date.getText().toString().trim();
                 total_value = Integer.parseInt(get_amount)+Integer.parseInt(get_tip);
                 get_total = String.valueOf(total_value);
-                total.setText(get_total);
-                Intent i = new Intent(PayEmployee.this,PayEmployee1.class);
+                total.setText(get_total);*/
+               /* Intent i = new Intent(PayEmployee.this,PayEmployee1.class);
                 i.putExtra("jobId",job_id);
                 i.putExtra("employerId",employer_id);
                 i.putExtra("employeeId",employee_id);
@@ -115,11 +173,156 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
                 i.putExtra("paymentMethod",get_method);
                 i.putExtra("payment_amount",get_tip);
                 i.putExtra("transaction_date",get_date);
-                startActivity(i);
+                startActivity(i);*/
+            }
+        });
+
+        info1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // custom dialog
+                final Dialog dialog = new Dialog(PayEmployee.this);
+                dialog.setContentView(R.layout.custom_dialog);
+
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("You may add a tip for a job well done, or if the job took longer than expected.");
+                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+                Window window = dialog.getWindow();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                return;
+            }
+        });
+
+        info2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // custom dialog
+                final Dialog dialog = new Dialog(PayEmployee.this);
+                dialog.setContentView(R.layout.custom_dialog);
+
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("This fee may minimally increase if you choose to add a tip.");
+                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+                Window window = dialog.getWindow();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                return;
             }
         });
     }
 
+    TextWatcher tw = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+            if (!s.toString().matches("^\\$(\\d{1,3}(\\,\\d{3})*|(\\d+))(\\.\\d{2})?$")) {
+                String userInput = "" + s.toString().replaceAll("[^\\d]", "");
+                StringBuilder cashAmountBuilder = new StringBuilder(userInput);
+                while (cashAmountBuilder.length() > 3 && cashAmountBuilder.charAt(0) == '0') {
+                    cashAmountBuilder.deleteCharAt(0);
+                }
+                while (cashAmountBuilder.length() < 3) {
+                    cashAmountBuilder.insert(0, '0');
+                }
+                cashAmountBuilder.insert(cashAmountBuilder.length() - 2, '.');
+
+                tip.removeTextChangedListener(this);
+                tip.setText(cashAmountBuilder.toString());
+
+                tip.setTextKeepState(cashAmountBuilder.toString());
+                Selection.setSelection(tip.getText(), cashAmountBuilder.toString().length());
+
+                tip.addTextChangedListener(this);
+            }
+
+            if(fee_details.equals("add"))
+            {
+                String new_payout = payout.getText().toString().trim();
+                System.out.println("DDDDDDDd:new_payout::"+new_payout);
+                String new_payout_value = new_payout;
+                new_payout_value = new_payout_value.substring(1);
+                System.out.println("DDDDDDDd:new_payout_value::"+new_payout_value);
+                String new_tip = tip.getText().toString().trim();
+                String add_job_payout = String.valueOf(Float.valueOf(new_payout)+Float.valueOf(new_tip));
+                System.out.println("DDDDDDDd:add_job_payout::"+add_job_payout);
+
+                String s1 = "100";
+                String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(add_job_payout));
+                System.out.println("DDDDDDDd:pay_employee:multi:"+multi);
+                String s2 = "130";
+                String add1 = String.valueOf(Float.valueOf(multi)+Float.valueOf(s2));
+                System.out.println("DDDDDDDd:pay_employee:add1:"+add1);
+                String s3 = "97.1";
+                String div_total = String.valueOf(Float.valueOf(add1)/Float.valueOf(s3));
+                System.out.println("DDDDDDDd:pay_employee:div_total:"+div_total);
+                String roundup_value = String.format("%.2f", Float.valueOf(div_total));
+                System.out.println("DDDDDDDd:pay_employee:roundup_value:"+roundup_value);
+                String handz_fee = "1.00";
+                String pay_fee = String.valueOf(Float.valueOf(roundup_value)-Float.valueOf(new_payout)-Float.valueOf(new_tip)-Float.valueOf(handz_fee));
+                String total_value = String.format("%.2f", Float.valueOf(pay_fee));
+                System.out.println("DDDDDDDd:pay_employee:pay_fee:"+pay_fee+"total2:::"+total_value);
+                processing_fee.setText(total_value);
+                total.setText(roundup_value);
+            }
+            else
+            {
+                String new_payout = payout.getText().toString().trim();
+                System.out.println("DDDDDDDd:new_payout::"+new_payout);
+                String estimated_value = estimated_payment;
+                estimated_value = estimated_value.substring(1);
+                System.out.println("DDDDDDDd:estimated_value::"+estimated_value);
+                String new_tip = tip.getText().toString().trim();
+
+                String s1 = "100";
+                String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(new_tip));
+                System.out.println("DDDDDDDd:pay_employee:multi:"+multi);
+                String s3 = "97.1";
+                String div_total = String.valueOf(Float.valueOf(multi)/Float.valueOf(s3));
+                System.out.println("DDDDDDDd:pay_employee:div_total:"+div_total);
+                String roundup_value = String.format("%.2f", Float.valueOf(div_total));
+                System.out.println("DDDDDDDd:pay_employee:roundup_value:"+roundup_value);
+                String total_value = String.valueOf(Float.valueOf(job_payment_amount)+Float.valueOf(roundup_value));
+                System.out.println("DDDDDDDd:pay_employee:total_value:"+total_value);
+                String handz_fee = "1.00";
+                String pay_fee = String.valueOf(Float.valueOf(total_value)-Float.valueOf(estimated_value)-Float.valueOf(new_tip)-Float.valueOf(handz_fee));
+                String pay_roundup_value = String.format("%.2f", Float.valueOf(pay_fee));
+                System.out.println("DDDDDDDd:pay_employee:pay_roundup_value:"+pay_roundup_value);
+                processing_fee.setText(pay_roundup_value);
+                total.setText(total_value);
+            }
+        }
+    };
     @Override
     public void onSwipe(int direction) {
         String str = "";

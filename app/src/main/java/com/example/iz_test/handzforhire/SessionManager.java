@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.example.iz_test.handzforhire.MainActivity;
-
 import java.util.HashMap;
 
 public class SessionManager {
@@ -53,6 +51,8 @@ public class SessionManager {
     public static final String LATITUDE = "lat";
     public static final String LONGITUDE = "lon";
 
+    public static final String CHECKBOX_STATUS = "checkbox_status";
+
      // Email address (make variable public to access from outside)
     public static final String KEY_PASS = "password";
     public static final String LOGIN_STATUS = "login_status";
@@ -90,6 +90,21 @@ public class SessionManager {
 
         // commit changes
         editor.commit();
+    }
+
+    public void saveCheckboxStatus(String checkboxStatus){
+        // Storing login value as TRUE
+        editor.putString(CHECKBOX_STATUS, checkboxStatus);
+        // commit changes
+        editor.commit();
+    }
+
+    public  HashMap<String, String> getCheckboxStatus(){
+        HashMap<String, String> check = new HashMap<String, String>();
+        // Storing name in preferences
+        check.put(CHECKBOX_STATUS, pref.getString(CHECKBOX_STATUS, ""));
+
+        return check;
     }
 
     public void NeedLogin(String email,String password,String name,String type,String id,String address,String city,String state,String zipcode,String usertype){

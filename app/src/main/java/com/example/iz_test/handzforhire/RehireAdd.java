@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,7 +85,7 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
     TextView job_payout,pocket_expense,paypal_merchant;
     EditText hourly_value,expected_value;
     String value,id,name,category,description,date,start_time,expected_hours,end_time,amount,type;
-    String estimated_amount,flexible_status;
+    String estimated_amount,flexible_status,checkbox_status,session_status;
     String fee_details = "add";
     String address = "";
     String city = "";
@@ -99,9 +100,10 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
     String latitude = "";
     String longitude = "";
     String current_location = "";
-
     Dialog dialog;
     private SimpleGestureFilter detector;
+    SessionManager session;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +137,11 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
         job_id = i.getStringExtra("job_id");
         duration = i.getStringExtra("duration");
         employeeId = i.getStringExtra("employeeId");
+
+        session = new SessionManager(getApplicationContext());
+        HashMap<String, String> check = session.getCheckboxStatus();
+        session_status = check.get(SessionManager.CHECKBOX_STATUS);
+        System.out.println("sssssssssssss:session:status:::::"+session_status+"...check:::"+check);
 
         dialog = new Dialog(RehireAdd.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -175,7 +182,14 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+               // onBackPressed();
+                String hourly_wage = hourly_value.getText().toString();
+                String expected_hours = expected_value.getText().toString();
+                System.out.println("sssssssssssss:hourly_wage:::"+hourly_wage+":::expected_hours:::"+expected_hours);
+                Intent i = new Intent(RehireAdd.this,RehireMultiply.class);
+                i.putExtra("payment_amount",hourly_wage);
+                i.putExtra("expected_hours",expected_hours);
+                startActivity(i);
             }
         });
 
@@ -219,11 +233,51 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
         create_job.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                payout = job_payout.getText().toString();
-                expense = "$ " + pocket_expense.getText().toString();
-                fee = "$ " + paypal_merchant.getText().toString();
-                System.out.println("sssssssssssss:add:pay:expe:fee:"+payout+".."+expense+".."+fee);
-                registerUser();
+                if(session_status.equals("checked"))
+                {
+                    payout = "$" + job_payout.getText().toString();
+                    expense = "$" + pocket_expense.getText().toString();
+                    fee = "$" + paypal_merchant.getText().toString();
+                    System.out.println("sssssssssssss:add:pay:expe:fee:"+payout+".."+expense+".."+fee);
+                    System.out.println("sssssssssssss:check_Ststus::::"+checkbox_status);
+                    registerUser();
+                }
+                else
+                {
+                    final Dialog dialog = new Dialog(RehireAdd.this);
+                    dialog.setContentView(R.layout.create_job_popup);
+                    Button ok_Button = (Button) dialog.findViewById(R.id.ok_btn);
+                    final CheckBox checkBox = (CheckBox) dialog.findViewById(R.id.checkBox);
+                    // if button is clicked, close the custom dialog
+                    ok_Button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(checkBox.isChecked())
+                            {
+                                checkbox_status = "checked";
+                                session.saveCheckboxStatus(checkbox_status);
+                            }
+                            else
+                            {
+                                checkbox_status = "unchecked";
+                                session.saveCheckboxStatus(checkbox_status);
+                            }
+
+                            dialog.dismiss();
+                            payout = "$" + job_payout.getText().toString();
+                            expense = "$" + pocket_expense.getText().toString();
+                            fee = "$" + paypal_merchant.getText().toString();
+                            System.out.println("sssssssssssss:add:pay:expe:fee:"+payout+".."+expense+".."+fee);
+                            System.out.println("sssssssssssss:check_Ststus::::"+checkbox_status);
+                            registerUser();
+                        }
+                    });
+                    dialog.show();
+                    Window window = dialog.getWindow();
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    return;
+                }
             }
         });
 
@@ -367,36 +421,15 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
 
             if(status.equals("success"))
             {
-                // custom dialog
-                final Dialog dialog = new Dialog(RehireAdd.this);
-                dialog.setContentView(R.layout.gray_custom);
-
-                // set the custom dialog components - text, image and button
-                TextView text = (TextView) dialog.findViewById(R.id.text);
-                text.setText("Job Created Successfully");
-                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
-                // if button is clicked, close the custom dialog
-                dialogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                        Intent i = new Intent(RehireAdd.this,ProfilePage.class);
-                        i.putExtra("userId", id);
-                        i.putExtra("jobId",job_id);
-                        i.putExtra("address", address);
-                        i.putExtra("city", city);
-                        i.putExtra("state", state);
-                        i.putExtra("zipcode", zipcode);
-                        startActivity(i);
-                        finish();
-                    }
-                });
-
-                dialog.show();
-                Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                return;
+                Intent i = new Intent(RehireAdd.this,ProfilePage.class);
+                i.putExtra("userId", id);
+                i.putExtra("jobId",job_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
             }
             else
             {

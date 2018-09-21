@@ -113,6 +113,11 @@ public class ActiveJobAdapter extends BaseAdapter {
             final String channel_id=items.get("channel");
             final String message_notification_count=items.get("message_count");
             final String payment_notification_count=items.get("payment_count");
+            final String job_payout=items.get("job_payout");
+            final String paypal_fee=items.get("paypalfee");
+            final String estimated_payment=items.get("job_estimated_payment");
+            final String fee_details=items.get("fee_details");
+            final String job_payment_amount=items.get("job_payment_amount");
             System.out.println("success:count:::" + message_notification_count+",,,"+payment_notification_count);
 
             job_name.setText(get_name);
@@ -186,6 +191,12 @@ public class ActiveJobAdapter extends BaseAdapter {
                     i.putExtra("username",user);
                     i.putExtra("employer",employer);
                     i.putExtra("employee",employee);
+                    i.putExtra("job_payout",job_payout);
+                    i.putExtra("paypalfee",paypal_fee);
+                    i.putExtra("job_estimated_payment",estimated_payment);
+                    i.putExtra("job_payment_amount",job_payment_amount);
+                    i.putExtra("fee_details",fee_details);
+
                     v.getContext().startActivity(i);
                 }
             });

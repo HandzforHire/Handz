@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -77,12 +80,15 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import static android.content.ContentValues.TAG;
+
 public class LendReviewRating extends Activity implements SimpleGestureFilter.SimpleGestureListener{
 
-    String image,id,date,profile_image,profilename,average_rating,comments,avg_rat;
+   public static String  image,id,date,profile_image,profilename,average_rating,comments,avg_rat;
     private static final String URL = Constant.SERVER_URL+"review_rating";
     private static final String LINKEDIN_URL = Constant.SERVER_URL+"linked_in ";
     ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
@@ -109,29 +115,6 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
     Dialog dialog;
     private SimpleGestureFilter detector;
     Activity thisActivity;
-    private static final String AUTHORIZATION_URL = "https://www.linkedin.com/uas/oauth2/authorization";
-    private static final String ACCESS_TOKEN_URL = "https://www.linkedin.com/uas/oauth2/accessToken";
-    private static final String SECRET_KEY_PARAM = "client_secret";
-    private static final String RESPONSE_TYPE_PARAM = "response_type";
-    private static final String GRANT_TYPE_PARAM = "grant_type";
-    private static final String GRANT_TYPE = "authorization_code";
-    private static final String RESPONSE_TYPE_VALUE ="code";
-    private static final String CLIENT_ID_PARAM = "client_id";
-    private static final String STATE_PARAM = "state";
-    private static final String REDIRECT_URI_PARAM = "redirect_uri";
-    /*---------------------------------------*/
-    private static final String QUESTION_MARK = "?";
-    private static final String AMPERSAND = "&";
-    private static final String EQUALS = "=";
-
-    private static final String API_KEY = "81qt2f2mg525a4";
-    //This is the private api key of our application
-    private static final String SECRET_KEY = "E3VnJD4wY2l5x9U7";
-    //This is any string we want to use. This will be used for avoid CSRF attacks. You can generate one here: http://strongpasswordgenerator.com/
-    private static final String STATE = "DLKDJF46ikMMZADfdfds";
-    //This is the url that LinkedIn Auth process will redirect to. We can put whatever we want that starts with http:// or https:// .
-    //We use a made up url that we will intercept when redirecting. Avoid Uppercases.
-    private static final String REDIRECT_URI = "https://www.handzforhire.com";
     String firstnmae,lastnmae,lin_email,lin_id,pictureurl,profileurl;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,14 +169,19 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
         lin_linkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // if(appInstalledOrNot("com.linkedin.android")) {
-                    linkedlogin();
-               /* }else{
+
+               if(appInstalledOrNot()) {
+                   linkedlogin();
+                }else{
                     Toast.makeText(getApplicationContext(),"App not installed ",Toast.LENGTH_LONG).show();
-                    getAuthorizationToken();
-                }*/
+                    Intent in_linkedin=new Intent(LendReviewRating.this,LinkedInActivity.class);
+                    startActivity(in_linkedin);
+                }
+
             }
         });
+
+// the
         lin_linkin.setVisibility(View.VISIBLE);
 
         thisActivity = this;
@@ -268,12 +256,12 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
 
                                 if(jsonObject.isNull("linked_in_data"))
                                 {
-                                   /* lin_linkin.setVisibility(View.VISIBLE);
-                                    lin_linkininfo.setVisibility(View.GONE);*/
+                                   lin_linkin.setVisibility(View.VISIBLE);
+                                    lin_linkininfo.setVisibility(View.GONE);
                                     System.out.println("Null value");
                                 }else{
-                                 /*   lin_linkininfo.setVisibility(View.VISIBLE);
-                                    lin_linkin.setVisibility(View.GONE);*/
+                                   lin_linkininfo.setVisibility(View.VISIBLE);
+                                    lin_linkin.setVisibility(View.GONE);
                                     String linked_in_data=jsonObject.getString("linked_in_data");
                                     JSONObject obj=new JSONObject(linked_in_data);
                                     String id=obj.getString("id");
@@ -320,6 +308,7 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+        System.out.println("Data "+data);
     }
 
     public void onResponserecieved(String jsonobject, int i) {
@@ -391,9 +380,15 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
             {
 
             }
-            String linked_in_data=jResult.getString("linked_in_data");
-            if(linked_in_data!=null && !linked_in_data.isEmpty()){
-
+            if(jResult.isNull("linked_in_data"))
+            {
+                lin_linkin.setVisibility(View.VISIBLE);
+                lin_linkininfo.setVisibility(View.GONE);
+                System.out.println("Null value");
+            }else{
+                lin_linkininfo.setVisibility(View.VISIBLE);
+                lin_linkin.setVisibility(View.GONE);
+                String linked_in_data=jResult.getString("linked_in_data");
                 JSONObject obj=new JSONObject(linked_in_data);
                 String id=obj.getString("id");
                 String email=obj.getString("email");
@@ -402,9 +397,12 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
                 String profile_url=obj.getString("profile_url");
                 String picture_url=obj.getString("picture_url");
 
-            }else{
-                lin_linkin.setVisibility(View.VISIBLE);
+                txt_profilename.setText("VIEW "+first_name+" "+last_name);
+
+                Glide.with(LendReviewRating.this).load(picture_url).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(LendReviewRating.this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(imageprofile);
+
             }
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -548,180 +546,22 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
         });
 
     }
-    private boolean appInstalledOrNot(String uri) {
-        PackageManager pm = getPackageManager();
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-        }
+    private boolean appInstalledOrNot() {
+        Boolean appinstalled=false;
+        final PackageManager pm = getPackageManager();
+//get a list of installed apps.
+        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
-        return false;
-    }
-    private  String getAuthorizationToken() {
-
-       /* HttpClient httpclient = new DefaultHttpClient();
-       // String url="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id="+ Config.LINKEDIN_CLIENTID+"&redirect_uri=https://www.handzforhire.com&state=DLKDJF46ikMMZADfdfds&scope=r_basicprofile";
-
-        String url="https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=81qt2f2mg525a4&redirect_uri=https%3A%2F%2Fwww.handzforhire.com&state=DLKDJF46ikMMZADfdfds&scope=r_basicprofile,r_emailaddress";
-
-        HttpGet httpget = new HttpGet(url);
-        System.out.println("URL "+url);
-        try {
-            //httpget.addHeader("content-type", "application/json");
-           // httpget.addHeader("Authorization", "Bearer " + accesstoken);
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httpget);
-            String responseContent = EntityUtils.toString(response.getEntity());
-            System.out.println("Authorization"+responseContent);
-         *//*   try {
-                JSONObject obj = new JSONObject(responseContent);
-                JSONObject obj1=obj.getJSONObject("referral_data");
-                JSONObject obj2=obj1.getJSONObject("customer_data");
-                JSONArray array=obj2.getJSONArray("partner_specific_identifiers");
-                for(int i=0;i<array.length();i++){
-                    JSONObject obj3=array.getJSONObject(i);
-                    String trackiungvalue=obj3.getString("value");
-                    System.out.println("tracking Value "+trackiungvalue);
-                    getMerchantIdOfSeller(trackiungvalue,accesstoken);
-                }
-
-
-            }catch (Exception e)
-            {
-                System.out.println("e "+e.getMessage());
-            }*//*
-
-
-        } catch (ClientProtocolException e) {
-            System.out.println("Exception "+e.getMessage());
-// TODO Auto-generated catch block
-        } catch (IOException e) {
-            System.out.println("Exception "+e.getMessage());
-// TODO Auto-generated catch block
-        }
-        return null;*/
-       // String url="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=81qt2f2mg525a4&redirect_uri=https://www.handzforhire.com&state=DLKDJF46ikMMZADfdfds&scope=r_basicprofile,r_emailaddress";
-        //String url="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=81qt2f2mg525a4&redirect_uri=https%3A%2F%2Fwww.handzforhire.com%2Fauth%2Flinkedin&state=DLKDJF46ikMMZADfdfds&scope=r_basicprofile";
-        //  String url="https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id="+ Config.LINKEDIN_CLIENTID+"&redirect_uri=https://www.handzforhire.com&state=DLKDJF46ikMMZADfdfds&scope=r_basicprofile";
-       /* String url = getAuthorizationUrl();
-        System.out.println("Authorization url "+url);
-        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
-        apiHelper.getRequest(this, url, new ApiListener() {
-            @Override
-            public void onApiSuccess(ApiResponse apiResponse) {
-                System.out.println("Api response "+apiResponse);
-                // Success!
+        for (ApplicationInfo packageInfo : packages) {
+            System.out.println("packanme "+packageInfo.packageName);
+            if(packageInfo.packageName.equals("com.linkedin.android")) {
+                appinstalled = true;
+                System.out.println("App installed ");
+                break;
             }
-
-            @Override
-            public void onApiError(LIApiError liApiError) {
-                // Error making GET request!
-                System.out.println("Api response "+liApiError);
-            }
-        });
-*/
-
-      //  String myUrl = "http://myApi.com/get_some_data";
-        //String to place our result in
-        String result;
-        //Instantiate new instance of our class
-        HttpGetRequest getRequest = new HttpGetRequest();
-        //Perform the doInBackground method, passing in our url
-        try {
-            result = getRequest.execute(getAuthorizationUrl()).get();
-            System.out.println("Result "+result);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         }
-
-           /* HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("https://www.linkedin.com/oauth/v2/accessToken");
-            //HttpPost httppost = new HttpPost("https://api.sandbox.paypal.com/v1/oauth2/token");
-
-            try {
-                //String text=PayPalConfig.PAYPAL_CLIENT_ID+":"+PayPalConfig.PAYPAL_SECRET_KEY;
-                httppost.addHeader("content-type", "application/x-www-form-urlencoded");
-                StringEntity se=new StringEntity("grant_type=client_credentials&client_id="+Config.LINKEDIN_CLIENTID+"&client_secret="+Config.LINKEDIN_SECRETKEY);
-                httppost.setEntity(se);
-                HttpResponse response = httpclient.execute(httppost);
-                String responseContent = EntityUtils.toString(response.getEntity());
-                Log.d("Response", responseContent );
-                try {
-                    JSONObject obj = new JSONObject(responseContent);
-                    System.out.println(obj.getString("access_token"));
-
-                }catch (Exception e)
-                {
-                    System.out.println("e "+e.getMessage());
-                }
-                System.out.println("Response "+responseContent);
-
-            } catch (ClientProtocolException e) {
-                System.out.println("Exception "+e.getMessage());
-
-            } catch (IOException e) {
-                System.out.println("Exception " + e.getMessage());
-            }*/
-
-        return null;
+            return appinstalled;
     }
-
-    private static String getAuthorizationUrl(){
-        return AUTHORIZATION_URL
-                +QUESTION_MARK+RESPONSE_TYPE_PARAM+EQUALS+RESPONSE_TYPE_VALUE
-                +AMPERSAND+CLIENT_ID_PARAM+EQUALS+API_KEY
-                +AMPERSAND+STATE_PARAM+EQUALS+STATE
-                +AMPERSAND+REDIRECT_URI_PARAM+EQUALS+REDIRECT_URI;
-    }
-
-    public class HttpGetRequest extends AsyncTask<String, Void, String> {
-        public static final String REQUEST_METHOD = "GET";
-        public static final int READ_TIMEOUT = 15000;
-        public static final int CONNECTION_TIMEOUT = 15000;
-        @Override
-        protected String doInBackground(String... params){
-            String stringUrl = params[0];
-            String result;
-            String inputLine;
-            try {
-                //Create a URL object holding our url
-                URL myUrl = new URL(stringUrl);
-                //Create a connection
-                HttpURLConnection connection =(HttpURLConnection)
-                        myUrl.openConnection();
-                //Set methods and timeouts
-                connection.setRequestMethod(REQUEST_METHOD);
-                connection.setReadTimeout(READ_TIMEOUT);
-                connection.setConnectTimeout(CONNECTION_TIMEOUT);
-
-                //Connect to our url
-                connection.connect();
-                //Create a new InputStreamReader
-                InputStreamReader streamReader = new
-                        InputStreamReader(connection.getInputStream());
-                //Create a new buffered reader and String Builder
-                BufferedReader reader = new BufferedReader(streamReader);
-                StringBuilder stringBuilder = new StringBuilder();
-                //Check if the line we are reading is not null
-                while((inputLine = reader.readLine()) != null){
-                    stringBuilder.append(inputLine);
-                }
-                //Close our InputStream and Buffered reader
-                reader.close();
-                streamReader.close();
-                //Set our result equal to our stringBuilder
-                result = stringBuilder.toString();
-            }catch(IOException e){
-                e.printStackTrace();
-                result = null;
-            }
-            return result;
-        }
-    }
-
 
     public void UpdatelinkedingData() {
         dialog.show();
@@ -729,7 +569,8 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        onResponserecieved(response, 1);
+                      //  onResponserecieved(response, 1);
+                        System.out.println("Response "+response);
                         dialog.dismiss();
                     }
                 },
@@ -801,10 +642,10 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
-                params.put(KEY_USERID, lin_id);
+                params.put(KEY_USERID, id);
                 params.put(FIRST_NAME, firstnmae);
                 params.put(LAST_NAME, lastnmae);
-                params.put(ID, id);
+                params.put(ID, lin_id);
                 params.put(PROF_URL, profileurl);
                 params.put(PIC_URL, pictureurl);
                 params.put(EMAIL, lin_email);
