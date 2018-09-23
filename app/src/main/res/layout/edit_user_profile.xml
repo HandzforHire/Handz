@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="50sp"
-                android:background="#CBCACA"/>
+                android:background="#555555"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -136,19 +136,20 @@
                 android:background="@null"
                 android:textColor="#CBCACA"
                 android:textSize="20sp"
-                android:layout_marginTop="10sp"/>
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10dp"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="10sp"
-                android:background="#CBCACA"/>
+                android:background="#555555"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="5sp"
-                android:background="#CBCACA"/>
+                android:background="#555555"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -157,7 +158,8 @@
                 android:text="handz terms &amp; conditions"
                 android:gravity="center"
                 android:textAllCaps="true"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10dp"
                 android:textStyle="bold"
                 android:background="@null"
                 android:textColor="#CBCACA"
@@ -168,13 +170,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="10sp"
-                android:background="#CBCACA"/>
+                android:background="#555555"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="5sp"
-                android:background="#CBCACA"/>
+                android:background="#555555"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -184,7 +186,8 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textStyle="bold"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10dp"
                 android:background="@null"
                 android:textColor="#CBCACA"
                 android:textSize="20sp"/>
@@ -193,13 +196,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="10sp"
-                android:background="#CBCACA"/>
+                android:background="#555555"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="5sp"
-                android:background="#CBCACA"/>
+                android:background="#555555"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -209,7 +212,8 @@
                 android:gravity="center"
                 android:textStyle="bold"
                 android:background="@null"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="10dp"
                 android:textColor="#CBCACA"
                 android:textAllCaps="true"
                 android:textSize="20sp" />
@@ -218,7 +222,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="10sp"
-                android:background="#CBCACA"/>
+                android:background="#555555"/>
 
             <Button
                 android:layout_width="90sp"

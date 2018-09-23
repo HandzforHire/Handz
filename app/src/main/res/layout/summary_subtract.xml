@@ -485,7 +485,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/border_gray"
                 android:paddingTop="5sp"
-                android:text="Edit this job"
+                android:text="create this job"
                 android:textStyle="bold"
                 android:textSize="26sp" />
 

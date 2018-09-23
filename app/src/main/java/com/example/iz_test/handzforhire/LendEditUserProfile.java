@@ -88,7 +88,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
     String value = "HandzForHire@~";
     public static String id;
 
-    String email_id, address, city, state, zipcode,profile_image,profilename;
+    String email_id, address, city, state, zipcode,profile_image,profilename,user_name;
     String filename = "";
     private String userChoosenTask;
     LinearLayout layout;
@@ -295,25 +295,27 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
             if (status.equals("success")) {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
+                user_name=jResult.getString("username");
                 employee_rating = jResult.getString("employee_rating");
                 posted_notification = jResult.getString("notificationCountPosted");
                 pending_notification = jResult.getString("notificationCountPending");
                 active_notification = jResult.getString("notificationCountActive");
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
-                rating_value.setText(employee_rating);
-                if (!profile_image.equals("") && !profilename.equals("null")) {
-                    profile_name.setText(profilename);
-                    photo_text.setVisibility(View.INVISIBLE);
-                    image.setVisibility(View.VISIBLE);
-                    Glide.with(LendEditUserProfile.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-                } else if (!profile_image.equals("") && profilename.equals("null")) {
 
+                System.out.println("profilename "+profilename);
+                System.out.println("user_name "+user_name);
+                System.out.println("profile_image "+profile_image);
+                rating_value.setText(employee_rating);
+                if (!profile_image.equals("") && !profile_image.equals("null")) {
                     photo_text.setVisibility(View.INVISIBLE);
                     image.setVisibility(View.VISIBLE);
                     Glide.with(LendEditUserProfile.this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(activity,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-                } else if (!profilename.equals("null") && profile_image.equals("")) {
+                }
+
+                if (!profilename.equals("null") && profile_image.equals("")) {
                     profile_name.setText(profilename);
                 } else {
+                    profile_name.setText(user_name);
                 }
             }
 

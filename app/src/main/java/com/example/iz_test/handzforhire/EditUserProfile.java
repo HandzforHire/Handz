@@ -83,7 +83,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
     public static String APP_KEY = "X-APP-KEY";
     String value = "HandzForHire@~";
     public static String id;
-    String email_id, address, city, state, zipcode,profile_image,employer_rating,profilename,posted_notification,pending_notification,active_notification,jobhistory_notification;
+    String email_id, address, city, state, zipcode,profile_image,employer_rating,profilename,posted_notification,pending_notification,active_notification,jobhistory_notification,user_name;
     String filename = "";
     private String userChoosenTask;
     LinearLayout layout;
@@ -310,32 +310,32 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
             {
                 profile_image = jResult.getString("profile_image");
                 profilename = jResult.getString("profile_name");
+                user_name= jResult.getString("username");
                 employer_rating = jResult.getString("employer_rating");
                 posted_notification = jResult.getString("notificationCountPosted");
                 pending_notification = jResult.getString("notificationCountPending");
                 active_notification = jResult.getString("notificationCountActive");
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
-                rating_value.setText(employer_rating);
-                if(!profile_image.equals("")&&!profilename.equals("null"))
-                {
-                    profile_name.setText(profilename);
-                    photo_text.setVisibility(View.INVISIBLE);
-                    image.setVisibility(View.VISIBLE);
-                    Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
-                }
-                else if(!profile_image.equals("")&&profilename.equals("null"))
-                {
+                System.out.println("Profile image "+profile_image);
+                System.out.println("user_name "+user_name);
+                System.out.println("profilename "+profilename);
 
+                rating_value.setText(employer_rating);
+                if(!profile_image.equals("")&&!profile_image.equals("null"))
+                {
+                   // profile_name.setText(profilename);
                     photo_text.setVisibility(View.INVISIBLE);
                     image.setVisibility(View.VISIBLE);
                     Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this,0, Glideconstants.sCorner,Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
                 }
-                else if(!profilename.equals("null")&&profile_image.equals(""))
+
+                 if(!profilename.equals("null")&&profilename.equals(""))
                 {
                     profile_name.setText(profilename);
                 }
                 else
                 {
+                    profile_name.setText(user_name);
 
                 }
             }

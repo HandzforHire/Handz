@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +24,6 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -80,6 +80,22 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
         amount = (TextView) findViewById(R.id.amount);
         type = (TextView) findViewById(R.id.type);
         close = (ImageView) findViewById(R.id.close_btn);
+        TextView text2 = (TextView) findViewById(R.id.txt2);
+        TextView text5 = (TextView) findViewById(R.id.txt5);
+        TextView text6 = (TextView) findViewById(R.id.text6);
+
+        String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+        description.setTypeface(tf);
+        date.setTypeface(tf);
+        time.setTypeface(tf);
+        type.setTypeface(tf);
+        amount.setTypeface(tf);
+        text2.setTypeface(tf);
+        text5.setTypeface(tf);
+        text6.setTypeface(tf);
+
 
         Intent i = getIntent();
         job_id = i.getStringExtra("jobId");

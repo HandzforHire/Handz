@@ -89,6 +89,10 @@ public class EditRating extends Activity implements SimpleGestureFilter.SimpleGe
         rb1.setNumStars(5);
         rb1.setMax(5);
         rb1.setStepSize(0.1f);
+        rb2.setStepSize(0.1f);
+        rb3.setStepSize(0.1f);
+        rb4.setStepSize(0.1f);
+        rb5.setStepSize(0.1f);
         rb1.setRating(Float.parseFloat(cat1));
         rb2.setRating(Float.parseFloat(cat2));
         rb3.setRating(Float.parseFloat(cat3));

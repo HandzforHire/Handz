@@ -29,12 +29,10 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
@@ -80,10 +78,10 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
-        address = i.getStringExtra("address");
-        city = i.getStringExtra("city");
-        state = i.getStringExtra("state");
-        zipcode = i.getStringExtra("zipcode");
+        address = i.getStringExtra("job_address");
+        city = i.getStringExtra("job_city");
+        state = i.getStringExtra("job_state");
+        zipcode = i.getStringExtra("job_zipcode");
         name = i.getStringExtra("job_name");
         category = i.getStringExtra("job_category");
         description = i.getStringExtra("job_decription");
@@ -141,6 +139,10 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
         }
         else {
             check1.setChecked(false);
+            add.setText(address);
+            cit.setText(city);
+            stat.setText(state);
+            zip.setText(zipcode);
         }
 
         if(post_address.equals("yes"))
@@ -154,10 +156,6 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
         getJobDetails();
 
         text.setText(name);
-       /* add.setText(getAddress);
-        cit.setText(getCity);
-        stat.setText(getState);
-        zip.setText(getZipcode);*/
         linear.setVisibility(View.VISIBLE);
 
         pros.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +177,7 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
 
                 dialog.show();
                 Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
         });
@@ -235,7 +233,7 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
 
                 dialog.show();
                 Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
         });
@@ -382,7 +380,7 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
 
             dialog.show();
             Window window = dialog.getWindow();
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         } else {
             if(latitude.equals("0.0")||longitude.equals("0.0"))
@@ -404,7 +402,7 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
 
                 dialog.show();
                 Window window = dialog.getWindow();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             }
             else

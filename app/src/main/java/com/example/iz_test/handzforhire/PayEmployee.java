@@ -202,9 +202,9 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
                 i.putExtra("payment_amount",get_tip);
                 i.putExtra("transaction_date",get_date);
                 startActivity(i);*/
-                Intent intent = new Intent(PayEmployee.this, PayPalProfileSharingActivity.class);
+                Intent intent = new Intent(PayEmployee.this, PaymentActivity.class);
                 intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-                intent.putExtra(PayPalProfileSharingActivity.EXTRA_REQUESTED_SCOPES, getOauthScopes());
+            //    intent.putExtra(PayPalProfileSharingActivity.EXTRA_REQUESTED_SCOPES, getOauthScopes());
                 startActivityForResult(intent, PAYPAL_REQUEST_CODE);
             }
         });

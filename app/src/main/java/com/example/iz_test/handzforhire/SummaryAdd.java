@@ -140,6 +140,11 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
 
         detector = new SimpleGestureFilter(this,this);
 
+        session = new SessionManager(getApplicationContext());
+        HashMap<String, String> check = session.getCheckboxStatus();
+        session_status = check.get(SessionManager.CHECKBOX_STATUS);
+        System.out.println("sssssssssssss:session:status:::::"+session_status+"...check:::"+check);
+
         dialog = new Dialog(SummaryAdd.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);

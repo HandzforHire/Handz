@@ -91,6 +91,21 @@ public class ArchievedJob extends Activity {
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
 
+
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ArchievedJob.this, ProfilePage.class);
+                i.putExtra("userId", user_id);
+                i.putExtra("address", address);
+                i.putExtra("city", city);
+                i.putExtra("state", state);
+                i.putExtra("zipcode", zipcode);
+                startActivity(i);
+                finish();
+            }
+        });
+
         getProfileimage();
         listArchievedJobs();
 

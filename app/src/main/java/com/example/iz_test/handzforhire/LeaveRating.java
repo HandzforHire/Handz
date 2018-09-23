@@ -112,6 +112,11 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
             }
         });
 
+        rb1.setStepSize(0.1f);
+        rb2.setStepSize(0.1f);
+        rb3.setStepSize(0.1f);
+        rb4.setStepSize(0.1f);
+        rb5.setStepSize(0.1f);
 
         rb1.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating1,

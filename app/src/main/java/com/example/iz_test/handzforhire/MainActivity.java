@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
 
         ComputePackageHash();
 
-        text.setText(Html.fromHtml("Handz is currently offered in the Jacksonville,FL \n area. Want Handz in your area? <u>Click here.</u>"));
+        text.setText(Html.fromHtml("Handz is currently offered in the Jacksonville,FL \n area. Want Handz in your area? <u>Click here</u>"));
 
         text.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -180,7 +180,7 @@ public class SwitchingSide extends Activity implements SimpleGestureFilter.Simpl
                 startActivity(i);
                 finish();
                 break;
-            case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
+           /* case SimpleGestureFilter.SWIPE_LEFT :  str = "Swipe Left";
                 Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
                 startActivity(j);
                 finish();
@@ -188,7 +188,7 @@ public class SwitchingSide extends Activity implements SimpleGestureFilter.Simpl
             case SimpleGestureFilter.SWIPE_DOWN :  str = "Swipe Down";
                 break;
             case SimpleGestureFilter.SWIPE_UP :    str = "Swipe Up";
-                break;
+                break;*/
 
         }
         //  Toast.makeText(this, str, Toast.LENGTH_SHORT).show();

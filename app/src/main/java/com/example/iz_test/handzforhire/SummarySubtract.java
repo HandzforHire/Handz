@@ -148,6 +148,11 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
 
         detector = new SimpleGestureFilter(this,this);
 
+        session = new SessionManager(getApplicationContext());
+        HashMap<String, String> check = session.getCheckboxStatus();
+        session_status = check.get(SessionManager.CHECKBOX_STATUS);
+        System.out.println("sssssssssssss:session:status:::::"+session_status+"...check:::"+check);
+
         if(edit_job.equals("yes"))
         {
             create_job.setVisibility(View.INVISIBLE);

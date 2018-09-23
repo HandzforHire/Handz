@@ -92,7 +92,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
     public static String JOB_ID = "job_id";
     String value = "HandzForHire@~";
     String job_id,jobId,paytext,pay_amount,flexible_status,job_estimated,hourr;
-
+    String getAddress,getZipcode,getState,getCity;
     RelativeLayout pay_lay,payment_layout,date_layout,time_layout,estimate_layout,duration_layout;
     CheckBox checkBox;
     Activity activity;
@@ -259,7 +259,7 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
         });
 
 
-        job_amount.setOnClickListener(new View.OnClickListener() {
+        payment_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -753,6 +753,10 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
         i.putExtra("current_location", current_location);
         i.putExtra("post_address", post_address);
         i.putExtra("duration", duration);
+        i.putExtra("job_address", getAddress);
+        i.putExtra("job_city", getCity);
+        i.putExtra("job_state", getState);
+        i.putExtra("job_zipcode", getZipcode);
         startActivity(i);
     }
 
@@ -837,35 +841,24 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
 
                 JSONObject object = new JSONObject(job_data);
                 String get_name = object.getString("job_name");
-
                 job_category = object.getString("job_category");
-
                 String get_description = object.getString("description");
-
                 String get_date = object.getString("job_date");
-
                 String get_start_time = object.getString("start_time");
-
                 String get_amount = object.getString("job_payment_amount");
-
                 String get_type = object.getString("job_payment_type");
-
                 String flexible = object.getString("job_date_time_flexible");
-
                 String sub_cat = object.getString("sub_category");
-
                 String cat_color = object.getString("job_category_color");
-
                 String job_estimated_payment = object.getString("job_estimated_payment");
-
                 String job_expire_date_time = object.getString("job_expire_date_time");
-
                 job_id = object.getString("job_id");
-
                 post_address = object.getString("post_address");
-
                 current_location = object.getString("currentlocation");
-
+                String job_address = object.getString("job_address");
+                String job_state = object.getString("job_state");
+                String job_city = object.getString("job_city");
+                String job_zipcode = object.getString("job_zipcode");
 
                 name = get_name;
                 categoryId = job_category;
@@ -880,6 +873,10 @@ public class EditCreateJob extends Activity implements View.OnClickListener,Simp
                 flexible_status = flexible;
                 job_estimated = job_estimated_payment;
                 job_expire = job_expire_date_time;
+                getAddress = job_address;
+                getCity = job_city;
+                getState = job_state;
+                getZipcode = job_zipcode;
 
                 String date = get_date;
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
