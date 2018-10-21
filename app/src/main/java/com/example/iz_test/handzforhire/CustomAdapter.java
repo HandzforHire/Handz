@@ -140,6 +140,7 @@ public class CustomAdapter extends BaseAdapter {
                     map.put(APP_KEY, value);
                     map.put(KEY_CARDID, delete_card_id);
                     map.put(Constant.DEVICE, Constant.ANDROID);
+                    System.out.println("Params "+map);
                     return map;
                 }
             };

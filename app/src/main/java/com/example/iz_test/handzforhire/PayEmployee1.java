@@ -119,6 +119,7 @@ public class PayEmployee1 extends Activity implements SimpleGestureFilter.Simple
                 map.put(EMPLOYER_ID, employer_id);
                 map.put(JOB_ID, job_id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -211,11 +212,11 @@ public class PayEmployee1 extends Activity implements SimpleGestureFilter.Simple
                 map.put(TOTAL_PAYMENT, get_total);
                 map.put(DATE, get_date);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
 
-        System.out.println("vvvvvvv:"+"XAPP_KEY:"+value+"."+"EMPLOYER_ID:"+employer_id+"."+"EMPLOYEE_ID:"+ employee_id+"."+"TIP:"+ get_tip+"."+"PAYMENT_METHOD:"+ get_method+ "."+"JOB_NAME:"+job_name+ "."+"JOB_ID:"+job_id+"."+"PAYMENT_AMOUNT:"+ get_amount + "."+"TOTAL_PAYMENT:"+get_total+ "."+"DATE:"+get_date);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }

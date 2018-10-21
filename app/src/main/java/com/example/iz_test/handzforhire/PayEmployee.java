@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.Selection;
@@ -21,9 +23,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.util.ExceptionCatchingInputStream;
+import com.fasterxml.jackson.core.JsonParser;
+import com.firebase.client.Firebase;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
 import com.paypal.android.sdk.payments.PayPalAuthorization;
@@ -41,14 +57,20 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class PayEmployee extends Activity  implements SimpleGestureFilter.SimpleGestureListener{
 
@@ -58,31 +80,56 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
     String job_id,employer_id,employee_id,job_name,profile_image,paypal_value,estimated_value;
     ProgressDialog progress_dialog;
     TextView name,date,total,payout,service_fee,processing_fee;
-    String profile_name,user_name,job_payout,paypal_fee,estimated_payment,fee_details,job_payment_amount;
+    String profile_name,user_name,job_payout,paypal_fee,estimated_payment,fee_details,job_payment_amount,merchant_id,new_payout_value;
     Integer total_value;
     Dialog dialog;
     private SimpleGestureFilter detector;
     private String current = "";
-    private static PayPalConfiguration config = new PayPalConfiguration()
-            // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
-            // or live (ENVIRONMENT_PRODUCTION)
-           // .environment(PayPalConfiguration.ENVIRONMENT_PRODUCTION)
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-           // .clientId(PayPalConfig.PAYPAL_LIVE_CLIENT_ID)
-            .clientId(PayPalConfig.PAYPAL_CLIENT_ID)
-            .merchantName("HandzForHire")
-            .merchantPrivacyPolicyUri(Uri.parse("https://www.homeadvisor.com/rfs/aboutus/privacyPolicy.jsp"))
-            .merchantUserAgreementUri(Uri.parse("https://www.homeadvisor.com/servlet/TermsServlet"));
-    public static final int PAYPAL_REQUEST_CODE = 123;
+    SessionManager session;
+
+    private static final String PAYMENT_URL = Constant.SERVER_URL+"payment_service";
+
+    public static String JOB_NAME="job_name";
+    public static String ORDER_ID="order_id";
+    public static String TIP="tip";
+    public static String TRANS_DATE="transaction_date";
+    public static String PAYER_ID="payer_id";
+    public static String JOB_ID="job_id";
+    public static String PAYMENT_ID="payment_id";
+    public static String STATUS="status";
+    public static String ORDER_STATUS="order_status";
+    public static String PAYPAL_FEE="paypal_fee";
+    public static String EMPLOYER_ID="employer_id";
+    public static String PAYMENT_METHOD="payment_method";
+    public static String PAYMENT_AMOUNT="payment_amount";
+    public static String APP_KEY="X-APP-KEY";
+    public static String PAYEE_EMAIL="payee_email";
+    public static String USER_TYPE="user_type";
+    public static String PAYER_EMAIL="payer_email";
+    public static String TOTAL_AMOUNT="total_payment";
+    public static String EMPLOYEE_ID="employee_id";
+    public static String REFERENCE_ID="reference_id";
+
+    public static String appkey_value="HandzForHire@~";
+    Firebase reference1;
+    private static final String GET_REQUESTPAYMENT = Constant.SERVER_URL+"request_payment_notification";
+    String child_id,sender_id,get_user;
+    String transaction_date;
+    String current_user_id = "OGO6K8nyqKVJ8WQoE02WT5qFc1S2";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_employee);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         dialog = new Dialog(PayEmployee.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        session = new SessionManager(getApplicationContext());
 
         logo = (ImageView)findViewById(R.id.logo);
         image = (ImageView)findViewById(R.id.imageView);
@@ -97,41 +144,101 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
         date = (TextView) findViewById(R.id.transaction_date);
         total = (TextView) findViewById(R.id.total);
 
+
+        String paymentdetails  = session.Readpaymentdetails();
+
+         try {
+            JSONObject obj = new JSONObject(paymentdetails);
+            job_id = obj.getString("jobId");
+            employer_id =obj.getString("userId");
+            employee_id = obj.getString("employee");
+            job_name =  obj.getString("name");
+            profile_image = obj.getString("image");
+            profile_name =obj.getString("profile");
+            user_name = obj.getString("user");
+            job_payout =obj.getString("job_payout");
+            paypal_fee =obj.getString("paypalfee");
+            estimated_payment =obj.getString("job_estimated_payment");
+            fee_details = obj.getString("fee_details");
+            job_payment_amount=obj.getString("job_payment_amount");
+            merchant_id=obj.getString("merchant_id");
+
+        }catch (Exception e){
+            System.out.println("Exception "+e.getMessage());
+        }
+
+        Firebase.setAndroidContext(PayEmployee.this);
+        // reference1 = new Firebase("https://handz-8ac86.firebaseio.com/channels");
+        reference1 = new Firebase("https://handzdev-9e758.firebaseio.com/channels");
+
+        sender_id = current_user_id + Profilevalues.user_id;
+        get_user=Profilevalues.username;
+
         Intent i = getIntent();
-        job_id = i.getStringExtra("jobId");
-        employer_id = i.getStringExtra("employerId");
-        employee_id = i.getStringExtra("employeeId");
-        job_name = i.getStringExtra("jobname");
-        profile_image = i.getStringExtra("image");
-        profile_name = i.getStringExtra("profilename");
-        user_name = i.getStringExtra("username");
-        job_payout = i.getStringExtra("job_payout");
-        paypal_fee = i.getStringExtra("paypalfee");
-        estimated_payment = i.getStringExtra("job_estimated_payment");
-        fee_details = i.getStringExtra("fee_details");
-        job_payment_amount=i.getStringExtra("job_payment_amount");
+
+        if(i.getStringExtra("isfrom").equals("makepayment")) {
+
+        }else if(i.getStringExtra("isfrom").equals("paypal")){
+            Calendar c = Calendar.getInstance();
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            String formattedDate = df.format(c.getTime());
+            PaypalCon paycon=new PaypalCon(PayEmployee.this);
+            String payorderapi = PaypalCon.payOrderAPI(session.ReadAccessToekn(),formattedDate,session.ReadorderID());
+            try {
+                JSONObject obj = new JSONObject(payorderapi);
+                if(obj.has("debug_id")){
+                    final Dialog dialog = new Dialog(PayEmployee.this);
+                    dialog.setContentView(R.layout.custom_dialog);
+                    // set the custom dialog components - text, image and button
+                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                    text.setText(obj.getString("message"));
+                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                    // if button is clicked, close the custom dialog
+                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialog.show();
+                    Window window = dialog.getWindow();
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                }else{
+
+                    JSONArray array=obj.getJSONArray("links");
+                    JSONObject objre=array.getJSONObject(0);
+                    String orderstatusdapi=objre.getString("href");
+                    String orderstatusapi = PaypalCon.orderstatusapi(session.ReadAccessToekn(),orderstatusdapi);
+                    paymentservice(orderstatusapi);
+                }
+            }catch (Exception e)
+            {
+                System.out.println("e "+e.getMessage());
+            }
+        }
 
         detector = new SimpleGestureFilter(this,this);
 
         tip.addTextChangedListener(tw);
 
-        String new_payout_value = job_payout;
+        new_payout_value = job_payout;
         new_payout_value = new_payout_value.substring(1);
-        System.out.println("DDDDDDDd:new_payout_value::"+new_payout_value);
 
         if(fee_details.equals("add"))
         {
             payout.setText(new_payout_value);
             String get_service_fee = service_fee.getText().toString().trim();
             String get_tip = tip.getText().toString().trim();
-            System.out.println("DDDDDDDd:get_service_fee:::"+get_service_fee);
+
             paypal_value= paypal_fee;
             paypal_value = paypal_value.substring(1);
             processing_fee.setText(paypal_value);
             String get_total = String.valueOf(Float.valueOf(new_payout_value)+Float.valueOf(get_service_fee)+Float.valueOf(get_tip)+ Float.valueOf(paypal_value));
-            System.out.println("DDDDDDDd:get_total:::"+get_total);
             String tot= String.format("%.2f", Float.valueOf(get_total));
-            System.out.println("DDDDDDDd:tot:::"+tot);
+
             total.setText(tot);
         }
         else
@@ -139,24 +246,20 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
             estimated_value = estimated_payment;
             estimated_value = estimated_value.substring(1);
             payout.setText(estimated_value);
-            System.out.println("DDDDDDDd:estimated_value:::"+estimated_value);
             String get_service_fee = service_fee.getText().toString().trim();
             String get_tip = tip.getText().toString().trim();
-            System.out.println("DDDDDDDd:get_service_fee:::"+get_service_fee);
             paypal_value= paypal_fee;
             paypal_value = paypal_value.substring(1);
             processing_fee.setText(paypal_value);
             String get_total = String.valueOf(Float.valueOf(estimated_value)+Float.valueOf(get_service_fee)+Float.valueOf(get_tip)+ Float.valueOf(paypal_value));
-            System.out.println("DDDDDDDd:get_total:::"+get_total);
             String tot= String.format("%.2f", Float.valueOf(get_total));
-            System.out.println("DDDDDDDd:tot:::"+tot);
+
             total.setText(tot);
         }
 
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("MMMM dd, yyyy");
         String strDate = mdformat.format(calendar.getTime());
-        System.out.println("DDDDDDDd:date::"+strDate);
         date.setText(strDate);
 
         if(profile_image==null) {
@@ -185,27 +288,41 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
         payment_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* get_tip = tip.getText().toString().trim();
-                get_payout = payment_amount.getText().toString().trim();
-                get_servicefee = payment_method.getText().toString().trim();
-                get_date = date.getText().toString().trim();
-                total_value = Integer.parseInt(get_amount)+Integer.parseInt(get_tip);
-                get_total = String.valueOf(total_value);
-                total.setText(get_total);*/
-               /* Intent i = new Intent(PayEmployee.this,PayEmployee1.class);
-                i.putExtra("jobId",job_id);
-                i.putExtra("employerId",employer_id);
-                i.putExtra("employeeId",employee_id);
-                i.putExtra("jobName",job_name);
-                i.putExtra("tip",get_tip);
-                i.putExtra("paymentMethod",get_method);
-                i.putExtra("payment_amount",get_tip);
-                i.putExtra("transaction_date",get_date);
-                startActivity(i);*/
-                Intent intent = new Intent(PayEmployee.this, PaymentActivity.class);
-                intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-            //    intent.putExtra(PayPalProfileSharingActivity.EXTRA_REQUESTED_SCOPES, getOauthScopes());
-                startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+
+                session.savePaypalRedirect("1");
+
+                PaypalCon pay=new PaypalCon(PayEmployee.this);
+
+                String accesstoken=PaypalCon.getAccessToken();
+
+                session.saveAccesstoken(accesstoken);
+
+                Calendar c = Calendar.getInstance();
+
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                transaction_date = df.format(c.getTime());
+
+                String orderapibody=PaypalCon.OrderReqjson(merchant_id,new_payout_value,transaction_date);
+
+                String returnurl = PaypalCon.OrderAPI(accesstoken,transaction_date,orderapibody);
+
+                try {
+                    JSONObject obj = new JSONObject(returnurl);
+                    String orderid=obj.getString("id");
+                    session.saveorderId(orderid);
+
+                    JSONArray array=obj.getJSONArray("links");
+                    JSONObject objre=array.getJSONObject(1);
+                    Intent myIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse(objre.getString("href")));
+                    myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivityForResult(myIntent,1);
+                }catch (Exception e)
+                {
+                    System.out.println("e "+e.getMessage());
+                }
+
             }
         });
 
@@ -264,6 +381,11 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     TextWatcher tw = new TextWatcher() {
 
         @Override
@@ -301,55 +423,48 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
             if(fee_details.equals("add"))
             {
                 String new_payout = payout.getText().toString().trim();
-                System.out.println("DDDDDDDd:new_payout::"+new_payout);
+
                 String new_payout_value = new_payout;
                 new_payout_value = new_payout_value.substring(1);
-                System.out.println("DDDDDDDd:new_payout_value::"+new_payout_value);
+
                 String new_tip = tip.getText().toString().trim();
                 String add_job_payout = String.valueOf(Float.valueOf(new_payout)+Float.valueOf(new_tip));
-                System.out.println("DDDDDDDd:add_job_payout::"+add_job_payout);
+
 
                 String s1 = "100";
                 String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(add_job_payout));
-                System.out.println("DDDDDDDd:pay_employee:multi:"+multi);
+
                 String s2 = "130";
                 String add1 = String.valueOf(Float.valueOf(multi)+Float.valueOf(s2));
-                System.out.println("DDDDDDDd:pay_employee:add1:"+add1);
+
                 String s3 = "97.1";
                 String div_total = String.valueOf(Float.valueOf(add1)/Float.valueOf(s3));
-                System.out.println("DDDDDDDd:pay_employee:div_total:"+div_total);
+
                 String roundup_value = String.format("%.2f", Float.valueOf(div_total));
-                System.out.println("DDDDDDDd:pay_employee:roundup_value:"+roundup_value);
+
                 String handz_fee = "1.00";
                 String pay_fee = String.valueOf(Float.valueOf(roundup_value)-Float.valueOf(new_payout)-Float.valueOf(new_tip)-Float.valueOf(handz_fee));
                 String total_value = String.format("%.2f", Float.valueOf(pay_fee));
-                System.out.println("DDDDDDDd:pay_employee:pay_fee:"+pay_fee+"total2:::"+total_value);
+
                 processing_fee.setText(total_value);
                 total.setText(roundup_value);
             }
             else
             {
                 String new_payout = payout.getText().toString().trim();
-                System.out.println("DDDDDDDd:new_payout::"+new_payout);
                 String estimated_value = estimated_payment;
                 estimated_value = estimated_value.substring(1);
-                System.out.println("DDDDDDDd:estimated_value::"+estimated_value);
                 String new_tip = tip.getText().toString().trim();
 
                 String s1 = "100";
                 String multi = String.valueOf(Float.valueOf(s1)*Float.valueOf(new_tip));
-                System.out.println("DDDDDDDd:pay_employee:multi:"+multi);
                 String s3 = "97.1";
                 String div_total = String.valueOf(Float.valueOf(multi)/Float.valueOf(s3));
-                System.out.println("DDDDDDDd:pay_employee:div_total:"+div_total);
                 String roundup_value = String.format("%.2f", Float.valueOf(div_total));
-                System.out.println("DDDDDDDd:pay_employee:roundup_value:"+roundup_value);
                 String total_value = String.valueOf(Float.valueOf(job_payment_amount)+Float.valueOf(roundup_value));
-                System.out.println("DDDDDDDd:pay_employee:total_value:"+total_value);
                 String handz_fee = "1.00";
                 String pay_fee = String.valueOf(Float.valueOf(total_value)-Float.valueOf(estimated_value)-Float.valueOf(new_tip)-Float.valueOf(handz_fee));
                 String pay_roundup_value = String.format("%.2f", Float.valueOf(pay_fee));
-                System.out.println("DDDDDDDd:pay_employee:pay_roundup_value:"+pay_roundup_value);
                 processing_fee.setText(pay_roundup_value);
                 total.setText(total_value);
             }
@@ -404,115 +519,223 @@ public class PayEmployee extends Activity  implements SimpleGestureFilter.Simple
         return super.dispatchTouchEvent(event);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PAYPAL_REQUEST_CODE) {
+    public void paymentservice(final String orderresposne)
+    {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, PAYMENT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                      //  onResponserecieved1(response, 2);
+                        System.out.println("response from izaap "+response);
+                        dialog.dismiss();
+                        try {
 
-            //If the result is OK i.e. user has not canceled the payment
-            if (resultCode == Activity.RESULT_OK) {
-                //Getting the payment confirmation
-                //PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-                PayPalAuthorization auth = data
-                        .getParcelableExtra(PayPalFuturePaymentActivity.EXTRA_RESULT_AUTHORIZATION);
-                System.out.println("authorization "+auth.toJSONObject());
-                if (auth != null) {
-                    String authorization_code = auth.getAuthorizationCode();
-                    getAccessToken(authorization_code);
+                            JSONObject obj = new JSONObject(response);
+                            String status=obj.getString("status");
+                            if(status.equals("success"))
+                            {
+                                transactionstatus();
+                            }
+                        }catch (Exception e){
+                            System.out.println("Exception "+e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            final Dialog dialog = new Dialog(PayEmployee.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                // if (status.equals("You are not allowed to apply for the job")) {
+                                // custom dialog
+                                final Dialog dialog = new Dialog(PayEmployee.this);
+                                dialog.setContentView(R.layout.custom_dialog);
+
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText(status);
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                //   }
+                            } catch (JSONException e) {
+
+                            } catch (UnsupportedEncodingException error1) {
+
+                            }
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+
+                DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat destDf = new SimpleDateFormat("MMMM dd, yyyy");
+                String date="";
+                Date today = Calendar.getInstance().getTime();
+                try {
+                    date =  destDf.format(today);
+
+                } catch (Exception e)
+                {
+                    System.out.println("error " + e.getMessage());
                 }
 
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Log.i("paymentExample", "The user canceled.");
-            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-                Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+                try {
+
+                    JSONObject obj = new JSONObject(orderresposne);
+                    JSONObject payer_info = obj.getJSONObject("payer_info");
+                    JSONObject payment_det=obj.getJSONObject("payment_details");
+                    JSONArray purchase_units= obj.getJSONArray("purchase_units");
+                    JSONObject objec = purchase_units.getJSONObject(0);
+                    String reference_id= objec.getString("reference_id");
+                    JSONObject payee = objec.getJSONObject("payee");
+
+                    params.put(APP_KEY, appkey_value);
+                    params.put(JOB_NAME, job_name);
+                    params.put(ORDER_ID, obj.getString("id"));
+                    params.put(TIP, tip.getText().toString());
+                    params.put(TRANS_DATE, date);
+                    params.put(JOB_ID, job_id);
+                    params.put(PAYPAL_FEE, paypal_fee);
+                    params.put(EMPLOYER_ID, employer_id);
+                    params.put(PAYMENT_AMOUNT, job_payout);
+                    params.put(USER_TYPE, "employer");
+                    params.put(TOTAL_AMOUNT, total.getText().toString());
+                    params.put(EMPLOYEE_ID, employee_id);
+                    params.put(REFERENCE_ID, reference_id);
+                    params.put(PAYER_ID, payer_info.getString("payer_id"));
+                    params.put(PAYMENT_ID, payment_det.getString("payment_id"));
+                    params.put(STATUS, "payment");
+                    params.put(ORDER_STATUS, obj.getString("status"));
+                    params.put(PAYMENT_METHOD, "PayPal");
+                    params.put(PAYEE_EMAIL, payee.getString("email"));
+                    params.put(PAYER_EMAIL, payer_info.getString("email"));
+
+                    System.out.println("Params "+params);
+
+                }catch (Exception e){
+                    System.out.println("Exception "+e.getMessage());
+                }
+                return params;
             }
-        }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        // stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
     }
 
-    private PayPalOAuthScopes getOauthScopes() {
+    public void transactionstatus() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_REQUESTPAYMENT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            String status=object.getString("status");
+                            String channel=object.getString("channel_id");
+                            String job_id=object.getString("job_id");
+                            child_id = channel + job_id;
+                            if(status.equals("success")){
+                                final Dialog dialog = new Dialog(PayEmployee.this);
+                                dialog.setContentView(R.layout.custom_dialog);
 
-        HashSet<String> scopes = new HashSet<String>(
-                Arrays.asList(PayPalOAuthScopes.PAYPAL_SCOPE_EMAIL, PayPalOAuthScopes.PAYPAL_SCOPE_ADDRESS) );
-        scopes.add(PayPalOAuthScopes.PAYPAL_SCOPE_EMAIL);
-        scopes.add(PayPalOAuthScopes.PAYPAL_SCOPE_ADDRESS);
-        scopes.add(PayPalOAuthScopes.PAYPAL_SCOPE_PHONE);
-        scopes.add(PayPalOAuthScopes.PAYPAL_SCOPE_PROFILE);
-        return new PayPalOAuthScopes(scopes);
-    }
+                                // set the custom dialog components - text, image and button
+                                TextView text = (TextView) dialog.findViewById(R.id.text);
+                                text.setText("Transaction completed Successfully");
+                                Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                // if button is clicked, close the custom dialog
+                                dialogButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
 
+                                        Map<String, String> map = new HashMap<String, String>();
+                                        map.put("senderId", sender_id);
+                                        map.put("senderName", get_user);
+                                        map.put("text", "FROM HANDZ: Transaction completed on "+transaction_date+" for the amount of $"+job_payout);
+                                        reference1.child(child_id).child("messages").push().setValue(map);
+                                    }
+                                });
 
-    private String getAccessToken(String authorizationCode)
-    {
+                                dialog.show();
+                                Window window = dialog.getWindow();
+                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            }
+                        }catch (Exception e){
+                            System.out.println("exception "+e.getMessage());
+                        }
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("https://api.paypal.com/v1/oauth2/token");
-        //HttpPost httppost = new HttpPost("https://api.sandbox.paypal.com/v1/oauth2/token");
-
-        try {
-            String text=PayPalConfig.PAYPAL_CLIENT_ID+":"+PayPalConfig.PAYPAL_SECRET_KEY;
-            //String text=PayPalConfig.PAYPAL_LIVE_CLIENT_ID+":"+PayPalConfig.PAYPAL_LIVE_SECRET_KEY;
-            byte[] data = text.getBytes("UTF-8");
-            String base64 = Base64.encodeToString(data, Base64.NO_WRAP);
-
-            httppost.addHeader("content-type", "application/x-www-form-urlencoded");
-            httppost.addHeader("Authorization", "Basic " + base64);
-            StringEntity se=new StringEntity("grant_type=authorization_code&response_type=token&redirect_uri=urn:ietf:wg:oauth:2.0:oob&code="+authorizationCode);
-            httppost.setEntity(se);
-            HttpResponse response = httpclient.execute(httppost);
-            String responseContent = EntityUtils.toString(response.getEntity());
-            System.out.println("authorizatio code "+authorizationCode);
-            System.out.println("authorizatio code "+authorizationCode);
-            Log.d("Response", responseContent );
-            try {
-                JSONObject obj = new JSONObject(responseContent);
-                System.out.println(obj.getString("access_token"));
-                OrderAPI(obj.getString("access_token"));
-            }catch (Exception e)
-            {
-                System.out.println("e "+e.getMessage());
+                        dialog.dismiss();
+                        //Toast.makeText(LoginActivity.this,error.toString(),Toast.LENGTH_LONG ).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put(APP_KEY, appkey_value);
+                map.put(JOB_ID, job_id);
+                map.put(EMPLOYER_ID, employer_id);
+                map.put(EMPLOYEE_ID, employee_id);
+                map.put(USER_TYPE, "employee");
+                map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println(" Map "+map);
+                return map;
             }
-            System.out.println("Response "+responseContent);
+        };
 
-        } catch (ClientProtocolException e) {
-            System.out.println("Exception "+e.getMessage());
-
-        } catch (IOException e) {
-            System.out.println("Exception "+e.getMessage());
-
-        }
-        return null;
+        RequestQueue requestQueue = Volley.newRequestQueue(PayEmployee.this);
+        requestQueue.add(stringRequest);
     }
 
-    public void OrderAPI(String accesstoken) {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("https://api.sandbox.paypal.com/v1/checkout/orders/");
-        try {
-
-            Date c = Calendar.getInstance().getTime();
-            System.out.println("Current time => " + c);
-
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            String formattedDate = df.format(c);
-
-            System.out.println("Date "+formattedDate);
-
-            httppost.addHeader("Accept", "application/json");
-            httppost.addHeader("Accept-Language", "en_US");
-            httppost.addHeader("content-type", "application/json");
-            httppost.addHeader("Authorization", "Bearer " + accesstoken);
-            httppost.addHeader("PayPal-Partner-Attribution-Id", "HandzForHire_SP_PPM");
-            httppost.addHeader("PayPal-Request-Id", "Bearer " + accesstoken);
-            httppost.addHeader("Paypal-Client-Metadata-Id", "AZKGEIXjRP25L9gE8PZLI17F5BujtqTehLicuLknK1RUTmqErqBvIuJ84edzXOn5dOfNn67sTaUL3mgV");
-            HttpResponse response = httpclient.execute(httppost);
-            String responseContent = EntityUtils.toString(response.getEntity());
-            System.out.println("Response "+responseContent);
-
-        } catch (ClientProtocolException e) {
-            System.out.println("Exception "+e.getMessage());
-
-        } catch (IOException e) {
-            System.out.println("Exception "+e.getMessage());
-
-        }
-    }
 }

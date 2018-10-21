@@ -102,6 +102,7 @@ public class LinkedInActivity extends Activity {
     String usertype = "employee";
 
     String firstnmae,lastnmae,lin_email,lin_id,pictureurl,profileurl;
+    public static String userid;
     Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -447,10 +448,10 @@ public class LinkedInActivity extends Activity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(XAPP_KEY, value);
-                params.put(KEY_USERID, lin_id);
+                params.put(KEY_USERID, userid);
                 params.put(FIRST_NAME, firstnmae);
                 params.put(LAST_NAME, lastnmae);
-                params.put(ID, LendReviewRating.id);
+                params.put(ID, lin_id);
                 params.put(PROF_URL, profileurl);
                 params.put(PIC_URL, pictureurl);
                 params.put(EMAIL, lin_email);

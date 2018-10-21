@@ -233,6 +233,7 @@ public class UpdateAccount extends Activity implements SimpleGestureFilter.Simpl
                 params.put(STATUS, status);
                 params.put(CHECKING_ACCOUNT_ID, account_id);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };
@@ -318,6 +319,7 @@ public class UpdateAccount extends Activity implements SimpleGestureFilter.Simpl
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(APP_KEY, value);
                 map.put(CHECKING_ACCOUNT_ID, account_id);
+                System.out.println("Params "+map);
                 return map;
             }
         };

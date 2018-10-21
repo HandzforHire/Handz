@@ -56,6 +56,14 @@ public class SessionManager {
      // Email address (make variable public to access from outside)
     public static final String KEY_PASS = "password";
     public static final String LOGIN_STATUS = "login_status";
+    public static final String PAYPAL_REDIRECT = "paypalredirect";
+    public static final String PAYPAL_ORDERID = "paypalorderid";
+    public static final String PAYPAL_ACCESSTOEKN= "paypalaccesstoken";
+    public static final String PAYMENT_DETAILS= "makepaymentvalaue";
+    public static final String PAYMENT_REFERALAPI= "parterreferralapi";
+    public static final String PAYMENT_REGISTRATION= "registrationdet";
+    public static final String PAYMENT_PASS = "regpass";
+
 
     // Constructor
     public SessionManager(Context context){
@@ -98,6 +106,88 @@ public class SessionManager {
         // commit changes
         editor.commit();
     }
+
+    public void savePaypalRedirect(String paypalredirect){
+        // Storing paypalredirect value
+        editor.putString(PAYPAL_REDIRECT, paypalredirect);
+        // commit changes
+        editor.commit();
+    }
+
+    public String ReadPaypalRedirect(){
+
+        return pref.getString(PAYPAL_REDIRECT,"0");
+    }
+
+    public void saveReraalapilink(String link){
+        // Storing paypalredirect value
+        editor.putString(PAYMENT_REFERALAPI, link);
+        // commit changes
+        editor.commit();
+    }
+
+    public String readReraalapilink(){
+
+        return pref.getString(PAYMENT_REFERALAPI,"");
+    }
+
+    public void saveorderId(String orderid){
+        // Storing paypalredirect value
+        editor.putString(PAYPAL_ORDERID, orderid);
+        // commit changes
+        editor.commit();
+    }
+
+    public String ReadorderID(){
+
+        return pref.getString(PAYPAL_ORDERID,"");
+    }
+
+    public void saveAccesstoken(String accesstoken){
+        // Storing paypalredirect value
+        editor.putString(PAYPAL_ACCESSTOEKN, accesstoken);
+        // commit changes
+        editor.commit();
+    }
+
+    public String ReadAccessToekn(){
+
+        return pref.getString(PAYPAL_ACCESSTOEKN,"");
+    }
+
+    public void savepaymentdetails(String paymentdet){
+        // Storing paypalredirect value
+        editor.putString(PAYMENT_DETAILS, paymentdet);
+        // commit changes
+        editor.commit();
+    }
+
+    public String Readpaymentdetails(){
+        return pref.getString(PAYMENT_DETAILS,"");
+    }
+
+    public void saveregistrationdet(String registraiondet){
+        // Storing paypalredirect value
+        editor.putString(PAYMENT_REGISTRATION, registraiondet);
+        // commit changes
+        editor.commit();
+    }
+
+    public String Readreg(){
+        return pref.getString(PAYMENT_REGISTRATION,"");
+    }
+
+    public void savepass(String registraiondet){
+        // Storing paypalredirect value
+        editor.putString(PAYMENT_PASS, registraiondet);
+        // commit changes
+        editor.commit();
+    }
+
+    public String ReadPass(){
+        return pref.getString(PAYMENT_PASS,"");
+    }
+
 
     public  HashMap<String, String> getCheckboxStatus(){
         HashMap<String, String> check = new HashMap<String, String>();

@@ -194,16 +194,16 @@ public class Adapter extends BaseAdapter implements Filterable {
             holder.star.setText(star_notification);
 
         }
-
+        System.out.println("Adapter Rating value "+rating_value);
         if(rating_value.equals(""))
         {
+            System.out.println("Insise empty ");
             holder.edit_rating.setVisibility(View.GONE);
             holder.leave_rating.setVisibility(View.VISIBLE);
         }
-
-
         else
         {
+            System.out.println("Insise not empty ");
             holder.leave_rating.setVisibility(View.GONE);
             holder.edit_rating.setVisibility(View.VISIBLE);
         }

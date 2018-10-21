@@ -215,6 +215,7 @@ public class PendingJobs extends Activity implements SimpleGestureFilter.SimpleG
                 params.put(KEY_USER,user_id);
                 params.put(KEY_TYPE,type);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };
@@ -605,6 +606,7 @@ public class PendingJobs extends Activity implements SimpleGestureFilter.SimpleG
                     params.put(KEY_EMPLOYEEID, get_employeeid);
                     params.put(KEY_USERTYPE, type);
                     params.put(Constant.DEVICE, Constant.ANDROID);
+                    System.out.println("Params "+params);
                     return params;
                 }
 

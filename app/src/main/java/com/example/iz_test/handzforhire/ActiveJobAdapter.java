@@ -52,7 +52,7 @@ public class ActiveJobAdapter extends BaseAdapter {
         private ArrayList<HashMap<String, String>> data;
         private static LayoutInflater inflater = null;
         String jobId;
-
+        SessionManager sessoin;
         Dialog dialog;
         public ActiveJobAdapter(Activity a, ArrayList<HashMap<String, String>> d) {
             activity = a;
@@ -63,6 +63,7 @@ public class ActiveJobAdapter extends BaseAdapter {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            sessoin=new SessionManager(a);
         }
 
         public int getCount() {
@@ -167,7 +168,12 @@ public class ActiveJobAdapter extends BaseAdapter {
 
                     Intent i = new Intent(activity,MakePayment.class);
                     int pos= (int) v.getTag();
+
                     HashMap<String, String> items =data.get(pos);
+
+                    JSONObject object = new JSONObject(items);
+
+                    sessoin.savepaymentdetails(object.toString());
 
                     String  userId=items.get("userId");
                     getpaymentcount(userId);
@@ -188,14 +194,15 @@ public class ActiveJobAdapter extends BaseAdapter {
                     i.putExtra("job_name",name);
                     i.putExtra("image",image);
                     i.putExtra("profilename",profile);
+                    i.putExtra("merchant_id",items.get("merchant_id"));
                     i.putExtra("username",user);
                     i.putExtra("employer",employer);
                     i.putExtra("employee",employee);
-                    i.putExtra("job_payout",job_payout);
-                    i.putExtra("paypalfee",paypal_fee);
-                    i.putExtra("job_estimated_payment",estimated_payment);
-                    i.putExtra("job_payment_amount",job_payment_amount);
-                    i.putExtra("fee_details",fee_details);
+                    i.putExtra("job_payout",items.get("job_payout"));
+                    i.putExtra("paypalfee",items.get("paypalfee"));
+                    i.putExtra("job_estimated_payment",items.get("job_estimated_payment"));
+                    i.putExtra("job_payment_amount",items.get("job_payment_amount"));
+                    i.putExtra("fee_details",items.get("fee_details"));
 
                     v.getContext().startActivity(i);
                 }

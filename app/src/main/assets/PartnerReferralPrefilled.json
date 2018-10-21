@@ -36,8 +36,8 @@
                                ],
     "web_experience_preference": {
         "partner_logo_url": "http://162.144.41.156/~izaapinn/handzforhire/assets/images/handz_logo.png",
-        "return_url": "http://handzadmin.com",
-        "action_renewal_url": "http://handzadmin.com"
+        "return_url": "https://handzadmin.com",
+        "action_renewal_url": "https://handzadmin.com"
     },
     "collected_consents": [
                            {

@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -56,7 +58,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class CreateJob extends Activity implements View.OnClickListener,SimpleGestureFilter.SimpleGestureListener{
+//public class CreateJob extends Activity implements View.OnClickListener,SimpleGestureFilter.SimpleGestureListener{
+    public class CreateJob extends Activity implements View.OnClickListener,GestureDetector.OnGestureListener {
 
     Spinner list;
     LinearLayout layout,category_layout;
@@ -100,7 +103,8 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
     HashMap<String, List<String>> listDataChild;
 
     Dialog dialog;
-    private SimpleGestureFilter detector;
+  //  private SimpleGestureFilter detector;
+    ScrollView srcoll_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +119,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         dialog.setContentView(R.layout.progressbar);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        detector = new SimpleGestureFilter(this,this);
+       // detector = new SimpleGestureFilter(this,this);
 
         layout = (LinearLayout)findViewById(R.id.relay);
         category_layout = (LinearLayout)findViewById(R.id.linear);
@@ -144,6 +148,8 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         estimate_layout = (RelativeLayout) findViewById(R.id.linear3);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         hour = (TextView) findViewById(R.id.hour);
+
+        srcoll_view=(ScrollView)findViewById(R.id.srcoll_view);
 
         Intent i = getIntent();
         id = i.getStringExtra("userId");
@@ -320,9 +326,14 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
 
             }
         });
-
-
-
+        /*srcoll_view.setOnTouchListener(new View.OnTouchListener()
+        {
+            public boolean onTouch(View v, MotionEvent event)
+            {
+               return true;
+            }
+        });
+*/
 
         category_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -995,6 +1006,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
                 params.put(XAPP_KEY, value);
                 params.put(KEY_USERID, id);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };
@@ -1041,6 +1053,69 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent1, MotionEvent motionEvent2, float v, float v1) {
+        if (motionEvent1.getY() - motionEvent2.getY() > 50) {
+           // Toast.makeText(MainActivity.this, "You Swiped up!", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        if (motionEvent2.getY() - motionEvent1.getY() > 50) {
+           // Toast.makeText(MainActivity.this, "You Swiped Down!", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        if (motionEvent1.getX() - motionEvent2.getX() > 50) {
+           // Toast.makeText(MainActivity.this, "You Swiped Left!", Toast.LENGTH_LONG).show();
+
+            Intent i = new Intent(getApplicationContext(), ProfilePage.class);
+            i.putExtra("userId", Profilevalues.user_id);
+            i.putExtra("address", Profilevalues.address);
+            i.putExtra("city", Profilevalues.city);
+            i.putExtra("state", Profilevalues.state);
+            i.putExtra("zipcode", Profilevalues.zipcode);
+            startActivity(i);
+            finish();
+
+            return true;
+        }
+
+        if (motionEvent2.getX() - motionEvent1.getX() > 50) {
+            //Toast.makeText(MainActivity.this, "You Swiped Right!", Toast.LENGTH_LONG).show();
+            Intent j = new Intent(getApplicationContext(), SwitchingSide.class);
+            startActivity(j);
+            finish();
+            return true;
+        } else {
+            return true;
         }
     }
 
@@ -1154,6 +1229,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         }
     }
 
+/*
     @Override
     public void onSwipe(int direction) {
         String str = "";
@@ -1197,6 +1273,7 @@ public class CreateJob extends Activity implements View.OnClickListener,SimpleGe
         this.detector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
+*/
 
 
 }

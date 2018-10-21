@@ -144,6 +144,7 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
                 map.put(KEY_USERID, user_id);
                 map.put(TYPE, "employer");
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -230,6 +231,7 @@ public class JobDetails extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(APP_KEY, value);
                 params.put(JOB_ID, job_id);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

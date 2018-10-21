@@ -59,6 +59,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
     TextView text,t1,t2;
     Dialog dialog;
     private SimpleGestureFilter detector;
+    SessionManager session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
         t2.setTypeface(tf);
 
         detector = new SimpleGestureFilter(this,this);
+        session=new SessionManager(ManagePaymentOptions.this);
 
         listView.setOnTouchListener(new View.OnTouchListener() {
             // Setting on Touch Listener for handling the touch inside ScrollView
@@ -136,6 +138,18 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);
                 finish();*/
+                Intent i = new Intent(ManagePaymentOptions.this, EditUserProfile.class);
+                HashMap<String,String> map= new HashMap<String, String>();
+                i.putExtra("isfrom", "edit");
+                map.put("userId",user_id);
+                map.put("address",address);
+                map.put("city",city);
+                map.put("state",state);
+                map.put("zipcode",zipcode);
+                JSONObject object = new JSONObject(map);
+                session.saveregistrationdet(object.toString());
+                finish();
+                startActivity(i);
             }
         });
 
@@ -213,6 +227,7 @@ public class ManagePaymentOptions extends Activity implements SimpleGestureFilte
                 map.put(XAPP_KEY, value);
                 map.put(KEY_EMPLOYER_ID, user_id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

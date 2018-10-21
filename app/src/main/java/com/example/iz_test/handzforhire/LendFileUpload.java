@@ -265,6 +265,7 @@ public class LendFileUpload {
                 map.put(KEY_PROFILE_IMAGE, firstRemoteFile);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

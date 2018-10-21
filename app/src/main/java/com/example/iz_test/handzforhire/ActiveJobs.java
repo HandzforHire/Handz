@@ -137,6 +137,7 @@ public class ActiveJobs extends Activity implements SimpleGestureFilter.SimpleGe
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
                         onResponserecieved1(response, 2);
                         dialog.dismiss();
                     }
@@ -214,6 +215,7 @@ public class ActiveJobs extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(KEY_USERID, user_id);
                 params.put(TYPE, usertype);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };
@@ -271,6 +273,7 @@ public class ActiveJobs extends Activity implements SimpleGestureFilter.SimpleGe
                     map.put("job_estimated_payment",estimated_payment);
                     map.put("fee_details",fee_details);
                     map.put("job_payment_amount",job_payment_amount);
+                    map.put("merchant_id",object.getString("merchant_id"));
                     job_list.add(map);
                     System.out.println("job_list:::" + job_list);
                     ActiveJobAdapter arrayAdapter = new ActiveJobAdapter(this, job_list) {

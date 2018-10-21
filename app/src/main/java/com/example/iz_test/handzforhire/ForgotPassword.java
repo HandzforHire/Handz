@@ -211,6 +211,7 @@ public class ForgotPassword extends Activity{
                 map.put(APP_KEY, value);
                 map.put(EMAIL, email_address);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

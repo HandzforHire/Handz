@@ -74,6 +74,7 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
     String address, city, state, zipcode, cardtype;
     TextView add_card;
     private SimpleGestureFilter detector;
+    SessionManager session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +102,8 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
 
+        session=new SessionManager(LendCreditDebit.this);
+
         detector = new SimpleGestureFilter(this,this);
 
         layout.setOnClickListener(new View.OnClickListener() {
@@ -114,14 +117,26 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
         h_logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(LendCreditDebit.this, LendEditUserProfile.class);
-                i.putExtra("userId", employer_id);
+                /*  Intent i = new Intent(LendCreditDebit.this, LendEditUserProfile.class);
+                 i.putExtra("userId", employer_id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);
+                finish();*/
+                Intent i = new Intent(LendCreditDebit.this, LendEditUserProfile.class);
+                HashMap<String,String> map= new HashMap<String, String>();
+                i.putExtra("isfrom", "edit");
+                map.put("userId",employer_id);
+                map.put("address",address);
+                map.put("city",city);
+                map.put("state",state);
+                map.put("zipcode",zipcode);
+                JSONObject object = new JSONObject(map);
+                session.saveregistrationdet(object.toString());
                 finish();
+                startActivity(i);
             }
         });
         add_card.setOnClickListener(new View.OnClickListener() {
@@ -510,6 +525,7 @@ public class LendCreditDebit extends Activity implements SimpleGestureFilter.Sim
                 params.put(DEFAULT_CARD, de_card);
                 params.put(Constant.DEVICE, Constant.ANDROID);
                 params.put(DEVICETOKEN, dev);
+                System.out.println("Params "+params);
                 return params;
             }
 

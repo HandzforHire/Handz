@@ -48,6 +48,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
@@ -77,10 +78,13 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
     EditText profile_name;
     private static final String URL = Constant.SERVER_URL+"update_profile_image";
     private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
+    private static final String PAYPAL_UPDATEURL = Constant.SERVER_URL+"user_merchant_id_update?";
+
     public static String KEY_USERID = "user_id";
     public static String KEY_PROFILE_IMAGE = "profile_image";
     public static String KEY_PROFILE_NAME = "profile_name";
     public static String APP_KEY = "X-APP-KEY";
+    public static String MERCHANTID = "merchant_id";
     String value = "HandzForHire@~";
     public static String id;
     String email_id, address, city, state, zipcode,profile_image,employer_rating,profilename,posted_notification,pending_notification,active_notification,jobhistory_notification,user_name;
@@ -101,8 +105,10 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
     String name;
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
-    Dialog dialog;
     private SimpleGestureFilter detector;
+    SessionManager session;
+    Dialog dialog;
+    String merchantid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,8 +138,6 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
         detector = new SimpleGestureFilter(this,this);
 
-        getProfileimage();
-
         activity = EditUserProfile.this;
         FileUpload.activity = EditUserProfile.this;
         profile_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -148,13 +152,33 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
             }
         });
 
+        session = new SessionManager(getApplicationContext());
+
+        String registrationdet  = session.Readreg();
+
         Intent i = getIntent();
-        id = i.getStringExtra("userId");
-        address = i.getStringExtra("address");
-        city = i.getStringExtra("city");
-        state = i.getStringExtra("state");
-        zipcode = i.getStringExtra("zipcode");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:edit:::" + id);
+        if(i.getStringExtra("isfrom").equals("edit")) {
+
+        }else if(i.getStringExtra("isfrom").equals("paypal")){
+            merchantid= PaypalCon.partnerReferralPrefillData(session.readReraalapilink(),session.ReadAccessToekn());
+            System.out.println("Merchant id "+merchantid);
+            UpdatePaypal();
+        }
+
+        try {
+
+            JSONObject obj = new JSONObject(registrationdet);
+            id = obj.getString("userId");
+            address = obj.getString("address");
+            city = obj.getString("city");
+            state = obj.getString("state");
+            zipcode = obj.getString("zipcode");
+
+        }catch (Exception e){
+            System.out.println("Exception "+e.getMessage());
+        }
+
+        getProfileimage();
 
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
@@ -171,6 +195,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
         String fontPath2 = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf2 = Typeface.createFromAsset(getAssets(), fontPath2);
         profile_name.setTypeface(tf2);
+
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,6 +272,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
                 startActivity(i);*/
+                getAccessToken();
             }
         });
 
@@ -285,6 +311,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 map.put(APP_KEY, value);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -316,10 +343,6 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 pending_notification = jResult.getString("notificationCountPending");
                 active_notification = jResult.getString("notificationCountActive");
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
-                System.out.println("Profile image "+profile_image);
-                System.out.println("user_name "+user_name);
-                System.out.println("profilename "+profilename);
-
                 rating_value.setText(employer_rating);
                 if(!profile_image.equals("")&&!profile_image.equals("null"))
                 {
@@ -665,6 +688,7 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
                 map.put(KEY_PROFILE_NAME, name);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -769,6 +793,206 @@ public class EditUserProfile extends Activity implements SimpleGestureFilter.Sim
 
         this.detector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
+    }
+
+
+    private String getAccessToken() {
+
+        String Access_Token=PaypalCon.getAccessToken();
+        String[] href = PaypalCon.partnerReferralPrefillAPI(Access_Token,EditUserProfile.this);
+        session.saveAccesstoken(Access_Token);
+        session.savePaypalRedirect("3");
+        session.saveReraalapilink(href[0]);
+        Intent myIntent =
+                new Intent("android.intent.action.VIEW",
+                        Uri.parse(href[1]));
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivityForResult(myIntent,1);
+
+        return null;
+    }
+
+
+    public  void UpdatePaypal(){
+        dialog.show();
+ /*       System.out.println("URL "+ PAYPAL_UPDATEURL+APP_KEY+"="+value+"&"+KEY_USERID+"="+id+"&"+MERCHANTID+"="+merchantid+"&device=android");
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, PAYPAL_UPDATEURL+APP_KEY+"="+value+"&"+KEY_USERID+"="+id+"&"+MERCHANTID+"="+merchantid+"&device=android",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Toast.makeText(Registrationpage3.this,response,Toast.LENGTH_LONG).show();
+
+                        System.out.println("eeeee:"+response);
+                        onResponserecieved(response,1);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            final Dialog dialog = new Dialog(EditUserProfile.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                String status = jsonObject.getString("msg");
+                                if (!status.equals("")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(EditUserProfile.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+
+                    }
+                }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+              *//*  params.put(APP_KEY,value);
+                params.put(KEY_USERID,id);
+                params.put(MERCHANTID, merchantid);
+                params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);*//*
+                return params;
+            }
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        //stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);*/
+
+        String url= PAYPAL_UPDATEURL+APP_KEY+"="+value+"&"+KEY_USERID+"="+id+"&"+MERCHANTID+"="+merchantid+"&device=android";
+
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        dialog.dismiss();
+                        Log.d("Response", response.toString());
+                        System.out.println("updatea merchantd" + response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            final Dialog dialog = new Dialog(EditUserProfile.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                String status = jsonObject.getString("msg");
+                                if (!status.equals("")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(EditUserProfile.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+                    }
+                }
+        );
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(getRequest);
     }
 
 }

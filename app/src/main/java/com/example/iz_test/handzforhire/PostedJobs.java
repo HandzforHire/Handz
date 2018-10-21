@@ -479,6 +479,7 @@ public class PostedJobs extends Activity implements SimpleGestureFilter.SimpleGe
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

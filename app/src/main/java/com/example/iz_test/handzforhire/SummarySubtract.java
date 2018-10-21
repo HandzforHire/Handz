@@ -459,6 +459,7 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
                 params.put(CATEGORY_COLOR,job_category_color);
                 params.put(DELIST,delist);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
 
@@ -750,6 +751,7 @@ public class SummarySubtract extends Activity implements SimpleGestureFilter.Sim
                 params.put(ESTIMATED_PAYMENT,estimated_amount);
                 params.put(JOB_ID,job_id);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

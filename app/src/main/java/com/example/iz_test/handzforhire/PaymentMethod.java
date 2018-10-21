@@ -364,6 +364,7 @@ public class PaymentMethod extends Activity implements SimpleGestureFilter.Simpl
                 map.put(KEY_EMAILVERIFIED,ev);
                 map.put(KEY_USERVERIFIED,uv);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
 

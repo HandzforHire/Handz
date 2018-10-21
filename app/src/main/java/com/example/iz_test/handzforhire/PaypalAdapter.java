@@ -196,6 +196,7 @@ public class PaypalAdapter extends BaseAdapter {
                 map.put(APP_KEY, value);
                 map.put(PAYPAL_ID, account_id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

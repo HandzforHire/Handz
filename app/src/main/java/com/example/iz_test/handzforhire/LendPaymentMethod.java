@@ -337,6 +337,7 @@ public class LendPaymentMethod extends Activity implements SimpleGestureFilter.S
                 map.put(KEY_EMAILVERIFIED,lev);
                 map.put(KEY_USERVERIFIED,luv);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
 

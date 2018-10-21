@@ -286,12 +286,10 @@ public class ViewSearchJob extends Activity implements SimpleGestureFilter.Simpl
                 params.put(USER_ID,user_id);
                 params.put(TYPE,type);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };
-
-        System.out.println("vvvvvvv:job list:::::"+value+".."+user_id+".."+type);
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         //stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(stringRequest);
@@ -349,6 +347,7 @@ public class ViewSearchJob extends Activity implements SimpleGestureFilter.Simpl
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                System.out.println("Params "+params);
                 return params;
             }
         };

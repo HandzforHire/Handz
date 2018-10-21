@@ -398,6 +398,7 @@ public class RehireAdd extends Activity implements SimpleGestureFilter.SimpleGes
                 params.put(DELIST,delist);
                 params.put(EMPLOYEE_ID,employeeId);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
 

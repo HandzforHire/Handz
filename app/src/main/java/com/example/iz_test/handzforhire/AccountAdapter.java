@@ -175,6 +175,7 @@ public class AccountAdapter extends BaseAdapter {
                 map.put(APP_KEY, value);
                 map.put(KEY_ACCOUNT_ID, delete_account_id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

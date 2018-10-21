@@ -174,6 +174,7 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
                    linkedlogin();
                 }else{
                     Toast.makeText(getApplicationContext(),"App not installed ",Toast.LENGTH_LONG).show();
+                   LinkedInActivity.userid=id;
                     Intent in_linkedin=new Intent(LendReviewRating.this,LinkedInActivity.class);
                     startActivity(in_linkedin);
                 }
@@ -308,6 +309,7 @@ public class LendReviewRating extends Activity implements SimpleGestureFilter.Si
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+        System.out.println("Request code "+requestCode);
         System.out.println("Data "+data);
     }
 

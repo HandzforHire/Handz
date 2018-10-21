@@ -129,8 +129,7 @@ public class RestClientPost {
                     params.put("lon", String.valueOf(FindJobMap.lon));
                     params.put("miles","5");
                     params.put(Constant.DEVICE, Constant.ANDROID);
-                    System.out.println("lat "+String.valueOf(FindJobMap.lat));
-                    System.out.println("lon "+String.valueOf(FindJobMap.lon));
+                    System.out.println("Params "+params);
                     return params;
                 }
             };
@@ -199,6 +198,7 @@ public class RestClientPost {
                     params.put(APP_KEY, "HandzForHire@~");
                     params.put(JOB_ID, FindJobMap.job_id);
                     params.put(Constant.DEVICE, Constant.ANDROID);
+                    System.out.println("Params "+params);
                     return params;
                 }
             };

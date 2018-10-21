@@ -272,6 +272,7 @@ public class JobHistory extends Activity implements SimpleGestureFilter.SimpleGe
                     params.put(KEY_USERID, user_id);
                     params.put(TYPE, usertype);
                     params.put(Constant.DEVICE, Constant.ANDROID);
+                    System.out.println("Params "+params);
                     return params;
                 }
             };
@@ -310,8 +311,10 @@ public class JobHistory extends Activity implements SimpleGestureFilter.SimpleGe
                         final String description=object.getString("description");
                         final String msg_notification =object.getString("employer_notificationCountMsgJobhistory");
                         final String star_notification =object.getString("employer_notificationCountStarRating");
-                        System.out.println("object "+object);
                         String rating=object.getString("rating");
+
+                        System.out.println("Rating "+rating);
+                        System.out.println("Job Name "+job_name);
 
                         if(rating.equals("null"))
                         {
@@ -334,6 +337,8 @@ public class JobHistory extends Activity implements SimpleGestureFilter.SimpleGe
                             category4 = Result.getString("category4");
                             category5 = Result.getString("category5");
                         }
+
+                        System.out.println("Rationg "+rating_value);
 
                         WorldPopulation wp = new WorldPopulation(job_name,image,profilename,username,jobId,employerId,employeeId,channelid,user_id,rating_id,rating_value,category1,category2,category3,category4,category5,tran_date,job_category,description,msg_notification,star_notification);
                         // Binds all strings into an array

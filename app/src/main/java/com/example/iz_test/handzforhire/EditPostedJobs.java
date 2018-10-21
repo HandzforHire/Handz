@@ -156,6 +156,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, user_id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -307,6 +308,7 @@ public class EditPostedJobs extends Activity implements SimpleGestureFilter.Simp
                 params.put(KEY_USERID, user_id);
                 params.put(TYPE, type1);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

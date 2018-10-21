@@ -112,25 +112,16 @@ public class LeaveRating extends Activity implements SimpleGestureFilter.SimpleG
             }
         });
 
-        rb1.setStepSize(0.1f);
-        rb2.setStepSize(0.1f);
-        rb3.setStepSize(0.1f);
-        rb4.setStepSize(0.1f);
-        rb5.setStepSize(0.1f);
 
         rb1.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating1,
                                         boolean fromUser) {
                 category1 = String.valueOf(rb1.getRating());
-                System.out.println("rrrrrrrrrrrr:category1::" + category1);
                 category2 = String.valueOf(rb2.getRating());
-                System.out.println("rrrrrrrrrrrr::category2::" + category2);
                 category3 = String.valueOf(rb3.getRating());
-                System.out.println("rrrrrrrrrrrr:category3::" + category3);
                 category4 = String.valueOf(rb4.getRating());
-                System.out.println("rrrrrrrrrrrr::category4::" + category4);
                 category5 = String.valueOf(rb5.getRating());
-                System.out.println("rrrrrrrrrrrr:category5::" + category5);
+
                 float total = 0;
                 total += rb1.getRating();
                 total += rb2.getRating();

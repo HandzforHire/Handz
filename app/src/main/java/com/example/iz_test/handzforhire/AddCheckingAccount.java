@@ -66,6 +66,7 @@ public class AddCheckingAccount extends Activity implements SimpleGestureFilter.
     String status = "1";
     TextView text1,add_account;
     private SimpleGestureFilter detector;
+    SessionManager session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +93,8 @@ public class AddCheckingAccount extends Activity implements SimpleGestureFilter.
         state = i.getStringExtra("state");
         zipcode = i.getStringExtra("zipcode");
 
+        session = new SessionManager(getApplicationContext());
+
         String fontPath = "fonts/LibreFranklin-SemiBold.ttf";
         Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
         text1.setTypeface(tf);
@@ -110,14 +113,26 @@ public class AddCheckingAccount extends Activity implements SimpleGestureFilter.
         h_logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(AddCheckingAccount.this, EditUserProfile.class);
+                /*Intent i = new Intent(AddCheckingAccount.this, EditUserProfile.class);
                 i.putExtra("userId",user_id);
                 i.putExtra("address",address);
                 i.putExtra("city",city);
                 i.putExtra("state",state);
                 i.putExtra("zipcode",zipcode);
                 startActivity(i);
+                finish();*/
+                Intent i = new Intent(AddCheckingAccount.this, EditUserProfile.class);
+                HashMap<String,String> map= new HashMap<String, String>();
+                i.putExtra("isfrom", "edit");
+                map.put("userId",user_id);
+                map.put("address",address);
+                map.put("city",city);
+                map.put("state",state);
+                map.put("zipcode",zipcode);
+                JSONObject object = new JSONObject(map);
+                session.saveregistrationdet(object.toString());
                 finish();
+                startActivity(i);
             }
         });
 
@@ -416,7 +431,6 @@ public class AddCheckingAccount extends Activity implements SimpleGestureFilter.
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-
                 params.put(APP_KEY, value);
                 params.put(NAME, acc_name);
                 params.put(ACCOUNT_NUMBER, bank_no);
@@ -427,6 +441,7 @@ public class AddCheckingAccount extends Activity implements SimpleGestureFilter.
                 params.put(EMPLOYER_ID, user_id);
                 params.put(STATUS, status);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

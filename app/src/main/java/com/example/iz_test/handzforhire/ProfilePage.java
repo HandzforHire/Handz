@@ -186,14 +186,24 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
         edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ProfilePage.this, EditUserProfile.class);
-                i.putExtra("userId", id);
+
+               /* i.putExtra("userId", id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
                 i.putExtra("state", state);
-                i.putExtra("zipcode", zipcode);
-                startActivity(i);
+                i.putExtra("zipcode", zipcode);*/
+                Intent i = new Intent(ProfilePage.this, EditUserProfile.class);
+                HashMap<String,String> map= new HashMap<String, String>();
+                i.putExtra("isfrom", "edit");
+                map.put("userId",id);
+                map.put("address",address);
+                map.put("city",city);
+                map.put("state",state);
+                map.put("zipcode",zipcode);
+                JSONObject object = new JSONObject(map);
+                session.saveregistrationdet(object.toString());
                 finish();
+                startActivity(i);
             }
         });
 
@@ -410,6 +420,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -551,7 +562,9 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
+                map.put("type", "employer");
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -732,6 +745,7 @@ public class ProfilePage extends Activity implements SimpleGestureFilter.SimpleG
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

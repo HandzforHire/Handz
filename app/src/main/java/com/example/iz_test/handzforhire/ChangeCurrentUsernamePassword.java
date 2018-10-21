@@ -33,6 +33,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.firebase.client.core.view.Change;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +60,7 @@ public class ChangeCurrentUsernamePassword extends Activity implements SimpleGes
     public static String XAPP_KEY = "X-APP-KEY";
     public static String KEY_PASSWORD = "password";
     TextView username,text,text1;
-
+    SessionManager session;
     String address,city,state,zipcode;
     private SimpleGestureFilter detector;
     @Override
@@ -99,6 +100,7 @@ public class ChangeCurrentUsernamePassword extends Activity implements SimpleGes
         retype_pass.setTypeface(tf1);
 
         detector = new SimpleGestureFilter(this,this);
+        session=new SessionManager(ChangeCurrentUsernamePassword.this);
 
         webservice();
 
@@ -279,6 +281,18 @@ public class ChangeCurrentUsernamePassword extends Activity implements SimpleGes
                 i.putExtra("zipcode",zipcode);
                 startActivity(i);
                 finish();*/
+                /*Intent i = new Intent(ChangeCurrentUsernamePassword.this, EditUserProfile.class);
+                HashMap<String,String> map= new HashMap<String, String>();
+                i.putExtra("isfrom", "edit");
+                map.put("userId",uid);
+                map.put("address",address);
+                map.put("city",city);
+                map.put("state",state);
+                map.put("zipcode",zipcode);
+                JSONObject object = new JSONObject(map);
+                session.saveregistrationdet(object.toString());
+                finish();
+                startActivity(i);*/
             }
         });
 
@@ -306,6 +320,7 @@ public class ChangeCurrentUsernamePassword extends Activity implements SimpleGes
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, uid);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -398,6 +413,7 @@ public class ChangeCurrentUsernamePassword extends Activity implements SimpleGes
                 map.put(KEY_USERID,uid);
                 map.put(KEY_PASSWORD,pass);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

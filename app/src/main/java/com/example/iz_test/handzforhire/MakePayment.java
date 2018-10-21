@@ -56,7 +56,7 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
     TextView name,job_cancel;
     Button pay_employee;
     private SimpleGestureFilter detector;
-    String employee,job_payment_amount,profile_image,profile_name,user_name,employerId,employeeId,job_payout,paypal_fee,fee_details,estimated_payment;
+    String employee,job_payment_amount,profile_image,profile_name,user_name,employerId,employeeId,job_payout,paypal_fee,fee_details,estimated_payment,merchant_id;
     Dialog dialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +88,7 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
         paypal_fee=i.getStringExtra("paypalfee");
         estimated_payment=i.getStringExtra("job_estimated_payment");
         job_payment_amount=i.getStringExtra("job_payment_amount");
+        merchant_id=i.getStringExtra("merchant_id");
         fee_details=i.getStringExtra("fee_details");
        System.out.println("pppppppp:profilename:::"+profile_name+"---username::::"+user_name);
 
@@ -106,9 +107,10 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MakePayment.this,PayEmployee.class);
+                i.putExtra("isfrom", "makepayment");
                 i.putExtra("jobId",job_id);
                 i.putExtra("employerId",user_id);
-                i.putExtra("employeeId",employee);
+                i.putExtra("employeeId",employeeId);
                 i.putExtra("jobname",job_name);
                 i.putExtra("image",profile_image);
                 i.putExtra("profilename",profile_name);
@@ -118,6 +120,7 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
                 i.putExtra("job_estimated_payment",estimated_payment);
                 i.putExtra("job_payment_amount",job_payment_amount);
                 i.putExtra("fee_details",fee_details);
+                i.putExtra("merchant_id",merchant_id);
                 startActivity(i);
             }
         });
@@ -215,8 +218,8 @@ public class MakePayment extends Activity implements SimpleGestureFilter.SimpleG
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(JOB_ID, job_id);
-                map.put(EMPLOYER_ID, employeeId);
-                map.put(EMPLOYEE_ID, employerId);
+                map.put(EMPLOYER_ID,employerId);
+                map.put(EMPLOYEE_ID,employeeId);
                 map.put(USER_TYPE, "employer");
                 map.put(STATUS, "job_canceled");
                 map.put(TRANS_DATE, destDf.format(today));

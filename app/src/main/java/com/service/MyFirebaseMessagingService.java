@@ -59,9 +59,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
-            System.out.println("before try");
             try {
-                System.out.println("on try");
 
                 Map<String, String> params = remoteMessage.getData();
                 JSONObject object = new JSONObject(params);
@@ -102,9 +100,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String type = json.getString("type");
             String timestamp =String.valueOf(System.currentTimeMillis());
              Boolean loginstatus = session.getLoginStatus();
-            System.out.println("Type "+type);
-
-
             if(loginstatus==false)
                 loginstatus = session.isLoggedIn();
 

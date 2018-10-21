@@ -136,6 +136,7 @@ public class ArchievedJob extends Activity {
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, user_id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

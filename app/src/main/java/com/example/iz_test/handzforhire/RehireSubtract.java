@@ -398,6 +398,7 @@ public class RehireSubtract extends Activity implements SimpleGestureFilter.Simp
                 params.put(DELIST,delist);
                 params.put(EMPLOYEE_ID,employeeId);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
 

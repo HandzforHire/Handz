@@ -244,6 +244,7 @@ public class LendComments extends Activity implements SimpleGestureFilter.Simple
                 map.put(EMPLOYEEID,employee_id);
                 map.put(KEY_RATINGID,rating);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

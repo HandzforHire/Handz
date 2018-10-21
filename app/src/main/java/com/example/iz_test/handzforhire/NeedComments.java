@@ -232,6 +232,7 @@ public class NeedComments extends Activity implements SimpleGestureFilter.Simple
                 map.put(EMPLOYEEID,employee_id);
                 map.put(RATING_ID,rating);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

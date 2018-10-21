@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 
@@ -48,6 +50,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -56,6 +59,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.glide.Glideconstants;
 import com.glide.RoundedCornersTransformation;
+import com.linkedin.platform.APIHelper;
+import com.linkedin.platform.LISessionManager;
+import com.linkedin.platform.errors.LIApiError;
+import com.linkedin.platform.errors.LIAuthError;
+import com.linkedin.platform.listeners.ApiListener;
+import com.linkedin.platform.listeners.ApiResponse;
+import com.linkedin.platform.listeners.AuthListener;
+import com.linkedin.platform.utils.Scope;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 
@@ -68,25 +79,41 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LendEditUserProfile extends Activity implements SimpleGestureFilter.SimpleGestureListener {
 
     ImageView image, photo_bg;
-    Button home, email, update, paypal_login, terms_condition, logo;
+    Button home, email, update, paypal_login, terms_condition, logo,add_link;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     Bitmap finalbitmap;
     TextView photo_text,rating_value;
     EditText profile_name;
     private static final String URL = Constant.SERVER_URL+"update_profile_image";
     private static final String GET_URL = Constant.SERVER_URL+"get_profile_image";
-    public static String KEY_USERID = "user_id";
+    private static final String PAYPAL_UPDATEURL = Constant.SERVER_URL+"user_merchant_id_update?";
+
     public static String KEY_PROFILE_IMAGE = "profile_image";
     public static String KEY_PROFILE_NAME = "profile_name";
     public static String APP_KEY = "X-APP-KEY";
+    public static String MERCHANTID = "merchant_id";
     String value = "HandzForHire@~";
     public static String id;
+
+
+    private static final String LINKEDIN_URL = Constant.SERVER_URL+"linked_in ";
+    ArrayList<HashMap<String, String>> job_list = new ArrayList<HashMap<String, String>>();
+    public static String KEY_USERID = "user_id";
+    public static String XAPP_KEY = "X-APP-KEY";
+    public static String EMAIL = "email";
+    public static String FIRST_NAME = "first_name";
+    public static String LAST_NAME = "last_name";
+    public static String ID = "id";
+    public static String PROF_URL = "profile_url";
+    public static String PIC_URL = "picture_url";
 
     String email_id, address, city, state, zipcode,profile_image,profilename,user_name;
     String filename = "";
@@ -116,7 +143,11 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
     ProgressDialog progress_dialog;
     RelativeLayout rating_lay;
     Dialog dialog;
+    SessionManager session;
     private SimpleGestureFilter detector;
+    String merchantid;
+    String firstnmae,lastnmae,lin_email,lin_id,pictureurl,profileurl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,8 +177,8 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
         terms_condition = (Button) findViewById(R.id.condition);
         logo = (Button) findViewById(R.id.h_icon);
         layout = (LinearLayout) findViewById(R.id.layout);
+        add_link=(Button)findViewById(R.id.add_link);
 
-        getProfileimage();
 
         activity = LendEditUserProfile.this;
         FileUpload.activity = LendEditUserProfile.this;
@@ -165,12 +196,32 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
         });
 
         Intent i = getIntent();
-        id = i.getStringExtra("userId");
-        address = i.getStringExtra("address");
-        city = i.getStringExtra("city");
-        state = i.getStringExtra("state");
-        zipcode = i.getStringExtra("zipcode");
-        System.out.println("iiiiiiiiiiiiiiiiiiiii:edit:::" + id);
+
+        session = new SessionManager(getApplicationContext());
+        String registrationdet  = session.Readreg();
+
+        if(i.getStringExtra("isfrom").equals("edit")) {
+
+        }else if(i.getStringExtra("isfrom").equals("paypal")){
+            merchantid= PaypalCon.partnerReferralPrefillData(session.readReraalapilink(),session.ReadAccessToekn());
+            System.out.println("Merchant id "+merchantid);
+            UpdatePaypal();
+        }
+
+        try {
+
+            JSONObject obj = new JSONObject(registrationdet);
+            id = obj.getString("userId");
+            address = obj.getString("address");
+            city = obj.getString("city");
+            state = obj.getString("state");
+            zipcode = obj.getString("zipcode");
+
+        }catch (Exception e){
+            System.out.println("Exception "+e.getMessage());
+        }
+
+        getProfileimage();
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +247,27 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 i.putExtra("city", city);
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
+            }
+        });
+
+        paypal_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAccessToken();
+            }
+        });
+        add_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(appInstalledOrNot()) {
+                    linkedlogin();
+                }else{
+                    LinkedInActivity.userid=id;
+                    Toast.makeText(getApplicationContext(),"App not installed ",Toast.LENGTH_LONG).show();
+                    Intent in_linkedin=new Intent(LendEditUserProfile.this,LinkedInActivity.class);
+                    startActivity(in_linkedin);
+                }
+
             }
         });
 
@@ -271,6 +343,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 map.put(APP_KEY, value);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+ map);
                 return map;
             }
         };
@@ -302,9 +375,6 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 active_notification = jResult.getString("notificationCountActive");
                 jobhistory_notification = jResult.getString("notificationCountJobHistory");
 
-                System.out.println("profilename "+profilename);
-                System.out.println("user_name "+user_name);
-                System.out.println("profile_image "+profile_image);
                 rating_value.setText(employee_rating);
                 if (!profile_image.equals("") && !profile_image.equals("null")) {
                     photo_text.setVisibility(View.INVISIBLE);
@@ -399,14 +469,11 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 photo = addBorderToBitmap(photo, 3, Color.BLACK);
                 image.setImageBitmap(photo);
                 photo_text.setVisibility(View.INVISIBLE);
-
                 // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                 Uri tempUri = getImageUri(getApplicationContext(), photo);
-
                 CropImage.activity(tempUri)
                         .start(this);
-
-            }if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 if (resultCode == RESULT_OK) {
                     Uri resultUri = result.getUri();
@@ -420,6 +487,10 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     Exception error = result.getError();
                 }
+            }else {
+                LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
+                System.out.println("Request code "+requestCode);
+                System.out.println("Data "+data);
             }
         } else {
 
@@ -641,6 +712,7 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
                 map.put(KEY_PROFILE_NAME, name);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -741,4 +813,313 @@ public class LendEditUserProfile extends Activity implements SimpleGestureFilter
         return dstBitmap;
     }
 
+
+    private String getAccessToken() {
+
+        String Access_Token=PaypalCon.getAccessToken();
+        String[] href = PaypalCon.partnerReferralPrefillAPI(Access_Token,LendEditUserProfile.this);
+        session.saveAccesstoken(Access_Token);
+        session.savePaypalRedirect("4");
+        session.saveReraalapilink(href[0]);
+        Intent myIntent =
+                new Intent("android.intent.action.VIEW",
+                        Uri.parse(href[1]));
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivityForResult(myIntent,1);
+
+        return null;
+    }
+
+
+    public  void UpdatePaypal(){
+        dialog.show();
+
+        String url= PAYPAL_UPDATEURL+APP_KEY+"="+value+"&"+KEY_USERID+"="+id+"&"+MERCHANTID+"="+merchantid+"&device=android";
+
+        JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        dialog.dismiss();
+                        Log.d("Response", response.toString());
+                        System.out.println("updatea merchantd" + response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError ||error instanceof NoConnectionError) {
+                            final Dialog dialog = new Dialog(LendEditUserProfile.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        }else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(),"Authentication Failure while performing the request",Toast.LENGTH_LONG).show();
+                        }else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(),"Network error while performing the request",Toast.LENGTH_LONG).show();
+                        }else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                String status = jsonObject.getString("msg");
+                                if (!status.equals("")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(LendEditUserProfile.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText(status);
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+                    }
+                }
+        );
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(getRequest);
+    }
+
+
+    public void linkedlogin() {
+
+        LISessionManager.getInstance(getApplicationContext()).init(LendEditUserProfile.this, buildScope(), new AuthListener() {
+            @Override
+            public void onAuthSuccess () {
+                // Authentication was successful.  You can now do
+                // other calls with the SDK.
+                getPersonelinfo();
+            }
+
+            @Override
+            public void onAuthError (LIAuthError error){
+                // Handle authentication errors
+                System.out.println("Error "+error.toString());
+            }
+        },true);
+
+    }
+
+    private static Scope buildScope() {
+        return Scope.build(Scope.R_BASICPROFILE, Scope.W_SHARE,Scope.R_EMAILADDRESS);
+    }
+
+    public void getPersonelinfo(){
+        //  String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name,email,picture-url,profile_url)";
+        String url = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name,email-address,picture-url,picture-urls::(original),positions,date-of-birth,phone-numbers,location)?format=json";
+        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+        apiHelper.getRequest(this, url, new ApiListener() {
+            @Override
+            public void onApiSuccess(ApiResponse apiResponse) {
+                // Success!
+                JSONObject json=apiResponse.getResponseDataAsJson();
+                System.out.println("json res "+json);
+                try{
+
+                    lin_email=json.getString("emailAddress");
+                    firstnmae=json.getString("firstName");
+                    lastnmae=json.getString("lastName");
+                    lin_id=json.getString("id");
+                    String pictureUrl="";
+                    if(json.has("pictureUrl")){
+                        pictureUrl=json.getString("pictureUrl");
+                    }
+                    pictureurl=pictureUrl;
+                    getpublicprofileurl();
+                } catch (Exception e)
+                {
+
+                }
+                System.out.println("Json "+json);
+            }
+
+            @Override
+            public void onApiError(LIApiError liApiError) {
+                // Error making GET request!
+
+                System.out.println("Json "+liApiError);
+            }
+        });
+    }
+
+    public void getpublicprofileurl(){
+        final String profilurl = "https://api.linkedin.com/v1/people/~:(public-profile-url)?format=json";
+        APIHelper apiHelper = APIHelper.getInstance(getApplicationContext());
+        apiHelper.getRequest(this, profilurl, new ApiListener() {
+            @Override
+            public void onApiSuccess(ApiResponse apiResponse) {
+                // Success!
+                JSONObject json=apiResponse.getResponseDataAsJson();
+                try{
+                    String publicProfileUrl=json.getString("publicProfileUrl");
+                    System.out.println("publicProfileUrl "+publicProfileUrl);
+                    profileurl=publicProfileUrl;
+                    UpdatelinkedingData();
+                }catch (Exception e){
+                    System.out.println("Exception e"+e.getMessage());
+                }
+            }
+
+            @Override
+            public void onApiError(LIApiError liApiError) {
+                // Error making GET request!
+
+                System.out.println("Json "+liApiError);
+            }
+        });
+
+    }
+    private boolean appInstalledOrNot() {
+        Boolean appinstalled=false;
+        final PackageManager pm = getPackageManager();
+//get a list of installed apps.
+        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+
+        for (ApplicationInfo packageInfo : packages) {
+            System.out.println("packanme "+packageInfo.packageName);
+            if(packageInfo.packageName.equals("com.linkedin.android")) {
+                appinstalled = true;
+                System.out.println("App installed ");
+                break;
+            }
+        }
+        return appinstalled;
+    }
+
+    public void UpdatelinkedingData() {
+        dialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, LINKEDIN_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //  onResponserecieved(response, 1);
+                        System.out.println("Response "+response);
+                        dialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        dialog.dismiss();
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                            final Dialog dialog = new Dialog(LendEditUserProfile.this);
+                            dialog.setContentView(R.layout.custom_dialog);
+                            // set the custom dialog components - text, image and button
+                            TextView text = (TextView) dialog.findViewById(R.id.text);
+                            text.setText("Error Connecting To Network");
+                            Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                            // if button is clicked, close the custom dialog
+                            dialogButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                            dialog.show();
+                            Window window = dialog.getWindow();
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        } else if (error instanceof AuthFailureError) {
+                            Toast.makeText(getApplicationContext(), "Authentication Failure while performing the request", Toast.LENGTH_LONG).show();
+                        } else if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(), "Network error while performing the request", Toast.LENGTH_LONG).show();
+                        } else {
+                            try {
+                                String responseBody = new String(error.networkResponse.data, "utf-8");
+                                JSONObject jsonObject = new JSONObject(responseBody);
+                                System.out.println("error" + jsonObject);
+                                String status = jsonObject.getString("msg");
+                                if (status.equals("This User Currently Does Not Have Any Ratings")) {
+                                    // custom dialog
+                                    final Dialog dialog = new Dialog(LendEditUserProfile.this);
+                                    dialog.setContentView(R.layout.custom_dialog);
+
+                                    // set the custom dialog components - text, image and button
+                                    TextView text = (TextView) dialog.findViewById(R.id.text);
+                                    text.setText("This User Currently Does Not Have Any Ratings");
+                                    Button dialogButton = (Button) dialog.findViewById(R.id.ok);
+                                    // if button is clicked, close the custom dialog
+                                    dialogButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    dialog.show();
+                                    Window window = dialog.getWindow();
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    window.setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            } catch (JSONException e) {
+                                //Handle a malformed json response
+                                System.out.println("volley error ::" + e.getMessage());
+                            } catch (UnsupportedEncodingException errors) {
+                                System.out.println("volley error ::" + errors.getMessage());
+                            }
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(XAPP_KEY, value);
+                params.put(KEY_USERID, id);
+                params.put(FIRST_NAME, firstnmae);
+                params.put(LAST_NAME, lastnmae);
+                params.put(ID, lin_id);
+                params.put(PROF_URL, profileurl);
+                params.put(PIC_URL, pictureurl);
+                params.put(EMAIL, lin_email);
+                params.put(Constant.DEVICE, Constant.ANDROID);
+
+                System.out.println("Params " + params);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        stringRequest.setRetryPolicy(new DefaultRetryPolicy(timeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
+    }
 }

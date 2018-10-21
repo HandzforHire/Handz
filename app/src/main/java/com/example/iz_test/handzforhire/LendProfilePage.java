@@ -241,12 +241,24 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(LendProfilePage.this, LendEditUserProfile.class);
+               /* Intent i = new Intent(LendProfilePage.this, LendEditUserProfile.class);
                 i.putExtra("userId", id);
                 i.putExtra("address", address);
                 i.putExtra("city", city);
                 i.putExtra("state", state);
                 i.putExtra("zipcode", zipcode);
+                startActivity(i);*/
+                Intent i = new Intent(LendProfilePage.this, LendEditUserProfile.class);
+                HashMap<String,String> map= new HashMap<String, String>();
+                i.putExtra("isfrom", "edit");
+                map.put("userId",id);
+                map.put("address",address);
+                map.put("city",city);
+                map.put("state",state);
+                map.put("zipcode",zipcode);
+                JSONObject object = new JSONObject(map);
+                session.saveregistrationdet(object.toString());
+                finish();
                 startActivity(i);
             }
         });
@@ -320,6 +332,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -376,6 +389,7 @@ public class LendProfilePage extends Activity implements SimpleGestureFilter.Sim
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

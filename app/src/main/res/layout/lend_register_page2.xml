@@ -16,7 +16,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="530sp"
+                android:layout_height="650sp"
                 android:layout_gravity="bottom|center"
                 android:orientation="vertical"
                 android:weightSum="1"
@@ -180,6 +180,37 @@
                         android:hint="Re-type Email Address"
                         android:background="@drawable/shape"/>
 
+                    <EditText
+                        android:id="@+id/password"
+                        android:layout_marginLeft="12sp"
+                        android:layout_width="match_parent"
+                        android:textColorHint="#000000"
+                        android:layout_height="40sp"
+                        android:textSize="16sp"
+                        android:layout_below="@+id/retype_email"
+                        android:inputType="textPassword"
+                        android:layout_weight="1"
+                        android:layout_marginRight="12sp"
+                        android:hint="Password(8-30 Characters...)"
+                        android:paddingLeft="12sp"
+                        android:layout_marginTop="50sp"
+                        android:background="@drawable/shape" />
+
+                    <EditText
+                        android:id="@+id/retype_password"
+                        android:layout_marginLeft="12sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40sp"
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:inputType="textPassword"
+                        android:layout_below="@+id/password"
+                        android:textColorHint="#000000"
+                        android:layout_marginRight="12sp"
+                        android:hint="Re-type Password"
+                        android:paddingLeft="12sp"
+                        android:layout_marginTop="15sp"
+                        android:background="@drawable/shape" />
                 </RelativeLayout>
 
                 <ImageView

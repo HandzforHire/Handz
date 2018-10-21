@@ -75,6 +75,7 @@ public class CreditDebit extends Activity implements SimpleGestureFilter.SimpleG
     static ArrayList<String> listOfPattern=new ArrayList<String>();
     String address,city,state,zipcode,cardtype;
     TextView text,add_card;
+    SessionManager session;
     private SimpleGestureFilter detector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +115,7 @@ public class CreditDebit extends Activity implements SimpleGestureFilter.SimpleG
         stat.setTypeface(tf1);
         zip.setTypeface(tf1);
 
+        session=new SessionManager(CreditDebit.this);
         Intent i = getIntent();
         employer_id = i.getStringExtra("userId");
         address = i.getStringExtra("address");
@@ -133,14 +135,26 @@ public class CreditDebit extends Activity implements SimpleGestureFilter.SimpleG
         h_logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(CreditDebit.this, EditUserProfile.class);
+             /*   Intent i = new Intent(CreditDebit.this, EditUserProfile.class);
                 i.putExtra("userId",employer_id);
                 i.putExtra("address",address);
                 i.putExtra("city",city);
                 i.putExtra("state",state);
                 i.putExtra("zipcode",zipcode);
                 startActivity(i);
+                finish();*/
+                Intent i = new Intent(CreditDebit.this, EditUserProfile.class);
+                HashMap<String,String> map= new HashMap<String, String>();
+                i.putExtra("isfrom", "edit");
+                map.put("userId",employer_id);
+                map.put("address",address);
+                map.put("city",city);
+                map.put("state",state);
+                map.put("zipcode",zipcode);
+                JSONObject object = new JSONObject(map);
+                session.saveregistrationdet(object.toString());
                 finish();
+                startActivity(i);
             }
         });
         add_card.setOnClickListener(new View.OnClickListener() {
@@ -548,6 +562,7 @@ public class CreditDebit extends Activity implements SimpleGestureFilter.SimpleG
                 params.put(USER_TYPE,usertype);
                 params.put(DEVICETOKEN, dev);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
 

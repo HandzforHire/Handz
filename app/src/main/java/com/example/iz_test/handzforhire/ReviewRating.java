@@ -123,10 +123,6 @@ public class ReviewRating extends Activity implements SimpleGestureFilter.Simple
             Glide.with(this).load(profile_image).apply(RequestOptions.bitmapTransform(new RoundedCornersTransformation(this, 0, Glideconstants.sCorner, Glideconstants.sColor, Glideconstants.sBorder)).error(R.drawable.default_profile)).into(image);
 
         }
-
-
-
-
     }
 
     @Override

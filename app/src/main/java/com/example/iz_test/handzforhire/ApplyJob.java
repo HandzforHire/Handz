@@ -69,6 +69,7 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
     Dialog dialog;
     private SimpleGestureFilter detector;
     ImageView handz_button;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,6 +304,7 @@ public class ApplyJob extends Activity implements SimpleGestureFilter.SimpleGest
                 params.put(EMPLOYER_ID, employer_id);
                 params.put(COMMENTS, comments);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

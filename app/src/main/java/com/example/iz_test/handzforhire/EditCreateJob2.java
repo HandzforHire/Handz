@@ -492,6 +492,7 @@ public class EditCreateJob2 extends Activity implements SimpleGestureFilter.Simp
                 params.put(APP_KEY, value);
                 params.put(JOB_ID, jobId);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

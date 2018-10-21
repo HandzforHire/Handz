@@ -188,12 +188,12 @@
         "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\drawable-xxhdpi\\abc_ic_go.png"
     },
     {
-        "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi\\abc_list_selector_disabled_holo_dark.9.png",
-        "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\drawable-xxhdpi\\abc_list_selector_disabled_holo_dark.9.png"
-    },
-    {
         "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi\\abc_cab_background_bottom_holo_light.9.png",
         "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\drawable-xxhdpi\\abc_cab_background_bottom_holo_light.9.png"
+    },
+    {
+        "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi\\abc_list_selector_disabled_holo_dark.9.png",
+        "source": "C:\\Users\\IZ-Parimala\\.android\\build-cache\\94a81992fca2c0b7ceff0dbe76268c21a1ca0e76\\output\\res\\drawable-xxhdpi\\abc_list_selector_disabled_holo_dark.9.png"
     },
     {
         "merged": "C:\\Users\\IZ-Parimala\\Documents\\GitHub\\Handz\\sampleapp\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi\\abc_textfield_search_right_default_holo_light.9.png",

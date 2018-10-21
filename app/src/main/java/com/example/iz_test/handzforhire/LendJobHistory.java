@@ -258,6 +258,7 @@ public class LendJobHistory extends Activity implements SimpleGestureFilter.Simp
                 params.put(KEY_USERID, user_id);
                 params.put(TYPE, usertype);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

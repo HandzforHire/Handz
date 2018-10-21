@@ -20,7 +20,8 @@
                 android:layout_height="280sp"
                 android:layout_gravity="bottom|center"
                 android:orientation="vertical"
-                android:weightSum="1" >
+                android:weightSum="1"
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/layout"
@@ -30,7 +31,8 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="top|center"
                     android:background="#BFE8C64B"
-                    android:gravity="top">
+                    android:gravity="top"
+                    >
 
                     <EditText
                         android:id="@+id/password"
@@ -82,14 +84,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_below="@+id/retype_password"
-                android:background="#3B3B3B">
+                android:background="#3B3B3B"
+                android:layout_marginTop="20sp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Request For Permission:"
+                    android:paddingLeft="20dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
 
                 <RelativeLayout
                     android:layout_width="300sp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20sp"
+                    android:layout_gravity="center_horizontal">
 
                     <CheckBox
                         android:id="@+id/checkBox1"
@@ -121,10 +130,18 @@
                          android:background="#3380ff"/>-->
 
                 </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Please Read and Agree:"
+                    android:paddingLeft="20dp"
+                    android:layout_marginTop="20sp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"/>
 
                 <RelativeLayout
                     android:layout_width="300sp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20sp">
 
                     <CheckBox
@@ -155,6 +172,7 @@
                 <RelativeLayout
                     android:layout_width="300sp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20sp">
 
                     <CheckBox
@@ -173,7 +191,8 @@
                 <RelativeLayout
                     android:layout_width="300sp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20sp">
+                    android:layout_marginTop="20sp"
+                    android:layout_gravity="center_horizontal">
 
                     <CheckBox
                         android:id="@+id/checkBox4"
@@ -193,7 +212,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="30sp"
                     android:layout_marginTop="10sp"
-                    android:background="#BFE8C64B"/>
+                    android:background="#BFE8C64B"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

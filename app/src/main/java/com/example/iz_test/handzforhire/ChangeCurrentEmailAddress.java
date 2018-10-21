@@ -364,6 +364,7 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
                 map.put(XAPP_KEY, value);
                 map.put(KEY_USERID, uid);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };
@@ -465,6 +466,7 @@ public class ChangeCurrentEmailAddress extends Activity implements ResponseListe
                 map.put(KEY_PASSWORD,retype_password);
                 map.put(KEY_USERID,uid);
                 map.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map);
                 return map;
             }
         };

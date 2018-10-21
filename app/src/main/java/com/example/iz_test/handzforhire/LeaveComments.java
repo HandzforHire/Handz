@@ -52,6 +52,7 @@ public class LeaveComments extends Activity implements SimpleGestureFilter.Simpl
     private static final String URL = Constant.SERVER_URL+"add_rating";
     public static String KEY_JOBID = "job_id";
     public static String KEY_USERID = "user_id";
+    public static String KEY_LOGINUSERID = "login_user_id";
     public static String KEY_RATING = "rating";
     public static String KEY_COMMENTS = "comments";
     public static String XAPP_KEY = "X-APP-KEY";
@@ -213,11 +214,10 @@ public class LeaveComments extends Activity implements SimpleGestureFilter.Simpl
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_JOBID, job_id);
-                map.put(KEY_USERID, employer_id);
+                map.put(KEY_USERID, employee_id);
                 map.put(KEY_RATING, rating);
                 map.put(KEY_COMMENTS, comments);
-                map.put(KEY_TYPE, type);
-                map.put(KEY_USER,employee_id);
+                map.put(KEY_USER,user_id);
                 map.put(CATEGORY1,category1);
                 map.put(CATEGORY2,category2);
                 map.put(CATEGORY3,category3);
@@ -227,6 +227,7 @@ public class LeaveComments extends Activity implements SimpleGestureFilter.Simpl
                 map.put(EMPLOYEEID,employee_id);
                 map.put(RATING_ID,rating_id);
                 map.put(USER_TYPE,type);
+                map.put(KEY_LOGINUSERID,employer_id);
                 map.put(Constant.DEVICE, Constant.ANDROID);
                 System.out.println("URL  "+URL);
                 System.out.println("parameter "+map);

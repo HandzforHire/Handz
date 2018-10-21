@@ -266,6 +266,7 @@ public class UpdateCard extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(CARD_ID, card_id);
                 params.put(DEVICETOKEN, dev);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };
@@ -361,6 +362,7 @@ public class UpdateCard extends Activity implements SimpleGestureFilter.SimpleGe
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(XAPP_KEY, value);
                 map.put(KEY_CARD_ID, card_id);
+                System.out.println("Params "+map);
                 return map;
             }
         };

@@ -1,14 +1,13 @@
 apply plugin: 'com.android.application'
 
+
+//keyalias : handzforhire
+//keystore Pass : android
+//key Pass : android
+//path C:\Users\IZ-Parimala\Desktop\handz.jks
+
 android {
-    signingConfigs {
-        config {
-            keyAlias 'handzforhire'
-            keyPassword 'android'
-            storeFile file('E:/D colon/Androidproject/Android Team/handzdebugfile from my system/debug.keystore')
-            storePassword 'android'
-        }
-    }
+
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     useLibrary 'org.apache.http.legacy'
@@ -21,22 +20,25 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs{
+        key{
+            keyAlias 'handzforhire'
+            keyPassword 'android'
+            storeFile file('C:\\Users\\IZ-Parimala\\Desktop\\handz.jks')
+            storePassword 'android'
+        }
+    }
+    buildTypes {
+        debug{
+            signingConfig signingConfigs.key
+        }
+    }
+
     aaptOptions {
         cruncherEnabled = false
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable true
-            signingConfig signingConfigs.config
-            proguardFile 'E:/D colon/Androidproject/Android Team/handzdebugfile from my system/debug.keystore'
-        }
-        debug {
-            signingConfig signingConfigs.config
-            proguardFile 'E:/D colon/Androidproject/Android Team/handzdebugfile from my system/debug.keystore'
-        }
-    }
+
     packagingOptions {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
@@ -72,6 +74,7 @@ dependencies {
     compile files('libs/simpleftp.jar')
     compile files('libs/mint-5.2.2.jar')
     compile files('libs/picasso-2.5.2.jar')
+
     //compile files('libs/YouTubeAndroidPlayerApi.jar')
     compile 'com.android.support:cardview-v7:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.4.0'
@@ -86,6 +89,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
     //  compile 'com.google.firebase:firebase-database:10.0.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.5.0'
     compile 'com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1'
     compile 'android.arch.lifecycle:runtime:1.0.0'
     annotationProcessor "android.arch.lifecycle:common-java8:1.0.0-rc1"

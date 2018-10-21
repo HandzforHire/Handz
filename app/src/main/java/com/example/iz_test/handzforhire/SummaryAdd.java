@@ -436,6 +436,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(CATEGORY_COLOR,job_category_color);
                 params.put(DELIST,delist);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
 
@@ -721,6 +722,7 @@ public class SummaryAdd extends Activity implements SimpleGestureFilter.SimpleGe
                 params.put(ESTIMATED_PAYMENT,estimated_amount);
                 params.put(JOB_ID,job_id);
                 params.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+params);
                 return params;
             }
         };

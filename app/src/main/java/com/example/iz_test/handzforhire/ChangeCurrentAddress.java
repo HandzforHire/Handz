@@ -318,12 +318,11 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
                 map1.put(ZIPCODE,zip);
                 map1.put(USERID,uid);
                 map1.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params"+map1);
                 return map1;
             }
 
         };
-
-        System.out.println("vvvvvvv5:"+".."+value+".."+add1+".."+add2+".."+cit+".."+stat+".."+zip+".."+uid+"..");
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
@@ -436,6 +435,7 @@ public class ChangeCurrentAddress extends Activity implements SimpleGestureFilte
                 map1.put(XAPP_KEY,value);
                 map1.put(USERID,uid);
                 map1.put(Constant.DEVICE, Constant.ANDROID);
+                System.out.println("Params "+map1);
                 return map1;
             }
 
